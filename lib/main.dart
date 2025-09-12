@@ -1,5 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mama_kris/core/services/lifecycle/lifecycle_manager.dart';
+import 'package:mama_kris/core/services/routes/router.dart';
+import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mama_kris/screens/main_screen.dart';
 import 'package:mama_kris/screens/welcome_screen.dart';
@@ -18,12 +22,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SessionManager(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: const AppInitializer(),
-      ),
-    );
+    return ScreenUtilInit(
+        designSize: const Size(400, 932),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return LifecycleManager(
+            child: MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              routerConfig: AppRouter.router,
+              theme: AppTheme.lightTheme,
+              // home: const AppInitializer(),
+            ),
+          );
+        });
   }
 }
 
@@ -31,7 +43,7 @@ class MyApp extends StatelessWidget {
 /// и вызывает startSession при открытии и endSession при закрытии.
 class SessionManager extends StatefulWidget {
   final Widget child;
-  const SessionManager({Key? key, required this.child}) : super(key: key);
+  const SessionManager({super.key, required this.child});
 
   @override
   State<SessionManager> createState() => _SessionManagerState();
@@ -91,7 +103,7 @@ class _SessionManagerState extends State<SessionManager>
 
 /// Инициализирует приложение и определяет начальный экран
 class AppInitializer extends StatefulWidget {
-  const AppInitializer({Key? key}) : super(key: key);
+  const AppInitializer({super.key});
 
   @override
   State<AppInitializer> createState() => _AppInitializerState();
@@ -132,7 +144,7 @@ class _AppInitializerState extends State<AppInitializer> {
     if (updateRequired) {
       // Здесь можно вернуть экран обновления приложения
       // Например:
-      return UpdateScreen();
+      return const UpdateScreen();
       // Пока что выводим отладочное сообщение и возвращаем WelcomeScreen().
       // print("Update screen should be displayed here (code commented out)");
       // return WelcomeScreen();
@@ -164,18 +176,19 @@ class _AppInitializerState extends State<AppInitializer> {
 
         int likedCount = await funcs.getLikedCount(accessToken, userId);
         await prefs.setInt('liked_count', likedCount);
-      // Если currentPage равен "tinder" или "job", запускаем MainScreen, иначе WelcomeScreen
-      if (currentPage == 'tinder' || currentPage == 'search' || currentPage == 'job') {
-        return MainScreen();
+        // Если currentPage равен "tinder" или "job", запускаем MainScreen, иначе WelcomeScreen
+        if (currentPage == 'tinder' ||
+            currentPage == 'search' ||
+            currentPage == 'job') {
+          return const MainScreen();
+        } else {
+          return const WelcomeScreen();
+        }
       } else {
-        return WelcomeScreen();
-      }
-      }
-      else {
-        return WelcomeScreen();
+        return const WelcomeScreen();
       }
     } else {
-      return WelcomeScreen();
+      return const WelcomeScreen();
     }
   }
 
