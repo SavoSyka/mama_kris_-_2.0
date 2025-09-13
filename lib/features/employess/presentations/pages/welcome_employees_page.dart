@@ -12,6 +12,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/features/jobs/presentations/widgets/job_terms_bottomsheet.dart';
 
 class WelcomeEmployeesPage extends StatefulWidget {
   const WelcomeEmployeesPage({super.key});
@@ -40,23 +41,19 @@ class _WelcomeEmployeesPageState extends State<WelcomeEmployeesPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 32),
-
               const Center(
                 child: CustomImageView(
                   imagePath: MediaRes.illustrationWelcomeEmp,
                   width: 286,
                 ),
               ),
-
               SizedBox(height: 60.h),
-
               CustomText(
                 text: AppTextContents.welcomEemploye,
                 style: GoogleFonts.manrope(
                     fontSize: 22, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 20.h),
-
               Column(
                 children: options.map((option) {
                   return Padding(
@@ -67,9 +64,9 @@ class _WelcomeEmployeesPageState extends State<WelcomeEmployeesPage> {
                       onTap: () {
                         // Handle navigation based on option
                         if (option == _WelcomeOption.register) {
-                          _onNext(context);
+                          jobTermsBottomSheet(context, false, false, () {});
                         } else {
-                          _onNext(context);
+                          jobTermsBottomSheet(context, false, false, () {});
 
                           // context.pushNamed(RouteName.welcomeEmploye);
                         }
@@ -79,60 +76,12 @@ class _WelcomeEmployeesPageState extends State<WelcomeEmployeesPage> {
                   );
                 }).toList(),
               )
-
             ],
           ),
         ),
       ),
     );
   }
-
-Future<bool> _onNext(BuildContext context) async {
-  final result = await showModalBottomSheet<bool>(
-    context: context,
-    isDismissible: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-    ),
-    builder: (context) {
-      return Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CustomText(
-              text: "😎 Мы работаем над этим!",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            const CustomText(
-              text:
-                  "Эта функция будет доступна в следующем обновлении.\nСледите за новостями!",
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: CustomTextButton(
-                onPressed: () => Navigator.pop(context, true),
-                text: 'Назад',
-              ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-
-  return result ?? false;
-}
-
-
 }
 
 enum _WelcomeOption { register, login }

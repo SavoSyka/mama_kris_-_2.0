@@ -11,6 +11,7 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/features/jobs/presentations/widgets/job_terms_bottomsheet.dart';
 
 class WelcomeJobPage extends StatefulWidget {
   const WelcomeJobPage({super.key});
@@ -75,14 +76,13 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
                         isSecondary: selectedOption != option,
                         onTap: () {
                           // Handle navigation based on option
-                          if (option == _WelcomeOption.register) {
-                            _onNext(context);
-                            // context.pushNamed(RouteName.welcomeJob);
-                          } else {
-                            _onNext(context);
+                         if (option == _WelcomeOption.register) {
+                          jobTermsBottomSheet(context, false, false, () {});
+                        } else {
+                          jobTermsBottomSheet(context, false, false, () {});
 
-                            // context.pushNamed(RouteName.welcomeEmploye);
-                          }
+                          // context.pushNamed(RouteName.welcomeEmploye);
+                        }
                         },
                         btnText: option.displayText,
                       ),
