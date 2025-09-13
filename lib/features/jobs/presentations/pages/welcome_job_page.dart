@@ -11,7 +11,10 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/features/jobs/presentations/widgets/email_bottomsheet.dart';
 import 'package:mama_kris/features/jobs/presentations/widgets/job_terms_bottomsheet.dart';
+import 'package:mama_kris/features/jobs/presentations/widgets/name_bottomsheet.dart';
+import 'package:mama_kris/features/jobs/presentations/widgets/password_bottomsheet.dart';
 
 class WelcomeJobPage extends StatefulWidget {
   const WelcomeJobPage({super.key});
@@ -36,15 +39,13 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
     return CustomScaffold(
       body: Container(
         decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            Color(0xFFFFF9E3),
-            Color(0xFFCEE5DB),
-          ],
-          stops: [0, 1],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        )),
+          gradient: LinearGradient(
+            colors: [Color(0xFFFFF9E3), Color(0xFFCEE5DB)],
+            stops: [0, 1],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: SafeArea(
           child: CustomDefaultPadding(
             child: Column(
@@ -64,7 +65,9 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
                 CustomText(
                   text: AppTextContents.welcomeJob,
                   style: GoogleFonts.manrope(
-                      fontSize: 22, fontWeight: FontWeight.w600),
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 SizedBox(height: 20.h),
 
@@ -76,19 +79,31 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
                         isSecondary: selectedOption != option,
                         onTap: () {
                           // Handle navigation based on option
-                         if (option == _WelcomeOption.register) {
-                          jobTermsBottomSheet(context, false, false, () {});
-                        } else {
-                          jobTermsBottomSheet(context, false, false, () {});
+                          if (option == _WelcomeOption.register) {
+                            jobTermsBottomSheet(context, false, false, () {
+                              nameBottomSheet(context, () {
+                                Navigator.pop(context);
+                                emailBottomSheet(context, () {
+                                  Navigator.pop(context);
+                                  passwordBottomsheet(context, () {
+                                    Navigator.pop(context);
+                                    context.goNamed(RouteName.home);
+                                  }, );
+                                });
+                              });
+                            });
+                            // jobTermsBottomSheet(context, false, false, () {});
+                          } else {
+                            jobTermsBottomSheet(context, false, false, () {});
 
-                          // context.pushNamed(RouteName.welcomeEmploye);
-                        }
+                            // context.pushNamed(RouteName.welcomeEmploye);
+                          }
                         },
                         btnText: option.displayText,
                       ),
                     );
                   }).toList(),
-                )
+                ),
 
                 // Option buttons can be dynamically generated using enum
               ],
@@ -114,10 +129,7 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
             children: [
               const CustomText(
                 text: "😎 Мы работаем над этим!",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),

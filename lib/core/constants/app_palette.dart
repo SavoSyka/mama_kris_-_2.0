@@ -19,6 +19,7 @@ class AppPalette {
 
   // 🌑 Shades of Gray
   static const Color whiteGrey = Color(0xFFE3E3E3);
+  static const Color greyTooLight = Color(0xFFF9F9F9);
 
   static const Color greyLight = Color(0xFFEEEEEE);
   static const Color grey = Color(0xFF9E9E9E);

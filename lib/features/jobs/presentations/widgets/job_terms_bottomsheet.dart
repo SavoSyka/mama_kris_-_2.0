@@ -17,7 +17,10 @@ import 'package:mama_kris/core/constants/app_text_contents.dart';
 
 /// Returns true if user accepts both Privacy & Terms, otherwise false.
 Future<bool> jobTermsBottomSheet(BuildContext context, bool privacyAccepted,
-    bool termsAccepted, VoidCallback onAgree) async {
+    bool termsAccepted, VoidCallback onAgree,
+    
+    [bool isSecondaryPrimary = false] 
+    ) async {
   // local state for checkboxes
   privacyAccepted = false;
   termsAccepted = false;
@@ -64,6 +67,7 @@ Future<bool> jobTermsBottomSheet(BuildContext context, bool privacyAccepted,
                     children: [
                       Checkbox(
                         value: termsAccepted,
+                        activeColor: isSecondaryPrimary ? AppPalette.secondaryColor: AppPalette.primaryColor,
                         onChanged: (val) {
                           setState(() => termsAccepted = val ?? false);
                         },
@@ -85,6 +89,8 @@ Future<bool> jobTermsBottomSheet(BuildContext context, bool privacyAccepted,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Checkbox(
+                        activeColor: isSecondaryPrimary ? AppPalette.secondaryColor: AppPalette.primaryColor,
+
                         value: privacyAccepted,
                         onChanged: (val) {
                           if(termsAccepted)

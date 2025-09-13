@@ -29,4 +29,32 @@ class AppTextContents {
 
   static const employeOption1 = "Регистрация";
   static const employeOption2 = "Войти";
+  static const whatsUrName = "Как вас зовут?";
+  static const urName = "Ваше имя";
+  static const next = "Далее";
+
+  static const whstsUrEmail = 'Укажите ваш email';
+  static const email = 'Email';
+  static const createPwd = 'Придумайте пароль';
+  static const password = 'Пароль';
+
+  //home screen
+  static const vacancies = 'Вакансии';
+  static const active = 'Активные';
+  static const drafts = 'Черновики';
+  static const archive = 'Архив';
+  static const createJob = "Создать вакансию";
+  static const noJob = 'Вакансий еще нет';
+  static const tellOurMoms = 'Расскажите о своей задаче нашим мамам';
+  static const resume = 'Резюме';
+  static const favorite = 'Избранное';
+  static const profile = 'Профиль';
+  static const myProfile = "Мой профиль";
+  static const contactInfo = 'Контакты для связи';
+  static const myEmail = "Мой email";
+  static const descriptionOf = "Описание моей деятельности";
+  static const favoriteResumes = 'Избранные резюме';
+  static const search = "Поиск";
+  //  static const search=
+
 }

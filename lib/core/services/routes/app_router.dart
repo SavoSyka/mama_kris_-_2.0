@@ -6,6 +6,6 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     navigatorKey: globalNavigatorKey,
     initialLocation: RouteName.initialPage,
-    routes: <RouteBase>[...authRoutes, ...employeRoutes, ...jobRoutes],
+    routes: <RouteBase>[...authRoutes, ...employeRoutes, ...jobRoutes, ...homeRoutes],
   );
 }

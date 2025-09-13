@@ -7,15 +7,17 @@ class CustomPrimaryButton extends StatelessWidget {
     this.isLoading = false,
     super.key,
     this.onTap,
-    this.borderRadius = 32,
+    this.borderRadius = 5,
     this.isBtnActive = true,
     this.borderSide,
+    this.isSecondaryPrimary = false
   });
 
   final void Function()? onTap;
   final String btnText;
   final bool isLoading;
   final double borderRadius;
+  final bool isSecondaryPrimary;
 
   final bool isBtnActive;
   final BorderSide? borderSide;
@@ -46,7 +48,11 @@ class CustomPrimaryButton extends StatelessWidget {
                     side: borderSide ?? BorderSide.none,
                   ),
                   color: isBtnActive
-                      ? Theme.of(context).primaryColor
+                      ? 
+                      isSecondaryPrimary ?
+                      AppPalette.secondaryColor:
+                      
+                      Theme.of(context).primaryColor
                       : const Color(0xFFACACAC),
                 ),
                 child: Row(
@@ -66,9 +72,10 @@ class CustomPrimaryButton extends StatelessWidget {
                     Text(
                       btnText,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                          color: AppPalette.white),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        color: AppPalette.white,
+                      ),
                     ),
                   ],
                 ),

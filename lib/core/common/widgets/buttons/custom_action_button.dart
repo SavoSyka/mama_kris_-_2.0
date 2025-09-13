@@ -13,6 +13,7 @@ class CustomActionButton extends StatelessWidget {
     this.isSecondary = true,
     this.isSecondaryPrimary = false,
     this.borderSide,
+    this.suffix,
   });
 
   final void Function()? onTap;
@@ -24,6 +25,7 @@ class CustomActionButton extends StatelessWidget {
   /// if false → primary without shadow
   final bool isSecondary;
   final bool isSecondaryPrimary;
+  final Widget? suffix;
 
   final BorderSide? borderSide;
 
@@ -39,16 +41,19 @@ class CustomActionButton extends StatelessWidget {
                 onTap?.call();
               },
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 14,
+                  horizontal: 20,
+                ),
                 decoration: ShapeDecoration(
                   shadows: isSecondary
                       ? [
                           BoxShadow(
-                            color:
-                                const Color(0xFFC9C9C9).withValues(alpha: 0.25),
+                            color: const Color(
+                              0xFFC9C9C9,
+                            ).withValues(alpha: 0.25),
                             blurRadius: 10,
-                          )
+                          ),
                         ]
                       : [],
                   shape: RoundedRectangleBorder(
@@ -58,8 +63,8 @@ class CustomActionButton extends StatelessWidget {
                   color: isSecondary
                       ? AppPalette.white
                       : isSecondaryPrimary
-                          ? AppPalette.secondaryColor
-                          : Theme.of(context).primaryColor,
+                      ? AppPalette.secondaryColor
+                      : Theme.of(context).primaryColor,
                 ),
                 child: Row(
                   children: [
@@ -80,31 +85,30 @@ class CustomActionButton extends StatelessWidget {
                           ],
                           Text(
                             btnText,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
+                            style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15,
                                   color: isSecondary
                                       ? isSecondaryPrimary
-                                          ? AppPalette.secondaryColor
-                                          : AppPalette.primaryColor
+                                            ? AppPalette.secondaryColor
+                                            : AppPalette.primaryColor
                                       : AppPalette.white,
                                 ),
                           ),
                         ],
                       ),
                     ),
-                    CustomImageView(
-                      imagePath: MediaRes.nextIcon,
-                      color: isSecondary
-                          ? isSecondaryPrimary
-                              ? AppPalette.secondaryColor
-                              : AppPalette.primaryColor
-                          : AppPalette.white,
-                      width: 24,
-                    )
+                    suffix ??
+                        CustomImageView(
+                          imagePath: MediaRes.nextIcon,
+                          color: isSecondary
+                              ? isSecondaryPrimary
+                                    ? AppPalette.secondaryColor
+                                    : AppPalette.primaryColor
+                              : AppPalette.white,
+                          width: 24,
+                        ),
                   ],
                 ),
               ),

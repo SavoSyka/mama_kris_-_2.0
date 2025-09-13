@@ -12,7 +12,10 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/features/jobs/presentations/widgets/email_bottomsheet.dart';
 import 'package:mama_kris/features/jobs/presentations/widgets/job_terms_bottomsheet.dart';
+import 'package:mama_kris/features/jobs/presentations/widgets/name_bottomsheet.dart';
+import 'package:mama_kris/features/jobs/presentations/widgets/password_bottomsheet.dart';
 
 class WelcomeEmployeesPage extends StatefulWidget {
   const WelcomeEmployeesPage({super.key});
@@ -51,7 +54,9 @@ class _WelcomeEmployeesPageState extends State<WelcomeEmployeesPage> {
               CustomText(
                 text: AppTextContents.welcomEemploye,
                 style: GoogleFonts.manrope(
-                    fontSize: 22, fontWeight: FontWeight.w600),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               SizedBox(height: 20.h),
               Column(
@@ -64,7 +69,18 @@ class _WelcomeEmployeesPageState extends State<WelcomeEmployeesPage> {
                       onTap: () {
                         // Handle navigation based on option
                         if (option == _WelcomeOption.register) {
-                          jobTermsBottomSheet(context, false, false, () {});
+                          jobTermsBottomSheet(context, false, false, () {
+                            nameBottomSheet(context, () {
+                              Navigator.pop(context);
+                              emailBottomSheet(context, () {
+                                Navigator.pop(context);
+                                passwordBottomsheet(context, () {
+                                  Navigator.pop(context);
+                                  context.goNamed(RouteName.home);
+                                },true);
+                              },true);
+                            }, true);
+                          }, true);
                         } else {
                           jobTermsBottomSheet(context, false, false, () {});
 
@@ -75,7 +91,7 @@ class _WelcomeEmployeesPageState extends State<WelcomeEmployeesPage> {
                     ),
                   );
                 }).toList(),
-              )
+              ),
             ],
           ),
         ),
