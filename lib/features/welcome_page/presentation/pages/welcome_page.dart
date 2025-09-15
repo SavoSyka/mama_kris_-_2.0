@@ -51,7 +51,9 @@ class _WelcomePageState extends State<WelcomePage> {
               CustomText(
                 text: AppTextContents.welcomeDescription,
                 style: GoogleFonts.manrope(
-                    fontSize: 22, fontWeight: FontWeight.w600),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               SizedBox(height: 20.h),
 
@@ -64,7 +66,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       onTap: () {
                         // Handle navigation based on option
                         if (option == WelcomeOption.findJob) {
-                          context.pushNamed(RouteName.welcomeJob);
+                          context.pushNamed(RouteName.welcomeApplicant);
                         } else {
                           context.pushNamed(RouteName.welcomeEmploye);
                         }
@@ -73,7 +75,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     ),
                   );
                 }).toList(),
-              )
+              ),
 
               // Option buttons can be dynamically generated using enum
             ],
@@ -86,7 +88,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
 enum WelcomeOption {
   findJob, // "Ищу удаленную работу"
-  findEmployee // "Ищу сотрудника"
+  findEmployee, // "Ищу сотрудника"
 }
 
 extension WelcomeOptionExtension on WelcomeOption {

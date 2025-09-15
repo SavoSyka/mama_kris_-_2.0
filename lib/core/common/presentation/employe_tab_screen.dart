@@ -8,14 +8,14 @@ import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/resume_tab.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class EmployeTabScreen extends StatefulWidget {
+  const EmployeTabScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<EmployeTabScreen> createState() => _EmployeTabScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _EmployeTabScreenState extends State<EmployeTabScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [

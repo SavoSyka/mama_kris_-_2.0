@@ -4,12 +4,11 @@ class RouteName {
   static String initialPage = "/initial-page";
 
   static String welcomePage = "/getStart";
-  static String welcomeJob = "/welcome-job";
+  static String welcomeApplicant = "/welcome-applicant";
   static String welcomeEmploye = "/welcome-employe";
 
-
-
-
+  static String employesHome = "/employes-home";
+  static String applicantHome = "/applicant-home";
 
   static String login = "/login";
   static String welcomeSignup = "/welcome-signup";
@@ -18,16 +17,7 @@ class RouteName {
   static String signupGender = "/signup-gender";
   static String signupBirthDate = "/signup-birth-date";
 
-
   static String findMyAcct = "/find-my-account";
   static String checkEmail = "/check-email";
   static String signupMobilePhone = "/signup-mobile-phone";
-
-  static String home = "/home";
-
-
-
-
-
-  
 }

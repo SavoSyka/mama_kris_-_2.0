@@ -1,6 +1,90 @@
 class AppTextContents {
   AppTextContents._();
 
+  static const welcomeDescription = 'Earn money remotely';
+  static const welcomeOption1 = 'Looking for remote work';
+  static const welcomeOption2 = 'Looking for an employee';
+
+  // job
+
+  static const welcomeJob =
+      'Mamakris – a platform for finding remote jobs for moms.';
+
+  static const register = "Register";
+  static const login = "Login";
+
+  // privacy
+  static const privacyTitle = "Privacy above all";
+  static const privacyDescription =
+      "Please check the boxes to confirm that you agree to the terms of using our application.";
+  static const privacyACceppt =
+      "I accept the Privacy Policy and consent to the processing of my personal data in accordance with the law";
+  static const privacyAgree = "I agree to the Terms of Use";
+  static const agree = "Agree";
+
+  // employees
+
+  static const welcomEemploye =
+      'Mamakris – an app for finding remote employees.';
+
+  static const employeOption1 = "Register";
+  static const employeOption2 = "Login";
+  static const whatsUrName = "What is your name?";
+  static const urName = "Your name";
+  static const next = "Next";
+
+  static const whstsUrEmail = 'Enter your email';
+  static const email = 'Email';
+  static const createPwd = 'Create a password';
+  static const password = 'Password';
+
+  // home screen
+
+  static const whoAreULooking = 'Who are you looking for?';
+  static const profession = 'Profession';
+
+  static const vacancies = 'Job postings';
+  static const active = 'Active';
+  static const drafts = 'Drafts';
+  static const archive = 'Archive';
+  static const createJob = "Create a job posting";
+  static const noJob = 'No job postings yet';
+  static const tellOurMoms = 'Tell our moms about your task';
+  static const resume = 'Resume';
+  static const favorite = 'Favorites';
+  static const profile = 'Profile';
+  static const myProfile = "My profile";
+  static const contactInfo = 'Contact information';
+  static const myEmail = "My email";
+  static const descriptionOf = "Description of my activity";
+  static const favoriteResumes = 'Favorite resumes';
+  static const search = "Search";
+  static const myOrders = 'My orders';
+  static const support = 'Support';
+
+  static const notInterested = 'Not interested';
+  static const interested = 'Interested';
+
+  // Validation messages
+  static const nameRequired = 'Имя обязательно';
+  static const nameTooShort = 'Имя должно содержать не менее 2 символов';
+
+  static const emailRequired = 'Электронная почта обязательна';
+  static const emailInvalid = 'Введите корректный адрес электронной почты';
+
+  static const passwordRequired = 'Пароль обязателен';
+  static const passwordTooShort = 'Пароль должен содержать не менее 6 символов';
+
+  // applicant home page.
+  static const slider = 'Слайдер';
+  static const list = 'Список';
+  static const home = 'Дом';
+}
+
+/*
+class AppTextContents {
+  AppTextContents._();
+
   static const welcomeDescription = 'Зарабатывайте на удалёнке';
   static const welcomeOption1 = 'Ищу удаленную работу';
   static const welcomeOption2 = 'Ищу сотрудника';
@@ -39,6 +123,10 @@ class AppTextContents {
   static const password = 'Пароль';
 
   //home screen
+
+  static const whoAreULooking = 'Кого ищете?';
+  static const profession = 'Специальность';
+
   static const vacancies = 'Вакансии';
   static const active = 'Активные';
   static const drafts = 'Черновики';
@@ -55,6 +143,23 @@ class AppTextContents {
   static const descriptionOf = "Описание моей деятельности";
   static const favoriteResumes = 'Избранные резюме';
   static const search = "Поиск";
-  //  static const search=
+  static const myOrders = 'Мои заказы';
+  static const support = 'Поддержка';
+
+  static const notInterested = 'Неинтересно';
+  static const interested = 'Интересно';
+
+    // Validation messages
+  static const nameRequired = 'Имя обязательно';
+  static const nameTooShort = 'Имя должно содержать не менее 2 символов';
+
+  static const emailRequired = 'Электронная почта обязательна';
+  static const emailInvalid = 'Введите корректный адрес электронной почты';
+
+  static const passwordRequired = 'Пароль обязателен';
+  static const passwordTooShort = 'Пароль должен содержать не менее 6 символов';
+
 
 }
+
+*/

@@ -27,6 +27,7 @@ class ProfileTab extends StatelessWidget {
           InkWell(
             child: 
             CustomImageView(imagePath: MediaRes.btnFilter, width: 64),
+
           ),
         ],
       ),
@@ -48,6 +49,7 @@ class ProfileTab extends StatelessWidget {
                       ),
                     ),
                     CustomImageView(imagePath: MediaRes.editBtn, width: 24),
+                
                   ],
                 ),
               ),

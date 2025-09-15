@@ -8,14 +8,14 @@ import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/resume_tab.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class EmployeHomePage extends StatefulWidget {
+  const EmployeHomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<EmployeHomePage> createState() => _EmployeHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _EmployeHomePageState extends State<EmployeHomePage> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
@@ -62,24 +62,23 @@ class _HomePageState extends State<HomePage> {
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
-                imagePath: MediaRes.resumeIcon,
+                imagePath: MediaRes.myOrders,
                 width: 28,
                 color: _selectedIndex == 1
                     ? AppPalette.secondaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.resume,
+              label: AppTextContents.myOrders,
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
-                imagePath: MediaRes.favoriteIcon,
+                imagePath: MediaRes.support,
                 width: 28,
                 color: _selectedIndex == 2
                     ? AppPalette.secondaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.favorite,
-
+              label: AppTextContents.support,
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
@@ -90,7 +89,6 @@ class _HomePageState extends State<HomePage> {
                     : Colors.grey,
               ),
               label: AppTextContents.profile,
-
             ),
           ],
         ),

@@ -1,0 +1,73 @@
+[
+    {
+      "id": 1,
+      "title": "Virtual Assistant (Part-Time)",
+      "description": "Help manage emails, calendars, and basic admin tasks for small business owners.",
+      "price": 800,
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "title": "Online Tutor (Elementary Math)",
+      "description": "Teach math to elementary school students in a virtual classroom. Flexible hours.",
+      "price": 1000,
+      "status": "active"
+    },
+    {
+      "id": 3,
+      "title": "Mom Blogger",
+      "description": "Write blog posts about parenting tips, family life, and motherhood experiences.",
+      "price": 500,
+      "status": "draft"
+    },
+    {
+      "id": 4,
+      "title": "Meal Planning Consultant",
+      "description": "Create healthy weekly meal plans for busy families. Must have nutrition knowledge.",
+      "price": 700,
+      "status": "active"
+    },
+    {
+      "id": 5,
+      "title": "Online Store Manager (Etsy)",
+      "description": "Manage product listings, respond to customer messages, and process orders.",
+      "price": 1200,
+      "status": "archived"
+    },
+    {
+      "id": 6,
+      "title": "Social Media Manager for Parenting Brand",
+      "description": "Create and schedule content for Instagram and Facebook. Ideal for moms with creative flair.",
+      "price": 900,
+      "status": "active"
+    },
+    {
+      "id": 7,
+      "title": "Customer Support Representative (Remote)",
+      "description": "Answer support emails and chats for a baby product company. Training provided.",
+      "price": 1100,
+      "status": "draft"
+    },
+    {
+      "id": 8,
+      "title": "Product Reviewer (Baby & Mom Products)",
+      "description": "Test and review mom and baby products. Write short reviews and give feedback.",
+      "price": 300,
+      "status": "active"
+    },
+    {
+      "id": 9,
+      "title": "Children’s Story Writer",
+      "description": "Write short, engaging children's stories for an educational app.",
+      "price": 600,
+      "status": "archived"
+    },
+    {
+      "id": 10,
+      "title": "Remote Data Entry (Flexible Hours)",
+      "description": "Enter and organize data for a health and wellness company. Perfect for stay-at-home moms.",
+      "price": 950,
+      "status": "active"
+    }
+  ]
+  

@@ -11,10 +11,11 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
-import 'package:mama_kris/features/jobs/presentations/widgets/email_bottomsheet.dart';
-import 'package:mama_kris/features/jobs/presentations/widgets/job_terms_bottomsheet.dart';
-import 'package:mama_kris/features/jobs/presentations/widgets/name_bottomsheet.dart';
-import 'package:mama_kris/features/jobs/presentations/widgets/password_bottomsheet.dart';
+import 'package:mama_kris/features/applicant_welcome/presentations/widgets/applicant_welcome_bottomsheet.dart';
+import 'package:mama_kris/features/applicant_welcome/presentations/widgets/email_bottomsheet.dart';
+import 'package:mama_kris/features/applicant_welcome/presentations/widgets/job_terms_bottomsheet.dart';
+import 'package:mama_kris/features/applicant_welcome/presentations/widgets/name_bottomsheet.dart';
+import 'package:mama_kris/features/applicant_welcome/presentations/widgets/password_bottomsheet.dart';
 
 class WelcomeJobPage extends StatefulWidget {
   const WelcomeJobPage({super.key});
@@ -31,6 +32,9 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
     // TODO: implement initState
     super.initState();
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,14 +91,21 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
                                   Navigator.pop(context);
                                   passwordBottomsheet(context, () {
                                     Navigator.pop(context);
-                                    context.goNamed(RouteName.home);
-                                  }, );
+                                    context.goNamed(RouteName.applicantHome);
+                                  });
                                 });
                               });
                             });
                             // jobTermsBottomSheet(context, false, false, () {});
                           } else {
-                            jobTermsBottomSheet(context, false, false, () {});
+                            ApplicantWelcomeBottomsheet.loginBottomSheet(
+                              context,
+                            
+                              onNext: () {
+                                context.goNamed(RouteName.applicantHome);
+                              },
+                            );
+                            // jobTermsBottomSheet(context, false, false, () {});
 
                             // context.pushNamed(RouteName.welcomeEmploye);
                           }
@@ -163,9 +174,9 @@ extension _WelcomeOptionExtension on _WelcomeOption {
   String get displayText {
     switch (this) {
       case _WelcomeOption.register:
-        return AppTextContents.jobOption1;
+        return AppTextContents.register;
       case _WelcomeOption.login:
-        return AppTextContents.jobOption2;
+        return AppTextContents.login;
     }
   }
 }

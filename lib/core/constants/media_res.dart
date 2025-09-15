@@ -22,4 +22,15 @@ class MediaRes {
   static const String btnFilter = '$_baseIcons/btn-filter.png';
   static const String editBtn = '$_baseIcons/edit_square.png';
   static const String settingGearIcon = '$_baseIcons/setting_gear_icon.png';
+
+  static const String warningCircle = '$_baseIcons/warning_circle.png';
+  static const String star = '$_baseIcons/star.png';
+  static const String send = '$_baseIcons/send.png';
+
+  static const String support = '$_baseIcons/support.png';
+  static const String myOrders = '$_baseIcons/my_orders.png';
+
+  static const String btnSorting = '$_baseIcons/btn_sorting.png';
+  static const String search = '$_baseIcons/search.png';
+  static const String slider = '$_baseIcons/slider.png';
 }

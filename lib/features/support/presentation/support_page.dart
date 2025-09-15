@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
@@ -11,14 +12,14 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/features/home/presentation/widgets/employe_home_card.dart';
 import 'package:mama_kris/features/home/presentation/widgets/search_field.dart';
 
-class FavoriteTab extends StatefulWidget {
-  const FavoriteTab({super.key});
+class SupportPage extends StatefulWidget {
+  const SupportPage({super.key});
 
   @override
-  State<FavoriteTab> createState() => _FavoriteTabState();
+  State<SupportPage> createState() => _SupportPageState();
 }
 
-class _FavoriteTabState extends State<FavoriteTab> {
+class _SupportPageState extends State<SupportPage> {
   final TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -31,38 +32,69 @@ class _FavoriteTabState extends State<FavoriteTab> {
         centerTitle: false,
         automaticallyImplyLeading: false,
       ),
-      body: Column(
-        children: [
-          // search starts
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              spacing: 16.w,
-              children: [
-                Expanded(
-                  child: SearchField(
-                    controller: _searchController,
-                    onChanged: (value) {
-                      // логика поиска
-                    },
-                  ),
-                ),
-            
-                const CustomImageView(imagePath: MediaRes.btnFilter, width: 64),
-              ],
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFFFF9E3), Color(0xFFCEE5DB)],
           ),
-          // job listing strat shere
-          Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              separatorBuilder: (context, index) => const SizedBox(height: 20),
+        ),
 
-              itemBuilder: (context, index) => const _favJobCard(),
-              itemCount: 10,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.separated(
+                padding: EdgeInsets.zero,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 20),
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Dismissible(
+                      key: ValueKey(index),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        setState(() {
+                          // jobs.removeAt(index);
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Deleted .title}")),
+                        );
+                      },
+
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.delete, color: Colors.white, size: 28),
+
+                            CustomText(
+                              text: "Delete",
+                              style: TextStyle(
+                                color: AppPalette.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      child: const _favJobCard(),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -73,8 +105,12 @@ class _favJobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomShadowContainer(
-      horMargin: 16,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      ),
       child: Column(
         spacing: 10,
         children: [
@@ -194,17 +230,18 @@ class _favJobCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: AppPalette.error
+                        color: AppPalette.error,
                       ),
                     ),
-                    CustomImageView(imagePath: MediaRes.warningCircle, width: 24,
-                        color: AppPalette.error
-                    
+                    CustomImageView(
+                      imagePath: MediaRes.warningCircle,
+                      width: 24,
+                      color: AppPalette.error,
                     ),
                   ],
                 ),
               ),
-             SizedBox(height: MediaQuery.sizeOf(context).height * 0.2,)
+              SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
             ],
           ),
         );

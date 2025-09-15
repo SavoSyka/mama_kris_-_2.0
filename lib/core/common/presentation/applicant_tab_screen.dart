@@ -3,25 +3,27 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/favorite_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/resume_tab.dart';
+import 'package:mama_kris/features/support/presentation/support_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class ApplicantTabScreen extends StatefulWidget {
+  const ApplicantTabScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ApplicantTabScreen> createState() => _ApplicantTabScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    HomeTab(),
+    ApplicantHomePage(),
     ResumeTab(),
-    FavoriteTab(),
+    SupportPage(),
     ProfileTab(),
   ];
 
@@ -47,50 +49,48 @@ class _HomePageState extends State<HomePage> {
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: AppPalette.secondaryColor,
+          selectedItemColor: AppPalette.primaryColor,
           unselectedItemColor: Colors.grey,
           items: [
             BottomNavigationBarItem(
               icon: CustomImageView(
                 imagePath: MediaRes.homeIcon,
-                width: 28,
+                width: 20,
                 color: _selectedIndex == 0
-                    ? AppPalette.secondaryColor
+                    ? AppPalette.primaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.vacancies,
+              label: AppTextContents.home,
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
-                imagePath: MediaRes.resumeIcon,
-                width: 28,
+                imagePath: MediaRes.myOrders,
+                width: 18,
                 color: _selectedIndex == 1
-                    ? AppPalette.secondaryColor
+                    ? AppPalette.primaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.resume,
+              label: AppTextContents.myOrders,
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
-                imagePath: MediaRes.favoriteIcon,
-                width: 28,
+                imagePath: MediaRes.support,
+                width: 22,
                 color: _selectedIndex == 2
-                    ? AppPalette.secondaryColor
+                    ? AppPalette.primaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.favorite,
-
+              label: AppTextContents.support,
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
                 imagePath: MediaRes.profileIcon,
-                width: 28,
+                width: 24,
                 color: _selectedIndex == 3
-                    ? AppPalette.secondaryColor
+                    ? AppPalette.primaryColor
                     : Colors.grey,
               ),
               label: AppTextContents.profile,
-
             ),
           ],
         ),
