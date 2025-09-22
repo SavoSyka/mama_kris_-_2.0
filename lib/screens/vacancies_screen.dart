@@ -20,6 +20,8 @@ int previousVacancyIndex = 0; // добавляем предыдущий инд�
 List<Map<String, dynamic>>? vacancies;
 
 class VacanciesScreen extends StatefulWidget {
+  const VacanciesScreen({super.key});
+
   @override
   _VacanciesScreenState createState() => _VacanciesScreenState();
 }
@@ -82,13 +84,12 @@ class _VacanciesScreenState extends State<VacanciesScreen> {
         : await VacancyService.dislikeVacancy(jobID);
 
     if (!success) {
-      final error = VacancyService.getLastErrorMessage() ?? 'Неизвестная ошибка';
+      final error =
+          VacancyService.getLastErrorMessage() ?? 'Неизвестная ошибка';
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('❗ $error'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('❗ $error')));
       return;
     }
 
@@ -191,7 +192,7 @@ class _VacanciesScreenState extends State<VacanciesScreen> {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -200,7 +201,7 @@ class _VacanciesScreenState extends State<VacanciesScreen> {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,
@@ -418,7 +419,7 @@ class _VacanciesScreenState extends State<VacanciesScreen> {
               left: 16 * scaleX,
               right: 16 * scaleX,
               bottom: 0, // гарантируем ограниченную высоту
-              child: Container(child: VacanciesList()),
+              child: Container(child: const VacanciesList()),
             ),
 
           // Рекламный баннер (показывается только в режиме "Слайдер")

@@ -23,46 +23,44 @@ class _FavoriteTabState extends State<FavoriteTab> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: AppBar(
-        title: const CustomText(
-          text: AppTextContents.favoriteResumes,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-      ),
-      body: Column(
-        children: [
-          // search starts
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              spacing: 16.w,
-              children: [
-                Expanded(
-                  child: SearchField(
-                    controller: _searchController,
-                    onChanged: (value) {
-                      // логика поиска
-                    },
+ 
+      body: SafeArea(
+        child: Column(
+          children: [
+            const CustomText(
+              text: AppTextContents.favoriteResumes,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                spacing: 16.w,
+                children: [
+                  Expanded(
+                    child: SearchField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        // логика поиска
+                      },
+                    ),
                   ),
-                ),
-            
-                const CustomImageView(imagePath: MediaRes.btnFilter, width: 64),
-              ],
+        
+                  const CustomImageView(imagePath: MediaRes.btnFilter, width: 64),
+                ],
+              ),
             ),
-          ),
-          // job listing strat shere
-          Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              separatorBuilder: (context, index) => const SizedBox(height: 20),
-
-              itemBuilder: (context, index) => const _favJobCard(),
-              itemCount: 10,
+            // job listing strat shere
+            Expanded(
+              child: ListView.separated(
+                padding: EdgeInsets.zero,
+                separatorBuilder: (context, index) => const SizedBox(height: 20),
+        
+                itemBuilder: (context, index) => const _favJobCard(),
+                itemCount: 10,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -194,17 +192,18 @@ class _favJobCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: AppPalette.error
+                        color: AppPalette.error,
                       ),
                     ),
-                    CustomImageView(imagePath: MediaRes.warningCircle, width: 24,
-                        color: AppPalette.error
-                    
+                    CustomImageView(
+                      imagePath: MediaRes.warningCircle,
+                      width: 24,
+                      color: AppPalette.error,
                     ),
                   ],
                 ),
               ),
-             SizedBox(height: MediaQuery.sizeOf(context).height * 0.2,)
+              SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
             ],
           ),
         );

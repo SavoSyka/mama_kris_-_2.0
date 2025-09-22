@@ -1,42 +1,59 @@
-part of "auth_bloc.dart";
+import 'package:equatable/equatable.dart';
+import 'package:mama_kris/features/applicant_welcome/domain/entities/user.dart';
 
-abstract class AuthState extends Equatable {
-  const AuthState();
 
+abstract class AuthState extends Equatable {}
+
+class AuthInitial extends AuthState {
   @override
+  // TODO: implement props
   List<Object?> get props => [];
 }
 
-class AuthInitial extends AuthState {}
-
-class AuthLoading extends AuthState {}
-
-class Authenticated extends AuthState {
-  final String userId;
-  final String email;
-
-  const Authenticated({required this.userId, required this.email});
-
+class AuthLoading extends AuthState {
   @override
-  List<Object?> get props => [userId, email];
+  // TODO: implement props
+  List<Object?> get props => [];
 }
 
-class Unauthenticated extends AuthState {}
+class AuthEmailChecked extends AuthState {
+  final bool exists;
+  AuthEmailChecked(this.exists);
+  
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class AuthOtpValidated extends AuthState {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class Authenticated extends AuthState {
+  final User user;
+  Authenticated(this.user);
+  
+  @override
+  // TODO: implement props
+  List<Object?> get props => [user];
+}
 
 class AuthError extends AuthState {
   final String message;
-
-  const AuthError(this.message);
-
+  AuthError(this.message);
+  
   @override
+  // TODO: implement props
   List<Object?> get props => [message];
 }
 
-class PasswordResetSent extends AuthState {
-  final String email;
-
-  const PasswordResetSent(this.email);
-
+class CheckEmailErroState extends AuthState {
+  final String message;
+  CheckEmailErroState(this.message);
+  
   @override
-  List<Object?> get props => [email];
+  // TODO: implement props
+  List<Object?> get props => [message];
 }

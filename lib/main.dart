@@ -1,9 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/lifecycle/lifecycle_manager.dart';
 import 'package:mama_kris/core/services/routes/router.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/applicant_welcome/applications/auth_bloc.dart';
+import 'package:mama_kris/features/employe_welcome/applications/emp_auth_bloc.dart';
+import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mama_kris/screens/main_screen.dart';
 import 'package:mama_kris/screens/welcome_screen.dart';
@@ -13,7 +18,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mama_kris/constants/api_constants.dart';
 import 'package:mama_kris/screens/update_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dependencyInjection();
   runApp(const MyApp());
 }
 
@@ -23,19 +30,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(400, 932),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) {
-          return LifecycleManager(
+      designSize: const Size(400, 932),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => getIt<EmpAuthBloc>()),
+
+            BlocProvider(create: (_) => getIt<AuthBloc>()),
+            BlocProvider(create: (_) => getIt<ForceUpdateBloc>()),
+          ],
+          child: LifecycleManager(
             child: MaterialApp.router(
               debugShowCheckedModeBanner: false,
               routerConfig: AppRouter.router,
               theme: AppTheme.lightTheme,
               // home: const AppInitializer(),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -195,8 +211,10 @@ class _AppInitializerState extends State<AppInitializer> {
   // Функция сравнения версий
   int _compareVersion(String currentVersion, String minRequiredVersion) {
     List<int> currentList = currentVersion.split('.').map(int.parse).toList();
-    List<int> requiredList =
-        minRequiredVersion.split('.').map(int.parse).toList();
+    List<int> requiredList = minRequiredVersion
+        .split('.')
+        .map(int.parse)
+        .toList();
     for (int i = 0; i < 3; i++) {
       int current = i < currentList.length ? currentList[i] : 0;
       int required = i < requiredList.length ? requiredList[i] : 0;

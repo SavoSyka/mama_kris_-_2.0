@@ -23,18 +23,14 @@ class _ResumeTabState extends State<ResumeTab> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: AppBar(
-        title: const CustomText(
-          text: AppTextContents.favoriteResumes,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-      ),
       body: Column(
         children: [
+          const CustomText(
+            text: AppTextContents.favoriteResumes,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+          ),
           // search starts
-        Padding(
+          Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               spacing: 16.w,
@@ -47,13 +43,13 @@ class _ResumeTabState extends State<ResumeTab> {
                     },
                   ),
                 ),
-            
+
                 const CustomImageView(imagePath: MediaRes.btnFilter, width: 64),
               ],
             ),
           ),
 
-          SizedBox(height: 20,),
+          const SizedBox(height: 20),
           // job listing strat shere
           Expanded(
             child: ListView.separated(
@@ -196,17 +192,18 @@ class _favJobCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: AppPalette.error
+                        color: AppPalette.error,
                       ),
                     ),
-                    CustomImageView(imagePath: MediaRes.warningCircle, width: 24,
-                        color: AppPalette.error
-                    
+                    CustomImageView(
+                      imagePath: MediaRes.warningCircle,
+                      width: 24,
+                      color: AppPalette.error,
                     ),
                   ],
                 ),
               ),
-             SizedBox(height: MediaQuery.sizeOf(context).height * 0.2,)
+              SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
             ],
           ),
         );

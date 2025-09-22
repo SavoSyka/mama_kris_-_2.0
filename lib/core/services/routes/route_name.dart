@@ -4,6 +4,8 @@ class RouteName {
   static String initialPage = "/initial-page";
 
   static String welcomePage = "/getStart";
+  static String forceUpdate = "/force-update";
+
   static String welcomeApplicant = "/welcome-applicant";
   static String welcomeEmploye = "/welcome-employe";
 

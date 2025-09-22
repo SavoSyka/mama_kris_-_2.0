@@ -1,61 +1,132 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mama_kris/features/applicant_welcome/domain/usecases/change_password.dart';
+import 'package:mama_kris/features/applicant_welcome/domain/usecases/check_email.dart';
+import 'package:mama_kris/features/applicant_welcome/domain/usecases/forgot_password_usecase.dart';
+import 'package:mama_kris/features/applicant_welcome/domain/usecases/login_applicant.dart';
+import 'package:mama_kris/features/applicant_welcome/domain/usecases/register_applicant.dart';
+import 'package:mama_kris/features/applicant_welcome/domain/usecases/validate_otp.dart';
 
-part "auth_event.dart";
-part "auth_state.dart";
-
+import 'auth_event.dart';
+import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
-    on<LoginRequested>(_onLoginRequested);
-    on<SignupRequested>(_onSignupRequested);
-    on<ForgotPasswordRequested>(_onForgotPasswordRequested);
-    on<LogoutRequested>(_onLogoutRequested);
-  }
+  final CheckEmail checkEmail;
+  final ForgotPasswordUsecase forgotPassword;
+  final ValidateOtp validateOtp;
+  final RegisterApplicant register;
+  final LoginApplicant login;
+  final ChangePassword changePassword;
 
-  Future<void> _onLoginRequested(
-    LoginRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    try {
-      // TODO: call your login API
-      await Future.delayed(const Duration(seconds: 2));
-      emit(Authenticated(userId: "12345", email: event.email));
-    } catch (e) {
-      emit(AuthError("Login failed: ${e.toString()}"));
-    }
-  }
+  AuthBloc({
+    required this.checkEmail,
+    required this.forgotPassword,
+    required this.validateOtp,
+    required this.register,
+    required this.login,
+    required this.changePassword,
+  }) : super(AuthInitial()) {
+    on<CheckEmailEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final exists = await checkEmail(event.email);
+        exists.fold(
+          (failure) {
+            emit(CheckEmailErroState(failure.message));
+          },
+          (success) {
+            emit(AuthEmailChecked(true));
+          },
+        );
+      } catch (e) {
+        emit(CheckEmailErroState(e.toString()));
+      }
+    });
 
-  Future<void> _onSignupRequested(
-    SignupRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    try {
-      // TODO: call your signup API
-      await Future.delayed(const Duration(seconds: 2));
-      emit(Authenticated(userId: "67890", email: event.email));
-    } catch (e) {
-      emit(AuthError("Signup failed: ${e.toString()}"));
-    }
-  }
+    on<ForgotPasswordEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final exists = await forgotPassword(event.email);
+        exists.fold(
+          (failure) {
+            emit(CheckEmailErroState(failure.message));
+          },
+          (success) {
+            emit(AuthEmailChecked(true));
+          },
+        );
+      } catch (e) {
+        emit(CheckEmailErroState(e.toString()));
+      }
+    });
 
-  Future<void> _onForgotPasswordRequested(
-    ForgotPasswordRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    try {
-      // TODO: call your forgot password API
-      await Future.delayed(const Duration(seconds: 1));
-      emit(PasswordResetSent(event.email));
-    } catch (e) {
-      emit(AuthError("Reset password failed: ${e.toString()}"));
-    }
-  }
+    on<ValidateOtpEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final valid = await validateOtp(event.email, event.otp);
 
-  void _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) {
-    emit(Unauthenticated());
+        valid.fold(
+          (failure) {
+            emit(AuthError(failure.message));
+          },
+          (success) {
+            emit(AuthEmailChecked(true));
+          },
+        );
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    on<RegisterEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final user = await register(event.email, event.name, event.password);
+
+        user.fold(
+          (failure) {
+            emit(AuthError(failure.message));
+          },
+          (success) {
+            emit(Authenticated(success));
+          },
+        );
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    on<LoginEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final user = await login(event.email, event.password);
+        user.fold(
+          (failure) {
+            emit(AuthError(failure.message));
+          },
+          (success) {
+            emit(Authenticated(success));
+          },
+        );
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    on<ChangePasswordEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final user = await changePassword(event.password);
+        user.fold(
+          (failure) {
+            emit(AuthError(failure.message));
+          },
+          (success) {
+            emit(Authenticated(success));
+          },
+        );
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
   }
 }

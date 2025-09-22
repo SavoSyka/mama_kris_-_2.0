@@ -1,3 +1,7 @@
+
+
+
+
 class AppTextContents {
   AppTextContents._();
 
@@ -74,20 +78,33 @@ class AppTextContents {
 
   static const passwordRequired = 'Пароль обязателен';
   static const passwordTooShort = 'Пароль должен содержать не менее 6 символов';
+  static const forgotPassword = 'Forgot password';
 
   // applicant home page.
   static const slider = 'Слайдер';
   static const list = 'Список';
   static const home = 'Дом';
+
+  static const updateRequired = 'Update Required';
+  static const updateNow = 'Update Now';
+  static const updateDescription =
+      'A new version of the app is available! To continue using all features and ensure the best experience, please update to the latest version.';
+  static const edit = "редактировать";
 }
 
+
 /*
+
+
 class AppTextContents {
   AppTextContents._();
 
   static const welcomeDescription = 'Зарабатывайте на удалёнке';
   static const welcomeOption1 = 'Ищу удаленную работу';
   static const welcomeOption2 = 'Ищу сотрудника';
+
+static const register = "Регистрация";
+static const login = "Вход";
 
   // job
 
@@ -123,6 +140,10 @@ class AppTextContents {
   static const password = 'Пароль';
 
   //home screen
+    // applicant home page.
+  static const slider = 'Слайдер';
+  static const list = 'Список';
+  static const home = 'Дом';
 
   static const whoAreULooking = 'Кого ищете?';
   static const profession = 'Специальность';
@@ -146,6 +167,8 @@ class AppTextContents {
   static const myOrders = 'Мои заказы';
   static const support = 'Поддержка';
 
+static const forgotPassword = 'Забыли пароль';
+
   static const notInterested = 'Неинтересно';
   static const interested = 'Интересно';
 
@@ -160,6 +183,16 @@ class AppTextContents {
   static const passwordTooShort = 'Пароль должен содержать не менее 6 символов';
 
 
+static const updateRequired = 'Требуется обновление';
+static const updateNow = 'Обновить сейчас';
+static const updateDescription =
+    'Доступна новая версия приложения! Чтобы продолжить пользоваться всеми функциями и обеспечить лучший опыт, пожалуйста, обновите приложение до последней версии.';
+
+
+static const edit = 'edit';
+
 }
 
 */
+
+

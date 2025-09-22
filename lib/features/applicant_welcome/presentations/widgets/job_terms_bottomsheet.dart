@@ -1,11 +1,15 @@
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_text_button.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_text_button.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/constants/app_constants.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 
 /// Returns true if user accepts both Privacy & Terms, otherwise false.
@@ -14,13 +18,16 @@ import 'package:mama_kris/core/common/widgets/buttons/custom_text_button.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
+import 'package:mama_kris/core/utils/handle_launch_url.dart';
 
 /// Returns true if user accepts both Privacy & Terms, otherwise false.
-Future<bool> jobTermsBottomSheet(BuildContext context, bool privacyAccepted,
-    bool termsAccepted, VoidCallback onAgree,
-    
-    [bool isSecondaryPrimary = false] 
-    ) async {
+Future<bool> jobTermsBottomSheet(
+  BuildContext context,
+  bool privacyAccepted,
+  bool termsAccepted,
+  VoidCallback onAgree, [
+  bool isSecondaryPrimary = false,
+]) async {
   // local state for checkboxes
   privacyAccepted = false;
   termsAccepted = false;
@@ -41,7 +48,11 @@ Future<bool> jobTermsBottomSheet(BuildContext context, bool privacyAccepted,
           builder: (context, setState) {
             return Container(
               padding: const EdgeInsets.only(
-                  top: 40, bottom: 10, left: 20, right: 20),
+                top: 40,
+                bottom: 10,
+                left: 20,
+                right: 20,
+              ),
               color: Colors.white,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -49,10 +60,7 @@ Future<bool> jobTermsBottomSheet(BuildContext context, bool privacyAccepted,
                 children: [
                   const CustomText(
                     text: AppTextContents.privacyACceppt,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   const SizedBox(height: 16),
                   const CustomText(
@@ -67,60 +75,110 @@ Future<bool> jobTermsBottomSheet(BuildContext context, bool privacyAccepted,
                     children: [
                       Checkbox(
                         value: termsAccepted,
-                        activeColor: isSecondaryPrimary ? AppPalette.secondaryColor: AppPalette.primaryColor,
+                        activeColor: isSecondaryPrimary
+                            ? AppPalette.secondaryColor
+                            : AppPalette.primaryColor,
                         onChanged: (val) {
                           setState(() => termsAccepted = val ?? false);
+                          if (privacyAccepted && termsAccepted) {
+                            debugPrint("s");
+                            Navigator.pop(context);
+                            onAgree();
+                          }
                         },
                       ),
                       Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            debugPrint("chec");
-                            setState(() => termsAccepted = !termsAccepted);
-                          },
-                          child: const CustomText(
-                            text: AppTextContents.privacyACceppt,
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Я принимаю условия ',
+                                style: GoogleFonts.outfit(fontSize: 14.sp),
+                              ),
+                              TextSpan(
+                                text: 'Политики конфиденциальности',
+                                style: GoogleFonts.outfit(
+                                  color: isSecondaryPrimary
+                                      ? AppPalette.secondaryColor
+                                      : AppPalette.primaryColor,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    HandleLaunchUrl.launchUrls(
+                                      context,
+                                      url: AppConstants.privacyAgreement,
+                                    );
+                                  },
+                              ),
+
+                              TextSpan(
+                                text:
+                                    " и даю согласие  на обработку моих персональных данных  в соответствии с законодательством",
+
+                                style: GoogleFonts.outfit(fontSize: 14.sp),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 10),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Checkbox(
-                        activeColor: isSecondaryPrimary ? AppPalette.secondaryColor: AppPalette.primaryColor,
+                        activeColor: isSecondaryPrimary
+                            ? AppPalette.secondaryColor
+                            : AppPalette.primaryColor,
 
                         value: privacyAccepted,
                         onChanged: (val) {
-                          if(termsAccepted)
                           setState(() => privacyAccepted = val ?? false);
+
+                          if (privacyAccepted && termsAccepted) {
+                            debugPrint("s");
+                            Navigator.pop(context);
+                            onAgree();
+                          }
                         },
                       ),
-                      Expanded(
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            debugPrint("chec");
-                            setState(() => privacyAccepted = !privacyAccepted);
 
-                            if (privacyAccepted && termsAccepted) {
-                              debugPrint("s");
-                              Navigator.pop(context);
-                              onAgree();
-                            }
-                          },
-                          child: const CustomText(
-                            text: AppTextContents.privacyAgree,
+                      Expanded(
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Я соглашаюсь с ',
+                                style: GoogleFonts.outfit(fontSize: 14.sp),
+                              ),
+                              TextSpan(
+                                text: 'Условиями использования',
+                                style: GoogleFonts.outfit(
+                                  color: isSecondaryPrimary
+                                      ? AppPalette.secondaryColor
+                                      : AppPalette.primaryColor,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    HandleLaunchUrl.launchUrls(
+                                      context,
+                                      url: AppConstants.termsAgreement,
+                                    );
+                                  },
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
 
-                  const SizedBox(
-                    height: 70,
-                  )
+                  const SizedBox(height: 70),
                 ],
               ),
             );

@@ -5,7 +5,7 @@ final List<RouteBase> employeRoutes = [
     path: RouteName.welcomeEmploye,
     name: RouteName.welcomeEmploye,
     builder: (BuildContext context, GoRouterState state) {
-      return const WelcomeEmployeesPage();
+      return const WelcomeEmployePage();
     },
   ),
 

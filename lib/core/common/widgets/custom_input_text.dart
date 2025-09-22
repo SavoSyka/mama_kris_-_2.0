@@ -10,7 +10,11 @@ class CustomInputText extends StatefulWidget {
   final bool autoFocus;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final Widget? prefixIcon;
   final void Function()? onTap;
+  final int minLines;
+  final int maxLines;
+
   const CustomInputText({
     super.key,
     required this.hintText,
@@ -21,6 +25,10 @@ class CustomInputText extends StatefulWidget {
     this.keyboardType,
     this.onTap,
     this.validator,
+    this.prefixIcon, 
+     this.minLines=1,
+     this.maxLines=1,
+
   });
 
   @override
@@ -41,11 +49,14 @@ class _CustomInputTextState extends State<CustomInputText> {
     });
   }
 
+  // all gredient,
+  // nature
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      obscureText: widget.obscureText,
+      obscureText: widget.obscureText && !_showPassword,
       readOnly: widget.readOnly,
       autofocus: widget.autoFocus,
       keyboardType: widget.keyboardType,
@@ -54,8 +65,13 @@ class _CustomInputTextState extends State<CustomInputText> {
       onTapOutside: (val) {
         FocusScope.of(context).unfocus();
       },
+      minLines: widget.minLines,
+      maxLines: widget.maxLines,
+
       onTap: widget.onTap,
       decoration: InputDecoration(
+        
+        prefixIcon: widget.prefixIcon,
         suffixIcon: widget.obscureText
             ? IconButton(
                 icon: Icon(

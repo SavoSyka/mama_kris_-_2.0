@@ -3,6 +3,8 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/features/employe_home/presentation/employe_home_page.dart';
+import 'package:mama_kris/features/employe_profile/presentation/pages/employe_profile_page.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/favorite_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
@@ -19,10 +21,10 @@ class _EmployeTabScreenState extends State<EmployeTabScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    HomeTab(),
+    EmployeHomePage(),
     ResumeTab(),
     FavoriteTab(),
-    ProfileTab(),
+    EmployeProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -44,6 +46,7 @@ class _EmployeTabScreenState extends State<EmployeTabScreen> {
           child: IndexedStack(index: _selectedIndex, children: _pages),
         ),
         bottomNavigationBar: BottomNavigationBar(
+          
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,

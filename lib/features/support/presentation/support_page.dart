@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
@@ -6,6 +9,7 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_shadow_container.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/common/widgets/entity/job_model.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
@@ -21,17 +25,34 @@ class SupportPage extends StatefulWidget {
 
 class _SupportPageState extends State<SupportPage> {
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadJobs();
+  }
+
+  List<JobModel> _allJobs = [];
+
+  Future<void> loadJobs() async {
+    final String jsonString = await rootBundle.loadString(
+      'assets/json/job.json',
+    );
+    final List<dynamic> jsonData = json.decode(jsonString);
+    setState(() {
+      _allJobs = jsonData.map((e) => JobModel.fromJson(e)).toList();
+    });
+
+    debugPrint("Jobs");
+  }
+
+  List<JobModel> get filteredJobs {
+    return _allJobs;
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: AppBar(
-        title: const CustomText(
-          text: AppTextContents.favoriteResumes,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -39,61 +60,73 @@ class _SupportPageState extends State<SupportPage> {
           ),
         ),
 
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.zero,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 20),
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Dismissible(
-                      key: ValueKey(index),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) {
-                        setState(() {
-                          // jobs.removeAt(index);
-                        });
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Deleted .title}")),
-                        );
-                      },
-
-                      background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Icon(Icons.delete, color: Colors.white, size: 28),
-
-                            CustomText(
-                              text: "Delete",
-                              style: TextStyle(
-                                color: AppPalette.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      child: const _favJobCard(),
-                    ),
-                  );
-                },
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: CustomText(
+                  text: AppTextContents.favoriteResumes,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView.separated(
+                  padding: EdgeInsets.zero,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 20),
+                  itemCount: filteredJobs.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Dismissible(
+                        key: ValueKey(filteredJobs[index].id),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          setState(() {
+                            filteredJobs.removeAt(index);
+                            // jobs.removeAt(index);
+                          });
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Deleted}")),
+                          );
+                        },
+
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(Icons.delete, color: Colors.white, size: 28),
+
+                              CustomText(
+                                text: "Delete",
+                                style: TextStyle(
+                                  color: AppPalette.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        child: const _favJobCard(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

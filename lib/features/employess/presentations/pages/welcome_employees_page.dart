@@ -12,10 +12,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
-import 'package:mama_kris/features/applicant_welcome/presentations/widgets/email_bottomsheet.dart';
 import 'package:mama_kris/features/applicant_welcome/presentations/widgets/job_terms_bottomsheet.dart';
-import 'package:mama_kris/features/applicant_welcome/presentations/widgets/name_bottomsheet.dart';
-import 'package:mama_kris/features/applicant_welcome/presentations/widgets/password_bottomsheet.dart';
 
 class WelcomeEmployeesPage extends StatefulWidget {
   const WelcomeEmployeesPage({super.key});
@@ -70,16 +67,16 @@ class _WelcomeEmployeesPageState extends State<WelcomeEmployeesPage> {
                         // Handle navigation based on option
                         if (option == _WelcomeOption.register) {
                           jobTermsBottomSheet(context, false, false, () {
-                            nameBottomSheet(context, () {
-                              Navigator.pop(context);
-                              emailBottomSheet(context, () {
-                                Navigator.pop(context);
-                                passwordBottomsheet(context, () {
-                                  Navigator.pop(context);
-                                  context.goNamed(RouteName.employesHome);
-                                },true);
-                              },true);
-                            }, true);
+                            // nameBottomSheet(context, () {
+                            //   Navigator.pop(context);
+                            //   emailBottomSheet(context, () {
+                            //     Navigator.pop(context);
+                            //     passwordBottomsheet(context, () {
+                            //       Navigator.pop(context);
+                            //       context.goNamed(RouteName.employesHome);
+                            //     },true);
+                            //   },true);
+                            // }, true);
                           }, true);
                         } else {
                           jobTermsBottomSheet(context, false, false, () {});

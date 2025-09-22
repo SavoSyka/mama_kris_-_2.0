@@ -4,6 +4,8 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
+import 'package:mama_kris/features/applicant_orders/presentations/pages/my_orders_page.dart';
+import 'package:mama_kris/features/applicant_profile/presentation/pages/applicant_profile_page.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/favorite_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
@@ -22,9 +24,8 @@ class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
 
   final List<Widget> _pages = const [
     ApplicantHomePage(),
-    ResumeTab(),
-    SupportPage(),
-    ProfileTab(),
+    MyOrdersPage(),
+    ApplicantProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -43,6 +44,7 @@ class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
       ),
       child: Scaffold(
         body: SafeArea(
+          top: false,
           child: IndexedStack(index: _selectedIndex, children: _pages),
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -72,21 +74,12 @@ class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
               ),
               label: AppTextContents.myOrders,
             ),
-            BottomNavigationBarItem(
-              icon: CustomImageView(
-                imagePath: MediaRes.support,
-                width: 22,
-                color: _selectedIndex == 2
-                    ? AppPalette.primaryColor
-                    : Colors.grey,
-              ),
-              label: AppTextContents.support,
-            ),
+
             BottomNavigationBarItem(
               icon: CustomImageView(
                 imagePath: MediaRes.profileIcon,
                 width: 24,
-                color: _selectedIndex == 3
+                color: _selectedIndex == 2
                     ? AppPalette.primaryColor
                     : Colors.grey,
               ),

@@ -33,4 +33,11 @@ class MediaRes {
   static const String btnSorting = '$_baseIcons/btn_sorting.png';
   static const String search = '$_baseIcons/search.png';
   static const String slider = '$_baseIcons/slider.png';
+
+  static const String forceUpdate = '$_baseIcons/force_update.png';
+  static const String whatsapp = '$_baseIcons/whatsapp.png';
+
+  static const String deleteIcon = '$_baseIcons/delete_icon.png';
+
+
 }

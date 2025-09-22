@@ -13,7 +13,7 @@ final List<RouteBase> jobRoutes = [
     path: RouteName.applicantHome,
     name: RouteName.applicantHome,
     builder: (BuildContext context, GoRouterState state) {
-      return const ApplicantTabScreen();
+      return const MainScreen();
     },
   ),
 ];

@@ -11,11 +11,9 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
-import 'package:mama_kris/features/applicant_welcome/presentations/widgets/applicant_welcome_bottomsheet.dart';
-import 'package:mama_kris/features/applicant_welcome/presentations/widgets/email_bottomsheet.dart';
+import 'package:mama_kris/features/applicant_welcome/presentations/widgets/applicant_auth_bottomsheet.dart';
+
 import 'package:mama_kris/features/applicant_welcome/presentations/widgets/job_terms_bottomsheet.dart';
-import 'package:mama_kris/features/applicant_welcome/presentations/widgets/name_bottomsheet.dart';
-import 'package:mama_kris/features/applicant_welcome/presentations/widgets/password_bottomsheet.dart';
 
 class WelcomeJobPage extends StatefulWidget {
   const WelcomeJobPage({super.key});
@@ -32,9 +30,6 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
     // TODO: implement initState
     super.initState();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -85,22 +80,15 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
                           // Handle navigation based on option
                           if (option == _WelcomeOption.register) {
                             jobTermsBottomSheet(context, false, false, () {
-                              nameBottomSheet(context, () {
-                                Navigator.pop(context);
-                                emailBottomSheet(context, () {
-                                  Navigator.pop(context);
-                                  passwordBottomsheet(context, () {
-                                    Navigator.pop(context);
-                                    context.goNamed(RouteName.applicantHome);
-                                  });
-                                });
-                              });
+                              ApplicantAuthBottomsheet.emailBottomSheet(
+                                context,
+                              );
                             });
                             // jobTermsBottomSheet(context, false, false, () {});
                           } else {
-                            ApplicantWelcomeBottomsheet.loginBottomSheet(
+                            ApplicantAuthBottomsheet.loginBottomSheet(
                               context,
-                            
+
                               onNext: () {
                                 context.goNamed(RouteName.applicantHome);
                               },

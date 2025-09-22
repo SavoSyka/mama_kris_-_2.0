@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_primary_button.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
@@ -7,6 +9,7 @@ import 'package:mama_kris/core/common/widgets/custom_shadow_container.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/features/home/presentation/widgets/employe_home_card.dart';
 
 class ProfileTab extends StatelessWidget {
@@ -25,19 +28,17 @@ class ProfileTab extends StatelessWidget {
 
         actions: const [
           InkWell(
-            child: 
-            CustomImageView(imagePath: MediaRes.btnFilter, width: 64),
-
+            child: CustomImageView(imagePath: MediaRes.btnFilter, width: 64),
           ),
         ],
       ),
 
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: CustomDefaultPadding(
           child: Column(
             spacing: 20,
             children: [
-              CustomShadowContainer(
+              const CustomShadowContainer(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -49,12 +50,11 @@ class ProfileTab extends StatelessWidget {
                       ),
                     ),
                     CustomImageView(imagePath: MediaRes.editBtn, width: 24),
-                
                   ],
                 ),
               ),
 
-              CustomShadowContainer(
+              const CustomShadowContainer(
                 child: Column(
                   spacing: 16,
                   children: [
@@ -85,7 +85,7 @@ class ProfileTab extends StatelessWidget {
                 ),
               ),
 
-              CustomShadowContainer(
+              const CustomShadowContainer(
                 child: Column(
                   spacing: 16,
 
@@ -117,12 +117,11 @@ class ProfileTab extends StatelessWidget {
                 ),
               ),
 
-              CustomShadowContainer(
+              const CustomShadowContainer(
                 child: Column(
                   spacing: 16,
 
                   children: [
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -144,6 +143,15 @@ class ProfileTab extends StatelessWidget {
                   ],
                 ),
               ),
+
+              CustomPrimaryButton(
+                btnText: "Выход",
+                onTap: () {
+                  context.goNamed(RouteName.welcomePage);
+                },
+              ),
+
+              const SizedBox(height: 32),
             ],
           ),
         ),

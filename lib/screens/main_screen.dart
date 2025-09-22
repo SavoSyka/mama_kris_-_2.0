@@ -14,9 +14,11 @@ class MainScreen extends StatefulWidget {
   final int initialIndex;
   final bool showChangeDialog;
 
-  const MainScreen(
-      {Key? key, this.initialIndex = 0, this.showChangeDialog = false})
-      : super(key: key);
+  const MainScreen({
+    super.key,
+    this.initialIndex = 0,
+    this.showChangeDialog = false,
+  });
 
   @override
   State<MainScreen> createState() => MainScreenState();
@@ -59,17 +61,17 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     setState(() {
       if (currentPage == 'job') {
         _screens = [
-          OrderScreen(),
-          JobListScreen(),
-          ChatScreen(),
-          ProfileScreen(),
+          const OrderScreen(),
+          const JobListScreen(),
+          const ChatScreen(),
+          const ProfileScreen(),
         ];
       } else {
         _screens = [
           VacanciesScreen(),
-          FavoriteScreen(),
-          ChatScreen(),
-          ProfileScreen(),
+          const FavoriteScreen(),
+          const ChatScreen(),
+          const ProfileScreen(),
         ];
       }
 
@@ -80,19 +82,29 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   void _updateAnimations() {
-    _slideOutAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: _slideDirection == 1 ? const Offset(-1, 0) : const Offset(1, 0),
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    _slideOutAnimation =
+        Tween<Offset>(
+          begin: Offset.zero,
+          end: _slideDirection == 1 ? const Offset(-1, 0) : const Offset(1, 0),
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeInOut,
+          ),
+        );
 
-    _slideInAnimation = Tween<Offset>(
-      begin: _slideDirection == 1 ? const Offset(1, 0) : const Offset(-1, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    _slideInAnimation =
+        Tween<Offset>(
+          begin: _slideDirection == 1
+              ? const Offset(1, 0)
+              : const Offset(-1, 0),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeInOut,
+          ),
+        );
   }
 
   void onItemTapped(int index) {
@@ -134,15 +146,18 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     required double scaleY,
   }) {
     bool isActive = (_navigationStack.last == index);
-    Color textColor =
-        isActive ? const Color(0xFF00A80E) : const Color(0xFF979AA0);
+    Color textColor = isActive
+        ? const Color(0xFF00A80E)
+        : const Color(0xFF979AA0);
     String iconPath = isActive ? activeIconPath : inactiveIconPath;
 
     return GestureDetector(
       onTap: () => onItemTapped(index),
       behavior: HitTestBehavior.translucent, // важно!
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16), // увеличиваем хитбокс
+        padding: const EdgeInsets.symmetric(
+          vertical: 16,
+        ), // увеличиваем хитбокс
         alignment: Alignment.center,
         width: 105 * scaleX,
         child: Column(
@@ -170,7 +185,6 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         ),
       ),
     );
-
   }
 
   @override
@@ -183,7 +197,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     // Если _screens еще не загружены, показываем индикатор загрузки
     if (_screens == null) {
-      return Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -216,6 +230,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+
               _buildNavItem(
                 label: "Главная",
                 inactiveIconPath: "assets/bottom_bar/inactive/home.svg",
@@ -224,6 +239,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 scaleX: scaleX,
                 scaleY: scaleY,
               ),
+
               _buildNavItem(
                 label: "Мои заказы",
                 inactiveIconPath: "assets/bottom_bar/inactive/orders.svg",
@@ -232,6 +248,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 scaleX: scaleX,
                 scaleY: scaleY,
               ),
+              
               _buildNavItem(
                 label: "Поддержка",
                 inactiveIconPath: "assets/bottom_bar/inactive/chat.svg",
