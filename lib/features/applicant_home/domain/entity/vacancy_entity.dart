@@ -12,16 +12,16 @@ class VacancyEntity extends Equatable {
 }
 
 class Job extends Equatable {
-  int? jobID;
-  int? userID;
-  String? description;
-  String? dateTime;
-  String? salary;
-  String? status;
-  String? title;
-  int? contactsID;
+ final int? jobID;
+  final int? userID;
+  final  String? description;
+  final String? dateTime;
+ final String? salary;
+ final String? status;
+ final String? title;
+ final int? contactsID;
 
-  Job({
+  const Job({
     this.jobID,
     this.userID,
     this.description,
