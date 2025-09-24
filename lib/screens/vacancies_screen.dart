@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/widgets/vacancies_slider.dart';
 import 'package:mama_kris/widgets/vacancies_banner.dart';
 import 'package:mama_kris/screens/contacts_sheet.dart';
@@ -370,26 +372,34 @@ class _VacanciesScreenState extends State<VacanciesScreen> {
                 child: vacancies!.isEmpty
                     ? NoMoreVacanciesCard(
                         onGoToProfile: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            PageRouteBuilder(
-                              transitionDuration: const Duration(
-                                milliseconds: 300,
-                              ),
-                              pageBuilder: (_, animation, __) =>
-                                  const MainScreen(initialIndex: 3),
-                              transitionsBuilder: (_, animation, __, child) {
-                                final tween = Tween(
-                                  begin: const Offset(1.0, 0.0),
-                                  end: Offset.zero,
-                                ).chain(CurveTween(curve: Curves.easeInOut));
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                            ),
-                            (_) => false,
+                          debugPrint("pressed");
+                          context.goNamed(
+                            RouteName.applicantHome,
+                            extra: {'page': 3},
                           );
+                          debugPrint("pressed after");
+
+
+                          // Navigator.of(context).pushAndRemoveUntil(
+                          //   PageRouteBuilder(
+                          //     transitionDuration: const Duration(
+                          //       milliseconds: 300,
+                          //     ),
+                          //     pageBuilder: (_, animation, __) =>
+                          //         const MainScreen(initialIndex: 3),
+                          //     transitionsBuilder: (_, animation, __, child) {
+                          //       final tween = Tween(
+                          //         begin: const Offset(1.0, 0.0),
+                          //         end: Offset.zero,
+                          //       ).chain(CurveTween(curve: Curves.easeInOut));
+                          //       return SlideTransition(
+                          //         position: animation.drive(tween),
+                          //         child: child,
+                          //       );
+                          //     },
+                          //   ),
+                          //   (_) => false,
+                          // );
                         },
                       )
                     : VacanciesSlider(
@@ -411,9 +421,13 @@ class _VacanciesScreenState extends State<VacanciesScreen> {
                         },
                       ),
               ),
-            )
+            ),
+
           // ======= Режим "Список" =======
+          /*
           else
+
+
             Positioned(
               top: 196 * scaleY,
               left: 16 * scaleX,
@@ -430,6 +444,7 @@ class _VacanciesScreenState extends State<VacanciesScreen> {
               left: 16 * scaleX,
               child: const VacanciesBanner(),
             ),
+    */
         ],
       ),
     );

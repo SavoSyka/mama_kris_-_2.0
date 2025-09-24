@@ -11,7 +11,6 @@ class VacancyService {
 
   static String? getLastErrorMessage() => _lastErrorMessage;
 
-
   /// Существующие функции не изменяются:
   static Future<List<Map<String, dynamic>>> loadCachedVacancies() async {
     final prefs = await SharedPreferences.getInstance();
@@ -45,21 +44,27 @@ class VacancyService {
     if (_isFetching) return [];
     _isFetching = true;
 
+    debugPrint("Fetching cvacony 000 ");
+
     final prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('auth_token');
-    final userId = prefs.getInt('user_id');
+    final userId = prefs.getString('user_id');
+
+    debugPrint("Fetching cvacony 000  $accessToken $userId ");
 
     if (accessToken == null || userId == null) {
       _isFetching = false;
       return [];
     }
 
+    debugPrint("Fetching cvacony1");
     try {
       final spheresResponse = await http.get(
         Uri.parse('${kBaseUrl}user-preferences/$userId'),
         headers: {'Authorization': 'Bearer $accessToken'},
       );
 
+      debugPrint("spheresResponse.statusCode ${spheresResponse.statusCode}");
       if (spheresResponse.statusCode == 401) {
         final refreshed = await funcs.refreshAccessToken();
         _isFetching = false;
@@ -72,6 +77,7 @@ class VacancyService {
         return [];
       }
 
+      debugPrint("spheresResponse.body ${spheresResponse.body}");
       final sphereIds = List<int>.from(jsonDecode(spheresResponse.body));
       final sphereParam = sphereIds.join(',');
 
@@ -96,9 +102,7 @@ class VacancyService {
         if (append) {
           final existing = await loadCachedVacancies();
           final newOnes = jobs
-              .where(
-                (job) => !existing.any((e) => e['jobID'] == job['jobID']),
-              )
+              .where((job) => !existing.any((e) => e['jobID'] == job['jobID']))
               .toList();
           final updated = [...existing, ...newOnes];
           await saveCachedVacancies(updated);
@@ -146,8 +150,9 @@ class VacancyService {
   ) async {
     final prefs = await SharedPreferences.getInstance();
     final reduced = jobs.map((job) => _reduceVacancyForCache(job)).toList();
-    final limited =
-        reduced.length > 100 ? reduced.sublist(reduced.length - 100) : reduced;
+    final limited = reduced.length > 100
+        ? reduced.sublist(reduced.length - 100)
+        : reduced;
     await prefs.setString('saved_reduced_jobs', jsonEncode(limited));
   }
 
@@ -167,8 +172,9 @@ class VacancyService {
     List<Map<String, dynamic>> newJobs,
   ) async {
     final existing = await loadCachedVacanciesReduced();
-    final reducedNewJobs =
-        newJobs.map((job) => _reduceVacancyForCache(job)).toList();
+    final reducedNewJobs = newJobs
+        .map((job) => _reduceVacancyForCache(job))
+        .toList();
     final combined = [...existing, ...reducedNewJobs];
     final limited = combined.length > 100
         ? combined.sublist(combined.length - 100)

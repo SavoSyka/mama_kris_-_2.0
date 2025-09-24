@@ -94,10 +94,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       final accessToken = data['accessToken'] as String? ?? '';
       final refreshToken = data['refreshToken'] as String? ?? '';
+      final userId = data['userId'].toString();
 
       await local.saveUserType(true);
       await local.saveToken(accessToken);
       await local.saveRefreshToken(refreshToken);
+      await local.saveUserId(userId);
 
       final user = UserModel(id: "id", email: "email", name: "name");
 

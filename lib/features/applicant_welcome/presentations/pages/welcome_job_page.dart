@@ -12,7 +12,6 @@ import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/features/applicant_welcome/presentations/widgets/applicant_auth_bottomsheet.dart';
-
 import 'package:mama_kris/features/applicant_welcome/presentations/widgets/job_terms_bottomsheet.dart';
 
 class WelcomeJobPage extends StatefulWidget {
@@ -23,18 +22,11 @@ class WelcomeJobPage extends StatefulWidget {
 }
 
 class _WelcomeJobPageState extends State<WelcomeJobPage> {
-  final options = [_WelcomeOption.register, _WelcomeOption.login];
-  final selectedOption = _WelcomeOption.register;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  final options = [WelcomeOption.register, WelcomeOption.login];
+  WelcomeOption selectedOption = WelcomeOption.register;
 
   @override
   Widget build(BuildContext context) {
-    // Example usage of enum
-
     return CustomScaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -51,16 +43,13 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 32),
-
                 const Center(
                   child: CustomImageView(
                     imagePath: MediaRes.illustrationWelcome,
                     width: 286,
                   ),
                 ),
-
                 SizedBox(height: 60.h),
-
                 CustomText(
                   text: AppTextContents.welcomeJob,
                   style: GoogleFonts.manrope(
@@ -69,7 +58,6 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
                   ),
                 ),
                 SizedBox(height: 20.h),
-
                 Column(
                   children: options.map((option) {
                     return Padding(
@@ -77,34 +65,20 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
                       child: CustomActionButton(
                         isSecondary: selectedOption != option,
                         onTap: () {
-                          // Handle navigation based on option
-                          if (option == _WelcomeOption.register) {
-                            jobTermsBottomSheet(context, false, false, () {
-                              ApplicantAuthBottomsheet.emailBottomSheet(
-                                context,
-                              );
-                            });
-                            // jobTermsBottomSheet(context, false, false, () {});
-                          } else {
-                            ApplicantAuthBottomsheet.loginBottomSheet(
-                              context,
-
-                              onNext: () {
-                                context.goNamed(RouteName.applicantHome);
-                              },
-                            );
-                            // jobTermsBottomSheet(context, false, false, () {});
-
-                            // context.pushNamed(RouteName.welcomeEmploye);
-                          }
+                          setState(() {
+                            selectedOption = option;
+                          });
+                          WelcomeOptionHandler.handleWelcomeOption(
+                            context: context,
+                            option: option,
+                            showTerms: option == WelcomeOption.register,
+                          );
                         },
                         btnText: option.displayText,
                       ),
                     );
                   }).toList(),
                 ),
-
-                // Option buttons can be dynamically generated using enum
               ],
             ),
           ),
@@ -112,58 +86,59 @@ class _WelcomeJobPageState extends State<WelcomeJobPage> {
       ),
     );
   }
+}
 
-  Future<bool> _onNext(BuildContext context) async {
-    final result = await showModalBottomSheet<bool>(
-      context: context,
-      isDismissible: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CustomText(
-                text: "😎 Мы работаем над этим!",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              const CustomText(
-                text:
-                    "Эта функция будет доступна в следующем обновлении.\nСледите за новостями!",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: CustomTextButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  text: 'Назад',
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+enum WelcomeOption { register, login }
 
-    return result ?? false;
+class WelcomeOptionHandler {
+  static void handleWelcomeOption({
+    required BuildContext context,
+    required WelcomeOption option,
+    bool showTerms = true,
+  }) {
+    if (showTerms) {
+      // Show terms and conditions before proceeding
+      JobTermsBottomSheet.showJobTermsBottomSheet(
+        context,
+        isSecondaryPrimary: false,
+        onAgree: () {
+          _navigateToAuthBottomSheet(context, option);
+        },
+      );
+    } else {
+      // Skip terms and go directly to auth bottom sheet
+      _navigateToAuthBottomSheet(context, option);
+    }
+  }
+
+  static void _navigateToAuthBottomSheet(
+    BuildContext context,
+    WelcomeOption option,
+  ) {
+    if (option == WelcomeOption.register) {
+      ApplicantAuthBottomSheet.emailBottomSheet(
+        context,
+        isSecondaryPrimary: false,
+        isForgotPassword: false,
+      );
+    } else {
+      ApplicantAuthBottomSheet.loginBottomSheet(
+        context,
+        onNext: () {
+          context.goNamed(RouteName.applicantHome);
+          // Navigation to applicantHome is handled by AuthBottomSheetListener
+        },
+      );
+    }
   }
 }
 
-enum _WelcomeOption { register, login }
-
-extension _WelcomeOptionExtension on _WelcomeOption {
+extension WelcomeOptionExtension on WelcomeOption {
   String get displayText {
     switch (this) {
-      case _WelcomeOption.register:
+      case WelcomeOption.register:
         return AppTextContents.register;
-      case _WelcomeOption.login:
+      case WelcomeOption.login:
         return AppTextContents.login;
     }
   }

@@ -5,6 +5,7 @@ import 'package:mama_kris/core/common/presentation/applicant_tab_screen.dart';
 import 'package:mama_kris/core/common/presentation/employe_tab_screen.dart';
 import 'package:mama_kris/core/services/routes/global_navigator_key.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
 import 'package:mama_kris/features/employe_welcome/presentations/pages/welcome_employe_page.dart';
 import 'package:mama_kris/features/employess/presentations/pages/welcome_employees_page.dart';

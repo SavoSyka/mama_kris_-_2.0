@@ -369,6 +369,154 @@ class ApplicantProfileBottomsheet {
     return result;
   }
 
+  static Future<String?> changePassword(
+    BuildContext context, {
+
+    required VoidCallback onNext,
+    required TextEditingController oldPassword,
+    required TextEditingController newPassword,
+    required TextEditingController confirmPassword,
+
+    required GlobalKey<FormState> formKey,
+  }) async {
+    String? errorMessage;
+
+    final result = await showModalBottomSheet<String>(
+      context: context,
+      isDismissible: true,
+      isScrollControlled: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      backgroundColor: Colors.transparent,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, useState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SingleChildScrollView(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      top: 40,
+                      left: 20,
+                      right: 20,
+                    ),
+                    color: Colors.white,
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const CustomText(
+                            text: AppTextContents.changePwd,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          CustomInputText(
+                            controller: oldPassword,
+                            hintText: AppTextContents.oldPassword,
+                            validator: FormValidations.validatePassword,
+                            autoFocus: true,
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 20),
+                          CustomInputText(
+                            controller: newPassword,
+                            hintText: AppTextContents.newPassword,
+                            validator: (value) =>
+                                FormValidations.validateNewPassword(
+                                  value,
+                                  oldPassword.text,
+                                ),
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 20),
+                          CustomInputText(
+                            controller: confirmPassword,
+                            hintText: AppTextContents.confirmPassword,
+                            validator: (value) =>
+                                FormValidations.validateConfirmPassword(
+                                  value,
+                                  newPassword.text,
+                                ),
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 20),
+
+                          BlocConsumer<AuthBloc, AuthState>(
+                            listener: (context, state) {
+                              if (state is Authenticated) {
+                                context.goNamed(RouteName.applicantHome);
+                              } else if (state is AuthError) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(state.message)),
+                                );
+                              }
+                            },
+                            builder: (context, state) {
+                              return Column(
+                                children: [
+                                  if (state is AuthError)
+                                    ErrorLoginContainer(
+                                      errMessage: state.message,
+                                    ),
+
+                                  CustomPrimaryButton(
+                                    btnText: AppTextContents.next,
+
+                                    isLoading: state is AuthLoading,
+                                    onTap: () {
+                                      if (formKey.currentState!.validate()) {
+                                        onNext(); // your passed callback
+                                      }
+                                    },
+                                  ),
+
+                                  const SizedBox(height: 10),
+                                  CustomTextButton(
+                                    text: "Cancel",
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          Visibility(
+                            visible:
+                                MediaQuery.of(context).viewInsets.bottom == 0,
+
+                            child: const SizedBox(height: 200),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+
+    return result;
+  }
+
   static Future<String?> descriptionBottomSheet(
     BuildContext context, {
 

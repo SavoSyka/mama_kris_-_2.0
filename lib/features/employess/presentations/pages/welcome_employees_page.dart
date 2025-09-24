@@ -66,20 +66,20 @@ class _WelcomeEmployeesPageState extends State<WelcomeEmployeesPage> {
                       onTap: () {
                         // Handle navigation based on option
                         if (option == _WelcomeOption.register) {
-                          jobTermsBottomSheet(context, false, false, () {
-                            // nameBottomSheet(context, () {
-                            //   Navigator.pop(context);
-                            //   emailBottomSheet(context, () {
-                            //     Navigator.pop(context);
-                            //     passwordBottomsheet(context, () {
-                            //       Navigator.pop(context);
-                            //       context.goNamed(RouteName.employesHome);
-                            //     },true);
-                            //   },true);
-                            // }, true);
-                          }, true);
+                          // jobTermsBottomSheet(context, false, false, () {
+                          //   // nameBottomSheet(context, () {
+                          //   //   Navigator.pop(context);
+                          //   //   emailBottomSheet(context, () {
+                          //   //     Navigator.pop(context);
+                          //   //     passwordBottomsheet(context, () {
+                          //   //       Navigator.pop(context);
+                          //   //       context.goNamed(RouteName.employesHome);
+                          //   //     },true);
+                          //   //   },true);
+                          //   // }, true);
+                          // }, true);
                         } else {
-                          jobTermsBottomSheet(context, false, false, () {});
+                          // jobTermsBottomSheet(context, false, false, () {});
 
                           // context.pushNamed(RouteName.welcomeEmploye);
                         }

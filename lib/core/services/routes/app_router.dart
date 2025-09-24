@@ -5,7 +5,7 @@ class AppRouter {
 
   static final GoRouter router = GoRouter(
     navigatorKey: globalNavigatorKey,
-    initialLocation: RouteName.welcomePage,
+    initialLocation: RouteName.welcomeApplicant,
     routes: <RouteBase>[
       
       

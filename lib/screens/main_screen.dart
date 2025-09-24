@@ -58,6 +58,8 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     int index = widget.initialIndex;
 
+    debugPrint("Current page $currentPage");
+
     setState(() {
       if (currentPage == 'job') {
         _screens = [
@@ -68,7 +70,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         ];
       } else {
         _screens = [
-          VacanciesScreen(),
+          const VacanciesScreen(),
           const FavoriteScreen(),
           const ChatScreen(),
           const ProfileScreen(),
@@ -230,7 +232,6 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-
               _buildNavItem(
                 label: "Главная",
                 inactiveIconPath: "assets/bottom_bar/inactive/home.svg",
@@ -248,7 +249,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 scaleX: scaleX,
                 scaleY: scaleY,
               ),
-              
+
               _buildNavItem(
                 label: "Поддержка",
                 inactiveIconPath: "assets/bottom_bar/inactive/chat.svg",

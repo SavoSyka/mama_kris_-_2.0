@@ -1,7 +1,3 @@
-
-
-
-
 class AppTextContents {
   AppTextContents._();
 
@@ -16,6 +12,7 @@ class AppTextContents {
 
   static const register = "Register";
   static const login = "Login";
+  static const accept = "Accept";
 
   // privacy
   static const privacyTitle = "Privacy above all";
@@ -40,7 +37,12 @@ class AppTextContents {
   static const whstsUrEmail = 'Enter your email';
   static const email = 'Email';
   static const createPwd = 'Create a password';
+  static const changePwd = 'Change password';
+
   static const password = 'Password';
+  static const oldPassword = 'Old Password';
+  static const newPassword = 'New Password';
+  static const confirmPassword = 'Confirm Password';
 
   // home screen
 
@@ -90,6 +92,9 @@ class AppTextContents {
   static const updateDescription =
       'A new version of the app is available! To continue using all features and ensure the best experience, please update to the latest version.';
   static const edit = "редактировать";
+
+static const String privacyPolicyRequired = 'You must accept the Privacy Policy';
+  static const String termsRequired = 'You must accept the Terms of Use';
 }
 
 

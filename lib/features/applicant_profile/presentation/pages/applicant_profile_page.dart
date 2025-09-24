@@ -11,6 +11,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/features/applicant_profile/presentation/widget/applicant_profile_bottomsheet.dart';
 import 'package:mama_kris/features/employe_profile/presentation/widget/employe_profile_bottomsheet.dart';
 import 'package:mama_kris/features/home/presentation/widgets/employe_home_card.dart';
 
@@ -26,6 +27,9 @@ class _ApplicantProfilePageState extends State<ApplicantProfilePage> {
   final TextEditingController emailController = TextEditingController();
 
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController oldPassword = TextEditingController();
+  final TextEditingController newPassword = TextEditingController();
+  final TextEditingController confrimPassword = TextEditingController();
 
   final nameKey = GlobalKey<FormState>();
   final emailKey = GlobalKey<FormState>();
@@ -270,7 +274,7 @@ class _ApplicantProfilePageState extends State<ApplicantProfilePage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   const CustomText(
-                                    text: AppTextContents.myEmail,
+                                    text: AppTextContents.changePwd,
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -279,14 +283,17 @@ class _ApplicantProfilePageState extends State<ApplicantProfilePage> {
 
                                   GestureDetector(
                                     onTap: () {
-                                      emailController.text =
-                                          "yaroslaw@gmail.com";
-                                      EmployeProfileBottomsheet.changePassword(
+                                      oldPassword.clear();
+                                      newPassword.clear();
+                                      confrimPassword.clear();
+
+
+                                      ApplicantProfileBottomsheet.changePassword(
                                         context,
                                         onNext: () {},
-                                        oldPassword: emailController,
-                                        newPassword: emailController,
-                                        confirmPassword: emailController,
+                                        oldPassword: oldPassword,
+                                        newPassword: newPassword,
+                                        confirmPassword: confrimPassword,
 
                                         formKey: nameKey,
                                       );
@@ -298,13 +305,19 @@ class _ApplicantProfilePageState extends State<ApplicantProfilePage> {
                                   ),
                                 ],
                               ),
-
-                            
                             ],
                           ),
                         ),
 
+                          CustomPrimaryButton(
+                btnText: "Выход",
+                onTap: () {
+                  context.goNamed(RouteName.welcomePage);
+                },
+              ),
+
                         const SizedBox(height: 32),
+
                       ],
                     ),
                   ),

@@ -48,8 +48,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   static const _userKey = 'user_data';
 
-  static const _refreshKey = 'refreshKey';
-  static const _applicantkey = '_applicationKey';
+  static const _refreshKey = 'refresh_token';
+  static const _applicantkey =
+      '_applicationKey'; // check whether employe or applicant logged to the system
 
   @override
   Future<void> saveToken(String token) async {
