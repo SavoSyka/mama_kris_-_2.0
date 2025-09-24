@@ -9,7 +9,7 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/utils/version_utils.dart';
-import 'package:mama_kris/features/applicant_welcome/data/data_source/auth_local_data_source.dart';
+import 'package:mama_kris/features/auth/data/data_source/auth_local_data_source.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_event.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_state.dart';

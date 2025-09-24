@@ -5,6 +5,9 @@ class FormValidations {
 
   static const int minPasswordLength = 6;
   static const String passwordRequired = 'Password is required';
+  static const String otpRequired = 'OTP is required';
+  static const String otpTooShort = 'OTP must be 6 characters.';
+
   static const String passwordTooShort =
       'Password must be at least $minPasswordLength characters';
   static const String passwordsDoNotMatch = 'Passwords do not match';
@@ -17,6 +20,17 @@ class FormValidations {
     }
     if (value.trim().length < 2) {
       return AppTextContents.nameTooShort;
+    }
+
+    return null;
+  }
+
+  static String? validateOTP(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return otpRequired;
+    }
+    if (value.trim().length < 6) {
+      return otpTooShort;
     }
 
     return null;

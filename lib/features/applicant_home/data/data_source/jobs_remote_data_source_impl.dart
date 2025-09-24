@@ -4,8 +4,8 @@ import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
 import 'package:mama_kris/features/applicant_home/data/data_source/jobs_local_data_source.dart';
 import 'package:mama_kris/features/applicant_home/data/model/search_job_model.dart';
-import 'package:mama_kris/features/applicant_welcome/data/data_source/auth_local_data_source.dart';
-import 'package:mama_kris/features/applicant_welcome/data/model/user_model.dart';
+import 'package:mama_kris/features/auth/data/data_source/auth_local_data_source.dart';
+import 'package:mama_kris/features/auth/data/model/user_model.dart';
 import 'jobs_remote_data_source.dart';
 
 class JobsRemoteDataSourceImpl implements JobsRemoteDataSource {

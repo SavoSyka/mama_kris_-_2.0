@@ -13,9 +13,9 @@ import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
-import 'package:mama_kris/features/applicant_welcome/applications/auth_bloc.dart';
-import 'package:mama_kris/features/applicant_welcome/applications/auth_event.dart';
-import 'package:mama_kris/features/applicant_welcome/applications/auth_state.dart';
+import 'package:mama_kris/features/auth/applications/auth_bloc.dart';
+import 'package:mama_kris/features/auth/applications/auth_event.dart';
+import 'package:mama_kris/features/auth/applications/auth_state.dart';
 import 'package:pinput/pinput.dart';
 
 class ApplicantProfileBottomsheet {

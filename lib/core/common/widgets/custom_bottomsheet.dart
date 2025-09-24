@@ -13,6 +13,7 @@ class CustomBottomSheet extends StatelessWidget {
   final VoidCallback? onSubmit;
   final Widget? errorWidget;
   final bool isLoading;
+  final bool boldTitle;
   final List<Widget>? additionalWidgets;
   final GlobalKey<FormState> formKey;
 
@@ -26,6 +27,7 @@ class CustomBottomSheet extends StatelessWidget {
     this.errorWidget,
     this.isLoading = false,
     this.additionalWidgets,
+    this.boldTitle = true,
     required this.formKey,
   });
 
@@ -51,8 +53,8 @@ class CustomBottomSheet extends StatelessWidget {
                 children: [
                   CustomText(
                     text: title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                      fontWeight: boldTitle ? FontWeight.bold : FontWeight.w500,
                       fontSize: 18,
                     ),
                   ),

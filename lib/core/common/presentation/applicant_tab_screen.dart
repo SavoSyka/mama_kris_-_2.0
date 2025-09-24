@@ -13,14 +13,15 @@ import 'package:mama_kris/features/home/presentation/pages/tabs/resume_tab.dart'
 import 'package:mama_kris/features/support/presentation/support_page.dart';
 
 class ApplicantTabScreen extends StatefulWidget {
-  const ApplicantTabScreen({super.key});
+  const ApplicantTabScreen({super.key, required this.pageIndex});
 
+  final int pageIndex;
   @override
   State<ApplicantTabScreen> createState() => _ApplicantTabScreenState();
 }
 
 class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   final List<Widget> _pages = const [
     ApplicantHomePage(),
@@ -35,6 +36,24 @@ class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
   }
 
   @override
+  void initState() {
+    debugPrint("init state ${widget.pageIndex} ");
+    setState(() {
+      _selectedIndex = widget.pageIndex;
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(ApplicantTabScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      _selectedIndex = widget.pageIndex.clamp(0, _pages.length - 1);
+      debugPrint("Updated selectedIndex to ${widget.pageIndex}");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(

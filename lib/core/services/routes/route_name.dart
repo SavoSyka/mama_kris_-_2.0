@@ -3,6 +3,8 @@ class RouteName {
 
   static String initialPage = "/initial-page";
 
+  static String authPage = '/auth-page';
+
   static String welcomePage = "/getStart";
   static String forceUpdate = "/force-update";
 

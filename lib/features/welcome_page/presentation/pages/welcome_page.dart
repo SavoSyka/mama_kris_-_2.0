@@ -66,9 +66,15 @@ class _WelcomePageState extends State<WelcomePage> {
                       onTap: () {
                         // Handle navigation based on option
                         if (option == WelcomeOption.findJob) {
-                          context.pushNamed(RouteName.welcomeApplicant);
+                          context.pushNamed(
+                            RouteName.authPage,
+                            extra: {'isApplicant': true},
+                          );
                         } else {
-                          context.pushNamed(RouteName.welcomeEmploye);
+                          context.pushNamed(
+                            RouteName.authPage,
+                            extra: {'isApplicant': false},
+                          );
                         }
                       },
                       btnText: option.displayText,

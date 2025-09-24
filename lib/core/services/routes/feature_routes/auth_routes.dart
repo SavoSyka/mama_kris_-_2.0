@@ -15,9 +15,7 @@ final List<RouteBase> authRoutes = [
     builder: (BuildContext context, GoRouterState state) {
       final extra = state.extra as Map<String, dynamic>;
 
-      return  ForceUpdateScreen(
-        isAndroid: extra['isAndroid'],
-      );
+      return ForceUpdateScreen(isAndroid: extra['isAndroid']);
     },
   ),
   GoRoute(
@@ -25,6 +23,15 @@ final List<RouteBase> authRoutes = [
     name: RouteName.welcomePage,
     builder: (BuildContext context, GoRouterState state) {
       return const WelcomePage();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.authPage,
+    name: RouteName.authPage,
+    builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as DataMap;
+      return AuthScreenPage(isApplicant: extra['isApplicant'] as bool);
     },
   ),
 ];

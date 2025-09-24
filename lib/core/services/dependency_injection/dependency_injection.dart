@@ -8,7 +8,6 @@ Future<void> dependencyInjection() async {
   await _initDio();
   await _initForceUpdate();
   _initAuth();
-  await _initEmpAuth();
   await _initJobSearch();
 }
 
@@ -209,41 +208,6 @@ void _initAuth() {
   );
 }
 
-Future<void> _initEmpAuth() async {
-  // Data source
-  getIt.registerLazySingleton<EmpAuthLocalDataSource>(
-    () => EmpAuthLocalDataSourceImpl(getIt()), // inject Dio
-  );
-  getIt.registerLazySingleton<EmpAuthRemoteDataSource>(
-    () =>
-        EmpAuthRemoteDataSourceImpl(dio: getIt(), local: getIt()), // inject Dio
-  );
-
-  // Repository
-  getIt.registerLazySingleton<EmployeAuthRepository>(
-    () => EmpAuthRepositoryImpl(getIt()),
-  );
-
-  // Use cases
-  getIt.registerLazySingleton(() => EmpCheckEmailUsecase(getIt()));
-  getIt.registerLazySingleton(() => EmpValidatOtpUsecase(getIt()));
-  getIt.registerLazySingleton(() => EmpRegisterUsecase(getIt()));
-  getIt.registerLazySingleton(() => EmpLoginUsecase(getIt()));
-  getIt.registerLazySingleton(() => EmpChangePassUsecase(getIt()));
-  getIt.registerLazySingleton(() => EmpForgotPassUsecase(getIt()));
-
-  // Bloc (factory → new instance per request)
-  getIt.registerFactory(
-    () => EmpAuthBloc(
-      checkEmail: getIt(),
-      validateOtp: getIt(),
-      register: getIt(),
-      login: getIt(),
-      changePassword: getIt(),
-      forgotPassword: getIt(),
-    ),
-  );
-}
 
 Future<void> _initJobSearch() async {
   // DataSource

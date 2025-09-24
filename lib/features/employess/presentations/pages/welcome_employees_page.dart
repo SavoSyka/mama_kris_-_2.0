@@ -12,7 +12,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
-import 'package:mama_kris/features/applicant_welcome/presentations/widgets/job_terms_bottomsheet.dart';
+import 'package:mama_kris/features/auth/presentations/widgets/job_terms_bottomsheet.dart';
 
 class WelcomeEmployeesPage extends StatefulWidget {
   const WelcomeEmployeesPage({super.key});

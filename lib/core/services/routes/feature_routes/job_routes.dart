@@ -1,13 +1,6 @@
 part of '../router.dart';
 
 final List<RouteBase> jobRoutes = [
-  GoRoute(
-    path: RouteName.welcomeApplicant,
-    name: RouteName.welcomeApplicant,
-    builder: (BuildContext context, GoRouterState state) {
-      return const WelcomeJobPage();
-    },
-  ),
   /*
   GoRoute(
     path: RouteName.applicantHome,
@@ -42,7 +35,11 @@ final List<RouteBase> jobRoutes = [
     path: RouteName.applicantHome,
     name: RouteName.applicantHome,
     builder: (BuildContext context, GoRouterState state) {
-      return const ApplicantTabScreen();
+      final extra = state.extra != null
+          ? state.extra as DataMap
+          : {"pageIndex": 0};
+      debugPrint("extra $extra");
+      return ApplicantTabScreen(pageIndex: extra['pageIndex'] as int);
     },
   ),
 ];

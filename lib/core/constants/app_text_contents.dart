@@ -34,7 +34,7 @@ class AppTextContents {
   static const urName = "Your name";
   static const next = "Next";
 
-  static const whstsUrEmail = 'Enter your email';
+  static const whatsUrEmail = 'Enter your email';
   static const email = 'Email';
   static const createPwd = 'Create a password';
   static const changePwd = 'Change password';

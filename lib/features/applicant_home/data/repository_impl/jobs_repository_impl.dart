@@ -4,9 +4,9 @@ import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/applicant_home/data/data_source/jobs_remote_data_source.dart';
 import 'package:mama_kris/features/applicant_home/domain/entity/search_job_entity.dart';
 import 'package:mama_kris/features/applicant_home/domain/repository/jobs_repository.dart';
-import 'package:mama_kris/features/applicant_welcome/data/data_source/auth_remote_data_source.dart';
-import 'package:mama_kris/features/applicant_welcome/domain/entities/user.dart';
-import 'package:mama_kris/features/applicant_welcome/domain/repository/auth_repository.dart';
+import 'package:mama_kris/features/auth/data/data_source/auth_remote_data_source.dart';
+import 'package:mama_kris/features/auth/domain/entities/user.dart';
+import 'package:mama_kris/features/auth/domain/repository/auth_repository.dart';
 
 class JobsRepositoryImpl implements JobsRepository {
   final JobsRemoteDataSource remoteDataSource;

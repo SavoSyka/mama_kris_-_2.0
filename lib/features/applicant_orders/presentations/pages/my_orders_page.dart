@@ -67,7 +67,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: CustomText(
-                  text: AppTextContents.favoriteResumes,
+                  text: AppTextContents.myOrders,
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
                 ),
               ),

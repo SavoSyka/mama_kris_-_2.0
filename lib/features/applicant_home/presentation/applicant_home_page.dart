@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_action_button.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_primary_button.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
@@ -17,6 +18,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/job_search_cubit.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/job_search_state.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/recent_search_queries.dart';
@@ -25,6 +27,7 @@ import 'package:mama_kris/features/home/presentation/widgets/add_job.dart';
 import 'package:mama_kris/features/home/presentation/widgets/employe_home_card.dart';
 import 'package:mama_kris/features/home/presentation/widgets/empty_posted_job.dart';
 import 'package:mama_kris/features/home/presentation/widgets/home_bottomsheet/profession_bottomsheet.dart';
+import 'package:mama_kris/widgets/no_more_vacancies_card.dart';
 
 class ApplicantHomePage extends StatefulWidget {
   const ApplicantHomePage({super.key});
@@ -195,11 +198,23 @@ class _ApplicantHomePageState extends State<ApplicantHomePage> {
                 ),
               ),
               SizedBox(height: 20.h),
+              Center(
+                child: NoMoreVacanciesCard(
+                  onGoToProfile: () {
+                    debugPrint("pressed");
+                    context.replaceNamed(RouteName.applicantHome, extra: {'pageIndex': 2});
+                    debugPrint("pressed after");
+                
+               
+                  },
+                ),
+              ),
+              // const EmptyPostedJob()
 
               // JobList(jobs: _allJobs),
-              Expanded(
-                child: JobList(jobs: _allJobs, isList: isList),
-              ),
+              // Expanded(
+              //   child: JobList(jobs: _allJobs, isList: isList),
+              // ),
 
               // const EmptyPostedJob(),
               // SizedBox(height: 24.h),
