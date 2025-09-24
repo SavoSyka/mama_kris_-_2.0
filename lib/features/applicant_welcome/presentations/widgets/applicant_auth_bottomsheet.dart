@@ -655,6 +655,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_text_button.dart';
 import 'package:mama_kris/core/common/widgets/custom_bottomsheet.dart';
 import 'package:mama_kris/core/common/widgets/error_login_container.dart';
+import 'package:mama_kris/core/common/widgets/show_toast.dart';
 import 'package:mama_kris/core/config/bottomsheet_config.dart';
 import 'package:mama_kris/core/config/form_field_config.dart';
 import 'package:mama_kris/core/constants/app_constants.dart';
@@ -666,6 +667,7 @@ import 'package:mama_kris/features/applicant_welcome/applications/auth_state.dar
 import 'package:pinput/pinput.dart';
 
 class ApplicantAuthBottomSheet {
+  ///
   static Future<bool> showCustomBottomSheet({
     required BuildContext context,
     required String title,
@@ -713,42 +715,60 @@ class ApplicantAuthBottomSheet {
     final emailController = TextEditingController(
       text: AppConstants.isDevelopmentMode ? 'roobi@yopmail.com' : '',
     );
+
     final formKey = GlobalKey<FormState>();
 
-    return showCustomBottomSheet(
+    return showModalBottomSheet(
       context: context,
-      formKey: formKey,
-      title: AppTextContents.whstsUrEmail,
-      fields: [
-        FormFieldConfig(
-          hintText: AppTextContents.email,
-          controller: emailController,
-          validator: FormValidations.validateEmail,
-          keyboardType: TextInputType.emailAddress,
-        ),
-      ],
-      buttonText: AppTextContents.next,
-      isSecondaryPrimary: isSecondaryPrimary,
-      onSubmit: () {
-        if (formKey.currentState!.validate()) {
-          if (isForgotPassword) {
-            context.read<AuthBloc>().add(
-              ForgotPasswordEvent(emailController.text),
+      isScrollControlled: true,
+      builder: (_) {
+        return BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is Authenticated) {
+              // Navigator.pop(context, true);
+              // onNext();
+            }
+            if (state is AuthError) {
+              showToast(context, message: state.message);
+            }
+          },
+          builder: (context, state) {
+            final isLoading = state is AuthLoading;
+
+            return CustomBottomSheet(
+              title: AppTextContents.whstsUrEmail,
+
+              formKey: formKey,
+
+              fields: [
+                FormFieldConfig(
+                  hintText: AppTextContents.email,
+                  controller: emailController,
+                  validator: FormValidations.validateEmail,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ],
+              buttonText: AppTextContents.next,
+              onSubmit: () {
+                if (formKey.currentState!.validate()) {
+                  if (isForgotPassword) {
+                    context.read<AuthBloc>().add(
+                      ForgotPasswordEvent(emailController.text),
+                    );
+                  } else {
+                    context.read<AuthBloc>().add(
+                      CheckEmailEvent(emailController.text),
+                    );
+                  }
+                }
+              },
+
+              isLoading: isLoading,
             );
-          } else {
-            context.read<AuthBloc>().add(CheckEmailEvent(emailController.text));
-          }
-        }
+          },
+        );
       },
-      errorWidget: BlocSelector<AuthBloc, AuthState, String?>(
-        selector: (state) =>
-            state is CheckEmailErroState ? state.message : null,
-        builder: (context, errorMessage) => errorMessage != null
-            ? ErrorLoginContainer(errMessage: errorMessage)
-            : Container(),
-      ),
-      isLoading: context.watch<AuthBloc>().state is AuthLoading,
-    );
+    ).then((value) => value ?? false);
   }
 
   static Future<bool> otpBottomSheet(
@@ -871,7 +891,9 @@ class ApplicantAuthBottomSheet {
               Navigator.pop(context, true);
               onNext();
             }
-            if (state is AuthError) {}
+            if (state is AuthError) {
+              showToast(context, message: state.message);
+            }
           },
           builder: (context, state) {
             final isLoading = state is AuthLoading;
@@ -879,6 +901,7 @@ class ApplicantAuthBottomSheet {
             return CustomBottomSheet(
               title: AppTextContents.login,
               formKey: formKey,
+
               fields: [
                 FormFieldConfig(
                   hintText: AppTextContents.email,

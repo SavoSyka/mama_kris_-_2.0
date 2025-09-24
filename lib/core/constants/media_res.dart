@@ -39,5 +39,10 @@ class MediaRes {
 
   static const String deleteIcon = '$_baseIcons/delete_icon.png';
 
+    static const errorMsgIcon = '$_baseIcons/errorMsgIcon.png';
+  static const successMsgIcon = '$_baseIcons/successMsgIcon.png';
+  static const infoMsgIcon = '$_baseIcons/infoMsgIcon.png';
+  static const warningMsgIcon = '$_baseIcons/warningMsgIcon.png';
+
 
 }

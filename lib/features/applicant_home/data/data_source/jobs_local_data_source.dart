@@ -14,9 +14,16 @@ abstract class JobsLocalDataSource {
   Future<List<SearchJobModel>> getSearchQueries();
 
   /// Clear cached searches
+  ///
   Future<void> clearAllSearchQueries();
 
   Future<void> removeSearchQuery(String query);
+
+  Future<void> saveSpheres(List<SearchJobModel> spheres);
+
+  /// Clear cached clearAllSpheres
+
+  Future<void> clearAllSpheres();
 }
 
 class JobsLocalDataSourceImpl implements JobsLocalDataSource {
@@ -28,6 +35,10 @@ class JobsLocalDataSourceImpl implements JobsLocalDataSource {
   Future<List<SearchJobModel>> getSearchQueries() async {
     final box = await _getSearchBox();
     return box.values.toList();
+  }
+
+  Future<Box<SearchJobModel>> _getSphereBox() async {
+    return await Hive.openBox<SearchJobModel>(HiveConstants.sphereJobBox);
   }
 
   @override
@@ -86,5 +97,31 @@ class JobsLocalDataSourceImpl implements JobsLocalDataSource {
   Future<void> clearAllSearchQueries() async {
     final box = await _getSearchBox();
     await box.clear();
+  }
+
+  @override
+  Future<void> saveSpheres(List<SearchJobModel> spheres) async {
+    if (spheres.isEmpty) return;
+
+    final box = await _getSphereBox();
+
+    final existingTitles = box.values.map((e) => e.title).toSet();
+
+    for (var sphere in spheres) {
+      if (!existingTitles.contains(sphere.title)) {
+        await box.add(sphere);
+        existingTitles.add(sphere.title);
+        debugPrint("Added new sphere: ${sphere.title}");
+      } else {
+        debugPrint("Skipped duplicate sphere: ${sphere.title}");
+      }
+    }
+  }
+
+  @override
+  Future<void> clearAllSpheres() async {
+    final box = await _getSphereBox();
+    await box.clear();
+    debugPrint("Cleared all spheres");
   }
 }

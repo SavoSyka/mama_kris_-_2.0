@@ -53,7 +53,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       return true;
     } on DioException catch (e) {
-      throw Exception(_handleError(e));
+      throw ApiException(message: _handleError(e), statusCode: 400);
     }
   }
 
@@ -77,7 +77,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       return user;
     } on DioException catch (e) {
-      throw Exception(_handleError(e));
+      throw ApiException(message: _handleError(e), statusCode: 400);
     }
   }
 
@@ -107,7 +107,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Return UserModel
       // return UserModel.fromJson(userJson);
     } on DioException catch (e) {
-      throw Exception(_handleError(e));
+      throw ApiException(message: _handleError(e), statusCode: 400);
     }
   }
 
@@ -134,7 +134,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Return UserModel
       // return UserModel.fromJson(userJson);
     } on DioException catch (e) {
-      throw Exception(_handleError(e));
+      throw ApiException(message: _handleError(e), statusCode: 400);
     }
   }
 
