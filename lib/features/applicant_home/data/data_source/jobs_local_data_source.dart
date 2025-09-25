@@ -21,6 +21,8 @@ abstract class JobsLocalDataSource {
 
   Future<void> saveSpheres(List<SearchJobModel> spheres);
 
+  Future<List<SearchJobModel>> getAllSpheres();
+
   /// Clear cached clearAllSpheres
 
   Future<void> clearAllSpheres();
@@ -34,6 +36,13 @@ class JobsLocalDataSourceImpl implements JobsLocalDataSource {
   @override
   Future<List<SearchJobModel>> getSearchQueries() async {
     final box = await _getSearchBox();
+    return box.values.toList();
+  }
+
+
+   @override
+  Future<List<SearchJobModel>> getAllSpheres() async {
+    final box = await _getSphereBox();
     return box.values.toList();
   }
 

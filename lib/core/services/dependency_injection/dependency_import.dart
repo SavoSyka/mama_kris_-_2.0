@@ -9,6 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/constants/app_constants.dart';
 import 'package:mama_kris/core/constants/hive_constants.dart';
+import 'package:mama_kris/features/applicant_home/applications/home/bloc/applicant_home_bloc.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/job_search_cubit.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/recent_search_queries.dart';
 import 'package:mama_kris/features/applicant_home/data/data_source/jobs_local_data_source.dart';
@@ -17,7 +18,9 @@ import 'package:mama_kris/features/applicant_home/data/data_source/jobs_remote_d
 import 'package:mama_kris/features/applicant_home/data/model/search_job_model.dart';
 import 'package:mama_kris/features/applicant_home/data/repository_impl/jobs_repository_impl.dart';
 import 'package:mama_kris/features/applicant_home/domain/repository/jobs_repository.dart';
+import 'package:mama_kris/features/applicant_home/domain/usecases/get_all_vacancies_usecase.dart';
 import 'package:mama_kris/features/applicant_home/domain/usecases/get_query_jobs_usecase.dart';
+import 'package:mama_kris/features/applicant_home/domain/usecases/search_combined_usecase.dart';
 import 'package:mama_kris/features/auth/applications/auth_bloc.dart';
 import 'package:mama_kris/features/auth/data/data_source/auth_local_data_source.dart';
 import 'package:mama_kris/features/auth/data/data_source/auth_remote_data_source.dart';

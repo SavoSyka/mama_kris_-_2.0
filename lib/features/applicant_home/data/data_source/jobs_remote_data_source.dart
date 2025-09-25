@@ -5,4 +5,6 @@ import 'package:mama_kris/features/auth/data/model/user_model.dart';
 abstract class JobsRemoteDataSource {
   Future<List<SearchJobModel>> queryJobs({required String query});
   Future<List<VacancyModel>> getAllVacancies();
+  Future<List<VacancyModel>> searchCombined({required String query});
+
 }

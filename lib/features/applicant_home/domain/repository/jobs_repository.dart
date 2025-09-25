@@ -4,7 +4,7 @@ import 'package:mama_kris/features/applicant_home/domain/entity/vacancy_entity.d
 
 abstract class JobsRepository {
   ResultFuture<List<SearchJobEntity>> getQueryJobs({required String query});
-  ResultFuture<List<SearchJobEntity>> searchCombined({required String query});
+  ResultFuture<List<VacancyEntity>> searchCombined({required String query});
 
   ResultFuture<List<VacancyEntity>> getAllVacancies();
 }

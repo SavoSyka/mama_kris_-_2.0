@@ -6,6 +6,7 @@ import 'package:mama_kris/core/services/dependency_injection/dependency_import.d
 import 'package:mama_kris/core/services/lifecycle/lifecycle_manager.dart';
 import 'package:mama_kris/core/services/routes/router.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/applicant_home/applications/home/bloc/applicant_home_bloc.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/job_search_cubit.dart';
 import 'package:mama_kris/features/auth/applications/auth_bloc.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
@@ -36,11 +37,10 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
-
             BlocProvider(create: (_) => getIt<AuthBloc>()),
             BlocProvider(create: (_) => getIt<ForceUpdateBloc>()),
             BlocProvider(create: (_) => getIt<JobSearchCubit>()),
-
+            BlocProvider(create: (_) => getIt<ApplicantHomeBloc>()),
           ],
           child: LifecycleManager(
             child: MaterialApp.router(

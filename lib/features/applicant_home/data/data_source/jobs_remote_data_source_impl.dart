@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
+import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/applicant_home/data/data_source/jobs_local_data_source.dart';
 import 'package:mama_kris/features/applicant_home/data/model/search_job_model.dart';
 import 'package:mama_kris/features/applicant_home/data/model/vacancy_model.dart';
@@ -46,10 +47,54 @@ class JobsRemoteDataSourceImpl implements JobsRemoteDataSource {
   }
 
   @override
-  Future<List<VacancyModel>> getAllVacancies() {
-    // TODO: implement getAllVacancies
-    throw UnimplementedError();
+  Future<List<VacancyModel>> getAllVacancies() async {
+    final spheres = await local.getAllSpheres();
+
+    final sphereTitles = spheres.map((sphere) => sphere.title).toList();
+
+    try {
+      final response = await dio.get(
+        ApiConstants.getAllSphereVacancies,
+        queryParameters: {'sphere': sphereTitles},
+      );
+
+      debugPrint("Search query ${response.data}");
+
+      final data = response.data as List<dynamic>;
+      final List<VacancyModel> vacancies = data
+          .map((e) => VacancyModel.fromJson(e as DataMap))
+          .toList();
+
+      return vacancies;
+    } on DioException catch (e) {
+      throw ApiException(message: _handleError(e), statusCode: 400);
+    }
   }
-  
+
+
+
+  @override
+  Future<List<VacancyModel>> searchCombined({required String query}) async {
+
+
+    try {
+      final response = await dio.get(
+        ApiConstants.searchCombined,
+        queryParameters: {'titleQuery': query},
+      );
+
+      debugPrint("Search query ${response.data}");
+
+      final data = response.data as List<dynamic>;
+      final List<VacancyModel> vacancies = data
+          .map((e) => VacancyModel.fromJson(e as DataMap))
+          .toList();
+
+      return vacancies;
+    } on DioException catch (e) {
+      throw ApiException(message: _handleError(e), statusCode: 400);
+    }
+  }
+
 
 }

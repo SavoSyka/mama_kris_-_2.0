@@ -29,14 +29,27 @@ class JobsRepositoryImpl implements JobsRepository {
   }
 
   @override
-  ResultFuture<List<SearchJobEntity>> searchCombined({required String query}) {
-    // TODO: implement searchCombined
-    throw UnimplementedError();
+  ResultFuture<List<VacancyEntity>> searchCombined({required String query}) async{
+    try {
+      final result = await remoteDataSource.searchCombined(query: query);
+      return Right(result);
+    } on ApiException catch (err) {
+      return Left(ServerFailure(err.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
   }
 
+
   @override
-  ResultFuture<List<VacancyEntity>> getAllVacancies() {
-    // TODO: implement getAllVacancies
-    throw UnimplementedError();
+  ResultFuture<List<VacancyEntity>> getAllVacancies() async {
+    try {
+      final result = await remoteDataSource.getAllVacancies();
+      return Right(result);
+    } on ApiException catch (err) {
+      return Left(ServerFailure(err.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
   }
 }

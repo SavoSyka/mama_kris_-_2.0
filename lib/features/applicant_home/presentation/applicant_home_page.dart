@@ -19,6 +19,7 @@ import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/features/applicant_home/applications/home/bloc/applicant_home_bloc.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/job_search_cubit.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/job_search_state.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/recent_search_queries.dart';
@@ -202,10 +203,11 @@ class _ApplicantHomePageState extends State<ApplicantHomePage> {
                 child: NoMoreVacanciesCard(
                   onGoToProfile: () {
                     debugPrint("pressed");
-                    context.replaceNamed(RouteName.applicantHome, extra: {'pageIndex': 2});
+                    context.replaceNamed(
+                      RouteName.applicantHome,
+                      extra: {'pageIndex': 2},
+                    );
                     debugPrint("pressed after");
-                
-               
                   },
                 ),
               ),
@@ -555,6 +557,16 @@ class _ApplicantHomePageState extends State<ApplicantHomePage> {
                                                   context,
                                                   state.jobs[index],
                                                 );
+
+                                                context
+                                                    .read<ApplicantHomeBloc>()
+                                                    .add(
+                                                      SearchCombinedEvent(
+                                                        query: state
+                                                            .jobs[index]
+                                                            .title,
+                                                      ),
+                                                    );
                                               },
                                             );
                                           },

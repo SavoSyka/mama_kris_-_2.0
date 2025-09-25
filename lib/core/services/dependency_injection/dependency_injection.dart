@@ -11,7 +11,6 @@ Future<void> dependencyInjection() async {
   await _initJobSearch();
 }
 
-
 Future<bool> refreshAccessToken() async {
   final prefs = await SharedPreferences.getInstance();
   final refreshToken = prefs.getString('refresh_token');
@@ -43,7 +42,9 @@ Future<bool> refreshAccessToken() async {
         debugPrint("New access token is null or empty");
       }
     } else {
-      debugPrint("Refresh token failed: ${response.statusCode} - ${response.data}");
+      debugPrint(
+        "Refresh token failed: ${response.statusCode} - ${response.data}",
+      );
     }
   } catch (e) {
     debugPrint("Error refreshing access token: $e");
@@ -93,7 +94,8 @@ Future<void> _initDio() async {
       },
       onError: (DioException e, handler) async {
         // Skip 401 handling for refresh requests
-        if (e.response?.statusCode == 401 && e.requestOptions.extra['isRefreshRequest'] != true) {
+        if (e.response?.statusCode == 401 &&
+            e.requestOptions.extra['isRefreshRequest'] != true) {
           debugPrint("401 Unauthorized detected, attempting token refresh");
 
           // Avoid infinite loops by checking if already retrying
@@ -208,7 +210,6 @@ void _initAuth() {
   );
 }
 
-
 Future<void> _initJobSearch() async {
   // DataSource
 
@@ -228,6 +229,22 @@ Future<void> _initJobSearch() async {
   // UseCase
   getIt.registerLazySingleton<GetQueryJobsUsecase>(
     () => GetQueryJobsUsecase(getIt()),
+  );
+
+  getIt.registerLazySingleton<GetAllVacanciesUsecase>(
+    () => GetAllVacanciesUsecase(getIt()),
+  );
+
+  getIt.registerLazySingleton<SearchCombinedUsecase>(
+    () => SearchCombinedUsecase(getIt()),
+  );
+  // blocs
+
+  getIt.registerFactory(
+    () => ApplicantHomeBloc(
+      getAllVacanciesUsecase: getIt(),
+      searchCombinedUsecase: getIt(),
+    ),
   );
 
   getIt.registerFactory(() => RecentSearchesCubit(getIt()));
