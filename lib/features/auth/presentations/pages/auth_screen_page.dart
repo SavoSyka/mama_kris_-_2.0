@@ -73,7 +73,7 @@ class _AuthScreenPageState extends State<AuthScreenPage> {
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: CustomActionButton(
                         isSecondary: selectedOption != option,
-                        isSecondaryPrimary:! widget.isApplicant,
+                        isSecondaryPrimary: !widget.isApplicant,
                         onTap: () {
                           setState(() {
                             selectedOption = option;
@@ -148,8 +148,11 @@ class WelcomeOptionHandler {
         isSecondaryPrimary: isSecondaryPrimary,
 
         onNext: () {
-          context.goNamed(RouteName.applicantHome);
-          // Navigation to applicantHome is handled by AuthBottomSheetListener
+          if (isSecondaryPrimary) {
+            context.goNamed(RouteName.employesHome);
+          } else {
+            context.goNamed(RouteName.applicantHome);
+          }
         },
       );
     }

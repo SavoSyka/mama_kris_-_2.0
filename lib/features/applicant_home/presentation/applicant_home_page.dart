@@ -6,12 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mama_kris/core/common/widgets/buttons/custom_action_button.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_primary_button.dart';
-import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
-import 'package:mama_kris/core/common/widgets/custom_shadow_container.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/entity/job_model.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
@@ -23,11 +20,6 @@ import 'package:mama_kris/features/applicant_home/applications/home/bloc/applica
 import 'package:mama_kris/features/applicant_home/applications/search/job_search_cubit.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/job_search_state.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/recent_search_queries.dart';
-import 'package:mama_kris/features/applicant_home/presentation/widget/job_list.dart';
-import 'package:mama_kris/features/home/presentation/widgets/add_job.dart';
-import 'package:mama_kris/features/home/presentation/widgets/employe_home_card.dart';
-import 'package:mama_kris/features/home/presentation/widgets/empty_posted_job.dart';
-import 'package:mama_kris/features/home/presentation/widgets/home_bottomsheet/profession_bottomsheet.dart';
 import 'package:mama_kris/widgets/no_more_vacancies_card.dart';
 
 class ApplicantHomePage extends StatefulWidget {
@@ -203,10 +195,12 @@ class _ApplicantHomePageState extends State<ApplicantHomePage> {
                 child: NoMoreVacanciesCard(
                   onGoToProfile: () {
                     debugPrint("pressed");
-                    context.replaceNamed(
-                      RouteName.applicantHome,
-                      extra: {'pageIndex': 2},
-                    );
+
+                    context.read<ApplicantHomeBloc>().add(GetAllVacancyEvent());
+                    // context.replaceNamed(
+                    //   RouteName.applicantHome,
+                    //   extra: {'pageIndex': 2},
+                    // );
                     debugPrint("pressed after");
                   },
                 ),

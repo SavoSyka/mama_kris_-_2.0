@@ -12,6 +12,6 @@ class ApiConstants {
   static const changePassword = 'auth/change-password';
   static searchJobs(String query) => 'jobs/autocomplete?query=$query';
   static const getAllSphereVacancies = 'jobs/autocomplete?query=';
+  static userPreference(String? userId) => '/user-preferences/$userId';
   static const searchCombined = 'jobs/search-combined';
-
 }
