@@ -4,6 +4,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/features/employe_home/presentation/employe_home_page.dart';
+import 'package:mama_kris/features/employe_home/presentation/post_job_page.dart';
 import 'package:mama_kris/features/employe_profile/presentation/pages/employe_profile_page.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/favorite_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
@@ -21,6 +22,7 @@ class _EmployeTabScreenState extends State<EmployeTabScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
+    // PostJobPage(),
     EmployeHomePage(),
     ResumeTab(),
     FavoriteTab(),
@@ -46,7 +48,6 @@ class _EmployeTabScreenState extends State<EmployeTabScreen> {
           child: IndexedStack(index: _selectedIndex, children: _pages),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,
@@ -82,7 +83,6 @@ class _EmployeTabScreenState extends State<EmployeTabScreen> {
                     : Colors.grey,
               ),
               label: AppTextContents.favorite,
-
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
@@ -93,7 +93,6 @@ class _EmployeTabScreenState extends State<EmployeTabScreen> {
                     : Colors.grey,
               ),
               label: AppTextContents.profile,
-
             ),
           ],
         ),

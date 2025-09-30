@@ -6,6 +6,7 @@ import 'package:mama_kris/core/services/routes/global_navigator_key.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/auth/presentations/pages/auth_screen_page.dart';
+import 'package:mama_kris/features/employe_home/presentation/post_job_page.dart';
 import 'package:mama_kris/features/welcome_page/presentation/pages/force_update_screen.dart';
 import 'package:mama_kris/features/welcome_page/presentation/pages/splash_screen.dart';
 import 'package:mama_kris/features/welcome_page/presentation/pages/welcome_page.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class VacancyContent extends StatelessWidget {
   final Map<String, dynamic> vacancy;
-  const VacancyContent({Key? key, required this.vacancy}) : super(key: key);
+  const VacancyContent({super.key, required this.vacancy});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class VacancyContent extends StatelessWidget {
     double scaleY = screenHeight / 956;
 
     return Center(
-      child: Container(
+      child: SizedBox(
         width: 343 * scaleX,
         height: 540 * scaleY, // высота должна соответствовать родителю
         child: SingleChildScrollView(
@@ -37,7 +37,10 @@ class VacancyContent extends StatelessWidget {
               SizedBox(height: 10 * scaleY),
               // Описание вакансии
               Text(
-                vacancy['description'] ?? 'Нет описания',
+                ''' Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
+                   Words ending in -ff: If a word ends in "-ff", simply add "-s
+                    ''',
+                // vacancy['description'] ?? 'Нет описания',
                 style: TextStyle(
                   fontFamily: 'Jost',
                   fontWeight: FontWeight.w400,

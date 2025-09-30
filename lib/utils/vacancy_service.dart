@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mama_kris/constants/api_constants.dart';
 import 'package:mama_kris/utils/funcs.dart' as funcs;
 import 'package:flutter/foundation.dart';
+import 'package:mama_kris/data/mock_jobs.dart';
 
 class VacancyService {
   static bool _isFetching = false;
@@ -57,65 +58,25 @@ class VacancyService {
       return [];
     }
 
-    debugPrint("Fetching cvacony1");
+    debugPrint("Fetching mock jobs");
     try {
-      final spheresResponse = await http.get(
-        Uri.parse('${kBaseUrl}user-preferences/$userId'),
-        headers: {'Authorization': 'Bearer $accessToken'},
-      );
-
-      debugPrint("spheresResponse.statusCode ${spheresResponse.statusCode}");
-      if (spheresResponse.statusCode == 401) {
-        final refreshed = await funcs.refreshAccessToken();
+      final jobs = await getMockJobs();
+      if (append) {
+        final existing = await loadCachedVacancies();
+        final newOnes = jobs
+            .where((job) => !existing.any((e) => e['jobID'] == job['jobID']))
+            .toList();
+        final updated = [...existing, ...newOnes];
+        await saveCachedVacancies(updated);
         _isFetching = false;
-        if (refreshed) return fetchVacancies(append: append);
-        return [];
-      }
-
-      if (spheresResponse.statusCode != 200) {
+        return updated;
+      } else {
+        await saveCachedVacancies(jobs);
         _isFetching = false;
-        return [];
-      }
-
-      debugPrint("spheresResponse.body ${spheresResponse.body}");
-      final sphereIds = List<int>.from(jsonDecode(spheresResponse.body));
-      final sphereParam = sphereIds.join(',');
-
-      final jobsResponse = await http.get(
-        Uri.parse(
-          '${kBaseUrl}jobs/random-unviewed-approved/$userId?spheres=$sphereParam',
-        ),
-        headers: {'Authorization': 'Bearer $accessToken'},
-      );
-
-      if (jobsResponse.statusCode == 401) {
-        final refreshed = await funcs.refreshAccessToken();
-        _isFetching = false;
-        if (refreshed) return fetchVacancies(append: append);
-        return [];
-      }
-
-      if (jobsResponse.statusCode == 200) {
-        final jobs = List<Map<String, dynamic>>.from(
-          jsonDecode(jobsResponse.body),
-        );
-        if (append) {
-          final existing = await loadCachedVacancies();
-          final newOnes = jobs
-              .where((job) => !existing.any((e) => e['jobID'] == job['jobID']))
-              .toList();
-          final updated = [...existing, ...newOnes];
-          await saveCachedVacancies(updated);
-          _isFetching = false;
-          return updated;
-        } else {
-          await saveCachedVacancies(jobs);
-          _isFetching = false;
-          return jobs;
-        }
+        return jobs;
       }
     } catch (e) {
-      // print("Ошибка получения вакансий: $e");
+      debugPrint("Ошибка получения mock вакансий: $e");
     }
 
     _isFetching = false;
@@ -188,73 +149,14 @@ class VacancyService {
   static Future<List<Map<String, dynamic>>> fetchVacanciesForListWithCache({
     required int page,
   }) async {
-    // Параметр page здесь не используется, так как API возвращает 7 случайных вакансий каждый раз.
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('auth_token');
-    final userId = prefs.getInt('user_id');
-
-    if (accessToken == null || userId == null) {
-      // print("fetchVacanciesForListWithCache: auth_token or user_id is null");
-      return [];
-    }
-
-    // Получаем список сфер пользователя
-    final spheresResponse = await http.get(
-      Uri.parse('${kBaseUrl}user-preferences/$userId'),
-      headers: {'Authorization': 'Bearer $accessToken'},
-    );
-    if (spheresResponse.statusCode != 200) {
-      // print(
-      //   "fetchVacanciesForListWithCache: Failed to get spheres, status code: ${spheresResponse.statusCode}",
-      // );
-      return [];
-    }
-    final sphereIds = List<int>.from(jsonDecode(spheresResponse.body));
-    final sphereParam = sphereIds.join(',');
-    // print("fetchVacanciesForListWithCache: Spheres: $sphereParam");
-
-    // Формируем URL согласно предоставленному curl:
-    // GET https://dev.mamakris.ru/api/jobs/random-unviewed-approved/{userId}?spheres={sphereParam}
-    final url = Uri.parse(
-      '${kBaseUrl}jobs/random-unviewed-approved/$userId?spheres=$sphereParam',
-    );
-    // print("fetchVacanciesForListWithCache: Requesting URL = $url");
-    // print(
-    //   "fetchVacanciesForListWithCache: accessToken = $accessToken, userId = $userId",
-    // );
-
+    debugPrint("Fetching mock jobs for list");
     try {
-      final response = await http.get(
-        url,
-        headers: {'Authorization': 'Bearer $accessToken'},
-      );
-      // print(
-      //   "fetchVacanciesForListWithCache: Response statusCode = ${response.statusCode}",
-      // );
-      // print("fetchVacanciesForListWithCache: Response body = ${response.body}");
-
-      if (response.statusCode == 200) {
-        final vacancies = List<Map<String, dynamic>>.from(
-          jsonDecode(response.body),
-        );
-        // print(
-        //   "fetchVacanciesForListWithCache: Vacancies count from API = ${vacancies.length}",
-        // );
-        // Обновляем уменьшённый кэш с новыми данными
-        final updatedCache = await updateCachedVacanciesReduced(vacancies);
-        // print(
-        //   "fetchVacanciesForListWithCache: Updated reduced cache length = ${updatedCache.length}",
-        // );
-        return updatedCache;
-      } else if (response.statusCode == 401) {
-        final refreshed = await funcs.refreshAccessToken();
-        if (refreshed) return fetchVacanciesForListWithCache(page: page);
-        return [];
-      }
+      final jobs = await getMockJobs();
+      final updatedCache = await updateCachedVacanciesReduced(jobs);
+      return updatedCache;
     } catch (e) {
-      // print("fetchVacanciesForListWithCache: Exception occurred: $e");
+      debugPrint("Ошибка получения mock вакансий для списка: $e");
     }
-
     return [];
   }
 
@@ -269,89 +171,24 @@ class VacancyService {
   }
 
   static Future<bool> _sendReaction(int jobId, bool isLiked) async {
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('auth_token');
-    final userId = prefs.getInt('user_id');
-
-    if (accessToken == null || userId == null) {
-      _lastErrorMessage = 'Отсутствует токен или ID пользователя';
-      return false;
-    }
-
-    final url = Uri.parse('${kBaseUrl}viewed-jobs/$userId/$jobId');
-    final headers = {
-      'Authorization': 'Bearer $accessToken',
-      'Content-Type': 'application/json',
-    };
-    final body = jsonEncode({'isLiked': isLiked});
-
-    try {
-      final response = await http.put(url, headers: headers, body: body);
-
-      if (response.statusCode == 401) {
-        debugPrint("sendReaction: Статус 401, пытаемся обновить токен");
-        final refreshed = await funcs.refreshAccessToken();
-        if (refreshed) {
-          debugPrint("sendReaction: Токен успешно обновлён, повторяем запрос");
-          return _sendReaction(jobId, isLiked);
-        } else {
-          _lastErrorMessage = 'Не удалось обновить токен';
-          return false;
-        }
-      }
-
-      if (response.statusCode != 200) {
-        _lastErrorMessage = 'Ошибка: ${response.statusCode}';
-        try {
-          final responseBody = jsonDecode(response.body);
-          if (responseBody is Map && responseBody.containsKey('message')) {
-            _lastErrorMessage = responseBody['message'];
-          }
-        } catch (_) {
-          // Игнорируем ошибку парсинга
-        }
-        return false;
-      }
-
-      _lastErrorMessage = null; // сбрасываем, если всё хорошо
-      return true;
-    } catch (e) {
-      _lastErrorMessage = 'Сетевой сбой: $e';
-      return false;
-    }
+    debugPrint("Mock reaction: $jobId, liked: $isLiked");
+    // For mock, always succeed
+    _lastErrorMessage = null;
+    return true;
   }
 
   static Future<Map<String, dynamic>?> fetchVacancyById(int jobId) async {
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('auth_token');
-
-    if (accessToken == null) {
-      // print("fetchVacancyById: auth_token is null");
-      return null;
-    }
-
-    final url = Uri.parse('${kBaseUrl}jobs/$jobId');
-    // print("fetchVacancyById: Requesting URL = $url");
-
+    debugPrint("Fetching mock vacancy by id: $jobId");
     try {
-      final response = await http.get(
-        url,
-        headers: {'Authorization': 'Bearer $accessToken'},
-      );
-      // print("fetchVacancyById: Response statusCode = ${response.statusCode}");
-      // print("fetchVacancyById: Response body = ${response.body}");
-
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
-      } else if (response.statusCode == 401) {
-        // При необходимости можно реализовать логику обновления токена.
-        final refreshed = await funcs.refreshAccessToken();
-        if (refreshed) return fetchVacancyById(jobId);
+      final jobs = await getMockJobs();
+      for (var j in jobs) {
+        if (j['jobID'] == jobId) {
+          return j['job'] as Map<String, dynamic>;
+        }
       }
     } catch (e) {
-      // print("fetchVacancyById: Exception occurred: $e");
+      debugPrint("Ошибка получения mock вакансии по id: $e");
     }
-
     return null;
   }
 

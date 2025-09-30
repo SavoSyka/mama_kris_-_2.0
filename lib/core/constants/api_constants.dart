@@ -14,4 +14,8 @@ class ApiConstants {
   static const getAllSphereVacancies = 'jobs/autocomplete?query=';
   static userPreference(String? userId) => '/user-preferences/$userId';
   static const searchCombined = 'jobs/search-combined';
+  static createJob(String? userId) => 'jobs/user/$userId';
+  static getUserJob(String? userId) => 'jobs/user/$userId';
+  static updateContacts(String? userId, String? contactId) =>
+      'contacts/$userId/$contactId';
 }

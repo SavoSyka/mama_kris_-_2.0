@@ -12,6 +12,7 @@ class RouteName {
   static String welcomeEmploye = "/welcome-employe";
 
   static String employesHome = "/employes-home";
+  static String postJob = "/post-job";
   static String applicantHome = "/applicant-home";
 
   static String login = "/login";

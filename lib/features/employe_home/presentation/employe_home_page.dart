@@ -32,10 +32,9 @@ class _EmployeHomePageState extends State<EmployeHomePage> {
     AppTextContents.archive,
   ];
 
-  final TextEditingController _professionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _contactController = TextEditingController();
+  final _professionController = TextEditingController();
+  final _salaryController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   int _selectedIndex = 0;
 

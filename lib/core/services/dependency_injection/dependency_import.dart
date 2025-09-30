@@ -33,6 +33,22 @@ import 'package:mama_kris/features/auth/domain/usecases/forgot_password_usecase.
 import 'package:mama_kris/features/auth/domain/usecases/login_applicant.dart';
 import 'package:mama_kris/features/auth/domain/usecases/register_applicant.dart';
 import 'package:mama_kris/features/auth/domain/usecases/validate_otp.dart';
+import 'package:mama_kris/features/employe_home/applications/post_job/post_job_bloc.dart';
+import 'package:mama_kris/features/employe_home/data/data_source/job_post_remote_data_source.dart';
+import 'package:mama_kris/features/employe_home/data/data_source/job_post_remote_data_source_impl.dart';
+import 'package:mama_kris/features/employe_home/data/repository_impl/job_post_repository_impl.dart';
+import 'package:mama_kris/features/employe_home/domain/repository/job_post_repository.dart';
+import 'package:mama_kris/features/employe_home/domain/usecases/post_job_usecase.dart';
+import 'package:mama_kris/features/employe_profile/applications/profile_update/bloc/profile_update_bloc.dart';
+import 'package:mama_kris/features/employe_profile/data/data_source/profile_remote_data_source.dart';
+import 'package:mama_kris/features/employe_profile/data/data_source/profile_remote_data_source_impl.dart';
+import 'package:mama_kris/features/employe_profile/data/repository_impl/profile_repository_impl.dart';
+import 'package:mama_kris/features/employe_profile/domain/repository/profile_repository.dart';
+import 'package:mama_kris/features/employe_profile/domain/usecases/update_about_usecase.dart';
+import 'package:mama_kris/features/employe_profile/domain/usecases/update_contacts_usecase.dart';
+import 'package:mama_kris/features/employe_profile/domain/usecases/update_email_usecase.dart';
+import 'package:mama_kris/features/employe_profile/domain/usecases/update_password_usecase.dart';
+import 'package:mama_kris/features/employe_profile/domain/usecases/verify_email_usecase.dart';
 
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/features/welcome_page/data/data_source/force_update_remote_data_source.dart';

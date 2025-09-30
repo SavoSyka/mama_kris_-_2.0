@@ -7,6 +7,7 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/error_login_container.dart';
+import 'package:mama_kris/core/common/widgets/show_toast.dart';
 import 'package:mama_kris/core/constants/app_constants.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
@@ -16,6 +17,8 @@ import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/auth/applications/auth_bloc.dart';
 import 'package:mama_kris/features/auth/applications/auth_event.dart';
 import 'package:mama_kris/features/auth/applications/auth_state.dart';
+import 'package:mama_kris/features/employe_profile/applications/profile_update/bloc/profile_update_bloc.dart';
+import 'package:mama_kris/features/employe_profile/domain/entity/contact_entity.dart';
 import 'package:pinput/pinput.dart';
 
 class EmployeProfileBottomsheet {
@@ -81,24 +84,19 @@ class EmployeProfileBottomsheet {
                           ),
                           const SizedBox(height: 20),
 
-                          BlocConsumer<AuthBloc, AuthState>(
+                          BlocConsumer<ProfileUpdateBloc, ProfileUpdateState>(
                             listener: (context, state) {
                               if (state is Authenticated) {
                                 context.goNamed(RouteName.applicantHome);
                               } else if (state is AuthError) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(state.message)),
-                                );
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   SnackBar(content: Text(state.message)),
+                                // );
                               }
                             },
                             builder: (context, state) {
                               return Column(
                                 children: [
-                                  if (state is AuthError)
-                                    ErrorLoginContainer(
-                                      errMessage: state.message,
-                                    ),
-
                                   CustomPrimaryButton(
                                     btnText: AppTextContents.next,
                                     isSecondaryPrimary: true,
@@ -154,6 +152,8 @@ class EmployeProfileBottomsheet {
     final vkController = TextEditingController(text: vk ?? '');
     final whatsappController = TextEditingController(text: whatsapp ?? '');
 
+    final formKey = GlobalKey<FormState>();
+
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -169,79 +169,112 @@ class EmployeProfileBottomsheet {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(16),
                 ),
-                child: Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Update Contact Information",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                child: BlocConsumer<ProfileUpdateBloc, ProfileUpdateState>(
+                  listener: (context, state) {
+                    if (state is ProfileUpdateSuccess) {
+                      showToast(
+                        context,
+                        message: "Contact updated",
+                        isError: false,
+                      );
 
-                      CustomInputText(
-                        controller: telegramController,
-                        hintText: "Telegram Username / Link",
-                        prefixIcon: const Icon(
-                          Icons.telegram,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
+                      Navigator.pop(context);
+                    } else if (state is ProfileUpdateError) {
+                      showToast(context, message: state.message);
+                    }
 
-                      CustomInputText(
-                        controller: vkController,
-                        hintText: "VK Profile Link",
-                        prefixIcon: const Icon(Icons.link),
-                      ),
-                      const SizedBox(height: 16),
-
-                      CustomInputText(
-                        controller: whatsappController,
-                        hintText: "WhatsApp Number",
-                        prefixIcon: Container(
-                          padding: const EdgeInsets.all(13),
-                          child: const CustomImageView(
-                            imagePath: MediaRes.whatsapp,
-                            width: 8,
-
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-
-                        keyboardType: TextInputType.phone,
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustomPrimaryButton(
-                              btnText: "Save",
-                              isSecondaryPrimary: true,
-
-                              onTap: () {
-                                onSave(
-                                  telegramController.text,
-                                  vkController.text,
-                                  whatsappController.text,
-                                );
-                                Navigator.pop(context);
-                              },
+                    // TODO: implement listener
+                  },
+                  builder: (context, state) {
+                    return Container(
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(20),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Update Contact Information",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 20),
+
+                            CustomInputText(
+                              controller: telegramController,
+                              hintText: "Telegram Username / Link",
+                              prefixIcon: const Icon(
+                                Icons.telegram,
+                                color: Colors.blue,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+
+                            CustomInputText(
+                              controller: vkController,
+                              hintText: "VK Profile Link",
+                              prefixIcon: const Icon(Icons.link),
+                            ),
+                            const SizedBox(height: 16),
+
+                            CustomInputText(
+                              controller: whatsappController,
+                              hintText: "WhatsApp Number",
+                              prefixIcon: Container(
+                                padding: const EdgeInsets.all(13),
+                                child: const CustomImageView(
+                                  imagePath: MediaRes.whatsapp,
+                                  width: 8,
+
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+
+                              keyboardType: TextInputType.phone,
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomPrimaryButton(
+                                    btnText: "Save",
+                                    isSecondaryPrimary: true,
+
+                                    isLoading: state is ProfileUpdateLoading,
+
+                                    onTap: () {
+                                      context.read<ProfileUpdateBloc>().add(
+                                        UpdateContactsEvent(
+                                          contacts: ContactEntity(
+                                            telegram: telegramController.text,
+                                            whatsapp: whatsappController.text,
+                                            vk: vkController.text,
+                                          ),
+                                        ),
+                                      );
+                                      // onSave(
+                                      //   telegramController.text,
+                                      //   vkController.text,
+                                      //   whatsappController.text,
+                                      // );
+                                      // Navigator.pop(context);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             );
@@ -499,8 +532,6 @@ class EmployeProfileBottomsheet {
     return result;
   }
 
-
-
   static Future<String?> changePassword(
     BuildContext context, {
 
@@ -563,14 +594,14 @@ class EmployeProfileBottomsheet {
                             autoFocus: true,
                           ),
                           const SizedBox(height: 20),
-                             CustomInputText(
+                          CustomInputText(
                             controller: newPassword,
                             hintText: AppTextContents.email,
                             validator: FormValidations.validateEmail,
                             autoFocus: true,
                           ),
                           const SizedBox(height: 20),
-                             CustomInputText(
+                          CustomInputText(
                             controller: confirmPassword,
                             hintText: AppTextContents.email,
                             validator: FormValidations.validateEmail,
@@ -640,6 +671,4 @@ class EmployeProfileBottomsheet {
 
     return result;
   }
-
-
 }

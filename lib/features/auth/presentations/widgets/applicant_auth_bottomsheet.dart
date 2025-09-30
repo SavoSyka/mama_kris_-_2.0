@@ -66,7 +66,11 @@ class ApplicantAuthBottomSheet {
     bool isForgotPassword = false,
   }) async {
     final emailController = TextEditingController(
-      text: AppConstants.isDevelopmentMode ? 'roobi@yopmail.com' : '',
+      text: AppConstants.isDevelopmentMode
+          ? isSecondaryPrimary
+                ? "mamaemp@yopmail.com"
+                : 'roobi@yopmail.com'
+          : '',
     );
     final formKey = GlobalKey<FormState>();
 
@@ -367,10 +371,18 @@ class ApplicantAuthBottomSheet {
     required bool isSecondaryPrimary,
   }) async {
     final emailController = TextEditingController(
-      text: AppConstants.isDevelopmentMode ? 'roobi@yopmail.com' : '',
+      text: AppConstants.isDevelopmentMode
+          ? isSecondaryPrimary
+                ? "mamaemp@yopmail.com"
+                : 'roobi@yopmail.com'
+          : '',
     );
     final passwordController = TextEditingController(
-      text: AppConstants.isDevelopmentMode ? '12345678' : '',
+      text: AppConstants.isDevelopmentMode
+          ? isSecondaryPrimary
+                ? "811629811629"
+                : '12345678'
+          : '',
     );
     final formKey = GlobalKey<FormState>();
 

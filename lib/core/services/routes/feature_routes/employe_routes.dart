@@ -8,4 +8,11 @@ final List<RouteBase> employeRoutes = [
       return const EmployeTabScreen();
     },
   ),
+  GoRoute(
+    path: RouteName.postJob,
+    name: RouteName.postJob,
+    builder: (BuildContext context, GoRouterState state) {
+      return const PostJobPage();
+    },
+  ),
 ];

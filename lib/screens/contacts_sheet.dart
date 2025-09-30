@@ -6,7 +6,18 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 
 Future<void> showContactsSheet(BuildContext context, int contactId) async {
-  final contactData = await ContactsService.fetchContacts(contactId);
+  final contactData = {
+    "contactsID": 21104,
+    "name": "Росатом",
+    "telegram": "@example",
+    "email": "contact@example.com",
+    "phone": "+1234567890",
+    "whatsapp": "+1234567890",
+    "vk": "vk.com/example",
+    "link": "https://example.com",
+    "userID": 23734,
+  };
+  //await ContactsService.fetchContacts(contactId);
 
   // Если не получили данные — показываем SnackBar
   if (contactData == null || contactData.isEmpty) {
@@ -93,15 +104,15 @@ Future<void> showContactsSheet(BuildContext context, int contactId) async {
                       switch (key) {
                         case 'telegram':
                           platform = "Telegram";
-                          final String telegramValue =
-                              contactData['telegram'].toString();
+                          final String telegramValue = contactData['telegram']
+                              .toString();
                           primaryText = telegramValue.startsWith('@')
                               ? telegramValue
                               : '@' + telegramValue;
                           secondaryText =
                               "Свяжитесь с заказчиком через Telegram";
-                          onPressedCallback =
-                              () => onTelegramPressed(telegramValue, context);
+                          onPressedCallback = () =>
+                              onTelegramPressed(telegramValue, context);
                           break;
 
                         case 'whatsapp':
@@ -110,45 +121,45 @@ Future<void> showContactsSheet(BuildContext context, int contactId) async {
                           secondaryText =
                               "Свяжитесь с заказчиком через WhatsApp";
                           onPressedCallback = () => onWhatsAppPressed(
-                                contactData['whatsapp'].toString(),
-                                context,
-                              );
+                            contactData['whatsapp'].toString(),
+                            context,
+                          );
                           break;
                         case 'email':
                           platform = "Email";
                           primaryText = contactData['email'].toString();
                           secondaryText = "Свяжитесь с заказчиком через Email";
                           onPressedCallback = () => onEmailPressed(
-                                contactData['email'].toString(),
-                                context,
-                              );
+                            contactData['email'].toString(),
+                            context,
+                          );
                           break;
                         case 'phone':
                           platform = "Телефон";
                           primaryText = contactData['phone'].toString();
                           secondaryText = "Свяжитесь с заказчиком по телефону";
                           onPressedCallback = () => onPhonePressed(
-                                contactData['phone'].toString(),
-                                context,
-                              );
+                            contactData['phone'].toString(),
+                            context,
+                          );
                           break;
                         case 'vk':
                           platform = "VK";
                           primaryText = contactData['vk'].toString();
                           secondaryText = "Свяжитесь с заказчиком через VK";
                           onPressedCallback = () => onVKPressed(
-                                contactData['vk'].toString(),
-                                context,
-                              );
+                            contactData['vk'].toString(),
+                            context,
+                          );
                           break;
                         case 'link':
                           platform = "Ссылка";
                           primaryText = contactData['link'].toString();
                           secondaryText = "Заполните анкету по ссылке";
                           onPressedCallback = () => onLinkPressed(
-                                contactData['link'].toString(),
-                                context,
-                              );
+                            contactData['link'].toString(),
+                            context,
+                          );
                           break;
                         default:
                           platform = key;
@@ -266,9 +277,7 @@ Future<void> showContactsSheet(BuildContext context, int contactId) async {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF00A80E),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              15 * scaleX,
-                            ),
+                            borderRadius: BorderRadius.circular(15 * scaleX),
                           ),
                           elevation: 0,
                           padding: EdgeInsets.symmetric(

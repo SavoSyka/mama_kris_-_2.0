@@ -32,7 +32,7 @@ class VacanciesSlider extends StatelessWidget {
 
     return Container(
       width: 395 * scaleX,
-      height: 540 * scaleY,
+      height: 500 * scaleY,
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(15 * scaleX),
@@ -124,7 +124,7 @@ class VacanciesSlider extends StatelessWidget {
           ),
           // Фиксированная кнопка "Интересно" (справа)
           Positioned(
-            top: 468.36 * scaleY,
+            top: 430.36 * scaleY,
             left: 205.64 * scaleX,
             child: Container(
               width: 162.33 * scaleX,
@@ -167,7 +167,7 @@ class VacanciesSlider extends StatelessWidget {
           ),
           // Фиксированная кнопка "Неинтересно" (слева)
           Positioned(
-            top: 468 * scaleY,
+            top: 430 * scaleY,
             left: 26 * scaleX,
             child: Container(
               width: 162.33 * scaleX,

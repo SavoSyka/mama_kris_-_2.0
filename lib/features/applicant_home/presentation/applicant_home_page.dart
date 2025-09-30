@@ -1,642 +1,518 @@
-import 'dart:convert';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mama_kris/core/common/widgets/buttons/custom_primary_button.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
-import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
-import 'package:mama_kris/core/common/widgets/entity/job_model.dart';
+import 'package:mama_kris/core/common/widgets/error_login_container.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
-import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/features/applicant_home/applications/home/bloc/applicant_home_bloc.dart';
-import 'package:mama_kris/features/applicant_home/applications/search/job_search_cubit.dart';
-import 'package:mama_kris/features/applicant_home/applications/search/job_search_state.dart';
-import 'package:mama_kris/features/applicant_home/applications/search/recent_search_queries.dart';
+import 'package:mama_kris/features/applicant_home/presentation/widget/open_search_bottomsheet.dart';
+import 'package:mama_kris/widgets/vacancies_slider.dart';
+import 'package:mama_kris/widgets/vacancies_banner.dart';
+import 'package:mama_kris/screens/contacts_sheet.dart';
+import 'package:mama_kris/widgets/vacancies_list.dart';
+import 'package:mama_kris/utils/vacancy_service.dart';
 import 'package:mama_kris/widgets/no_more_vacancies_card.dart';
+import 'package:mama_kris/screens/main_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mama_kris/screens/first_alert_sheet.dart';
+
+import 'package:mama_kris/utils/share_and_review.dart' as show;
+
+int slideDirection = -1;
+int selectedMode = 0; // 0 - Слайдер, 1 - Список
+int currentVacancyIndex = 0;
+int previousVacancyIndex = 0; // добавляем предыдущий индекс
+List<Map<String, dynamic>>? vacancies;
 
 class ApplicantHomePage extends StatefulWidget {
   const ApplicantHomePage({super.key});
 
   @override
-  State<ApplicantHomePage> createState() => _ApplicantHomePageState();
+  _ApplicantHomePageState createState() => _ApplicantHomePageState();
 }
 
 class _ApplicantHomePageState extends State<ApplicantHomePage> {
-  final List<String> _tabList = [
-    AppTextContents.active,
-    AppTextContents.drafts,
-    AppTextContents.archive,
-  ];
-
-  bool isList = false;
-  List<JobModel> _allJobs = [];
-  bool _isLoading = true;
+  int selectedMode = 0; // 0 - Слайдер, 1 - Список
+  int currentVacancyIndex = 0;
+  int previousVacancyIndex = 0;
+  int slideDirection = -1; // -1 для «Интересно», +1 для «Неинтересно»
+  List<Map<String, dynamic>>? vacancies;
 
   @override
   void initState() {
     super.initState();
-    loadJobs();
+
+    context.read<ApplicantHomeBloc>().add(GetAllVacancyEvent());
+    _loadInitialVacancies();
   }
 
-  Future<void> loadJobs() async {
-    final String jsonString = await rootBundle.loadString(
-      'assets/json/job.json',
-    );
-    final List<dynamic> jsonData = json.decode(jsonString);
+  Future<void> _loadInitialVacancies() async {
+    final cached = await VacancyService.loadCachedVacancies();
+    if (cached.isNotEmpty) {
+      setState(() {
+        vacancies = cached;
+      });
+    } else {
+      final fresh = await VacancyService.fetchVacancies();
+      setState(() {
+        vacancies = fresh;
+      });
+    }
+  }
+
+  Future<void> _handleVacancyReaction({required bool isLiked}) async {
+    if (vacancies == null || vacancies!.isEmpty) return;
+
+    final job = vacancies![currentVacancyIndex];
+    final jobID = job['jobID'];
+    final contactsID = job['contactsID']; // Сохраняем ДО удаления
+    final prefs = await SharedPreferences.getInstance();
+
+    // 1. Увеличиваем счетчик просмотров
+    int currentViewed = prefs.getInt('viewed_count') ?? 0;
+    int newViewed = currentViewed + 1;
+    await prefs.setInt('viewed_count', newViewed);
+    // print("Просмотров: $newViewed");
+    // Если достигнут один из порогов: 20, 120, 220, выполняем нужное действие
+    if (newViewed % 100 == 20) {
+      // print("Достигнут порог просмотренных вакансий: $newViewed");
+      // Здесь можно, например, вызвать функцию показа уведомления о том, что можно поделиться приложением:
+      show.showShareAppNotification(context, newViewed);
+    }
+    if (newViewed == 0) {
+      // print("Достигнут порог лайков: $newLiked");
+      // Здесь можно вызвать функцию для запроса отзыва:
+      await showFirstAlertSheet(context);
+    }
+
+    // 2. Отправляем реакцию
+    final success = isLiked
+        ? await VacancyService.likeVacancy(jobID)
+        : await VacancyService.dislikeVacancy(jobID);
+
+    if (!success) {
+      final error =
+          VacancyService.getLastErrorMessage() ?? 'Неизвестная ошибка';
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('❗ $error')));
+      return;
+    }
+
+    // 3. Если поставлен лайк, увеличиваем счетчик лайков и, если достигнут порог 7, выполняем действие
+    if (isLiked && mounted) {
+      int currentLiked = prefs.getInt('liked_count') ?? 0;
+      int newLiked = currentLiked + 1;
+      await prefs.setInt('liked_count', newLiked);
+      // print("Лайков: $newLiked");
+      if (newLiked % 100 == 7) {
+        // print("Достигнут порог лайков: $newLiked");
+        // Здесь можно вызвать функцию для запроса отзыва:
+        await show.requestReview();
+      }
+
+      // Показываем контакты работодателя
+      await showContactsSheet(context, 21104);
+
+      //contactsID);
+    }
+
+    // Выводим текущие значения счетчиков
+    // print("Просмотров после реакции: ${prefs.getInt('viewed_count')}");
+    // print("Лайков после реакции: ${prefs.getInt('liked_count')}");
+
+    // 4. Удаляем вакансию из кэша
+    await VacancyService.removeFromCache(jobID);
+
+    // 5. Загружаем обновленный кэш вакансий и, если вакансий мало, запрашиваем новый пакет
+    final updated = await VacancyService.loadCachedVacancies();
+    if (updated.length <= 2) {
+      final appended = await VacancyService.fetchVacancies(append: true);
+      vacancies = appended;
+    } else {
+      vacancies = updated;
+    }
+
+    // 6. Обновляем индексы для показа следующей вакансии
+    if (!mounted) return;
     setState(() {
-      _allJobs = jsonData.map((e) => JobModel.fromJson(e)).toList();
-      _isLoading = false;
+      previousVacancyIndex = currentVacancyIndex;
+      slideDirection = isLiked ? -1 : 1;
+
+      if (vacancies!.isEmpty) {
+        currentVacancyIndex = 0;
+      } else {
+        currentVacancyIndex = (currentVacancyIndex + 1) % vacancies!.length;
+      }
+
+      // print(
+      // "Updated indexes: previousVacancyIndex = $previousVacancyIndex, "
+      // "new currentJobIndex = $currentVacancyIndex, "
+      // "slideDirection = $slideDirection",
+      // );
     });
 
-    debugPrint("Jobs ${_allJobs.length}");
-  }
-
-  final Map<String, String> _tabStatusMap = {
-    'Активные': 'active',
-    'Черновики': 'draft',
-    'Архив': 'archived',
-  };
-
-  List<JobModel> get filteredJobs {
-    return _allJobs;
+    // debugPrint(
+    // '[${isLiked ? 'LIKE' : 'DISLIKE'}] Remaining jobIDs in cache: '
+    // '${vacancies!.map((e) => e['jobID']).toList()}',
+    // );
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFFFF9E3), Color(0xFFCEE5DB)],
+    // Если вакансии ещё не загружены, показываем индикатор загрузки
+    if (vacancies == null) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    double scaleX = screenWidth / 428;
+    double scaleY = screenHeight / 956;
+
+    // Безопасно проверяем индекс
+    if (currentVacancyIndex >= vacancies!.length && vacancies!.isNotEmpty) {
+      currentVacancyIndex = 0;
+    }
+
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () {
+          debugPrint("Selected mode");
+          // setState(() {
+          //   selectedMode = 0;
+          // });
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFFFF9E3), Color(0xFFCEE5DB)],
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: CustomText(
-                  text: AppTextContents.vacancies,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-                ),
-              ),
-              SizedBox(height: 20.h),
-
-              // Search Field
-              GestureDetector(
-                onTap: () {
-                  _openSearchBottomSheet(context);
-                },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppPalette.white,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: CustomText(text: AppTextContents.search),
+          child: BlocBuilder<ApplicantHomeBloc, ApplicantHomeState>(
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  // * Заголовок (title.svg)
+                  Positioned(
+                    top: 70 * scaleY,
+                    left: 16 * scaleX,
+                    child: const CustomText(
+                      text: AppTextContents.vacancies,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
                       ),
-                      CustomImageView(imagePath: MediaRes.search, width: 24),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              /// buttons filter buttons
-              Padding(
-                padding: const EdgeInsetsGeometry.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        _Cards(
-                          imagePath: MediaRes.slider,
-                          text: AppTextContents.slider,
-
-                          color: !isList
-                              ? AppPalette.primaryColor
-                              : AppPalette.white,
-                          iconColor: !isList
-                              ? AppPalette.white
-                              : AppPalette.grey,
-                          onTap: () {
-                            setState(() {
-                              isList = false;
-                            });
-                          },
-                        ),
-                        const SizedBox(width: 12),
-                        _Cards(
-                          imagePath: MediaRes.slider,
-                          text: AppTextContents.list,
-                          color: isList
-                              ? AppPalette.primaryColor
-                              : AppPalette.white,
-                          iconColor: isList
-                              ? AppPalette.white
-                              : AppPalette.grey,
-                          onTap: () {
-                            setState(() {
-                              isList = true;
-                            });
-                          },
-                        ),
-                      ],
                     ),
 
-                    Row(
-                      children: [
+                    // S
+
+                    // vgPicture.asset(
+                    //   'assets/vacancies_screen/title.svg',
+                    //   width: 121 * scaleX,
+                    //   height: 25 * scaleY,
+                    //   fit: BoxFit.contain,
+                    // ),
+                  ),
+
+                  // * Search box field
+                  Positioned(
+                    top: 115 * scaleY,
+                    left: 16 * scaleX,
+                    right: 16 * scaleX,
+                    child:
+                        // Search Field
                         GestureDetector(
                           onTap: () {
-                            final filterResult = _openFilterBottomSheet(
-                              context,
-                              ["Developer", "Designer", "Manager", "Tester"],
-                            );
-
-                            // if (filterResult != null) {
-                            //   print("Price range: ${filterResult['priceRange']}");
-                            //   print(
-                            //     "Selected jobs: ${filterResult['selectedJobs']}",
-                            //   );
-                            // }
+                            homeOpenSearchBottomSheet(context);
                           },
-                          child: const CustomImageView(
-                            imagePath: MediaRes.btnFilter,
-                            width: 48,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppPalette.white,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: CustomText(
+                                    text: AppTextContents.search,
+                                  ),
+                                ),
+                                CustomImageView(
+                                  imagePath: MediaRes.search,
+                                  width: 24,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                  ),
+
+                  // * two buttons at the topПереключатель режимов "Слайдер" и "Список"
+                  Positioned(
+                    top: 176 * scaleY,
+                    left: 16 * scaleX,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 108 * scaleX,
+                          height: 40 * scaleY,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: selectedMode == 0
+                                    ? const Color(0xFFCFFFD1)
+                                    : const Color(0x78E7E7E7),
+                                offset: Offset(0, 4 * scaleY),
+                                blurRadius: 19 * scaleX,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(15 * scaleX),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedMode = 0;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: selectedMode == 0
+                                  ? const Color(0xFF00A80E)
+                                  : const Color(0xFFFFFFFF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  15 * scaleX,
+                                ),
+                              ),
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6 * scaleY,
+                                horizontal: 8 * scaleX,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  selectedMode == 0
+                                      ? 'assets/vacancies_screen/active.png'
+                                      : 'assets/vacancies_screen/inactive.png',
+                                  width: 16 * scaleX,
+                                  height: 16 * scaleY,
+                                ),
+                                SizedBox(width: 6 * scaleX),
+                                Expanded(
+                                  child: Text(
+                                    'Слайдер',
+                                    style: TextStyle(
+                                      fontFamily: 'Jost',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14 * scaleX,
+                                      height: 20 / 14,
+                                      color: selectedMode == 0
+                                          ? Colors.white
+                                          : const Color(0xFF596574),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 16),
+                        Container(
+                          width: 108 * scaleX,
+                          height: 40 * scaleY,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: selectedMode == 1
+                                    ? const Color(0xFFCFFFD1)
+                                    : const Color(0x78E7E7E7),
+                                offset: Offset(0, 4 * scaleY),
+                                blurRadius: 19 * scaleX,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(15 * scaleX),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedMode = 1;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: selectedMode == 1
+                                  ? const Color(0xFF00A80E)
+                                  : const Color(0xFFFFFFFF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  15 * scaleX,
+                                ),
+                              ),
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6 * scaleY,
+                                horizontal: 8 * scaleX,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  selectedMode == 1
+                                      ? 'assets/vacancies_screen/active.png'
+                                      : 'assets/vacancies_screen/inactive.png',
+                                  width: 16 * scaleX,
+                                  height: 16 * scaleY,
+                                ),
+                                SizedBox(width: 6 * scaleX),
+                                Expanded(
+                                  child: Text(
+                                    'Список',
+                                    style: TextStyle(
+                                      fontFamily: 'Jost',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14 * scaleX,
+                                      height: 20 / 14,
+                                      color: selectedMode == 1
+                                          ? Colors.white
+                                          : const Color(0xFF596574),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Center(
-                child: NoMoreVacanciesCard(
-                  onGoToProfile: () {
-                    debugPrint("pressed");
-
-                    context.read<ApplicantHomeBloc>().add(GetAllVacancyEvent());
-                    // context.replaceNamed(
-                    //   RouteName.applicantHome,
-                    //   extra: {'pageIndex': 2},
-                    // );
-                    debugPrint("pressed after");
-                  },
-                ),
-              ),
-              // const EmptyPostedJob()
-
-              // JobList(jobs: _allJobs),
-              // Expanded(
-              //   child: JobList(jobs: _allJobs, isList: isList),
-              // ),
-
-              // const EmptyPostedJob(),
-              // SizedBox(height: 24.h),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _openFilterBottomSheet(BuildContext context, List<String> jobList) {
-    double minPrice = 20.00;
-    double maxPrice = 145.00;
-    RangeValues priceRange = RangeValues(minPrice, maxPrice);
-
-    // track selected jobs
-    List<String> selectedJobs = [];
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return DraggableScrollableSheet(
-              expand: false,
-              initialChildSize: 0.5,
-              minChildSize: 0.45,
-              maxChildSize: 0.75,
-              builder: (_, scrollController) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
                   ),
-                  padding: const EdgeInsets.all(16),
-                  child: ListView(
-                    controller: scrollController,
-                    children: [
-                      // Drag handle
-                      Center(
-                        child: Container(
-                          width: 40,
-                          height: 4,
-                          margin: const EdgeInsets.only(bottom: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
 
-                      const Text(
-                        "Filter Jobs",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                  /// * job display cards  ======= Режим "Слайдер" =======
+                  if (selectedMode == 0)
+                    if (state is ApplicantHomeLoadingState)
+                      Positioned(
+                        top: 300 * scaleY,
+                        left: 0,
+                        right: 0,
 
-                      // Price Range
-                      const Text("Price Range"),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                        children: [
-                          CustomText(
-                            text: "от ${priceRange.start.toInt()} руб",
-                          ),
-                          CustomText(text: "до ${priceRange.end.toInt()} руб"),
-                        ],
-                      ),
-                      RangeSlider(
-                        padding: EdgeInsets.zero,
-                        values: priceRange,
-                        min: minPrice,
-                        max: maxPrice,
-                        divisions: 20,
-                        labels: RangeLabels(
-                          "от ${priceRange.start.toInt()} руб",
-                          "до ${priceRange.end.toInt()} руб",
-                        ),
-                        onChanged: (values) {
-                          setState(() {
-                            priceRange = values;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Job list selection
-                      const Text("Select Jobs"),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: jobList.map((job) {
-                          final isSelected = selectedJobs.contains(job);
-                          return ChoiceChip(
-                            label: CustomText(
-                              text: job,
-                              style: TextStyle(
-                                color: isSelected
-                                    ? AppPalette.white
-                                    : AppPalette.black,
-                              ),
-                            ),
-                            checkmarkColor: AppPalette.white,
-                            selected: isSelected,
-                            selectedColor: Theme.of(context).primaryColor,
-                            onSelected: (selected) {
-                              setState(() {
-                                if (selected) {
-                                  selectedJobs.add(job);
-                                } else {
-                                  selectedJobs.remove(job);
-                                }
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      CustomPrimaryButton(
-                        btnText: 'Apply filters',
-                        onTap: () {
-                          Navigator.pop(context, {
-                            'priceRange': priceRange,
-                            'selectedJobs': selectedJobs,
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _openSearchBottomSheet(BuildContext context) async {
-    final TextEditingController searchController = TextEditingController(
-      text: "Дизайнер",
-    );
-
-    final recentSearchesCubit = getIt<RecentSearchesCubit>();
-    // final jobSearchCubit = getIt<JobSearchCubit>();
-
-    await recentSearchesCubit.loadRecentSearches();
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withOpacity(0.3),
-      builder: (context) {
-        return DraggableScrollableSheet(
-          expand: true,
-          initialChildSize: 1,
-          minChildSize: 0.7,
-          maxChildSize: 1,
-          builder: (_, scrollController) {
-            return StatefulBuilder(
-              builder: (context, useState) {
-                return MultiBlocProvider(
-                  providers: [BlocProvider.value(value: recentSearchesCubit)],
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                      child: Container(
-                        color: Colors.white.withOpacity(0.7),
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Drag handle
-                            Center(
-                              child: Container(
-                                width: 40,
-                                height: 5,
-                                margin: const EdgeInsets.only(bottom: 16),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade400,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ),
-                            // Search input
-                            TextField(
-                              controller: searchController,
-                              autofocus: true,
-                              keyboardType: TextInputType.text,
-                              onSubmitted: (value) {
-                                if (value.isNotEmpty) {
-                                  // recentSearchesCubit.saveSearchQuery(value);
-                                  context.read<JobSearchCubit>().fetchJobs(
-                                    value,
-                                  );
-                                }
-                                FocusScope.of(context).unfocus();
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Search jobs",
-                                prefixIcon: const Icon(Icons.search),
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            // Recent Searches Section
-                            BlocBuilder<
-                              RecentSearchesCubit,
-                              RecentSearchesState
-                            >(
-                              builder: (context, state) {
-                                debugPrint("state $state");
-                                if (state is RecentSearchesLoading) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (state is RecentSearchesLoaded &&
-                                    state.searches.isNotEmpty) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            "Recent searches",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              context
-                                                  .read<RecentSearchesCubit>()
-                                                  .clearRecentSearches();
-                                            },
-                                            child: const Text("Clear all"),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Wrap(
-                                        spacing: 6,
-                                        runSpacing: 6,
-                                        children: state.searches.map((search) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              searchController.text =
-                                                  search.title;
-                                            },
-                                            child: Chip(
-                                              label: Text(search.title),
-                                              deleteIcon: const Icon(
-                                                Icons.close,
-                                                size: 16,
-                                              ),
-                                              padding: EdgeInsets.zero,
-                                              materialTapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
-                                              visualDensity:
-                                                  VisualDensity.compact,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(6),
-                                              ),
-                                              onDeleted: () {
-                                                recentSearchesCubit
-                                                    .removeSearchQuery(
-                                                      search.title,
-                                                    );
-
-                                                useState(() {});
-                                              },
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                      const SizedBox(height: 20),
-                                    ],
-                                  );
-                                } else if (state is RecentSearchesError) {
-                                  return Text("Error: ${state.message}");
-                                }
-                                return const SizedBox.shrink();
-                              },
-                            ),
-                            // Job Search Results
-                            Expanded(
-                              child:
-                                  BlocBuilder<JobSearchCubit, JobSearchState>(
-                                    builder: (context, state) {
-                                      debugPrint("Search state $state");
-                                      if (state is JobsLoading) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      } else if (state is JobsLoaded) {
-                                        if (state.jobs.isEmpty) {
-                                          return const Center(
-                                            child: Text("No jobs found"),
-                                          );
-                                        }
-                                        return ListView.builder(
-                                          controller: scrollController,
-                                          itemCount: state.jobs.length,
-                                          itemBuilder: (context, index) {
-                                            return ListTile(
-                                              title: Text(
-                                                state.jobs[index].title,
-                                              ),
-                                              onTap: () {
-                                                Navigator.pop(
-                                                  context,
-                                                  state.jobs[index],
-                                                );
-
-                                                context
-                                                    .read<ApplicantHomeBloc>()
-                                                    .add(
-                                                      SearchCombinedEvent(
-                                                        query: state
-                                                            .jobs[index]
-                                                            .title,
-                                                      ),
-                                                    );
-                                              },
-                                            );
-                                          },
-                                        );
-                                      } else if (state is JobsError) {
-                                        return Center(
-                                          child: Text(state.message),
-                                        );
-                                      }
-                                      return const Center(
-                                        child: Text(
-                                          "Enter a search term to find jobs",
-                                        ),
-                                      );
-                                    },
-                                  ),
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator(),
                             ),
                           ],
                         ),
+                      )
+                    else if (state is ApplicantHomeError)
+                      Positioned(
+                        top: 0,
+                        bottom: 0,
+                        child: SizedBox(
+                          height: 40,
+                          width: scaleX,
+                          child: ErrorLoginContainer(errMessage: state.message),
+                        ),
+                      )
+                    else if (state is VacancyLoadedState)
+                      Positioned(
+                        top: 235 * scaleY,
+                        left: 16 * scaleX,
+                        child: SizedBox(
+                          width: 395 * scaleX,
+                          height: 500 * scaleY,
+                          // Без AnimatedSwitcher здесь — карточка не пересоздаётся
+                          child: vacancies!.isEmpty
+                              ? NoMoreVacanciesCard(
+                                  onGoToProfile: () {
+                                    debugPrint("pressed");
+                                    context.goNamed(
+                                      RouteName.applicantHome,
+                                      extra: {'page': 3},
+                                    );
+                                    debugPrint("pressed after");
+                                  },
+                                )
+                              : VacanciesSlider(
+                                  vacancy: vacancies![currentVacancyIndex],
+                                  vacancyIndex: currentVacancyIndex,
+                                  previousVacancyIndex: previousVacancyIndex,
+                                  slideDirection: slideDirection,
+                                  onInterestedPressed: () {
+                                    // print(
+                                    // "onInterestedPressed pressed. currentVacancyIndex = $currentVacancyIndex",
+                                    // );
+                                    _handleVacancyReaction(isLiked: true);
+                                  },
+                                  onNotInterestedPressed: () {
+                                    // print(
+                                    // "onNotInterestedPressed pressed. currentVacancyIndex = $currentVacancyIndex",
+                                    // );
+                                    _handleVacancyReaction(isLiked: false);
+                                  },
+                                ),
+                        ),
+                      ),
+
+                  /// * FOr lists
+
+                  // ======= Режим "Список" =======
+                  if (selectedMode == 1) ...[
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0, // гарантируем ограниченную высоту
+                      child: GestureDetector(
+                        onTap: () {
+                          debugPrint("Pressed");
+                          setState(() {
+                            selectedMode = 0;
+                          });
+                        },
+                        child: Container(color: Colors.transparent),
                       ),
                     ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-}
 
-class _Cards extends StatelessWidget {
-  const _Cards({
-    super.key,
-    this.imagePath,
-    this.text,
-    this.color,
-    this.iconColor,
-    this.onTap,
-  });
-  final String? imagePath;
-  final String? text;
-  final Color? color;
-  final Color? iconColor;
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        decoration: BoxDecoration(
-          color: color ?? AppPalette.white,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 6,
-          children: [
-            if (imagePath != null)
-              CustomImageView(
-                imagePath: imagePath,
-                width: 12,
-                color: iconColor ?? AppPalette.grey,
-              ),
-            if (text != null)
-              CustomText(
-                text: text!,
-                style: TextStyle(
-                  color: iconColor ?? AppPalette.black,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-          ],
+                    Positioned(
+                      top: 196 * scaleY,
+                      left: 0,
+                      right: 0,
+                      bottom: 0, // гарантируем ограниченную высоту
+                      child: Container(child: const VacanciesList()),
+                    ),
+                  ],
+                  // Рекламный баннер (показывается только в режиме "Слайдер")
+                  if (selectedMode == 0)
+                    Positioned(
+                      top: (196 + 540 + 20) * scaleY,
+                      // top: 688 * scaleY,
+                      left: 16 * scaleX,
+                      child: const VacanciesBanner(),
+                    ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

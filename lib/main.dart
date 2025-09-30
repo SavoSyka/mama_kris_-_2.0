@@ -9,6 +9,8 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/applicant_home/applications/home/bloc/applicant_home_bloc.dart';
 import 'package:mama_kris/features/applicant_home/applications/search/job_search_cubit.dart';
 import 'package:mama_kris/features/auth/applications/auth_bloc.dart';
+import 'package:mama_kris/features/employe_home/applications/post_job/post_job_bloc.dart';
+import 'package:mama_kris/features/employe_profile/applications/profile_update/bloc/profile_update_bloc.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mama_kris/screens/main_screen.dart';
@@ -41,6 +43,10 @@ class MyApp extends StatelessWidget {
             BlocProvider(create: (_) => getIt<ForceUpdateBloc>()),
             BlocProvider(create: (_) => getIt<JobSearchCubit>()),
             BlocProvider(create: (_) => getIt<ApplicantHomeBloc>()),
+            BlocProvider(create: (_) => getIt<PostJobBloc>()),
+            BlocProvider(create: (_) => getIt<ProfileUpdateBloc>()),
+
+
           ],
           child: LifecycleManager(
             child: MaterialApp.router(

@@ -9,6 +9,8 @@ Future<void> dependencyInjection() async {
   await _initForceUpdate();
   _initAuth();
   await _initJobSearch();
+  await _initjobPosting();
+  await _initProfile();
 }
 
 Future<bool> refreshAccessToken() async {
@@ -250,4 +252,64 @@ Future<void> _initJobSearch() async {
   getIt.registerFactory(() => RecentSearchesCubit(getIt()));
 
   getIt.registerFactory(() => JobSearchCubit(getIt()));
+}
+
+Future<void> _initjobPosting() async {
+  // DataSource
+  getIt.registerLazySingleton<JobPostRemoteDataSource>(
+    () => JobPostRemoteDataSourceImpl(dio: getIt()),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<JobPostRepository>(
+    () => JobPostRepositoryImpl(getIt()),
+  );
+
+  // UseCase
+  getIt.registerLazySingleton<PostJobUsecase>(() => PostJobUsecase(getIt()));
+
+  // blocs
+
+  getIt.registerFactory(() => PostJobBloc(postJobUsecase: getIt()));
+}
+
+Future<void> _initProfile() async {
+  // DataSource
+  getIt.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImpl(dio: getIt()),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(getIt()),
+  );
+
+  // UseCase
+  getIt.registerLazySingleton<UpdateAboutUsecase>(
+    () => UpdateAboutUsecase(getIt()),
+  );
+  getIt.registerLazySingleton<UpdateContactsUsecase>(
+    () => UpdateContactsUsecase(getIt()),
+  );
+  getIt.registerLazySingleton<UpdateEmailUsecase>(
+    () => UpdateEmailUsecase(getIt()),
+  );
+  getIt.registerLazySingleton<UpdatePasswordUsecase>(
+    () => UpdatePasswordUsecase(getIt()),
+  );
+  getIt.registerLazySingleton<VerifyEmailUsecase>(
+    () => VerifyEmailUsecase(getIt()),
+  );
+
+  // blocs
+
+  getIt.registerFactory(
+    () => ProfileUpdateBloc(
+      updateAboutUsecase: getIt(),
+      updateContactsUsecase: getIt(),
+      updateEmailUsecase: getIt(),
+      updatePasswordUsecase: getIt(),
+      verifyEmailUsecase: getIt(),
+    ),
+  );
 }
