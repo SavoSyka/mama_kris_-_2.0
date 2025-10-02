@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/firebase/firebase_messaging_service.dart';
+import 'package:mama_kris/core/services/firebase/local_notification_service.dart';
 import 'package:mama_kris/core/services/lifecycle/lifecycle_manager.dart';
 import 'package:mama_kris/core/services/routes/router.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
@@ -12,6 +15,7 @@ import 'package:mama_kris/features/auth/applications/auth_bloc.dart';
 import 'package:mama_kris/features/employe_home/applications/post_job/post_job_bloc.dart';
 import 'package:mama_kris/features/employe_profile/applications/profile_update/bloc/profile_update_bloc.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
+import 'package:mama_kris/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mama_kris/screens/main_screen.dart';
 import 'package:mama_kris/screens/welcome_screen.dart';
@@ -23,7 +27,27 @@ import 'package:mama_kris/screens/update_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase app, handling potential duplicate app error in debug mode
+  try {
+    print('Initializing Firebase app...');
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    print('Firebase app initialized successfully.');
+  } catch (e) {
+    if (e.toString().contains('duplicate-app') || e.toString().contains('already exists')) {
+      print('Firebase app already exists, continuing...');
+    } else {
+      rethrow;
+    }
+  }
+
   await dependencyInjection();
+  final localNotificationsService = getIt<LocalNotificationsService>();
+  await localNotificationsService.init();
+  final firebaseMessagingService = getIt<FirebaseMessagingService>();
+  await firebaseMessagingService.init(
+    localNotificationsService: localNotificationsService,
+  );
   runApp(const MyApp());
 }
 
@@ -45,8 +69,6 @@ class MyApp extends StatelessWidget {
             BlocProvider(create: (_) => getIt<ApplicantHomeBloc>()),
             BlocProvider(create: (_) => getIt<PostJobBloc>()),
             BlocProvider(create: (_) => getIt<ProfileUpdateBloc>()),
-
-
           ],
           child: LifecycleManager(
             child: MaterialApp.router(

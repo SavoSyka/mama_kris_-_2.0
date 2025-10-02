@@ -33,3 +33,7 @@ class ServerFailure extends Failure {
 class ParsingFailure extends Failure {
   const ParsingFailure([super.message = 'Parsing error']);
 }
+
+class CacheFailure extends Failure {
+  const CacheFailure([super.message = 'Cache error']);
+}

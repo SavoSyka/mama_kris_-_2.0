@@ -4,14 +4,34 @@ abstract class PostJobEvent {
   const PostJobEvent();
 }
 
-class PostJobSubmitEvent extends PostJobEvent {
+class PostJobUpdateProfessionEvent extends PostJobEvent {
   final String profession;
-  final String salary;
+
+  const PostJobUpdateProfessionEvent({required this.profession});
+}
+
+class PostJobUpdateDescriptionEvent extends PostJobEvent {
   final String description;
 
-  const PostJobSubmitEvent({
-    required this.profession,
+  const PostJobUpdateDescriptionEvent({required this.description});
+}
+
+class PostJobUpdateContactsEvent extends PostJobEvent {
+  final List<String> contacts;
+
+  const PostJobUpdateContactsEvent({required this.contacts});
+}
+
+class PostJobUpdateSalaryEvent extends PostJobEvent {
+  final String salary;
+  final bool salaryByAgreement;
+
+  const PostJobUpdateSalaryEvent({
     required this.salary,
-    required this.description,
+    required this.salaryByAgreement,
   });
+}
+
+class PostJobSubmitEvent extends PostJobEvent {
+  const PostJobSubmitEvent();
 }

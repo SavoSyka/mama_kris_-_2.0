@@ -7,8 +7,10 @@ import 'package:mama_kris/core/error/failures.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/features/auth/data/data_source/auth_local_data_source.dart';
 import 'package:mama_kris/features/employe_home/data/data_source/job_post_remote_data_source.dart';
+import 'package:mama_kris/features/employe_home/data/model/contact_model.dart';
 import 'package:mama_kris/features/employe_home/data/model/employe_job_model.dart';
 import 'package:mama_kris/features/employe_home/data/model/job_post_model.dart';
+import 'package:mama_kris/features/employe_home/data/model/profession_model.dart';
 
 class JobPostRemoteDataSourceImpl implements JobPostRemoteDataSource {
   final Dio dio;
@@ -57,6 +59,48 @@ class JobPostRemoteDataSourceImpl implements JobPostRemoteDataSource {
 
       final result = responseData
           .map((resp) => EmployeJobModel.fromJson(resp))
+          .toList();
+
+      return result;
+    } on DioException catch (e) {
+      throw ApiException(
+        message: _handleError(e),
+        statusCode: e.response?.statusCode ?? 400,
+      );
+    }
+  }
+
+  @override
+  Future<List<ProfessionModel>> getProfessions() async {
+    try {
+      final response = await dio.get(ApiConstants.getProfessions);
+      debugPrint("Get professions response: ${response.data}");
+
+      final responseData = response.data as List<dynamic>;
+
+      final result = responseData
+          .map((resp) => ProfessionModel.fromJson(resp))
+          .toList();
+
+      return result;
+    } on DioException catch (e) {
+      throw ApiException(
+        message: _handleError(e),
+        statusCode: e.response?.statusCode ?? 400,
+      );
+    }
+  }
+
+  @override
+  Future<List<ContactModel>> getContacts() async {
+    try {
+      final response = await dio.get(ApiConstants.getContacts);
+      debugPrint("Get contacts response: ${response.data}");
+
+      final responseData = response.data as List<dynamic>;
+
+      final result = responseData
+          .map((resp) => ContactModel.fromJson(resp))
           .toList();
 
       return result;

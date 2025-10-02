@@ -11,6 +11,7 @@ Future<void> dependencyInjection() async {
   await _initJobSearch();
   await _initjobPosting();
   await _initProfile();
+  await _initNotifications();
 }
 
 Future<bool> refreshAccessToken() async {
@@ -145,6 +146,7 @@ Future<void> _initLocalCache() async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(SearchJobModelAdapter());
+  Hive.registerAdapter(NotificationModelAdapter());
 
   final searchJobsBox = await Hive.openBox<SearchJobModel>(
     HiveConstants.searchJobBox,
@@ -311,5 +313,37 @@ Future<void> _initProfile() async {
       updatePasswordUsecase: getIt(),
       verifyEmailUsecase: getIt(),
     ),
+  );
+}
+
+Future<void> _initNotifications() async {
+  // Register LocalNotificationsService as singleton
+  getIt.registerLazySingleton<LocalNotificationsService>(
+    () => LocalNotificationsService.instance(),
+  );
+
+  // Register FirebaseMessagingService as singleton
+  getIt.registerLazySingleton<FirebaseMessagingService>(
+    () => FirebaseMessagingService.instance(),
+  );
+
+  // Register NotificationLocalDataSource
+  getIt.registerLazySingleton<NotificationLocalDataSource>(
+    () => NotificationLocalDataSourceImpl(),
+  );
+
+  // Register NotificationRepository
+  getIt.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(getIt<NotificationLocalDataSource>()),
+  );
+
+  // Register NotificationListCubit
+  getIt.registerFactory<NotificationListCubit>(
+    () => NotificationListCubit(getIt<NotificationRepository>()),
+  );
+
+  // Register NotificationDetailCubit
+  getIt.registerFactory<NotificationDetailCubit>(
+    () => NotificationDetailCubit(getIt<NotificationRepository>()),
   );
 }

@@ -25,4 +25,7 @@ class RouteName {
   static String findMyAcct = "/find-my-account";
   static String checkEmail = "/check-email";
   static String signupMobilePhone = "/signup-mobile-phone";
+
+  static String notificationList = "/notifications";
+  static String notificationDetail = "/notification-detail";
 }

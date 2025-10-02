@@ -16,6 +16,7 @@ import 'package:mama_kris/features/applicant_home/data/data_source/jobs_local_da
 import 'package:mama_kris/features/applicant_home/data/data_source/jobs_remote_data_source.dart';
 import 'package:mama_kris/features/applicant_home/data/data_source/jobs_remote_data_source_impl.dart';
 import 'package:mama_kris/features/applicant_home/data/model/search_job_model.dart';
+import 'package:mama_kris/features/notifications/domain/models/notification_model.dart';
 import 'package:mama_kris/features/applicant_home/data/repository_impl/jobs_repository_impl.dart';
 import 'package:mama_kris/features/applicant_home/domain/repository/jobs_repository.dart';
 import 'package:mama_kris/features/applicant_home/domain/usecases/get_all_vacancies_usecase.dart';
@@ -55,6 +56,14 @@ import 'package:mama_kris/features/welcome_page/data/data_source/force_update_re
 import 'package:mama_kris/features/welcome_page/data/repository_impl/force_updated_repository_impl.dart';
 import 'package:mama_kris/features/welcome_page/domain/repository/force_update_repository.dart';
 import 'package:mama_kris/features/welcome_page/domain/usecase/check_force_update_usecase.dart';
+import 'package:mama_kris/core/services/firebase/local_notification_service.dart';
+import 'package:mama_kris/core/services/firebase/firebase_messaging_service.dart';
+import 'package:mama_kris/features/notifications/applications/notification_detail/bloc/notification_detail_cubit.dart';
+import 'package:mama_kris/features/notifications/applications/notification_list/bloc/notification_list_cubit.dart';
+import 'package:mama_kris/features/notifications/data/datasources/notification_local_datasource.dart';
+import 'package:mama_kris/features/notifications/data/datasources/notification_local_datasource_impl.dart';
+import 'package:mama_kris/features/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:mama_kris/features/notifications/domain/repository/notification_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'dependency_injection.dart';

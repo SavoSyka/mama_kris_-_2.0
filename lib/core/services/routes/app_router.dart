@@ -7,8 +7,10 @@ class AppRouter {
     navigatorKey: globalNavigatorKey,
     initialLocation: RouteName.welcomePage,
     routes: <RouteBase>[
-      
-      
-      ...authRoutes, ...employeRoutes, ...jobRoutes,],
+
+
+
+
+     ...authRoutes, ...employeRoutes, ...jobRoutes, ...notificationRoutes,],
   );
 }

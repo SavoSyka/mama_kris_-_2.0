@@ -35,7 +35,7 @@ class CustomPrimaryButton extends StatelessWidget {
                 if (isBtnActive) {
                   debugPrint('tap -----------r');
 
-                  if (onTap != null) onTap!();
+                  if (onTap != null) onTap?.call();
                 }
               },
 

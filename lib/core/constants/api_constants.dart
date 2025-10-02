@@ -18,4 +18,6 @@ class ApiConstants {
   static getUserJob(String? userId) => 'jobs/user/$userId';
   static updateContacts(String? userId, String? contactId) =>
       'contacts/$userId/$contactId';
+  static const getProfessions = 'professions';
+  static const getContacts = 'contacts';
 }

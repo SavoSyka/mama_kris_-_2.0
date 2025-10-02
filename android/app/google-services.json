@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "86099763542",
     "project_id": "mamakris-0",
-    "storage_bucket": "mamakris-0.appspot.com"
+    "storage_bucket": "mamakris-0.firebasestorage.app"
   },
   "client": [
     {
@@ -55,6 +55,14 @@
           "android_info": {
             "package_name": "com.mama.mama_kris",
             "certificate_hash": "507f4846285a11d4d9b5b1b5d65b3b9fb41131bc"
+          }
+        },
+        {
+          "client_id": "86099763542-cfl910m796thatqnp5tbv36a58ekvci8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mama.mama_kris",
+            "certificate_hash": "22931cca6f0a9b42cad74402c7c3e3887a712a60"
           }
         },
         {

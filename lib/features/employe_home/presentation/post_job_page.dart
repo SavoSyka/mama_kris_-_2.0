@@ -57,7 +57,10 @@ class _PostJobPageState extends State<PostJobPage> {
                   children: [
                     const CustomText(
                       text: 'Post a Job',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     TextField(
@@ -100,22 +103,27 @@ class _PostJobPageState extends State<PostJobPage> {
                         onTap: () {
                           final profession = _professionController.text.trim();
                           final salary = _salaryController.text.trim();
-                          final description = _descriptionController.text.trim();
+                          final description = _descriptionController.text
+                              .trim();
 
-                          if (profession.isEmpty || salary.isEmpty || description.isEmpty) {
+                          if (profession.isEmpty ||
+                              salary.isEmpty ||
+                              description.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Please fill all fields')),
+                              const SnackBar(
+                                content: Text('Please fill all fields'),
+                              ),
                             );
                             return;
                           }
 
-                          context.read<PostJobBloc>().add(
-                            PostJobSubmitEvent(
-                              profession: profession,
-                              salary: salary,
-                              description: description,
-                            ),
-                          );
+                          // context.read<PostJobBloc>().add(
+                          //   PostJobSubmitEvent(
+                          //     profession: profession,
+                          //     salary: salary,
+                          //     description: description,
+                          //   ),
+                          // );
                         },
                       ),
                   ],

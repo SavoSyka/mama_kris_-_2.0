@@ -13,6 +13,7 @@ import 'package:mama_kris/core/common/widgets/entity/job_model.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/features/employe_home/presentation/widget/employe_home_bottomsheet.dart';
 import 'package:mama_kris/features/home/presentation/widgets/add_job.dart';
 import 'package:mama_kris/features/home/presentation/widgets/employe_home_card.dart';
 import 'package:mama_kris/features/home/presentation/widgets/empty_posted_job.dart';
@@ -135,14 +136,16 @@ class _EmployeHomePageState extends State<EmployeHomePage> {
                 AddJob(
                   onTap: () async {
                     debugPrint("che");
-                    String? profession = await HomeBottomsheet.profession(
-                      context,
-                      _professionController,
-                      () {
-                        print("Next pressed for profession");
-                      },
-                    );
-                    print("Selected profession: $profession");
+                    EmployeHomeBottomsheet.startJobPosting(context);
+
+                    // String? profession = await HomeBottomsheet.profession(
+                    //   context,
+                    //   _professionController,
+                    //   () {
+                    //     print("Next pressed for profession");
+                    //   },
+                    // );
+                    // print("Selected profession: $profession");
                   },
                 ),
               ],
