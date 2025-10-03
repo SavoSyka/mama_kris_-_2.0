@@ -39,8 +39,7 @@ class JobsLocalDataSourceImpl implements JobsLocalDataSource {
     return box.values.toList();
   }
 
-
-   @override
+  @override
   Future<List<SearchJobModel>> getAllSpheres() async {
     final box = await _getSphereBox();
     return box.values.toList();
@@ -65,6 +64,8 @@ class JobsLocalDataSourceImpl implements JobsLocalDataSource {
         break; // Remove only the first matching duplicate
       }
     }
+
+    debugPrint("Box Length ${box.length}");
 
     // Add new search to the beginning (index 0)
     if (box.isEmpty) {

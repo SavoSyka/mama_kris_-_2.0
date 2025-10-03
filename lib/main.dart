@@ -29,25 +29,43 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Firebase app, handling potential duplicate app error in debug mode
-  try {
-    print('Initializing Firebase app...');
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    print('Firebase app initialized successfully.');
-  } catch (e) {
-    if (e.toString().contains('duplicate-app') || e.toString().contains('already exists')) {
-      print('Firebase app already exists, continuing...');
-    } else {
-      rethrow;
-    }
-  }
+  // try {
+  //   print('Checking if Firebase app exists...');
+  //   // Try to get the default app - if it exists, we don't need to initialize
+  //   Firebase.app();
+  //   print('Firebase app already exists, skipping initialization');
+  // } catch (e) {
+  //   // App doesn't exist, so initialize it
+  //   try {
+  //     print('Initializing Firebase app...');
+  //     await Firebase.initializeApp(
+  //       options: DefaultFirebaseOptions.currentPlatform,
+  //     );
+  //     print('Firebase app initialized successfully.');
+  //   } catch (initError) {
+  //     print('Firebase initialization error: $initError');
+  //     // Continue anyway in debug mode
+  //     print('Continuing despite Firebase initialization error...');
+  //   }
+  // }
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // final localNotificationsService = LocalNotificationsService.instance();
+  // await localNotificationsService.init();
+
+  // final firebaseMessagingService = FirebaseMessagingService.instance();
+  // await firebaseMessagingService.init(
+  //   localNotificationsService: localNotificationsService,
+  // );
 
   await dependencyInjection();
-  final localNotificationsService = getIt<LocalNotificationsService>();
-  await localNotificationsService.init();
-  final firebaseMessagingService = getIt<FirebaseMessagingService>();
-  await firebaseMessagingService.init(
-    localNotificationsService: localNotificationsService,
-  );
+
+  // final localNotificationsService = getIt<LocalNotificationsService>();
+  // await localNotificationsService.init();
+  // final firebaseMessagingService = getIt<FirebaseMessagingService>();
+  // await firebaseMessagingService.init(
+  //   localNotificationsService: localNotificationsService,
+  // );
   runApp(const MyApp());
 }
 

@@ -22,18 +22,19 @@ class JobPostRemoteDataSourceImpl implements JobPostRemoteDataSource {
     try {
       final response = await dio.post(
         ApiConstants.createJob("23737"),
-        data: {
-          "userID": 23737,
-          "description": "Software Developer",
-          "dateTime": "2023-10-01T12:00:00Z",
-          "salary": 50000,
-          "status": "checking",
-          "title": "Senior Developer",
-          "contactsID": 21106,
-          "firstPublishedAt": "3",
-        },
+        data: 
+        // {
+        //   "userID": 23737,
+        //   "description": "Software Developer",
+        //   "dateTime": "2023-10-01T12:00:00Z",
+        //   "salary": 50000,
+        //   "status": "checking",
+        //   "title": "Senior Developer",
+        //   "contactsID": 21106,
+        //   "firstPublishedAt": "3",
+        // },
 
-        //jobPost.toJson(),
+        jobPost.toJson(),
       );
 
       debugPrint("Post job response: ${response.data}");

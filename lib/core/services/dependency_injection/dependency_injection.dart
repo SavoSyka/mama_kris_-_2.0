@@ -317,15 +317,15 @@ Future<void> _initProfile() async {
 }
 
 Future<void> _initNotifications() async {
-  // Register LocalNotificationsService as singleton
-  getIt.registerLazySingleton<LocalNotificationsService>(
-    () => LocalNotificationsService.instance(),
-  );
+  // // Register LocalNotificationsService as singleton
+  // getIt.registerLazySingleton<LocalNotificationsService>(
+  //   () => LocalNotificationsService.instance(),
+  // );
 
-  // Register FirebaseMessagingService as singleton
-  getIt.registerLazySingleton<FirebaseMessagingService>(
-    () => FirebaseMessagingService.instance(),
-  );
+  // // Register FirebaseMessagingService as singleton
+  // getIt.registerLazySingleton<FirebaseMessagingService>(
+  //   () => FirebaseMessagingService.instance(),
+  // );
 
   // Register NotificationLocalDataSource
   getIt.registerLazySingleton<NotificationLocalDataSource>(

@@ -6,18 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 
 Future<void> showContactsSheet(BuildContext context, int contactId) async {
-  final contactData = {
-    "contactsID": 21104,
-    "name": "Росатом",
-    "telegram": "@example",
-    "email": "contact@example.com",
-    "phone": "+1234567890",
-    "whatsapp": "+1234567890",
-    "vk": "vk.com/example",
-    "link": "https://example.com",
-    "userID": 23734,
-  };
-  //await ContactsService.fetchContacts(contactId);
+  final contactData = await ContactsService.fetchContacts(contactId);
 
   // Если не получили данные — показываем SnackBar
   if (contactData == null || contactData.isEmpty) {

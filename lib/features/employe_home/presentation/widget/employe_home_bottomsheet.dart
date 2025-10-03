@@ -11,13 +11,50 @@ import 'package:mama_kris/features/employe_home/domain/entity/profession_entity.
 
 class EmployeHomeBottomsheet {
   // Start the job posting flow
-  static Future<void> startJobPosting(BuildContext context) async {
+  static Future<void> startJobPosting(
+    BuildContext context, {
+    bool skipProfession = false,
+  }) async {
     final bloc = context.read<PostJobBloc>();
-    await professionBottomSheet(context, bloc);
+
+    // Reset bloc to initial state for fresh start
+    bloc.emit(const PostJobData());
+
+    bool canContinue = true;
+
+    if (!skipProfession) {
+      // First show profession selection
+      canContinue = await professionBottomSheet(context, bloc);
+    }
+
+    if (canContinue) {
+      // Then show description
+      final descriptionEntered = await descriptionBottomSheet(context, bloc);
+      if (descriptionEntered) {
+        // Continue with contacts, etc.
+        final contactsSelected = await contactsBottomSheet(context, bloc);
+        if (contactsSelected) {
+          final salaryEntered = await salaryBottomSheet(context, bloc);
+          if (salaryEntered) {
+            await summaryBottomSheet(context, bloc);
+          }
+        }
+      }
+    }
+  }
+
+  // Start job posting directly from description (for when profession is already selected)
+  static Future<void> startJobPostingFromDescription(
+    BuildContext context,
+  ) async {
+    await startJobPosting(context, skipProfession: true);
   }
 
   // Profession Selection Bottom Sheet
-  static Future<bool> professionBottomSheet(BuildContext context, PostJobBloc bloc) async {
+  static Future<bool> professionBottomSheet(
+    BuildContext context,
+    PostJobBloc bloc,
+  ) async {
     // Dummy data for now
     List<ProfessionEntity> professions = [
       const ProfessionEntity(id: '1', name: 'Software Developer'),
@@ -34,8 +71,9 @@ class EmployeHomeBottomsheet {
         return StatefulBuilder(
           builder: (context, setState) {
             return CustomBottomSheet(
-              title: 'Select Profession',
-              fields: [],
+              title: 'Select Professionfff',
+              fields: const [],
+              isSecondaryPrimary: true,
               buttonText: AppTextContents.next,
               formKey: GlobalKey<FormState>(),
               additionalWidgets: [
@@ -61,10 +99,6 @@ class EmployeHomeBottomsheet {
                     ),
                   );
                   Navigator.pop(context, true);
-                  // Navigate to next step after current sheet is dismissed
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    descriptionBottomSheet(context, bloc);
-                  });
                 } else {
                   showToast(context, message: 'Please select a profession');
                 }
@@ -77,7 +111,10 @@ class EmployeHomeBottomsheet {
   }
 
   // Job Description Bottom Sheet
-  static Future<bool> descriptionBottomSheet(BuildContext context, PostJobBloc bloc) async {
+  static Future<bool> descriptionBottomSheet(
+    BuildContext context,
+    PostJobBloc bloc,
+  ) async {
     final descriptionController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
@@ -88,6 +125,7 @@ class EmployeHomeBottomsheet {
         return CustomBottomSheet(
           title: 'Job Description',
           formKey: formKey,
+              isSecondaryPrimary: true,
           fields: [
             FormFieldConfig(
               hintText: 'Enter job description',
@@ -102,26 +140,13 @@ class EmployeHomeBottomsheet {
           ],
           buttonText: AppTextContents.next,
           onSubmit: () {
-            debugPrint("on submitti tapped");
             if (formKey.currentState!.validate()) {
-            debugPrint("on submitti tapped 11");
-
               bloc.add(
                 PostJobUpdateDescriptionEvent(
                   description: descriptionController.text,
                 ),
               );
-            debugPrint("on submitti tapped 222");
-
-            debugPrint("on submitti tapped 3333");
-
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pop(context, true);
-
-            debugPrint("on submitti tapped 4444");
-
-                contactsBottomSheet(context, bloc);
-              });
+              Navigator.pop(context, true);
             }
           },
         );
@@ -130,7 +155,10 @@ class EmployeHomeBottomsheet {
   }
 
   // Contacts Selection Bottom Sheet
-  static Future<bool> contactsBottomSheet(BuildContext context, PostJobBloc bloc) async {
+  static Future<bool> contactsBottomSheet(
+    BuildContext context,
+    PostJobBloc bloc,
+  ) async {
     // Dummy data for now
     List<ContactEntity> contacts = [
       const ContactEntity(id: '1', name: 'Telegram', type: 'telegram'),
@@ -149,7 +177,8 @@ class EmployeHomeBottomsheet {
           builder: (context, setState) {
             return CustomBottomSheet(
               title: 'Select Contacts',
-              fields: [],
+              fields: const [],
+                  isSecondaryPrimary: true,
               buttonText: AppTextContents.next,
               formKey: GlobalKey<FormState>(),
               additionalWidgets: [
@@ -177,9 +206,6 @@ class EmployeHomeBottomsheet {
                     PostJobUpdateContactsEvent(contacts: selectedContacts),
                   );
                   Navigator.pop(context, true);
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    salaryBottomSheet(context, bloc);
-                  });
                 } else {
                   showToast(
                     context,
@@ -195,7 +221,10 @@ class EmployeHomeBottomsheet {
   }
 
   // Salary Input Bottom Sheet
-  static Future<bool> salaryBottomSheet(BuildContext context, PostJobBloc bloc) async {
+  static Future<bool> salaryBottomSheet(
+    BuildContext context,
+    PostJobBloc bloc,
+  ) async {
     final salaryController = TextEditingController();
     final formKey = GlobalKey<FormState>();
     bool salaryByAgreement = false;
@@ -209,6 +238,7 @@ class EmployeHomeBottomsheet {
             return CustomBottomSheet(
               title: 'Salary',
               formKey: formKey,
+                  isSecondaryPrimary: true,
               fields: [
                 if (!salaryByAgreement)
                   FormFieldConfig(
@@ -248,9 +278,6 @@ class EmployeHomeBottomsheet {
                     ),
                   );
                   Navigator.pop(context, true);
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    summaryBottomSheet(context, bloc);
-                  });
                 }
               },
             );
@@ -261,8 +288,10 @@ class EmployeHomeBottomsheet {
   }
 
   // Summary Bottom Sheet
-  static Future<bool> summaryBottomSheet(BuildContext context, PostJobBloc bloc) async {
-
+  static Future<bool> summaryBottomSheet(
+    BuildContext context,
+    PostJobBloc bloc,
+  ) async {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -272,7 +301,8 @@ class EmployeHomeBottomsheet {
             if (state is PostJobData) {
               return CustomBottomSheet(
                 title: 'Summary',
-                fields: [],
+                fields: const [],
+                    isSecondaryPrimary: true,
                 buttonText: 'Post Job',
                 formKey: GlobalKey<FormState>(),
                 additionalWidgets: [
@@ -304,8 +334,66 @@ class EmployeHomeBottomsheet {
                   Navigator.pop(context, true);
                 },
               );
+            } else if (state is PostJobLoading) {
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text('Posting job...'),
+                  ],
+                ),
+              );
+            } else if (state is PostJobError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('❌ Error posting job'),
+                    const SizedBox(height: 8),
+                    Text(state.message),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ),
+              );
+            } else if (state is PostJobSuccess) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('✅ Job posted successfully!'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text('Done'),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              // Unexpected state - reset to initial data state
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Unexpected state. Resetting...'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Reset bloc to initial state
+                        bloc.emit(const PostJobData());
+                      },
+                      child: const Text('Reset'),
+                    ),
+                  ],
+                ),
+              );
             }
-            return const Center(child: CircularProgressIndicator());
           },
         );
       },
