@@ -8,6 +8,7 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_filter_bottomsheet.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ApplHomeScreen extends StatefulWidget {
   const ApplHomeScreen({super.key});
@@ -98,9 +99,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                               ),
 
                               InkWell(
-                                onTap: () async {
-                                  await ApplicantFilterBottomSheet(context);
-                                },
+                                onTap: () async {},
                                 child: const CustomImageView(
                                   imagePath: MediaRes.btnFilter,
                                   width: 48,
@@ -198,7 +197,8 @@ class _VerticalJobListState extends State<VerticalJobList> {
   final GlobalKey _menuKey = GlobalKey();
 
   void _showJobOptionsMenu(BuildContext context) {
-    final RenderBox renderBox = _menuKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox renderBox =
+        _menuKey.currentContext!.findRenderObject() as RenderBox;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Size size = renderBox.size;
 
@@ -220,6 +220,10 @@ class _VerticalJobListState extends State<VerticalJobList> {
         PopupMenuItem(
           onTap: () {
             // Handle share
+            Share.share(
+              'Check out this job: Дизайнер инфорграфики - 6000 - 12 000 руб',
+              subject: 'Job Opportunity',
+            );
           },
           child: const Text('Поделиться'),
         ),
@@ -238,50 +242,54 @@ class _VerticalJobListState extends State<VerticalJobList> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      decoration: AppTheme.cardDecoration,
-      child:  Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              CustomText(
-                text: 'Дизайнер инфорграфики',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w600,
-                  height: 1.30,
+    return InkWell(
+      onTap: () async {
+        await ApplicantFilterBottomSheet(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        decoration: AppTheme.cardDecoration,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Column(
+              children: [
+                CustomText(
+                  text: 'Дизайнер инфорграфики',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontFamily: 'Manrope',
+                    fontWeight: FontWeight.w600,
+                    height: 1.30,
+                  ),
                 ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                '6000 - 12 000 руб',
-                style: TextStyle(
-                  color: Color(0xFF596574),
-                  fontSize: 12,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w500,
-                  height: 1.30,
+                SizedBox(height: 8),
+                Text(
+                  '6000 - 12 000 руб',
+                  style: TextStyle(
+                    color: Color(0xFF596574),
+                    fontSize: 12,
+                    fontFamily: 'Manrope',
+                    fontWeight: FontWeight.w500,
+                    height: 1.30,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
 
-          InkWell(
-            onTap: () {
-              _showJobOptionsMenu(context);
-            },
-            child: CustomImageView(
-              key: _menuKey,
-              imagePath: MediaRes.verticalDots,
-              width: 20,
-            )),
-       
-       
-        ],
+            InkWell(
+              onTap: () {
+                _showJobOptionsMenu(context);
+              },
+              child: CustomImageView(
+                key: _menuKey,
+                imagePath: MediaRes.verticalDots,
+                width: 20,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -9,8 +9,10 @@ import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:share_plus/share_plus.dart';
 
 Future<String?> ApplicantFilterBottomSheet(BuildContext context) {
+  GlobalKey menuKey = GlobalKey();
   return showModalBottomSheet<String>(
     context: context,
     isScrollControlled: true,
@@ -62,10 +64,10 @@ Future<String?> ApplicantFilterBottomSheet(BuildContext context) {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
+                              const Column(
                                 children: [
                                   CustomText(
                                     text: 'Дизайнер инфорграфики',
@@ -91,9 +93,15 @@ Future<String?> ApplicantFilterBottomSheet(BuildContext context) {
                                 ],
                               ),
 
-                              CustomImageView(
-                                imagePath: MediaRes.verticalDots,
-                                width: 20,
+                              InkWell(
+                                onTap: () {
+                                  _showJobOptionsMenu(context, menuKey);
+                                },
+                                child: CustomImageView(
+                                  key: menuKey,
+                                  imagePath: MediaRes.verticalDots,
+                                  width: 20,
+                                ),
                               ),
                             ],
                           ),
@@ -167,6 +175,41 @@ Widget _contactCard({required String label, required String icon}) {
     children: [
       Center(child: CustomText(text: label)),
       CustomImageView(imagePath: icon, width: 32),
+    ],
+  );
+}
+
+void _showJobOptionsMenu(BuildContext context, GlobalKey menuKey) {
+  final RenderBox renderBox =
+      menuKey.currentContext!.findRenderObject() as RenderBox;
+  final Offset offset = renderBox.localToGlobal(Offset.zero);
+  final Size size = renderBox.size;
+
+  showMenu(
+    context: context,
+    position: RelativeRect.fromLTRB(
+      offset.dx,
+      offset.dy + size.height,
+      offset.dx + size.width,
+      offset.dy + size.height,
+    ),
+    items: [
+      PopupMenuItem(
+        onTap: () {
+          // Handle add to favorites
+        },
+        child: const Text('Добавить в избранное'),
+      ),
+
+      PopupMenuItem(
+        onTap: () {
+          // Handle report
+        },
+        child: const Text(
+          'Отправить жалобу',
+          style: TextStyle(color: Colors.red),
+        ),
+      ),
     ],
   );
 }
