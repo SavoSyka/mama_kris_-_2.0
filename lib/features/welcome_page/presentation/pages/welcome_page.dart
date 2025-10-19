@@ -10,6 +10,8 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/welcome_page/presentation/widgets/welcome_card.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -32,59 +34,64 @@ class _WelcomePageState extends State<WelcomePage> {
     // Example usage of enum
 
     return CustomScaffold(
-      body: SafeArea(
-        child: CustomDefaultPadding(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 32),
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        child: SafeArea(
+          child: CustomDefaultPadding(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 32),
 
-              const Center(
-                child: CustomImageView(
-                  imagePath: MediaRes.illustrationWelcome,
-                  width: 286,
+                const Center(
+                  child: CustomImageView(
+                    imagePath: MediaRes.illustrationWelcome,
+                    width: 286,
+                    height: 306,
+                  ),
                 ),
-              ),
 
-              SizedBox(height: 60.h),
+                SizedBox(height: 60.h),
+                const WelcomeCard(),
 
-              CustomText(
-                text: AppTextContents.welcomeDescription,
-                style: GoogleFonts.manrope(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 20.h),
+                // CustomText(
+                //   text: AppTextContents.welcomeDescription,
+                //   style: GoogleFonts.manrope(
+                //     fontSize: 22,
+                //     fontWeight: FontWeight.w600,
+                //   ),
+                // ),
+                // SizedBox(height: 20.h),
 
-              Column(
-                children: options.map((option) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: CustomActionButton(
-                      isSecondary: selectedOption != option,
-                      onTap: () {
-                        // Handle navigation based on option
-                        if (option == WelcomeOption.findJob) {
-                          context.pushNamed(
-                            RouteName.authPage,
-                            extra: {'isApplicant': true},
-                          );
-                        } else {
-                          context.pushNamed(
-                            RouteName.authPage,
-                            extra: {'isApplicant': false},
-                          );
-                        }
-                      },
-                      btnText: option.displayText,
-                    ),
-                  );
-                }).toList(),
-              ),
+                // Column(
+                //   children: options.map((option) {
+                //     return Padding(
+                //       padding: const EdgeInsets.only(bottom: 10.0),
+                //       child: CustomActionButton(
+                //         isSecondary: selectedOption != option,
+                //         onTap: () {
+                //           // Handle navigation based on option
+                //           if (option == WelcomeOption.findJob) {
+                //             context.pushNamed(
+                //               RouteName.authPage,
+                //               extra: {'isApplicant': true},
+                //             );
+                //           } else {
+                //             context.pushNamed(
+                //               RouteName.authPage,
+                //               extra: {'isApplicant': false},
+                //             );
+                //           }
+                //         },
+                //         btnText: option.displayText,
+                //       ),
+                //     );
+                //   }).toList(),
+                // ),
 
-              // Option buttons can be dynamically generated using enum
-            ],
+                // Option buttons can be dynamically generated using enum
+              ],
+            ),
           ),
         ),
       ),

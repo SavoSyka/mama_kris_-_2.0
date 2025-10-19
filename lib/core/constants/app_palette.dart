@@ -6,7 +6,7 @@ class AppPalette {
   AppPalette._(); // private constructor to prevent instantiation
 
   // 🔵 Primary Colors
-  static const Color primaryColor = Color(0xFF12902A); // Facebook blue
+  static const Color primaryColor = Color(0xff12902A); // Facebook blue
   static const Color secondaryColor = Color(0xFF0074BC); // Facebook blue
 
   static const Color primaryDark = Color(0xFF0D47A1);

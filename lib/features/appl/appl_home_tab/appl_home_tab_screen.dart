@@ -3,6 +3,7 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/appl_home_screen.dart';
 import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
 import 'package:mama_kris/features/applicant_orders/presentations/pages/my_orders_page.dart';
 import 'package:mama_kris/features/applicant_profile/presentation/pages/applicant_profile_page.dart';
@@ -12,19 +13,19 @@ import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart
 import 'package:mama_kris/features/home/presentation/pages/tabs/resume_tab.dart';
 import 'package:mama_kris/features/support/presentation/support_page.dart';
 
-class ApplicantTabScreen extends StatefulWidget {
-  const ApplicantTabScreen({super.key, required this.pageIndex});
+class ApplHomeTabScreen extends StatefulWidget {
+  const ApplHomeTabScreen({super.key, this.pageIndex = 0});
 
   final int pageIndex;
   @override
-  State<ApplicantTabScreen> createState() => _ApplicantTabScreenState();
+  State<ApplHomeTabScreen> createState() => _ApplHomeTabScreenState();
 }
 
-class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
+class _ApplHomeTabScreenState extends State<ApplHomeTabScreen> {
   late int _selectedIndex;
 
   final List<Widget> _pages = const [
-    ApplicantHomePage(),
+    ApplHomeScreen(),
     MyOrdersPage(),
     ApplicantProfilePage(),
   ];
@@ -46,7 +47,7 @@ class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
   }
 
   @override
-  void didUpdateWidget(ApplicantTabScreen oldWidget) {
+  void didUpdateWidget(ApplHomeTabScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     setState(() {
       _selectedIndex = widget.pageIndex.clamp(0, _pages.length - 1);
@@ -109,5 +110,4 @@ class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
       ),
     );
   }
-
 }

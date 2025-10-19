@@ -7,7 +7,11 @@ import 'package:mama_kris/core/services/dependency_injection/dependency_import.d
 import 'package:mama_kris/core/services/routes/global_navigator_key.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/appl_home_screen.dart';
+import 'package:mama_kris/features/appl/appl_home_tab/appl_home_tab_screen.dart';
 import 'package:mama_kris/features/auth/presentations/pages/auth_screen_page.dart';
+import 'package:mama_kris/features/appl/app_auth/presentation/appl_login_screen.dart';
+import 'package:mama_kris/features/appl/app_auth/presentation/appl_signup_screen.dart';
 import 'package:mama_kris/features/employe_home/presentation/post_job_page.dart';
 import 'package:mama_kris/features/notifications/applications/notification_detail/bloc/notification_detail_cubit.dart';
 import 'package:mama_kris/features/notifications/applications/notification_list/bloc/notification_list_cubit.dart';

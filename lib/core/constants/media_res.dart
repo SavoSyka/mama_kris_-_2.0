@@ -39,10 +39,18 @@ class MediaRes {
 
   static const String deleteIcon = '$_baseIcons/delete_icon.png';
 
-    static const errorMsgIcon = '$_baseIcons/errorMsgIcon.png';
+  static const errorMsgIcon = '$_baseIcons/errorMsgIcon.png';
   static const successMsgIcon = '$_baseIcons/successMsgIcon.png';
   static const infoMsgIcon = '$_baseIcons/infoMsgIcon.png';
   static const warningMsgIcon = '$_baseIcons/warningMsgIcon.png';
+
+  static const unMarkedBox = '$_baseIcons/unmarked_box.png';
+  static const markedBox = '$_baseIcons/marked_box.png';
+  static const verticalDots = '$_baseIcons/vertical_dots.png';
+  static const telegramIcon = '$_baseIcons/telegram_icon.png';
+  static const whatsappIcon = '$_baseIcons/whatsapp_icon.png';
+  static const vkIcon = '$_baseIcons/vk_icon.png';
+
 
 
 }

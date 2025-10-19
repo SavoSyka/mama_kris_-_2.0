@@ -22,7 +22,10 @@ final List<RouteBase> authRoutes = [
     path: RouteName.welcomePage,
     name: RouteName.welcomePage,
     builder: (BuildContext context, GoRouterState state) {
-      return const WelcomePage();
+      return const ApplHomeTabScreen();
+      // const ApplSignupScreen();
+      // const EmpLoginScreen();
+      // return const WelcomePage();
     },
   ),
 

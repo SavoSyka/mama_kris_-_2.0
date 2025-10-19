@@ -14,7 +14,7 @@ class AppTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: AppPalette.white,
       //  AppPalette.primaryColor,
-       surfaceTintColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
       foregroundColor: AppPalette.white,
       elevation: 0,
       iconTheme: IconThemeData(
@@ -119,5 +119,60 @@ class AppTheme {
       surface: AppPalette.black,
       error: AppPalette.error,
     ),
+  );
+
+  /// 🎨 Gradient Colors for Backgrounds and Buttons
+  static const LinearGradient primaryGradient = LinearGradient(
+    colors: [Color(0xFfF6FEF7), Color(0xFfCEE5DB)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient sunsetGradient = LinearGradient(
+    colors: [Color(0xFFFF6B6B), Color(0xFFFFA500)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  static const LinearGradient oceanGradient = LinearGradient(
+    colors: [Color(0xFF00B4DB), Color(0xFF0083B0)],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
+
+  static const LinearGradient forestGradient = LinearGradient(
+    colors: [Color(0xFF56AB2F), Color(0xFFA8E6CF)],
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+  );
+
+  static const LinearGradient purpleGradient = LinearGradient(
+    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static BoxDecoration primaryColordecoration = BoxDecoration(
+    color: AppPalette.primaryColor,
+    borderRadius: BorderRadius.circular(30),
+    boxShadow: const [
+      BoxShadow(
+        color: Color(0xff2e786633),
+        offset: Offset(0, 1),
+        blurRadius: 4,
+      ),
+    ],
+  );
+
+  static BoxDecoration cardDecoration = BoxDecoration(
+    color: AppPalette.white,
+    borderRadius: BorderRadius.circular(30),
+    boxShadow: const [
+      BoxShadow(
+        color: Color(0xff2e786633),
+        offset: Offset(0, 1),
+        blurRadius: 4,
+      ),
+    ],
   );
 }
