@@ -187,15 +187,61 @@ class _FilterCard extends StatelessWidget {
   }
 }
 
-class VerticalJobList extends StatelessWidget {
+class VerticalJobList extends StatefulWidget {
   const VerticalJobList({super.key});
+
+  @override
+  _VerticalJobListState createState() => _VerticalJobListState();
+}
+
+class _VerticalJobListState extends State<VerticalJobList> {
+  final GlobalKey _menuKey = GlobalKey();
+
+  void _showJobOptionsMenu(BuildContext context) {
+    final RenderBox renderBox = _menuKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    final Size size = renderBox.size;
+
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + size.height,
+        offset.dx + size.width,
+        offset.dy + size.height,
+      ),
+      items: [
+        PopupMenuItem(
+          onTap: () {
+            // Handle add to favorites
+          },
+          child: const Text('Добавить в избранное'),
+        ),
+        PopupMenuItem(
+          onTap: () {
+            // Handle share
+          },
+          child: const Text('Поделиться'),
+        ),
+        PopupMenuItem(
+          onTap: () {
+            // Handle report
+          },
+          child: const Text(
+            'Отправить жалобу',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       decoration: AppTheme.cardDecoration,
-      child: const Row(
+      child:  Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
@@ -224,7 +270,15 @@ class VerticalJobList extends StatelessWidget {
             ],
           ),
 
-          CustomImageView(imagePath: MediaRes.verticalDots, width: 20),
+          InkWell(
+            onTap: () {
+              _showJobOptionsMenu(context);
+            },
+            child: CustomImageView(
+              key: _menuKey,
+              imagePath: MediaRes.verticalDots,
+              width: 20,
+            )),
        
        
         ],
