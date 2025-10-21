@@ -5,6 +5,7 @@ import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/features/appl/appl_favorite/presentation/appl_favorite_screen.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/appl_home_screen.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_screen.dart';
 import 'package:mama_kris/features/appl/appl_support/presentation/appl_support_screen.dart';
 import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
 import 'package:mama_kris/features/applicant_orders/presentations/pages/my_orders_page.dart';
@@ -31,7 +32,7 @@ class _ApplHomeTabScreenState extends State<ApplHomeTabScreen> {
     ApplFavoriteScreen(),
     ApplSupportScreen(),
 
-    ApplicantProfilePage(),
+    ApplProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

@@ -1,0 +1,323 @@
+import 'package:flutter/material.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
+import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
+import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
+import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
+import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/common/widgets/job_list_item.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
+import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
+import 'package:share_plus/share_plus.dart';
+
+class ApplProfileEditScreen extends StatefulWidget {
+  const ApplProfileEditScreen({super.key});
+
+  @override
+  _ApplProfileEditScreenState createState() => _ApplProfileEditScreenState();
+}
+
+class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return CustomScaffold(
+      extendBodyBehindAppBar: true,
+      appBar: const CustomAppBar(title: 'Редактирование профиля'),
+
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        child: const SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: CustomDefaultPadding(
+                    child: Column(
+                      children: [
+                        // Основная информация -- basic information
+                        _basicInformation(),
+                        SizedBox(height: 20),
+
+                        // Контакты -- Contacts
+                        _Contacts(),
+                        SizedBox(height: 20),
+
+                        /// Специализация -- Speciliasaton
+                        _accounts(),
+                        SizedBox(height: 20),
+
+                        /// Опыт работы-- Experience
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _basicInformation extends StatelessWidget {
+  const _basicInformation({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+
+        children: [
+          const Text(
+            'Основная информация',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w600,
+              height: 1.30,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: 'Гордова',
+            labelText: "Фамилия",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: 'Кристина',
+            labelText: "Имя",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: '23.08.1999',
+            labelText: "Дата рождения",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: 'MamaKris@gmail.com',
+            labelText: "Почта",
+            controller: TextEditingController(),
+          ),
+          CustomInputText(
+            hintText: '+79997773322',
+            labelText: "Номер телефона",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+}
+
+class _Contacts extends StatelessWidget {
+  const _Contacts({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+
+        children: [
+          const Text(
+            'Контакты',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w600,
+              height: 1.30,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: 'Telegram',
+            labelText: "Как с вами связаться?",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: '******',
+            labelText: "Ссылка",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: 'VK',
+            labelText: "Как с вами связаться?",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: '*****',
+            labelText: "Ссылка",
+            controller: TextEditingController(),
+          ),
+          CustomInputText(
+            hintText: '+79997773322',
+            labelText: "Номер телефона",
+            controller: TextEditingController(),
+          ),
+
+          const SizedBox(height: 16),
+          const _updateButtons(),
+        ],
+      ),
+    );
+  }
+}
+
+class _accounts extends StatelessWidget {
+  const _accounts({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+
+        children: [
+          const Text(
+            'Контакты',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w600,
+              height: 1.30,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: 'Гордова',
+            labelText: "Фамилия",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: 'Кристина',
+            labelText: "Имя",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: '23.08.1999',
+            labelText: "Дата рождения",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 8),
+
+          CustomInputText(
+            hintText: 'MamaKris@gmail.com',
+            labelText: "Почта",
+            controller: TextEditingController(),
+          ),
+          CustomInputText(
+            hintText: '+79997773322',
+            labelText: "Номер телефона",
+            controller: TextEditingController(),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Кристина Гордова',
+            style: TextStyle(
+              color: AppPalette.primaryColor,
+              fontSize: 20,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w600,
+              height: 1.30,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          const Text(
+            '23.08.1999 (26 лет)',
+            style: TextStyle(
+              color: AppPalette.greyDark,
+
+              fontSize: 12,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w500,
+              height: 1.30,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _updateButtons extends StatelessWidget {
+  const _updateButtons({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      clipBehavior: Clip.antiAlias,
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          // side: const BorderSide(color: Color(0xFF2E7866)),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        shadows: const [
+          BoxShadow(
+            color: Color(0x332E7866),
+            blurRadius: 4,
+            offset: Offset(0, 1),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 30,
+        children: [
+          Text(
+            'Добавить контакт',
+            style: TextStyle(
+              color: Color(0xFF2E7866),
+              fontSize: 16,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w600,
+              height: 1.30,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
