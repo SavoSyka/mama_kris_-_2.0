@@ -3,7 +3,9 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/features/appl/appl_favorite/presentation/appl_favorite_screen.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/appl_home_screen.dart';
+import 'package:mama_kris/features/appl/appl_support/presentation/appl_support_screen.dart';
 import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
 import 'package:mama_kris/features/applicant_orders/presentations/pages/my_orders_page.dart';
 import 'package:mama_kris/features/applicant_profile/presentation/pages/applicant_profile_page.dart';
@@ -26,7 +28,9 @@ class _ApplHomeTabScreenState extends State<ApplHomeTabScreen> {
 
   final List<Widget> _pages = const [
     ApplHomeScreen(),
-    MyOrdersPage(),
+    ApplFavoriteScreen(),
+    ApplSupportScreen(),
+
     ApplicantProfilePage(),
   ];
 
@@ -97,9 +101,20 @@ class _ApplHomeTabScreenState extends State<ApplHomeTabScreen> {
 
             BottomNavigationBarItem(
               icon: CustomImageView(
+                imagePath: MediaRes.support,
+                width: 18,
+                color: _selectedIndex == 2
+                    ? AppPalette.primaryColor
+                    : Colors.grey,
+              ),
+              label: "Поддержка",
+            ),
+
+            BottomNavigationBarItem(
+              icon: CustomImageView(
                 imagePath: MediaRes.profileIcon,
                 width: 24,
-                color: _selectedIndex == 2
+                color: _selectedIndex == 3
                     ? AppPalette.primaryColor
                     : Colors.grey,
               ),

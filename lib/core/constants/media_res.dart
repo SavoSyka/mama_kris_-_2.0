@@ -51,6 +51,9 @@ class MediaRes {
   static const whatsappIcon = '$_baseIcons/whatsapp_icon.png';
   static const vkIcon = '$_baseIcons/vk_icon.png';
 
+  static const linkSupport = '$_baseIcons/link_support.png';
+
+
 
 
 }

@@ -11,7 +11,7 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:share_plus/share_plus.dart';
 
-Future<String?> ApplicantFilterBottomSheet(BuildContext context) {
+Future<String?> ApplicantJobDetail(BuildContext context) {
   GlobalKey menuKey = GlobalKey();
   return showModalBottomSheet<String>(
     context: context,

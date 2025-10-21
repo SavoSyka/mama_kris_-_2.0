@@ -4,9 +4,11 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/common/widgets/job_list_item.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
-import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_filter_bottomsheet.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -115,8 +117,13 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                             ? ListView.separated(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) =>
-                                    const VerticalJobList(),
+                                itemBuilder: (context, index) => JobListItem(
+                                  jobTitle: jobs[index]['title'] ?? 'No Title',
+                                  salaryRange: jobs[index]['salary'] ?? 'No Salary',
+                                  onTap: () async {
+                                    await ApplicantJobDetail(context);
+                                  },
+                                ),
                                 separatorBuilder: (context, index) =>
                                     const SizedBox(height: 8),
                                 itemCount: jobs.length,
@@ -180,120 +187,14 @@ class _FilterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: AppTheme.cardDecoration,
+      decoration: AppTheme.cardDecoration.copyWith(
+        border: isSelected ? Border.all(color: AppPalette.primaryColor) : null,
+      ),
       child: CustomText(text: text),
     );
   }
 }
 
-class VerticalJobList extends StatefulWidget {
-  const VerticalJobList({super.key});
-
-  @override
-  _VerticalJobListState createState() => _VerticalJobListState();
-}
-
-class _VerticalJobListState extends State<VerticalJobList> {
-  final GlobalKey _menuKey = GlobalKey();
-
-  void _showJobOptionsMenu(BuildContext context) {
-    final RenderBox renderBox =
-        _menuKey.currentContext!.findRenderObject() as RenderBox;
-    final Offset offset = renderBox.localToGlobal(Offset.zero);
-    final Size size = renderBox.size;
-
-    showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(
-        offset.dx,
-        offset.dy + size.height,
-        offset.dx + size.width,
-        offset.dy + size.height,
-      ),
-      items: [
-        PopupMenuItem(
-          onTap: () {
-            // Handle add to favorites
-          },
-          child: const Text('Добавить в избранное'),
-        ),
-        PopupMenuItem(
-          onTap: () {
-            // Handle share
-            Share.share(
-              'Check out this job: Дизайнер инфорграфики - 6000 - 12 000 руб',
-              subject: 'Job Opportunity',
-            );
-          },
-          child: const Text('Поделиться'),
-        ),
-        PopupMenuItem(
-          onTap: () {
-            // Handle report
-          },
-          child: const Text(
-            'Отправить жалобу',
-            style: TextStyle(color: Colors.red),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        await ApplicantFilterBottomSheet(context);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        decoration: AppTheme.cardDecoration,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Column(
-              children: [
-                CustomText(
-                  text: 'Дизайнер инфорграфики',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Manrope',
-                    fontWeight: FontWeight.w600,
-                    height: 1.30,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '6000 - 12 000 руб',
-                  style: TextStyle(
-                    color: Color(0xFF596574),
-                    fontSize: 12,
-                    fontFamily: 'Manrope',
-                    fontWeight: FontWeight.w500,
-                    height: 1.30,
-                  ),
-                ),
-              ],
-            ),
-
-            InkWell(
-              onTap: () {
-                _showJobOptionsMenu(context);
-              },
-              child: CustomImageView(
-                key: _menuKey,
-                imagePath: MediaRes.verticalDots,
-                width: 20,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _AdCards extends StatelessWidget {
   const _AdCards({super.key});
