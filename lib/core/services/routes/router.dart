@@ -14,6 +14,7 @@ import 'package:mama_kris/features/appl/app_auth/presentation/appl_login_screen.
 import 'package:mama_kris/features/appl/app_auth/presentation/appl_signup_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_login_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_signup_screen.dart';
+import 'package:mama_kris/features/emp/emp_home_tab/emp_home_tab_screen.dart';
 import 'package:mama_kris/features/employe_home/presentation/post_job_page.dart';
 import 'package:mama_kris/features/notifications/applications/notification_detail/bloc/notification_detail_cubit.dart';
 import 'package:mama_kris/features/notifications/applications/notification_list/bloc/notification_list_cubit.dart';

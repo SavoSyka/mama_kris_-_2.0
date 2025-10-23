@@ -17,9 +17,10 @@ class RouteName {
   static String editProfileApplicant = '/$_applicant/edit-profile';
 
   // * EMPLOYE ROUTES
-  static const String _employee = '/auth/appl';
+  static const String _employee = '/auth/emp';
   static String loginEmploye = '/$_employee/login';
   static String signupEmploye = '/$_employee/signup';
+  static String homeEmploye = '/$_employee/home';
 
   static String welcomePage = "/getStart";
   static String forceUpdate = "/force-update";

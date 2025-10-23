@@ -86,11 +86,16 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                           ),
                           const SizedBox(height: 42),
 
-                          const CustomButtonApplicant(btnText: 'Войти'),
+                          CustomButtonApplicant(
+                            btnText: 'Войти',
+                            onTap: () {
+                              context.pushNamed(RouteName.homeEmploye);
+                            },
+                          ),
                           const SizedBox(height: 20),
 
                           const CustomButtonSec(
-                            btnText: 'Войти',
+                            btnText: '',
 
                             child: Row(
                               children: [
@@ -106,7 +111,7 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                           ),
                           const SizedBox(height: 20),
                           const CustomButtonSec(
-                            btnText: 'Войти',
+                            btnText: '',
                             child: Row(
                               children: [
                                 CustomImageView(

@@ -9,11 +9,14 @@ class AppPalette {
   static const Color primaryColor = Color(0xff12902A); // Facebook blue
   static const Color secondaryColor = Color(0xFF0074BC); // Facebook blue
 
+  static const Color empPrimaryColor = Color(0xFF0074BC); // Facebook blue
+
   static const Color primaryDark = Color(0xFF0D47A1);
   static const Color accent = Color(0xFF42A5F5);
 
   // ⚫ Neutral / Background Colors
   static const Color background = Color(0xFFFFFFFF);
+  static const Color empBgColor = Color(0xFfF2F7FA);
   static const Color white = Colors.white;
   static const Color black = Colors.black;
 
