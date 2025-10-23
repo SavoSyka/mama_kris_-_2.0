@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
@@ -27,6 +28,13 @@ import 'package:mama_kris/screens/update_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Force status bar icons to dark
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+    ),
+  );
 
   // Initialize Firebase app, handling potential duplicate app error in debug mode
   // try {

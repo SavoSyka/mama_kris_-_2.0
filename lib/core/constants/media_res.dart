@@ -53,6 +53,11 @@ class MediaRes {
 
   static const linkSupport = '$_baseIcons/link_support.png';
 
+  static const modalCloseIcon = '$_baseIcons/modal_close_icon.png';
+  static const modalStarIcon = '$_baseIcons/modal_star.png';
+
+  static const googleIcon = '$_baseIcons/google_icon.png';
+  static const appleIcon = '$_baseIcons/apple_icon.png';
 
 
 

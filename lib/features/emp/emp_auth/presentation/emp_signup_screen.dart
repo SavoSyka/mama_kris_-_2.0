@@ -17,14 +17,14 @@ import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/welcome_page/presentation/widgets/welcome_card.dart';
 
-class ApplSignupScreen extends StatefulWidget {
-  const ApplSignupScreen({super.key});
+class EmpSignupScreen extends StatefulWidget {
+  const EmpSignupScreen({super.key});
 
   @override
-  State<ApplSignupScreen> createState() => _ApplSignupScreenState();
+  State<EmpSignupScreen> createState() => _EmpSignupScreenState();
 }
 
-class _ApplSignupScreenState extends State<ApplSignupScreen> {
+class _EmpSignupScreenState extends State<EmpSignupScreen> {
   bool _acceptPrivacyPolicy = false;
   bool _acceptTermsOfUse = false;
 

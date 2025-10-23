@@ -22,19 +22,43 @@ final List<RouteBase> authRoutes = [
     path: RouteName.welcomePage,
     name: RouteName.welcomePage,
     builder: (BuildContext context, GoRouterState state) {
-      return const ApplHomeTabScreen();
+      return
       // const ApplSignupScreen();
       // const EmpLoginScreen();
-      // return const WelcomePage();
+      const WelcomePage();
     },
   ),
 
   GoRoute(
-    path: RouteName.authPage,
-    name: RouteName.authPage,
+    path: RouteName.loginApplicant,
+    name: RouteName.loginApplicant,
     builder: (BuildContext context, GoRouterState state) {
-      final extra = state.extra as DataMap;
-      return AuthScreenPage(isApplicant: extra['isApplicant'] as bool);
+      return const ApplLoginScreen();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.signupApplicant,
+    name: RouteName.signupApplicant,
+    builder: (BuildContext context, GoRouterState state) {
+      return const ApplSignupScreen();
+    },
+  ),
+
+  // * forgot, and verify left here.
+  GoRoute(
+    path: RouteName.loginEmploye,
+    name: RouteName.loginEmploye,
+    builder: (BuildContext context, GoRouterState state) {
+      return const EmpLoginScreen();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.signupEmploye,
+    name: RouteName.signupEmploye,
+    builder: (BuildContext context, GoRouterState state) {
+      return const EmpSignupScreen();
     },
   ),
 ];

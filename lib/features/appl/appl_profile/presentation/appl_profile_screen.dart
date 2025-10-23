@@ -347,21 +347,21 @@ class _Experiences extends StatelessWidget {
             position: "Дизайнер",
             datePeriod: "12.09.2023 - 11.12.2025",
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
 
           _expereinceItems(
             title: "Creative Agency «PixelCraft»",
             position: "Дизайнер",
             datePeriod: "12.09.2023 - 11.12.2025",
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
 
           _expereinceItems(
             title: "Creative Agency «PixelCraft»",
             position: "Дизайнер",
             datePeriod: "12.09.2023 - 11.12.2025",
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
 
           _expereinceItems(
             title: "Creative Agency «PixelCraft»",
@@ -389,6 +389,7 @@ class _Experiences extends StatelessWidget {
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,

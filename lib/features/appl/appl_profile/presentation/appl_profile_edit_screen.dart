@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
@@ -32,27 +33,35 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
         width: double.infinity,
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: const SafeArea(
+          bottom: false,
           child: Column(
             children: [
+              SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
-                  child: CustomDefaultPadding(
-                    child: Column(
-                      children: [
-                        // Основная информация -- basic information
-                        _basicInformation(),
-                        SizedBox(height: 20),
+                  child: SafeArea(
+                    child: CustomDefaultPadding(
+                      bottom: 0,
+                      child: Column(
+                        children: [
+                          // Основная информация -- basic information
+                          _basicInformation(),
+                          SizedBox(height: 20),
 
-                        // Контакты -- Contacts
-                        _Contacts(),
-                        SizedBox(height: 20),
+                          // Контакты -- Contacts
+                          _Contacts(),
+                          SizedBox(height: 20),
 
-                        /// Специализация -- Speciliasaton
-                        _accounts(),
-                        SizedBox(height: 20),
+                          /// Специализация -- Speciliasaton
+                          _accounts(),
+                          SizedBox(height: 20),
 
-                        /// Опыт работы-- Experience
-                      ],
+                          CustomButtonApplicant(btnText: 'Сохранить изменения'),
+                          SizedBox(height: 32),
+
+                          /// Опыт работы-- Experience
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -191,8 +200,16 @@ class _Contacts extends StatelessWidget {
   }
 }
 
-class _accounts extends StatelessWidget {
+class _accounts extends StatefulWidget {
   const _accounts({super.key});
+
+  @override
+  State<_accounts> createState() => _AccountsState();
+}
+
+class _AccountsState extends State<_accounts> {
+  bool _acceptOrders =
+      false; // Default to false, can be loaded from preferences or API
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +221,7 @@ class _accounts extends StatelessWidget {
 
         children: [
           const Text(
-            'Контакты',
+            'Аккаунт',
             style: TextStyle(
               color: Colors.black,
               fontSize: 20,
@@ -214,62 +231,39 @@ class _accounts extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              const Text(
+                'Принимать заказы',
+                style: TextStyle(
+                  color: Color(0xFF596574),
+                  fontSize: 16,
+                  fontFamily: 'Manrope',
+                  fontWeight: FontWeight.w500,
+                  height: 1.30,
+                ),
+              ),
+              const Spacer(),
+              Switch(
+                value: _acceptOrders,
+                onChanged: (bool value) {
+                  setState(() {
+                    _acceptOrders = value;
+                  });
+                  // TODO: Save the preference to backend or local storage
+                },
+                activeThumbColor: AppPalette.primaryColor,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
 
-          CustomInputText(
-            hintText: 'Гордова',
-            labelText: "Фамилия",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
+          const _updateButtons(text: "Управление подпиской"),
+          const SizedBox(height: 16),
+          const _updateButtons(text: "Управление подпиской", error: true),
 
-          CustomInputText(
-            hintText: 'Кристина',
-            labelText: "Имя",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: '23.08.1999',
-            labelText: "Дата рождения",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: 'MamaKris@gmail.com',
-            labelText: "Почта",
-            controller: TextEditingController(),
-          ),
-          CustomInputText(
-            hintText: '+79997773322',
-            labelText: "Номер телефона",
-            controller: TextEditingController(),
-          ),
           const SizedBox(height: 24),
-          const Text(
-            'Кристина Гордова',
-            style: TextStyle(
-              color: AppPalette.primaryColor,
-              fontSize: 20,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          const Text(
-            '23.08.1999 (26 лет)',
-            style: TextStyle(
-              color: AppPalette.greyDark,
-
-              fontSize: 12,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w500,
-              height: 1.30,
-            ),
-          ),
         ],
       ),
     );
@@ -277,8 +271,13 @@ class _accounts extends StatelessWidget {
 }
 
 class _updateButtons extends StatelessWidget {
-  const _updateButtons({super.key});
-
+  const _updateButtons({
+    super.key,
+    this.text = 'Добавить контакт',
+    this.error = false,
+  });
+  final String text;
+  final bool error;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -288,7 +287,9 @@ class _updateButtons extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          // side: const BorderSide(color: Color(0xFF2E7866)),
+          side: error
+              ? const BorderSide(color: AppPalette.error)
+              : BorderSide.none,
           borderRadius: BorderRadius.circular(20),
         ),
         shadows: const [
@@ -300,22 +301,25 @@ class _updateButtons extends StatelessWidget {
           ),
         ],
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         spacing: 30,
         children: [
           Text(
-            'Добавить контакт',
+            text,
             style: TextStyle(
-              color: Color(0xFF2E7866),
+              color: error ? AppPalette.error : const Color(0xFF2E7866),
               fontSize: 16,
               fontFamily: 'Manrope',
               fontWeight: FontWeight.w600,
               height: 1.30,
             ),
           ),
+
+          if (error)
+            const CustomImageView(imagePath: MediaRes.deleteIcon, width: 24),
         ],
       ),
     );

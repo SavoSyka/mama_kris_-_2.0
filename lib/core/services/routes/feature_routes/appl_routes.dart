@@ -32,14 +32,14 @@ final List<RouteBase> jobRoutes = [
   ),
 */
   GoRoute(
-    path: RouteName.applicantHome,
-    name: RouteName.applicantHome,
+    path: RouteName.homeApplicant,
+    name: RouteName.homeApplicant,
     builder: (BuildContext context, GoRouterState state) {
       final extra = state.extra != null
           ? state.extra as DataMap
           : {"pageIndex": 0};
       debugPrint("extra $extra");
-      return ApplicantTabScreen(pageIndex: extra['pageIndex'] as int);
+      return ApplHomeTabScreen(pageIndex: extra['pageIndex'] as int);
     },
   ),
 ];

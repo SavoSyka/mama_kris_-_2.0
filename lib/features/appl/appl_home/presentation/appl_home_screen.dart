@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
@@ -9,6 +10,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_filter.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -55,6 +57,12 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      extendBodyBehindAppBar: true,
+      appBar: const CustomAppBar(
+        title: 'Вакансии',
+        showLeading: false,
+        alignTitleToEnd: false,
+      ),
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
@@ -101,7 +109,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                               ),
 
                               InkWell(
-                                onTap: () async {},
+                                onTap: () async {
+                                  ApplicantJobFilter(context);
+                                },
                                 child: const CustomImageView(
                                   imagePath: MediaRes.btnFilter,
                                   width: 48,
@@ -119,7 +129,8 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) => JobListItem(
                                   jobTitle: jobs[index]['title'] ?? 'No Title',
-                                  salaryRange: jobs[index]['salary'] ?? 'No Salary',
+                                  salaryRange:
+                                      jobs[index]['salary'] ?? 'No Salary',
                                   onTap: () async {
                                     await ApplicantJobDetail(context);
                                   },
@@ -194,7 +205,6 @@ class _FilterCard extends StatelessWidget {
     );
   }
 }
-
 
 class _AdCards extends StatelessWidget {
   const _AdCards({super.key});

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
@@ -47,6 +48,12 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+        extendBodyBehindAppBar: true,
+      appBar: const CustomAppBar(title: 'Мои заказы',
+      showLeading: false,
+      alignTitleToEnd: false,
+      ),
+
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
@@ -64,7 +71,7 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                             jobTitle: jobs[index]['title'] ?? 'No Title',
                             salaryRange: jobs[index]['salary'] ?? 'No Salary',
                             onTap: () async {
-                              await ApplicantJobDetail(context);
+                              await ApplicantJobDetail(context, showStar: false);
                             },
                             showAddToFavorite: false,
                           ),

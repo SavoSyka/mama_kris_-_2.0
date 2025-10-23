@@ -11,7 +11,10 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:share_plus/share_plus.dart';
 
-Future<String?> ApplicantJobDetail(BuildContext context) {
+Future<String?> ApplicantJobDetail(
+  BuildContext context, {
+  bool showStar = true,
+}) {
   GlobalKey menuKey = GlobalKey();
   return showModalBottomSheet<String>(
     context: context,
@@ -19,47 +22,56 @@ Future<String?> ApplicantJobDetail(BuildContext context) {
     backgroundColor: Colors.transparent,
     elevation: 0,
     useSafeArea: true,
+    isDismissible: true,
+
     builder: (BuildContext context) {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
         child: SizedBox(
           // height: MediaQuery.sizeOf(context).height ,
-          child: SafeArea(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const CustomImageView(
-                        imagePath: MediaRes.star,
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+          
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    showStar
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const CustomImageView(
+                              imagePath: MediaRes.modalStarIcon,
+                              width: 32,
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const CustomImageView(
+                        imagePath: MediaRes.modalCloseIcon,
                         width: 32,
                       ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const CustomImageView(
-                          imagePath: MediaRes.errorMsgIcon,
-                          width: 32,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(36),
-                      ),
                     ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(36),
+                    ),
+                  ),
+                  child: SafeArea(
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -92,7 +104,7 @@ Future<String?> ApplicantJobDetail(BuildContext context) {
                                   ),
                                 ],
                               ),
-
+                              
                               InkWell(
                                 onTap: () {
                                   _showJobOptionsMenu(context, menuKey);
@@ -128,28 +140,28 @@ Future<String?> ApplicantJobDetail(BuildContext context) {
                             style: TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 48),
-
+                              
                           CustomButtonSec(
-                            btnText: 'btnText',
+                            btnText: '',
                             child: _contactCard(
                               icon: MediaRes.telegramIcon,
                               label: 'Перейти в Telegram',
                             ),
                           ),
                           const SizedBox(height: 12),
-
+                              
                           CustomButtonSec(
-                            btnText: 'btnText',
+                            btnText: '',
                             child: _contactCard(
                               icon: MediaRes.whatsappIcon,
                               label: 'Перейти в WhatsApp',
                             ),
                           ),
                           const SizedBox(height: 12),
-
+                              
                           CustomButtonSec(
-                            btnText: 'btnText',
-
+                            btnText: '',
+                              
                             child: _contactCard(
                               icon: MediaRes.vkIcon,
                               label: 'Перейти в VK',
@@ -161,8 +173,8 @@ Future<String?> ApplicantJobDetail(BuildContext context) {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );

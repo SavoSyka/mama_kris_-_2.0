@@ -18,14 +18,14 @@ import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/welcome_page/presentation/widgets/welcome_card.dart';
 
-class ApplLoginScreen extends StatefulWidget {
-  const ApplLoginScreen({super.key});
+class EmpLoginScreen extends StatefulWidget {
+  const EmpLoginScreen({super.key});
 
   @override
-  State<ApplLoginScreen> createState() => _ApplLoginScreenState();
+  State<EmpLoginScreen> createState() => _EmpLoginScreenState();
 }
 
-class _ApplLoginScreenState extends State<ApplLoginScreen> {
+class _EmpLoginScreenState extends State<EmpLoginScreen> {
   @override
   void initState() {
     // TODO: implement initState
@@ -38,7 +38,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
 
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(title: ''),
+      appBar: const CustomAppBar(title: ''),
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(

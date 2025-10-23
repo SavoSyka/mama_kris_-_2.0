@@ -12,6 +12,8 @@ import 'package:mama_kris/features/appl/appl_home_tab/appl_home_tab_screen.dart'
 import 'package:mama_kris/features/auth/presentations/pages/auth_screen_page.dart';
 import 'package:mama_kris/features/appl/app_auth/presentation/appl_login_screen.dart';
 import 'package:mama_kris/features/appl/app_auth/presentation/appl_signup_screen.dart';
+import 'package:mama_kris/features/emp/emp_auth/presentation/emp_login_screen.dart';
+import 'package:mama_kris/features/emp/emp_auth/presentation/emp_signup_screen.dart';
 import 'package:mama_kris/features/employe_home/presentation/post_job_page.dart';
 import 'package:mama_kris/features/notifications/applications/notification_detail/bloc/notification_detail_cubit.dart';
 import 'package:mama_kris/features/notifications/applications/notification_list/bloc/notification_list_cubit.dart';
@@ -24,5 +26,5 @@ import 'package:mama_kris/features/welcome_page/presentation/pages/welcome_page.
 part 'app_router.dart';
 part './feature_routes/auth_routes.dart';
 part './feature_routes/employe_routes.dart';
-part './feature_routes/job_routes.dart';
+part 'feature_routes/appl_routes.dart';
 part './feature_routes/notification_routes.dart';

@@ -3,7 +3,23 @@ class RouteName {
 
   static String initialPage = "/initial-page";
 
-  static String authPage = '/auth-page';
+  // static String authPage = '/auth-page';
+  /// * APPLICANT ROUTES
+  static const String _applicant = '/auth/appl';
+
+  ///
+  static String loginApplicant = '/$_applicant/login';
+  static String signupApplicant = '/$_applicant/signup';
+  static String forgotApplicant = '/$_applicant/forgot';
+
+  static String homeApplicant = '/$_applicant/home';
+  static String supportDetailApplicant = '/$_applicant/support-detail';
+  static String editProfileApplicant = '/$_applicant/edit-profile';
+
+  // * EMPLOYE ROUTES
+  static const String _employee = '/auth/appl';
+  static String loginEmploye = '/$_employee/login';
+  static String signupEmploye = '/$_employee/signup';
 
   static String welcomePage = "/getStart";
   static String forceUpdate = "/force-update";
