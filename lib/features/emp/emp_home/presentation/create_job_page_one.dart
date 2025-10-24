@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
@@ -7,21 +9,26 @@ import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 
-class ApplProfileEditScreen extends StatefulWidget {
-  const ApplProfileEditScreen({super.key});
+class CreateJobPageOne extends StatefulWidget {
+  const CreateJobPageOne({super.key});
 
   @override
-  _ApplProfileEditScreenState createState() => _ApplProfileEditScreenState();
+  _CreateJobPageOneState createState() => _CreateJobPageOneState();
 }
 
-class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
+class _CreateJobPageOneState extends State<CreateJobPageOne> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Редактирование профиля'),
+      appBar: const CustomAppBar(
+        title: 'Создание вакансии',
+        alignTitleToEnd: false,
+        showLeading: false,
+      ),
 
       body: Container(
         width: double.infinity,
@@ -40,20 +47,6 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                         children: [
                           // Основная информация -- basic information
                           _basicInformation(),
-                          SizedBox(height: 20),
-
-                          // Контакты -- Contacts
-                          _Contacts(),
-                          SizedBox(height: 20),
-
-                          /// Специализация -- Speciliasaton
-                          _accounts(),
-                          SizedBox(height: 20),
-
-                          CustomButtonApplicant(btnText: 'Сохранить изменения'),
-                          SizedBox(height: 32),
-
-                          /// Опыт работы-- Experience
                         ],
                       ),
                     ),
@@ -81,7 +74,7 @@ class _basicInformation extends StatelessWidget {
 
         children: [
           const Text(
-            'Основная информация',
+            '',
             style: TextStyle(
               color: Colors.black,
               fontSize: 20,
@@ -93,36 +86,35 @@ class _basicInformation extends StatelessWidget {
           const SizedBox(height: 8),
 
           CustomInputText(
-            hintText: 'Гордова',
-            labelText: "Фамилия",
+            hintText: 'Выбрать',
+            labelText: "Кого ищете?",
             controller: TextEditingController(),
           ),
           const SizedBox(height: 8),
 
           CustomInputText(
-            hintText: 'Кристина',
-            labelText: "Имя",
+            hintText: 'Описание вакансии',
+            labelText: "Расскажите о вакансии",
             controller: TextEditingController(),
+            minLines: 8,
+            maxLines: 12,
           ),
           const SizedBox(height: 8),
 
           CustomInputText(
-            hintText: '23.08.1999',
-            labelText: "Дата рождения",
+            hintText: '10000',
+            labelText: "Оплата",
             controller: TextEditingController(),
           ),
           const SizedBox(height: 8),
 
-          CustomInputText(
-            hintText: 'MamaKris@gmail.com',
-            labelText: "Почта",
-            controller: TextEditingController(),
+          CustomButtonEmployee(
+            btnText: 'Далее',
+            onTap: () {
+              context.pushNamed(RouteName.createJobPageTwo);
+            },
           ),
-          CustomInputText(
-            hintText: '+79997773322',
-            labelText: "Номер телефона",
-            controller: TextEditingController(),
-          ),
+
           const SizedBox(height: 24),
         ],
       ),

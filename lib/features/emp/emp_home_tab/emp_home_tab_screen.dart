@@ -10,6 +10,9 @@ import 'package:mama_kris/features/appl/appl_support/presentation/appl_support_s
 import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
 import 'package:mama_kris/features/applicant_orders/presentations/pages/my_orders_page.dart';
 import 'package:mama_kris/features/applicant_profile/presentation/pages/applicant_profile_page.dart';
+import 'package:mama_kris/features/emp/emp_home/presentation/emp_home_screen.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_screen.dart';
+import 'package:mama_kris/features/emp/emp_support/presentation/emp_support_screen.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/favorite_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
@@ -28,11 +31,11 @@ class _ApplHomeTabScreenState extends State<EmpHomeTabScreen> {
   late int _selectedIndex;
 
   final List<Widget> _pages = const [
-    ApplHomeScreen(),
+    EmpHomeScreen(),
     ApplFavoriteScreen(),
-    ApplSupportScreen(),
+    EmpSupportScreen(),
 
-    ApplProfileScreen(),
+    EmpProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -101,7 +104,7 @@ class _ApplHomeTabScreenState extends State<EmpHomeTabScreen> {
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
-                imagePath: MediaRes.favoriteIcon,
+                imagePath: MediaRes.support,
                 width: 28,
                 color: _selectedIndex == 2
                     ? AppPalette.secondaryColor

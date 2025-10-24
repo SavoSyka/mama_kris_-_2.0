@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
@@ -8,51 +10,45 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/job_list_item.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_filter.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ApplHomeScreen extends StatefulWidget {
-  const ApplHomeScreen({super.key});
+enum FilterType { active, drafts, archive }
+
+class EmpHomeScreen extends StatefulWidget {
+  const EmpHomeScreen({super.key});
 
   @override
-  _ApplHomeScreenState createState() => _ApplHomeScreenState();
+  _EmpHomeScreenState createState() => _EmpHomeScreenState();
 }
 
-class _ApplHomeScreenState extends State<ApplHomeScreen> {
-  int currentVacancyIndex = 0;
-  int previousVacancyIndex = 0;
-  int slideDirection = -1;
-
-  bool isSlider = false;
+class _EmpHomeScreenState extends State<EmpHomeScreen> {
+  FilterType selectedFilter = FilterType.active;
 
   final List<Map<String, dynamic>> jobs = [
     {
       'title': 'Software Engineer',
       'description': 'Develop and maintain software applications.',
       'salary': '100000',
+      'status': FilterType.active,
     },
     {
       'title': 'Product Manager',
       'description': 'Oversee product development and strategy.',
       'salary': '120000',
+      'status': FilterType.archive,
     },
     {
       'title': 'Designer',
       'description': 'Create user interfaces and experiences.',
       'salary': '90000',
+      'status': FilterType.archive,
     },
   ];
-
-  void _handleVacancyReaction({required bool isLiked}) {
-    setState(() {
-      previousVacancyIndex = currentVacancyIndex;
-      slideDirection = isLiked ? -1 : 1;
-      currentVacancyIndex = (currentVacancyIndex + 1) % jobs.length;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,49 +69,53 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                   child: CustomDefaultPadding(
                     child: Column(
                       children: [
-                        const _Searchbox(),
-                        const SizedBox(height: 14),
                         Container(
                           // color: Colors.red,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              // Updated section with enum values for Активные, Черновики, Архив
                               Row(
                                 children: [
                                   InkWell(
                                     onTap: () {
                                       setState(() {
-                                        isSlider = true;
+                                        selectedFilter = FilterType.active;
                                       });
                                     },
                                     child: _FilterCard(
-                                      isSelected: isSlider,
-                                      text: 'Слайдер',
+                                      isSelected:
+                                          selectedFilter == FilterType.active,
+                                      text: 'Активные',
                                     ),
                                   ),
                                   const SizedBox(width: 12),
                                   InkWell(
                                     onTap: () {
                                       setState(() {
-                                        isSlider = false;
+                                        selectedFilter = FilterType.drafts;
                                       });
                                     },
                                     child: _FilterCard(
-                                      isSelected: !isSlider,
-                                      text: 'Слайдер',
+                                      isSelected:
+                                          selectedFilter == FilterType.drafts,
+                                      text: 'Черновики',
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedFilter = FilterType.archive;
+                                      });
+                                    },
+                                    child: _FilterCard(
+                                      isSelected:
+                                          selectedFilter == FilterType.archive,
+                                      text: 'Архив',
                                     ),
                                   ),
                                 ],
-                              ),
-
-                              InkWell(
-                                onTap: () async {
-                                  ApplicantJobFilter(context);
-                                },
-                                child: const CustomImageView(
-                                  imagePath: MediaRes.btnFilter,
-                                  width: 48,
-                                ),
                               ),
                             ],
                           ),
@@ -123,34 +123,26 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
 
                         const SizedBox(height: 28),
 
-                        !isSlider
-                            ? ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) => JobListItem(
-                                  jobTitle: jobs[index]['title'] ?? 'No Title',
-                                  salaryRange:
-                                      jobs[index]['salary'] ?? 'No Salary',
-                                  onTap: () async {
-                                    await ApplicantJobDetail(context);
-                                  },
-                                ),
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 8),
-                                itemCount: jobs.length,
-                              )
-                            : ApplicantJobSlider(
-                                vacancy: jobs[currentVacancyIndex],
-                                vacancyIndex: currentVacancyIndex,
-                                previousVacancyIndex: previousVacancyIndex,
-                                slideDirection: slideDirection,
-                                onInterestedPressed: () {
-                                  _handleVacancyReaction(isLiked: true);
-                                },
-                                onNotInterestedPressed: () {
-                                  _handleVacancyReaction(isLiked: false);
-                                },
-                              ),
+                        const _CreateJobCard(),
+
+                        // ListView.separated(
+                        //   shrinkWrap: true,
+                        //   physics: const NeverScrollableScrollPhysics(),
+                        //   itemBuilder: (context, index) {
+                        //     if (!(jobs[index]['status'] ==  selectedFilter))
+                        //       return Container();
+                        //     return JobListItem(
+                        //       jobTitle: jobs[index]['title'] ?? 'No Title',
+                        //       salaryRange: jobs[index]['salary'] ?? 'No Salary',
+                        //       onTap: () async {
+                        //         await ApplicantJobDetail(context);
+                        //       },
+                        //     );
+                        //   },
+                        //   separatorBuilder: (context, index) =>
+                        //       const SizedBox(height: 8),
+                        //   itemCount: jobs.length,
+                        // ),
                         const SizedBox(height: 16),
                         const _AdCards(),
                       ],
@@ -215,29 +207,94 @@ class _AdCards extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
       decoration: AppTheme.cardDecoration,
-      child: const Column(
+      child:  Column(
         children: [
           CustomText(
-            text: 'Место для рекламы',
+            text: 'Хотите создать еще вакансию?',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF12902A),
+              color: AppPalette.empPrimaryColor,
               fontSize: 20,
               fontFamily: 'Manrope',
               fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(height: 10),
-          CustomText(
-            text: 'Нажмите, чтобы оставить заявку',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF596574),
-              fontSize: 16,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w500,
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: AppTheme.cardDecoration,
+            child: CustomText(
+              text: 'Создать',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF596574),
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CreateJobCard extends StatelessWidget {
+  const _CreateJobCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: AppTheme.cardDecoration,
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        children: [
+          const Text(
+            'Вакансий еще нет',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppPalette.empPrimaryColor,
+              fontSize: 20,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w600,
+              height: 1.30,
+            ),
+          ),
+          const SizedBox(height: 12),
+          const SizedBox(
+            width: 175,
+            child: Text(
+              'Но вы можете рассказать о своей задаче нашим мамам',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF596574),
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w500,
+                height: 1.30,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          CustomButtonSec(
+            btnText: '',
+            onTap: () {
+              context.pushNamed(RouteName.createJobPageOne);
+            },
+            child: const Text(
+              'Рассказать',
+              style: TextStyle(
+                color: Color(0xFF0073BB),
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w600,
+                height: 1.30,
+              ),
+            ),
+          ),
+       
         ],
       ),
     );

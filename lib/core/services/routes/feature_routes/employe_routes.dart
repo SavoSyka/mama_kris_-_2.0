@@ -14,6 +14,30 @@ final List<RouteBase> employeRoutes = [
   ),
 
   GoRoute(
+    path: RouteName.createJobPageOne,
+    name: RouteName.createJobPageOne,
+    builder: (BuildContext context, GoRouterState state) {
+      return const CreateJobPageOne();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.createJobPageTwo,
+    name: RouteName.createJobPageTwo,
+    builder: (BuildContext context, GoRouterState state) {
+      return const CreateJobPageTwo();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.createJobPageThree,
+    name: RouteName.createJobPageThree,
+    builder: (BuildContext context, GoRouterState state) {
+      return const CreateJobPageThree();
+    },
+  ),
+
+  GoRoute(
     path: RouteName.employesHome,
     name: RouteName.employesHome,
     builder: (BuildContext context, GoRouterState state) {

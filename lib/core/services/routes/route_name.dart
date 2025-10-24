@@ -21,6 +21,13 @@ class RouteName {
   static String loginEmploye = '/$_employee/login';
   static String signupEmploye = '/$_employee/signup';
   static String homeEmploye = '/$_employee/home';
+  static String createJobPageOne = '/$_employee/create/1';
+
+  static String createJobPageTwo = '/$_employee/create/2';
+  static String createJobPageThree = '/$_employee/create/3';
+
+
+
 
   static String welcomePage = "/getStart";
   static String forceUpdate = "/force-update";

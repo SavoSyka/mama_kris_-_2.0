@@ -9,19 +9,19 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 
-class ApplProfileEditScreen extends StatefulWidget {
-  const ApplProfileEditScreen({super.key});
+class EmpProfileEditScreen extends StatefulWidget {
+  const EmpProfileEditScreen({super.key});
 
   @override
-  _ApplProfileEditScreenState createState() => _ApplProfileEditScreenState();
+  _EmpProfileEditScreenState createState() => _EmpProfileEditScreenState();
 }
 
-class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
+class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Редактирование профиля'),
+      appBar: const CustomAppBar(title: 'Редактированиепрофиля'),
 
       body: Container(
         width: double.infinity,
