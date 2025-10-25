@@ -11,6 +11,7 @@ import 'package:mama_kris/constants/api_constants.dart';
 /// Возвращает следующий экран в зависимости от значения current_page, сохранённого в кэше.
 /// Если current_page отсутствует, по умолчанию возвращается MainScreen.
 Future<Widget> determineNextPage(
+  
   String accessToken,
   int userId,
   double scaleX,
@@ -21,13 +22,13 @@ Future<Widget> determineNextPage(
   String? currentPage = prefs.getString('current_page');
   switch (currentPage) {
     case 'search':
-      return ApplicationScreen();
+      return const ApplicationScreen();
     case 'job':
-      return MainScreen();
+      return const MainScreen();
     case 'tinder':
-      return MainScreen();
+      return const MainScreen();
     default:
-      return MainScreen();
+      return const MainScreen();
   }
 }
 

@@ -31,9 +31,9 @@ class CustomButtonSec extends StatelessWidget {
                 debugPrint('tap 11');
                 if (isLoading) return;
                 if (isBtnActive) {
-                  debugPrint('tap -----------r');
+                  debugPrint('tap -----------r ${onTap != null}');
 
-                  if (onTap != null) onTap?.call();
+                  onTap?.call();
                 }
               },
 
