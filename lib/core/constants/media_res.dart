@@ -60,5 +60,9 @@ class MediaRes {
   static const appleIcon = '$_baseIcons/apple_icon.png';
 
 
+  static const logoutIcon = '$_baseIcons/logout_icon.png';
+  static const dropDownIcon = '$_baseIcons/drop_down_icon.png';
+
+
 
 }

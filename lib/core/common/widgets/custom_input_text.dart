@@ -18,6 +18,7 @@ class CustomInputText extends StatefulWidget {
   final int minLines;
   final int maxLines;
   final String labelText;
+  final bool hasGreyBg;
 
   const CustomInputText({
     super.key,
@@ -32,7 +33,10 @@ class CustomInputText extends StatefulWidget {
     this.prefixIcon,
     this.minLines = 1,
     this.maxLines = 1,
-    this.labelText = '', this.suffixIcon,
+    this.labelText = '',
+    this.suffixIcon,
+    this.hasGreyBg = false,
+
   });
 
   @override
@@ -71,6 +75,7 @@ class _CustomInputTextState extends State<CustomInputText> {
           keyboardType: widget.keyboardType,
           validator: widget.validator,
           style: const TextStyle(fontSize: 14),
+          
 
           onTapOutside: (val) {
             FocusScope.of(context).unfocus();
@@ -81,12 +86,17 @@ class _CustomInputTextState extends State<CustomInputText> {
           onTap: widget.onTap,
           decoration: InputDecoration(
             // label: const CustomText(text: 'teddxt'),
+            filled: true,
+            fillColor: widget.hasGreyBg ? AppPalette.grey.withValues(alpha: 0.2) : AppPalette.white ,
             prefixIcon: widget.prefixIcon,
-            suffixIcon: widget.suffixIcon ??
+            suffixIcon:
+                widget.suffixIcon ??
                 (widget.obscureText
                     ? IconButton(
                         icon: Icon(
-                          _showPassword ? Icons.visibility : Icons.visibility_off,
+                          _showPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: AppPalette.grey,
                         ),
                         onPressed: _handleShow,

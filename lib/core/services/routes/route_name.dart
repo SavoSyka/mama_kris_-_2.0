@@ -25,6 +25,7 @@ class RouteName {
 
   static String createJobPageTwo = '/$_employee/create/2';
   static String createJobPageThree = '/$_employee/create/3';
+  static String resumeDetail = "/$_employee/resume-detail";
 
 
 

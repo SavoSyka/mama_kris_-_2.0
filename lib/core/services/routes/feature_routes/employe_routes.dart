@@ -44,6 +44,17 @@ final List<RouteBase> employeRoutes = [
       return const EmployeTabScreen();
     },
   ),
+
+  GoRoute(
+    path: RouteName.resumeDetail,
+    name: RouteName.resumeDetail,
+    builder: (BuildContext context, GoRouterState state) {
+      return const EmpResumeScreenDetail();
+    },
+  ),
+
+
+  
   GoRoute(
     path: RouteName.postJob,
     name: RouteName.postJob,

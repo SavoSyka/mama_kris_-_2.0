@@ -45,6 +45,8 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
     },
   ];
 
+
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(

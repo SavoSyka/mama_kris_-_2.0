@@ -12,34 +12,55 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
-import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_edit_screen.dart';
 import 'package:share_plus/share_plus.dart';
 
-class EmpProfileScreen extends StatefulWidget {
-  const EmpProfileScreen({super.key});
+class EmpResumeScreenDetail extends StatefulWidget {
+  const EmpResumeScreenDetail({super.key});
 
   @override
-  _EmpProfileScreenState createState() => _EmpProfileScreenState();
+  _EmpResumeScreenDetailState createState() => _EmpResumeScreenDetailState();
 }
 
-class _EmpProfileScreenState extends State<EmpProfileScreen> {
+class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
+  final GlobalKey _menuKey = GlobalKey();
+
+  bool isLiked = false;
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
       appBar: CustomAppBar(
-        title: 'Мой профиль',
-        showLeading: false,
-        alignTitleToEnd: false,
+        title: '',
+        alignTitleToEnd: true,
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const EmpProfileEditScreen(),
-                ),
-              );
+              setState(() {
+                isLiked = !isLiked;
+              });
+            },
+            icon: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: AppTheme.cardDecoration.copyWith(
+                borderRadius: BorderRadius.circular(8),
+                border: isLiked
+                    ? Border.all(color: Theme.of(context).primaryColor)
+                    : null,
+              ),
+              child: const CustomImageView(
+                imagePath: MediaRes.star,
+                width: 20,
+                height: 20,
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            tooltip: 'Настройки',
+            splashRadius: 24,
+          ),
+          IconButton(
+            onPressed: () {
+              _showJobOptionsMenu(context);
             },
             icon: Container(
               padding: const EdgeInsets.all(6),
@@ -47,11 +68,12 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const CustomImageView(
-                imagePath: MediaRes.settingGearIcon,
-                width: 24,
-                height: 24,
+                imagePath: MediaRes.verticalDots,
+                width: 20,
+                height: 20,
               ),
             ),
+            key: _menuKey,
             padding: const EdgeInsets.symmetric(horizontal: 8),
             tooltip: 'Настройки',
             splashRadius: 24,
@@ -80,6 +102,10 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
 
                         /// Специализация -- Speciliasaton
                         _Specalisations(),
+                        SizedBox(height: 20),
+
+                        /// Опыт работы-- Experience
+                        _Experiences(),
                       ],
                     ),
                   ),
@@ -89,6 +115,44 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showJobOptionsMenu(BuildContext context) {
+    final RenderBox renderBox =
+        _menuKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    final Size size = renderBox.size;
+
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + size.height,
+        offset.dx + size.width,
+        offset.dy + size.height,
+      ),
+      items: [
+        PopupMenuItem(
+          onTap: () {
+            // Handle add to favorites
+          },
+          child: const Text('В избранное'),
+        ),
+        PopupMenuItem(
+          onTap: () {
+            // Handle share
+            Share.share('Check out this job: ', subject: 'Job Opportunity');
+          },
+          child: const Text('Отправить жалобу'),
+        ),
+        PopupMenuItem(
+          onTap: () {
+            // Handle report
+          },
+          child: const Text('Скрыть', style: TextStyle(color: Colors.red)),
+        ),
+      ],
     );
   }
 }
@@ -114,15 +178,15 @@ class _AcceptOrders extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     side: const BorderSide(
                       width: 1,
-                      color: AppPalette.primaryColor,
+                      color: AppPalette.empPrimaryColor,
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 child: const Text(
-                  'Проверенный работодатель',
+                  'Принимает заказы',
                   style: TextStyle(
-                    color: AppPalette.empPrimaryColor,
+                    color: Color(0xFF2E7866),
                     fontSize: 12,
                     fontFamily: 'Manrope',
                     fontWeight: FontWeight.w600,
@@ -132,10 +196,9 @@ class _AcceptOrders extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                'Ярослав Гордов',
+                'Кристина Гордова',
                 style: TextStyle(
                   color: AppPalette.empPrimaryColor,
-
                   fontSize: 20,
                   fontFamily: 'Manrope',
                   fontWeight: FontWeight.w600,
@@ -145,7 +208,7 @@ class _AcceptOrders extends StatelessWidget {
               const SizedBox(height: 8),
 
               const Text(
-                'Компания:  GordovCode ',
+                '23.08.1999 (26 лет)',
                 style: TextStyle(
                   color: AppPalette.greyDark,
 
@@ -241,13 +304,13 @@ class _Specalisations extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
-      child: const Row(
+      child: Row(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Описание моей деятельности',
+              const Text(
+                'Специализация',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -257,19 +320,24 @@ class _Specalisations extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 24),
-              SizedBox(
-                width: 321,
-                child: Text(
-                  'Я руковожу компанией среднего масштаба, которая уже несколько лет стабильно работает на рынке. Для меня важно сочетать устойчивость и развитие: мы не гонимся за быстрыми результатами, а строим долгосрочные отношения с клиентами и партнёрами. Основное внимание уделяю качеству услуг и оптимизации процессов, чтобы команда могла работать эффективно, а клиенты видели в нас надёжного партнёра.',
-                  style: TextStyle(
-                    color: Color(0xFF596574),
-                    fontSize: 16,
-                    fontFamily: 'Manrope',
-                    fontWeight: FontWeight.w500,
-                    height: 1.30,
-                  ),
-                ),
+              const SizedBox(height: 24),
+
+              Row(
+                spacing: 8,
+                children: [
+                  _specialisationItem("Дизайнер"),
+                  _specialisationItem("Маркетолог"),
+                  _specialisationItem("Ассистент"),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+              Row(
+                spacing: 8,
+                children: [
+                  _specialisationItem("Видеомонтаж"),
+                  _specialisationItem("Контекстная реклама"),
+                ],
               ),
             ],
           ),
@@ -284,7 +352,7 @@ class _Specalisations extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 1, color: Color(0x7F2E7866)),
+          side: const BorderSide(width: 1, color: AppPalette.empPrimaryColor),
           borderRadius: BorderRadius.circular(10),
         ),
       ),
@@ -297,7 +365,7 @@ class _Specalisations extends StatelessWidget {
           Text(
             text,
             style: const TextStyle(
-              color: Color(0xFF2E7866),
+              color: AppPalette.empPrimaryColor,
               fontSize: 12,
               fontFamily: 'Manrope',
               fontWeight: FontWeight.w600,
@@ -397,7 +465,7 @@ class _Experiences extends StatelessWidget {
           Text(
             position,
             style: const TextStyle(
-              color: AppPalette.primaryColor,
+              color: AppPalette.empPrimaryColor,
               fontSize: 12,
               fontFamily: 'Manrope',
               fontWeight: FontWeight.w600,

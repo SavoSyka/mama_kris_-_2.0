@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
@@ -50,7 +51,7 @@ class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
                           _accounts(),
                           SizedBox(height: 20),
 
-                          CustomButtonApplicant(btnText: 'Сохранить изменения'),
+                          CustomButtonEmployee(btnText: 'Сохранить изменения'),
                           SizedBox(height: 32),
 
                           /// Опыт работы-- Experience
@@ -117,6 +118,8 @@ class _basicInformation extends StatelessWidget {
             hintText: 'MamaKris@gmail.com',
             labelText: "Почта",
             controller: TextEditingController(),
+            hasGreyBg: true,
+            readOnly: true,
           ),
           CustomInputText(
             hintText: '+79997773322',
@@ -158,6 +161,10 @@ class _Contacts extends StatelessWidget {
             hintText: 'Telegram',
             labelText: "Как с вами связаться?",
             controller: TextEditingController(),
+            suffixIcon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(MediaRes.dropDownIcon, width: 16),
+            ),
           ),
           const SizedBox(height: 8),
 
@@ -172,6 +179,10 @@ class _Contacts extends StatelessWidget {
             hintText: 'VK',
             labelText: "Как с вами связаться?",
             controller: TextEditingController(),
+            suffixIcon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(MediaRes.dropDownIcon, width: 16),
+            ),
           ),
           const SizedBox(height: 8),
 
@@ -202,7 +213,7 @@ class _accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<_accounts> {
-  bool _acceptOrders =
+  final bool _acceptOrders =
       false; // Default to false, can be loaded from preferences or API
 
   @override
@@ -225,37 +236,22 @@ class _AccountsState extends State<_accounts> {
             ),
           ),
           const SizedBox(height: 8),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              const Text(
-                'Принимать заказы',
-                style: TextStyle(
-                  color: Color(0xFF596574),
-                  fontSize: 16,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w500,
-                  height: 1.30,
-                ),
-              ),
-              const Spacer(),
-              Switch(
-                value: _acceptOrders,
-                onChanged: (bool value) {
-                  setState(() {
-                    _acceptOrders = value;
-                  });
-                  // TODO: Save the preference to backend or local storage
-                },
-                activeThumbColor: AppPalette.primaryColor,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
 
           const _updateButtons(text: "Управление подпиской"),
+
           const SizedBox(height: 16),
-          const _updateButtons(text: "Управление подпиской", error: true),
+          _updateButtons(
+            text: "Выйти из аккаунта",
+            error: true,
+            errorIcon: MediaRes.logoutIcon,
+            onTap: () {},
+          ),
+          const SizedBox(height: 16),
+          _updateButtons(
+            text: "Управление подпиской",
+            error: true,
+            onTap: () {},
+          ),
 
           const SizedBox(height: 24),
         ],
@@ -269,52 +265,64 @@ class _updateButtons extends StatelessWidget {
     super.key,
     this.text = 'Добавить контакт',
     this.error = false,
+    this.errorIcon,
+
+    this.onTap,
   });
   final String text;
   final bool error;
+  final String? errorIcon;
+
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-      clipBehavior: Clip.antiAlias,
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: error
-              ? const BorderSide(color: AppPalette.error)
-              : BorderSide.none,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        shadows: const [
-          BoxShadow(
-            color: Color(0x332E7866),
-            blurRadius: 4,
-            offset: Offset(0, 1),
-            spreadRadius: 0,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        clipBehavior: Clip.antiAlias,
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            side: error
+                ? const BorderSide(color: AppPalette.error)
+                : BorderSide.none,
+            borderRadius: BorderRadius.circular(20),
           ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 30,
-        children: [
-          Text(
-            text,
-            style: TextStyle(
-              color: error ? AppPalette.error : const Color(0xFF2E7866),
-              fontSize: 16,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
+          shadows: const [
+            BoxShadow(
+              color: Color(0x332E7866),
+              blurRadius: 4,
+              offset: Offset(0, 1),
+              spreadRadius: 0,
             ),
-          ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 30,
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                color: error ? AppPalette.error : AppPalette.empPrimaryColor,
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w600,
+                height: 1.30,
+              ),
+            ),
 
-          if (error)
-            const CustomImageView(imagePath: MediaRes.deleteIcon, width: 24),
-        ],
+            if (error)
+              CustomImageView(
+                imagePath: errorIcon ?? MediaRes.deleteIcon,
+                width: 24,
+              ),
+          ],
+        ),
       ),
     );
   }

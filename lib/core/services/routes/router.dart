@@ -18,6 +18,7 @@ import 'package:mama_kris/features/emp/emp_home/presentation/create_job_page_one
 import 'package:mama_kris/features/emp/emp_home/presentation/create_job_page_three.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/create_job_page_two.dart';
 import 'package:mama_kris/features/emp/emp_home_tab/emp_home_tab_screen.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/emp_resume_screen_detail.dart';
 import 'package:mama_kris/features/employe_home/presentation/post_job_page.dart';
 import 'package:mama_kris/features/notifications/applications/notification_detail/bloc/notification_detail_cubit.dart';
 import 'package:mama_kris/features/notifications/applications/notification_list/bloc/notification_list_cubit.dart';
