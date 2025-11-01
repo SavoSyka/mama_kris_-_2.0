@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/widgets/custom_text_field.dart';
 import 'package:mama_kris/screens/pass_reset_manager.dart';
@@ -46,7 +45,7 @@ void showPassResetEmailSheet(BuildContext context) {
   }
 
   /// Функция, которая вызывается при нажатии на основную кнопку.
-  void _onButtonPressed() async {
+  void onButtonPressed() async {
     final String email = emailController.text.trim();
     if (email.isEmpty) {
       // Если поле пустое, показываем SnackBar и не продолжаем дальше.
@@ -135,7 +134,7 @@ void showPassResetEmailSheet(BuildContext context) {
                           fontSize: 14 * scaleX,
                           height: 20 / 14,
                           letterSpacing: -0.1 * scaleX,
-                          color: Color(0xFF596574),
+                          color: const Color(0xFF596574),
                         ),
                       ),
                       SizedBox(height: 30 * scaleY),
@@ -164,7 +163,7 @@ void showPassResetEmailSheet(BuildContext context) {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            _onButtonPressed();
+                            onButtonPressed();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF00A80E),

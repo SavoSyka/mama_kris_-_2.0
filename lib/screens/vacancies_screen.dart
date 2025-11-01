@@ -4,12 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/widgets/vacancies_slider.dart';
-import 'package:mama_kris/widgets/vacancies_banner.dart';
 import 'package:mama_kris/screens/contacts_sheet.dart';
-import 'package:mama_kris/widgets/vacancies_list.dart';
 import 'package:mama_kris/utils/vacancy_service.dart';
 import 'package:mama_kris/widgets/no_more_vacancies_card.dart';
-import 'package:mama_kris/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mama_kris/screens/first_alert_sheet.dart';
 
@@ -373,10 +370,10 @@ class _VacanciesScreenState extends State<VacanciesScreen> {
                     ? NoMoreVacanciesCard(
                         onGoToProfile: () {
                           debugPrint("pressed");
-                          context.goNamed(
-                            RouteName.applicantHome,
-                            extra: {'page': 3},
-                          );
+                          // context.goNamed(
+                          //   RouteName.applicantHome,
+                          //   extra: {'page': 3},
+                          // );
                           debugPrint("pressed after");
 
 

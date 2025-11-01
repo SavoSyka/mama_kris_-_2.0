@@ -16,7 +16,7 @@ class OrderScreen extends StatefulWidget {
   // Опциональные данные для предзаполнения
   final Map<String, dynamic>? prefillData;
 
-  const OrderScreen({Key? key, this.prefillData}) : super(key: key);
+  const OrderScreen({super.key, this.prefillData});
 
   @override
   _OrderScreenState createState() => _OrderScreenState();
@@ -530,7 +530,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                           fontSize: 18 * scaleX,
                                           height: 28 / 18,
                                           letterSpacing: -0.18 * scaleX,
-                                          color: const Color(0xFF979AA099),
+                                          color: const Color(0xff979aa099),
                                         ),
                                       ),
                                     ),

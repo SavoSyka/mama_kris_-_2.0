@@ -11,7 +11,7 @@ class CustomTextField extends StatefulWidget {
   final double? height; // кастомная высота
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.hintText,
@@ -20,7 +20,7 @@ class CustomTextField extends StatefulWidget {
     required this.controller,
     this.width, // можно передать кастомную ширину
     this.height, // можно передать кастомную высоту
-  }) : super(key: key);
+  });
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();

@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class SubscribtionInfoScreen extends StatelessWidget {
-  const SubscribtionInfoScreen({Key? key}) : super(key: key);
+  const SubscribtionInfoScreen({super.key});
 
   // Функция для получения информации о подписке
   Future<Map<String, dynamic>?> fetchSubscriptionInfo() async {
@@ -52,7 +52,7 @@ class SubscribtionInfoScreen extends StatelessWidget {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -61,7 +61,7 @@ class SubscribtionInfoScreen extends StatelessWidget {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,

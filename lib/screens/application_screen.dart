@@ -367,7 +367,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -376,7 +376,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,

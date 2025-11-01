@@ -14,12 +14,12 @@ class CodePanel extends StatelessWidget {
   final Function(String) onNext;
 
   const CodePanel({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.email,
     required this.onNext,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

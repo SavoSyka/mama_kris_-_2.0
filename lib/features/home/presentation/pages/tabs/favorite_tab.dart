@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_shadow_container.dart';
@@ -67,7 +66,7 @@ class _FavoriteTabState extends State<FavoriteTab> {
 }
 
 class _favJobCard extends StatelessWidget {
-  const _favJobCard({super.key});
+  const _favJobCard();
 
   @override
   Widget build(BuildContext context) {

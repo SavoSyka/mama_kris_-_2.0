@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mama_kris/constants/api_constants.dart';
-import 'package:mama_kris/utils/funcs.dart' as funcs;
 import 'package:flutter/foundation.dart';
 import 'package:mama_kris/data/mock_jobs.dart';
 

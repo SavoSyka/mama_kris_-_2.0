@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ConfScreen extends StatelessWidget {
-  const ConfScreen({Key? key}) : super(key: key);
+  const ConfScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ConfScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: contentHeight,
           child: Stack(
             children: [
@@ -29,7 +29,7 @@ class ConfScreen extends StatelessWidget {
                 left: 0,
                 child: ShaderMask(
                   shaderCallback: (Rect bounds) {
-                    return LinearGradient(
+                    return const LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
@@ -38,7 +38,7 @@ class ConfScreen extends StatelessWidget {
                         Colors.white,
                         Colors.transparent,
                       ],
-                      stops: const [0.0, 0.3, 0.7, 1.0],
+                      stops: [0.0, 0.3, 0.7, 1.0],
                     ).createShader(bounds);
                   },
                   blendMode: BlendMode.dstIn,

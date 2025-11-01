@@ -29,7 +29,7 @@ class JobService {
         jsonEncode(_cleanContactMap(newContactData)) !=
             jsonEncode(_cleanContactMap(oldContactData));
 
-    if (!hasChanged && oldContactData != null) {
+    if (!hasChanged) {
       // print(
       //   "🔄 Контакт не изменён. Используем существующий: ${oldContactData['contactsID']}",
       // );

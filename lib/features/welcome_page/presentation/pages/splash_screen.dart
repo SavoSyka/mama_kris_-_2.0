@@ -9,11 +9,9 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/utils/version_utils.dart';
-import 'package:mama_kris/features/auth/data/data_source/auth_local_data_source.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_event.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_state.dart';
-import 'package:mama_kris/features/welcome_page/domain/usecase/check_force_update_usecase.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -106,13 +104,13 @@ class _SplashScreenState extends State<SplashScreen>
                     extra: {"isAndroid": isAndroid},
                   );
                 } else {
-                  final isApplicant = await getIt<AuthLocalDataSource>()
-                      .getUserType();
+                  // final isApplicant = await sl<AuthLocalDataSource>()
+                      // .getUserType();
 
-                  if (isApplicant) {
-                    context.pushReplacementNamed(RouteName.applicantHome);
-                    return;
-                  }
+                  // if (isApplicant) {
+                  //   context.pushReplacementNamed(RouteName.applicantHome);
+                  //   return;
+                  // }
                   context.pushReplacementNamed(RouteName.welcomePage);
                   // context.pushReplacementNamed(RouteName.welcomePage);
                 }

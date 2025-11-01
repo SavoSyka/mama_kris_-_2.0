@@ -9,12 +9,12 @@ class PassResetCodePage extends StatelessWidget {
   final TextEditingController codeController;
 
   const PassResetCodePage({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.onNext,
     required this.codeController,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/features/notifications/applications/notification_detail/bloc/notification_detail_cubit.dart';
-import 'package:mama_kris/features/notifications/domain/models/notification_model.dart';
 
 class NotificationDetailPage extends StatefulWidget {
   final String notificationId;

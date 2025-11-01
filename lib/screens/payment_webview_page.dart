@@ -4,10 +4,10 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class PaymentWebViewPage extends StatefulWidget {
   const PaymentWebViewPage({
-    Key? key,
+    super.key,
     required this.url,
     required this.callback,
-  }) : super(key: key);
+  });
 
   final String url;
   final void Function(WebViewRequest) callback;

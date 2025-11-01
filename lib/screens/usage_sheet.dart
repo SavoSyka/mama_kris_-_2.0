@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/screens/usage_screen.dart';
 import 'package:mama_kris/widgets/next_button.dart';
@@ -13,7 +12,7 @@ void showUsageSheet(BuildContext context) {
   final double scaleY = screenHeight / 956;
 
   /// Функция, которая вызывается при нажатии на основную кнопку.
-  void _onButtonPressed() {
+  void onButtonPressed() {
     // print("Кнопка 'Узнать больше' нажата");
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -117,7 +116,7 @@ void showUsageSheet(BuildContext context) {
                           fontSize: 14 * scaleX,
                           height: 20 / 14,
                           letterSpacing: -0.1 * scaleX,
-                          color: Color(0xFF596574),
+                          color: const Color(0xFF596574),
                         ),
                       ),
                       SizedBox(height: 20 * scaleY),
@@ -140,7 +139,7 @@ void showUsageSheet(BuildContext context) {
                               ],
                             ),
                             child: ElevatedButton(
-                              onPressed: _onButtonPressed,
+                              onPressed: onButtonPressed,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF00A80E),
                                 shape: RoundedRectangleBorder(

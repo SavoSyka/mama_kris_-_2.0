@@ -3,14 +3,8 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
-import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
 import 'package:mama_kris/features/applicant_orders/presentations/pages/my_orders_page.dart';
 import 'package:mama_kris/features/applicant_profile/presentation/pages/applicant_profile_page.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/favorite_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/resume_tab.dart';
-import 'package:mama_kris/features/support/presentation/support_page.dart';
 
 class ApplicantTabScreen extends StatefulWidget {
   const ApplicantTabScreen({super.key, required this.pageIndex});
@@ -24,7 +18,7 @@ class _ApplicantTabScreenState extends State<ApplicantTabScreen> {
   late int _selectedIndex;
 
   final List<Widget> _pages = const [
-    ApplicantHomePage(),
+    Scaffold(),
     MyOrdersPage(),
     ApplicantProfilePage(),
   ];

@@ -9,12 +9,12 @@ class PassResetNewPasswordPage extends StatelessWidget {
   final TextEditingController passwordController;
 
   const PassResetNewPasswordPage({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.onNext,
     required this.passwordController,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

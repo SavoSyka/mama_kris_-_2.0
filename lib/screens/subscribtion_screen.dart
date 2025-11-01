@@ -13,7 +13,7 @@ enum SubscriptionType { oneTime, annual }
 
 class SubscribtionScreen extends StatefulWidget {
   final int jobId;
-  const SubscribtionScreen({Key? key, required this.jobId}) : super(key: key);
+  const SubscribtionScreen({super.key, required this.jobId});
 
   @override
   _SubscribtionScreenState createState() => _SubscribtionScreenState();
@@ -121,7 +121,7 @@ class _SubscribtionScreenState extends State<SubscribtionScreen> {
         left: 0,
         child: ShaderMask(
           shaderCallback: (Rect bounds) {
-            return LinearGradient(
+            return const LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
@@ -130,7 +130,7 @@ class _SubscribtionScreenState extends State<SubscribtionScreen> {
                 Colors.white,
                 Colors.transparent,
               ],
-              stops: const [0.0, 0.3, 0.7, 1.0],
+              stops: [0.0, 0.3, 0.7, 1.0],
             ).createShader(bounds);
           },
           blendMode: BlendMode.dstIn,

@@ -1,24 +1,18 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
-import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
-import 'package:share_plus/share_plus.dart';
 
 Future<String?> ResumeFilter(BuildContext context) {
   
   
   GlobalKey menuKey = GlobalKey();
 
-   RangeValues _currentRangeValues = const RangeValues(20, 1000); 
+   RangeValues currentRangeValues = const RangeValues(20, 1000); 
 
   return showModalBottomSheet<String>(
     context: context,
@@ -135,18 +129,18 @@ Future<String?> ResumeFilter(BuildContext context) {
                               ),
                               const SizedBox(height: 24),
                               RangeSlider(
-                                values: _currentRangeValues,
+                                values: currentRangeValues,
                                 min: 0,
                                 max: 1000,
                                 divisions:
                                     10,
                                 labels: RangeLabels(
-                                  _currentRangeValues.start.round().toString(),
-                                  _currentRangeValues.end.round().toString(),
+                                  currentRangeValues.start.round().toString(),
+                                  currentRangeValues.end.round().toString(),
                                 ),
                                 onChanged: (RangeValues newValues) {
                                   useState(() {
-                                    _currentRangeValues = newValues;
+                                    currentRangeValues = newValues;
                                   });
                                 },
                               ),

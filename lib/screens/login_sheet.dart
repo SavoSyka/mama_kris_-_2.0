@@ -1,5 +1,4 @@
 // lib/login_sheet.dart
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mama_kris/widgets/custom_text_field.dart';
@@ -16,12 +15,12 @@ class LoginSheetContent extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   const LoginSheetContent({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.emailController,
     required this.passwordController,
-  }) : super(key: key);
+  });
 
   Widget _buildLoginForm(BuildContext context) {
     return Stack(
@@ -138,7 +137,7 @@ class LoginSheetContent extends StatelessWidget {
                         overlayColor:
                             WidgetStateProperty.all(Colors.transparent),
                         foregroundColor:
-                            WidgetStateProperty.all(Color(0xFF00A80E)),
+                            WidgetStateProperty.all(const Color(0xFF00A80E)),
                         textStyle: WidgetStateProperty.resolveWith<TextStyle>((
                           Set<WidgetState> states,
                         ) {

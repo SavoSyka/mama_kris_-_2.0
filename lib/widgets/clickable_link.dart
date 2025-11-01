@@ -12,7 +12,7 @@ class ClickableText extends StatefulWidget {
   final TextStyle? style;
 
   const ClickableText({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.text,
@@ -20,7 +20,7 @@ class ClickableText extends StatefulWidget {
     this.normalColor = const Color(0xFF00A80E), // Цвет #00A80E
     this.pressedColor = const Color(0xFF009E0C), // При нажатии чуть темнее
     this.style,
-  }) : super(key: key);
+  });
 
   @override
   State<ClickableText> createState() => _ClickableTextState();

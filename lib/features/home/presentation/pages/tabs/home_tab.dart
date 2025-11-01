@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_action_button.dart';
-import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_shadow_container.dart';
@@ -202,7 +201,7 @@ class _HomeTabState extends State<HomeTab> {
 }
 
 class _jobCard extends StatelessWidget {
-  const _jobCard({super.key, required this.title, required this.price});
+  const _jobCard({required this.title, required this.price});
 
   final String title;
   final String price;

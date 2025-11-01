@@ -13,11 +13,11 @@ class ContactsPanel extends StatelessWidget {
   final Function(String, String, String, String) onNext;
 
   const ContactsPanel({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.onNext,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

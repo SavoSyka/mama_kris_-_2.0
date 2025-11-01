@@ -3,12 +3,7 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
-import 'package:mama_kris/features/employe_home/presentation/employe_home_page.dart';
-import 'package:mama_kris/features/employe_home/presentation/post_job_page.dart';
-import 'package:mama_kris/features/employe_profile/presentation/pages/employe_profile_page.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/favorite_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
 import 'package:mama_kris/features/home/presentation/pages/tabs/resume_tab.dart';
 
 class EmployeTabScreen extends StatefulWidget {
@@ -23,10 +18,10 @@ class _EmployeTabScreenState extends State<EmployeTabScreen> {
 
   final List<Widget> _pages = const [
     // PostJobPage(),
-    EmployeHomePage(),
+    ResumeTab(),
     ResumeTab(),
     FavoriteTab(),
-    EmployeProfilePage(),
+    ResumeTab(),
   ];
 
   void _onItemTapped(int index) {

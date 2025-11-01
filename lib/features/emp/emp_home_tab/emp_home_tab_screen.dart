@@ -3,22 +3,10 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
-import 'package:mama_kris/features/appl/appl_favorite/presentation/appl_favorite_screen.dart';
-import 'package:mama_kris/features/appl/appl_home/presentation/appl_home_screen.dart';
-import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_screen.dart';
-import 'package:mama_kris/features/appl/appl_support/presentation/appl_support_screen.dart';
-import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
-import 'package:mama_kris/features/applicant_orders/presentations/pages/my_orders_page.dart';
-import 'package:mama_kris/features/applicant_profile/presentation/pages/applicant_profile_page.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/emp_home_screen.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_screen.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/emp_resume_screen.dart';
 import 'package:mama_kris/features/emp/emp_support/presentation/emp_support_screen.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/favorite_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/resume_tab.dart';
-import 'package:mama_kris/features/support/presentation/support_page.dart';
 
 class EmpHomeTabScreen extends StatefulWidget {
   const EmpHomeTabScreen({super.key, this.pageIndex = 1});

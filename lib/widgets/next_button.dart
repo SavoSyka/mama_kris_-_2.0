@@ -7,12 +7,12 @@ class NextButton extends StatelessWidget {
   final String text;
 
   const NextButton({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.onPressed,
     this.text = 'Далее',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +72,12 @@ class PopButton extends StatelessWidget {
   final String text;
 
   const PopButton({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     // required this.onPressed,
     this.text = 'Назад',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,7 @@ class PopButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(13 * scaleX),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xE7E7E7781),
+            color: const Color(0xe7e7e7781),
             offset: Offset(0, 4 * scaleY),
             blurRadius: 19 * scaleX,
           ),

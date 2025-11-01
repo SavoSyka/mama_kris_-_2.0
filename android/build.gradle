@@ -7,8 +7,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.android.tools.build:gradle:8.3.2' // Проверьте последнюю версию на https://developer.android.com/studio/releases/gradle-plugin#updating-gradle
-
+        classpath 'com.android.tools.build:gradle:8.4.2' // Проверьте последнюю версию на https://developer.android.com/studio/releases/gradle-plugin#updating-gradle
 
     }
 }
@@ -34,3 +33,5 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+

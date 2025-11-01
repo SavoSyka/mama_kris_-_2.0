@@ -11,7 +11,6 @@ import 'package:mama_kris/screens/main_screen.dart';
 import 'package:mama_kris/screens/pass_reset_manager.dart';
 import 'package:mama_kris/constants/api_constants.dart';
 import 'package:mama_kris/screens/subscribtion_info_screen.dart';
-import 'package:mama_kris/widgets/change_alert.dart';
 
 Future<void> onExitPressed(BuildContext context) async {
   try {
@@ -59,7 +58,7 @@ Future<void> onExitPressed(BuildContext context) async {
 }
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   void _onEditProfilePressed(BuildContext context) {
     Navigator.push(
@@ -465,7 +464,7 @@ class ProfileScreen extends StatelessWidget {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -474,7 +473,7 @@ class ProfileScreen extends StatelessWidget {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,

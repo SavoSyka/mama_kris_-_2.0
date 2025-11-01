@@ -12,8 +12,7 @@ class PassResetFlow extends StatefulWidget {
   final double scaleX;
   final double scaleY;
 
-  const PassResetFlow({Key? key, required this.scaleX, required this.scaleY})
-      : super(key: key);
+  const PassResetFlow({super.key, required this.scaleX, required this.scaleY});
 
   @override
   _PassResetFlowState createState() => _PassResetFlowState();

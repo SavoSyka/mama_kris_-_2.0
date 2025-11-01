@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "86099763542-9v0d1jnq1hdq6rkjroroar0mo2tk3113.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lhlhlh",
+            "certificate_hash": "46bf477600c267382783ff8070f3fc726fcaa542"
+          }
+        },
+        {
           "client_id": "86099763542-a94uom1ijlqu6jp263dtc43dvgd540np.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -55,6 +63,14 @@
           "android_info": {
             "package_name": "com.mama.mama_kris",
             "certificate_hash": "507f4846285a11d4d9b5b1b5d65b3b9fb41131bc"
+          }
+        },
+        {
+          "client_id": "86099763542-b4aathd876oe7rfpdeltq1qqvbkubvd8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mama.mama_kris",
+            "certificate_hash": "46bf477600c267382783ff8070f3fc726fcaa542"
           }
         },
         {

@@ -2,18 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
-import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
-import 'package:mama_kris/core/common/widgets/custom_text.dart';
-import 'package:mama_kris/core/common/widgets/job_list_item.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
-import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
-import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
-import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_edit_screen.dart';
-import 'package:share_plus/share_plus.dart';
 
 class EmpProfileScreen extends StatefulWidget {
   const EmpProfileScreen({super.key});
@@ -94,7 +87,7 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
 }
 
 class _AcceptOrders extends StatelessWidget {
-  const _AcceptOrders({super.key});
+  const _AcceptOrders();
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +157,7 @@ class _AcceptOrders extends StatelessWidget {
 }
 
 class _Contacts extends StatelessWidget {
-  const _Contacts({super.key});
+  const _Contacts();
 
   @override
   Widget build(BuildContext context) {
@@ -234,32 +227,31 @@ class _Contacts extends StatelessWidget {
 }
 
 class _Specalisations extends StatelessWidget {
-  const _Specalisations({super.key});
+  const _Specalisations();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
-      child: const Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Text(
+            'Описание моей деятельности',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w600,
+              height: 1.30,
+            ),
+          ),
+      
+          SizedBox(height: 24),
+          Row(
             children: [
-              Text(
-                'Описание моей деятельности',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w600,
-                  height: 1.30,
-                ),
-              ),
-
-              SizedBox(height: 24),
-              SizedBox(
-                width: 321,
+              Expanded(
                 child: Text(
                   'Я руковожу компанией среднего масштаба, которая уже несколько лет стабильно работает на рынке. Для меня важно сочетать устойчивость и развитие: мы не гонимся за быстрыми результатами, а строим долгосрочные отношения с клиентами и партнёрами. Основное внимание уделяю качеству услуг и оптимизации процессов, чтобы команда могла работать эффективно, а клиенты видели в нас надёжного партнёра.',
                   style: TextStyle(
@@ -311,7 +303,7 @@ class _Specalisations extends StatelessWidget {
 }
 
 class _Experiences extends StatelessWidget {
-  const _Experiences({super.key});
+  const _Experiences();
 
   @override
   Widget build(BuildContext context) {

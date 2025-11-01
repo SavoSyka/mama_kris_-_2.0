@@ -28,7 +28,7 @@ class WelcomeScreen extends StatelessWidget {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -37,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,
@@ -253,7 +253,7 @@ class WelcomeScreen extends StatelessWidget {
               child: TextButton(
                 style: ButtonStyle(
                   overlayColor: WidgetStateProperty.all(Colors.transparent),
-                  foregroundColor: WidgetStateProperty.all(Color(0xFF00A80E)),
+                  foregroundColor: WidgetStateProperty.all(const Color(0xFF00A80E)),
                   textStyle: WidgetStateProperty.resolveWith<TextStyle>((
                     Set<WidgetState> states,
                   ) {

@@ -2,9 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_shadow_container.dart';
@@ -14,7 +11,6 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/features/home/presentation/widgets/employe_home_card.dart';
-import 'package:mama_kris/features/home/presentation/widgets/search_field.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({super.key});
@@ -134,7 +130,7 @@ class _SupportPageState extends State<SupportPage> {
 }
 
 class _favJobCard extends StatelessWidget {
-  const _favJobCard({super.key});
+  const _favJobCard();
 
   @override
   Widget build(BuildContext context) {

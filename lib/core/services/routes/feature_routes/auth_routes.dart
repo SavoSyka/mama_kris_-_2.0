@@ -33,7 +33,10 @@ final List<RouteBase> authRoutes = [
     path: RouteName.loginApplicant,
     name: RouteName.loginApplicant,
     builder: (BuildContext context, GoRouterState state) {
-      return const ApplLoginScreen();
+      return BlocProvider.value(
+        value: sl<AuthBloc>(),
+        child: const ApplLoginScreen(),
+      );
     },
   ),
 
@@ -42,6 +45,25 @@ final List<RouteBase> authRoutes = [
     name: RouteName.signupApplicant,
     builder: (BuildContext context, GoRouterState state) {
       return const ApplSignupScreen();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.verifyOptApplicant,
+    name: RouteName.verifyOptApplicant,
+    builder: (BuildContext context, GoRouterState state) {
+      var name = '';
+      var email = '';
+      var password = '';
+
+      final extra = state.extra;
+
+      if (extra is DataMap) {
+        name = extra['name'] as String;
+        email = extra['email'] as String;
+        password = extra['password'] as String;
+      }
+      return ApplVerifyOtpScreen(name: name, email: email, password: password);
     },
   ),
 

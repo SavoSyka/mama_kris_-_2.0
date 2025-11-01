@@ -573,8 +573,8 @@ Future<Map<String, String>> _fetchUserInfo() async {
 
 Future<void> sendPostRequest(String type) async {
   final prefs = await SharedPreferences.getInstance();
-  bool? in_crm = prefs.getBool('in_crm');
-  if (!(in_crm ?? false)) {
+  bool? inCrm = prefs.getBool('in_crm');
+  if (!(inCrm ?? false)) {
     final userInfo = await _fetchUserInfo();
     if (userInfo.isEmpty) {
       // print('Error: User info is empty');
@@ -857,7 +857,7 @@ Future<Map<String, dynamic>?> updateInvestStatus({
   required String phone,
   required String name,
 }) async {
-  final url = 'https://mamakris.sotka-api.ru/update_request';
+  const url = 'https://mamakris.sotka-api.ru/update_request';
   final body = {"phone": phone, "name": name, "invest": true};
 
   final response = await http.post(
@@ -895,7 +895,7 @@ Future<Map<String, dynamic>?> updateKarKonsStatusFromCache() async {
     }
   }
 
-  final url = 'https://mamakris.sotka-api.ru/update_request';
+  const url = 'https://mamakris.sotka-api.ru/update_request';
   final body = {"phone": phone, "name": name ?? "", "kar_kons": true};
 
   final response = await http.post(
@@ -933,7 +933,7 @@ Future<Map<String, dynamic>?> updatePsyKonsStatusFromCache() async {
     }
   }
 
-  final url = 'https://mamakris.sotka-api.ru/update_request';
+  const url = 'https://mamakris.sotka-api.ru/update_request';
   final body = {"phone": phone, "name": name ?? "", "psy_kons": true};
 
   final response = await http.post(
@@ -957,7 +957,7 @@ Future<Map<String, dynamic>?> updateAdsStatus({
   required String phone,
   required String name,
 }) async {
-  final url = 'https://mamakris.sotka-api.ru/update_request';
+  const url = 'https://mamakris.sotka-api.ru/update_request';
   final body = {"phone": phone, "name": name, "ads": true};
 
   final response = await http.post(

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
 
 class CreateJobPageOne extends StatefulWidget {
   const CreateJobPageOne({super.key});
@@ -20,24 +21,29 @@ class CreateJobPageOne extends StatefulWidget {
 }
 
 class _CreateJobPageOneState extends State<CreateJobPageOne> {
+  final TextEditingController _speciality = TextEditingController();
+  final TextEditingController _description = TextEditingController();
+
+  final TextEditingController _salary = TextEditingController();
+  bool _salaryWithAgreement = false;
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(
-        title: 'Создание вакансии',
-        alignTitleToEnd: false,
-        showLeading: false,
-      ),
+      appBar: const CustomAppBar(title: 'Создание вакансии', showLeading: true),
 
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
-        child: const SafeArea(
+        child: SafeArea(
           bottom: false,
           child: Column(
             children: [
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: CustomProgressBar(totalProgress: 2, filledProgress: 0),
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: SafeArea(
@@ -46,7 +52,7 @@ class _CreateJobPageOneState extends State<CreateJobPageOne> {
                       child: Column(
                         children: [
                           // Основная информация -- basic information
-                          _basicInformation(),
+                          _formData(context),
                         ],
                       ),
                     ),
@@ -59,13 +65,8 @@ class _CreateJobPageOneState extends State<CreateJobPageOne> {
       ),
     );
   }
-}
 
-class _basicInformation extends StatelessWidget {
-  const _basicInformation({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _formData(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
@@ -88,42 +89,86 @@ class _basicInformation extends StatelessWidget {
           CustomInputText(
             hintText: 'Выбрать',
             labelText: "Кого ищете?",
-            controller: TextEditingController(),
+            controller: _speciality,
           ),
           const SizedBox(height: 8),
 
           CustomInputText(
             hintText: 'Описание вакансии',
             labelText: "Расскажите о вакансии",
-            controller: TextEditingController(),
+            controller: _description,
             minLines: 8,
             maxLines: 12,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
 
           CustomInputText(
             hintText: '10000',
             labelText: "Оплата",
-            controller: TextEditingController(),
+            controller: _salary,
           ),
-          const SizedBox(height: 8),
+             const SizedBox(height: 16),
+
+
+              Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _salaryWithAgreement = !_salaryWithAgreement;
+                  });
+                },
+                child: Image.asset(
+                  _salaryWithAgreement
+                      ? MediaRes.markedBox
+                      : MediaRes.unMarkedBox,
+                  width: 28,
+                ),
+              ),
+              const SizedBox(width: 8),
+
+              const Expanded(
+                child: CustomText(
+                  text: "Оплата по договоренности"
+                  
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+       
 
           CustomButtonEmployee(
             btnText: 'Далее',
             onTap: () {
-              context.pushNamed(RouteName.createJobPageTwo);
+              context.pushNamed(
+                RouteName.createJobPageTwo,
+                extra: {
+                  'salary': _salary.text,
+                  'speciality': _speciality.text,
+                  "description": _description.text,
+                  "salaryWithAgreement":  _salaryWithAgreement
+                },
+              );
             },
           ),
 
           const SizedBox(height: 24),
+
+      
         ],
       ),
     );
   }
+
+
+
+
 }
 
 class _Contacts extends StatelessWidget {
-  const _Contacts({super.key});
+  const _Contacts();
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +232,7 @@ class _Contacts extends StatelessWidget {
 }
 
 class _accounts extends StatefulWidget {
-  const _accounts({super.key});
+  const _accounts();
 
   @override
   State<_accounts> createState() => _AccountsState();
@@ -257,11 +302,7 @@ class _AccountsState extends State<_accounts> {
 }
 
 class _updateButtons extends StatelessWidget {
-  const _updateButtons({
-    super.key,
-    this.text = 'Добавить контакт',
-    this.error = false,
-  });
+  const _updateButtons({this.text = 'Добавить контакт', this.error = false});
   final String text;
   final bool error;
   @override

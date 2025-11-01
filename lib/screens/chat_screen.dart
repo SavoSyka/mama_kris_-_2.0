@@ -11,7 +11,7 @@ import 'package:mama_kris/screens/investors_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  const ChatScreen({super.key});
 
   // =======================
   // ОБРАБОТЧИКИ КНОПОК
@@ -160,7 +160,7 @@ class ChatScreen extends StatelessWidget {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -169,7 +169,7 @@ class ChatScreen extends StatelessWidget {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,

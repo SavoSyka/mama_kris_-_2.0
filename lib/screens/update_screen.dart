@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart'; // добавьте этот и
 import 'package:flutter_svg/flutter_svg.dart';
 
 class UpdateScreen extends StatefulWidget {
-  const UpdateScreen({Key? key}) : super(key: key);
+  const UpdateScreen({super.key});
 
   @override
   State<UpdateScreen> createState() => _UpdateScreenState();
@@ -40,7 +40,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
       // print("Не удалось запустить URL: $url");
       // Здесь можно добавить отображение ошибки через SnackBar, если нужно.
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Не удалось открыть ссылку для обновления.")),
+        const SnackBar(content: Text("Не удалось открыть ссылку для обновления.")),
       );
     }
   }
@@ -63,7 +63,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -72,7 +72,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,
@@ -124,7 +124,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                   fontSize: 18 * scaleX,
                   height: 20 / 14,
                   letterSpacing: -0.1 * scaleX,
-                  color: Color(0xFF596574),
+                  color: const Color(0xFF596574),
                 ),
               ),
             ),

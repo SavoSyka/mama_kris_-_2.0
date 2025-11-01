@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ScammersScreen extends StatelessWidget {
-  const ScammersScreen({Key? key}) : super(key: key);
+  const ScammersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ScammersScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: contentHeight,
           child: Stack(
             children: [
@@ -29,7 +29,7 @@ class ScammersScreen extends StatelessWidget {
                 left: 0,
                 child: ShaderMask(
                   shaderCallback: (Rect bounds) {
-                    return LinearGradient(
+                    return const LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
@@ -38,7 +38,7 @@ class ScammersScreen extends StatelessWidget {
                         Colors.white,
                         Colors.transparent,
                       ],
-                      stops: const [0.0, 0.3, 0.7, 1.0],
+                      stops: [0.0, 0.3, 0.7, 1.0],
                     ).createShader(bounds);
                   },
                   blendMode: BlendMode.dstIn,
@@ -105,7 +105,7 @@ class ScammersScreen extends StatelessWidget {
                       fontSize: 14 * scaleX,
                       height: 20 / 14,
                       letterSpacing: -0.1 * scaleX,
-                      color: Color(0xFF596574),
+                      color: const Color(0xFF596574),
                     ),
                   ),
                 ),

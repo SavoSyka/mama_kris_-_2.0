@@ -2,16 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
-import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
-import 'package:mama_kris/core/common/widgets/custom_text.dart';
-import 'package:mama_kris/core/common/widgets/job_list_item.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
-import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
-import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
-import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
 import 'package:share_plus/share_plus.dart';
 
 class EmpResumeScreenDetail extends StatefulWidget {
@@ -158,7 +152,7 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
 }
 
 class _AcceptOrders extends StatelessWidget {
-  const _AcceptOrders({super.key});
+  const _AcceptOrders();
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +221,7 @@ class _AcceptOrders extends StatelessWidget {
 }
 
 class _Contacts extends StatelessWidget {
-  const _Contacts({super.key});
+  const _Contacts();
 
   @override
   Widget build(BuildContext context) {
@@ -297,7 +291,7 @@ class _Contacts extends StatelessWidget {
 }
 
 class _Specalisations extends StatelessWidget {
-  const _Specalisations({super.key});
+  const _Specalisations();
 
   @override
   Widget build(BuildContext context) {
@@ -379,7 +373,7 @@ class _Specalisations extends StatelessWidget {
 }
 
 class _Experiences extends StatelessWidget {
-  const _Experiences({super.key});
+  const _Experiences();
 
   @override
   Widget build(BuildContext context) {

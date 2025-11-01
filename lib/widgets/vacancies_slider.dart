@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'vacancy_content.dart';
 
@@ -12,14 +11,14 @@ class VacanciesSlider extends StatelessWidget {
   final VoidCallback onNotInterestedPressed;
 
   const VacanciesSlider({
-    Key? key,
+    super.key,
     required this.vacancy,
     required this.vacancyIndex,
     required this.previousVacancyIndex,
     required this.slideDirection,
     required this.onInterestedPressed,
     required this.onNotInterestedPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

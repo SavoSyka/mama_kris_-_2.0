@@ -4,7 +4,7 @@ import 'package:mama_kris/screens/banners_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VacanciesBanner extends StatelessWidget {
-  const VacanciesBanner({Key? key}) : super(key: key);
+  const VacanciesBanner({super.key});
 
   // Получаем URL рекламного изображения из кэша
   Future<String?> _getAdvImageUrl() async {

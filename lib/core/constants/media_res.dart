@@ -62,6 +62,7 @@ class MediaRes {
 
   static const logoutIcon = '$_baseIcons/logout_icon.png';
   static const dropDownIcon = '$_baseIcons/drop_down_icon.png';
+  static const emailOtp = '$_baseIcons/email_icon.png';
 
 
 

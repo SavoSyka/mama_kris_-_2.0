@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 
 
 
-import 'package:flutter/material.dart';
 
 class NoMoreVacanciesCard extends StatelessWidget {
   final VoidCallback onGoToProfile;
 
-  const NoMoreVacanciesCard({Key? key, required this.onGoToProfile})
-      : super(key: key);
+  const NoMoreVacanciesCard({super.key, required this.onGoToProfile});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +41,7 @@ class NoMoreVacanciesCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 22 * scaleX,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF343434),
+              color: const Color(0xFF343434),
               fontFamily: 'Jost',
             ),
           ),
@@ -53,7 +51,7 @@ class NoMoreVacanciesCard extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16 * scaleX,
-              color: Color(0xFF596574),
+              color: const Color(0xFF596574),
               fontFamily: 'Jost',
             ),
           ),
@@ -64,7 +62,7 @@ class NoMoreVacanciesCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 18 * scaleX,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF343434),
+              color: const Color(0xFF343434),
               fontFamily: 'Jost',
             ),
           ),

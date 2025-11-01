@@ -22,7 +22,7 @@ class EmployeHomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: isSelected ? isPrimary ? AppPalette.primaryColor : AppPalette.secondaryColor : Color(0xFFF9F9F9),
+      color: isSelected ? isPrimary ? AppPalette.primaryColor : AppPalette.secondaryColor : const Color(0xFFF9F9F9),
 
       borderRadius: BorderRadius.circular(5),
       child: InkWell(
@@ -34,7 +34,7 @@ class EmployeHomeCard extends StatelessWidget {
             text: text,
             textAlign: isTextCenter ? TextAlign.center : TextAlign.left,
             style: TextStyle(
-              color: !isSelected ? Color(0xFF596574) : AppPalette.white,
+              color: !isSelected ? const Color(0xFF596574) : AppPalette.white,
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),

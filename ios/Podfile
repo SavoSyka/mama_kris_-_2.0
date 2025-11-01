@@ -29,13 +29,6 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   use_frameworks!
-  use_modular_headers!
-
-  # Указываем поды для CloudPayments
-    pod 'Cloudpayments', :git => "https://gitpub.cloudpayments.ru/integrations/sdk/cloudpayments-ios", :branch => "master"
-    pod 'CloudpaymentsNetworking', :git => "https://gitpub.cloudpayments.ru/integrations/sdk/cloudpayments-ios", :branch => "master"
-
-  pod 'GoogleSignIn'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do

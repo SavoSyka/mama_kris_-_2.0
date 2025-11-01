@@ -7,7 +7,7 @@ import 'package:mama_kris/utils/favorite_service.dart';
 import 'package:mama_kris/widgets/vacancy_dialog.dart';
 
 class FavoriteScreen extends StatefulWidget {
-  const FavoriteScreen({Key? key}) : super(key: key);
+  const FavoriteScreen({super.key});
 
   @override
   _FavoriteScreenState createState() => _FavoriteScreenState();
@@ -198,7 +198,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -207,7 +207,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,

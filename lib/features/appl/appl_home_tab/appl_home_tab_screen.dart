@@ -7,14 +7,6 @@ import 'package:mama_kris/features/appl/appl_favorite/presentation/appl_favorite
 import 'package:mama_kris/features/appl/appl_home/presentation/appl_home_screen.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_screen.dart';
 import 'package:mama_kris/features/appl/appl_support/presentation/appl_support_screen.dart';
-import 'package:mama_kris/features/applicant_home/presentation/applicant_home_page.dart';
-import 'package:mama_kris/features/applicant_orders/presentations/pages/my_orders_page.dart';
-import 'package:mama_kris/features/applicant_profile/presentation/pages/applicant_profile_page.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/favorite_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/home_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/profile_tab.dart';
-import 'package:mama_kris/features/home/presentation/pages/tabs/resume_tab.dart';
-import 'package:mama_kris/features/support/presentation/support_page.dart';
 
 class ApplHomeTabScreen extends StatefulWidget {
   const ApplHomeTabScreen({super.key, this.pageIndex = 0});

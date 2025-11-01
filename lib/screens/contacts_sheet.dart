@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mama_kris/utils/contacts_service.dart'; // <-- убедись, что есть такой файл
@@ -97,7 +96,7 @@ Future<void> showContactsSheet(BuildContext context, int contactId) async {
                               .toString();
                           primaryText = telegramValue.startsWith('@')
                               ? telegramValue
-                              : '@' + telegramValue;
+                              : '@$telegramValue';
                           secondaryText =
                               "Свяжитесь с заказчиком через Telegram";
                           onPressedCallback = () =>
@@ -210,7 +209,7 @@ Future<void> showContactsSheet(BuildContext context, int contactId) async {
                                       ),
                                       SizedBox(height: 4 * scaleY),
                                       Text(
-                                        '$secondaryText',
+                                        secondaryText,
                                         style: TextStyle(
                                           fontFamily: 'Jost',
                                           fontWeight: FontWeight.w400,

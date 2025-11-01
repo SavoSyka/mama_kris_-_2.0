@@ -68,7 +68,7 @@ class CustomImageView extends StatelessWidget {
 
   Widget _buildImageView() {
     if (imagePath == null || imagePath == "") {
-      return Icon(
+      return const Icon(
         Icons.error_outline, 
         size: 48, 
         color: AppPalette.primaryColor,

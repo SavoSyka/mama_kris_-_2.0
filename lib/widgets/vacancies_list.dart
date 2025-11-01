@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mama_kris/widgets/vacancies_banner.dart';
 import 'package:mama_kris/utils/vacancy_service.dart';
-import 'dart:ui';
 // import 'dart:convert';
 import 'package:mama_kris/screens/contacts_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -536,7 +535,7 @@ class _VacanciesListState extends State<VacanciesList> {
     return Container(
       padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
       decoration:  BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [Color(0xFFFFF9E3), Color(0xFFCEE5DB)],
         ),
         borderRadius: BorderRadius.circular(16)

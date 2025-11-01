@@ -72,6 +72,7 @@ class _CustomInputTextState extends State<CustomInputText> {
           obscureText: widget.obscureText && !_showPassword,
           readOnly: widget.readOnly,
           autofocus: widget.autoFocus,
+          autovalidateMode: AutovalidateMode.onUnfocus,
           keyboardType: widget.keyboardType,
           validator: widget.validator,
           style: const TextStyle(fontSize: 14),
@@ -105,8 +106,9 @@ class _CustomInputTextState extends State<CustomInputText> {
 
             hint: Text(
               widget.hintText,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppPalette.greyDark),
             ),
+            
             contentPadding: const EdgeInsets.symmetric(
               vertical: 16,
               horizontal: 12,

@@ -191,8 +191,8 @@ Future<void> _navigateToChoice(
   // final Widget targetPage =
   //     (choice == 'Looking for job') ? ApplicationScreen() : OrderScreen();
   final Widget targetPage = (choice == 'Looking for job')
-      ? MonetizationScreen()
-      : MonetizationBannerScreen();
+      ? const MonetizationScreen()
+      : const MonetizationBannerScreen();
   final String currentPage = (choice == 'Looking for job') ? 'search' : 'job';
 
   // Сохраняем данные в кэш
@@ -256,8 +256,7 @@ class RegistrationFlow extends StatefulWidget {
   final double scaleX;
   final double scaleY;
 
-  const RegistrationFlow({Key? key, required this.scaleX, required this.scaleY})
-      : super(key: key);
+  const RegistrationFlow({super.key, required this.scaleX, required this.scaleY});
 
   @override
   State<RegistrationFlow> createState() => _RegistrationFlowState();

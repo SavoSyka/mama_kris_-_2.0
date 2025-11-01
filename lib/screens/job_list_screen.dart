@@ -57,7 +57,7 @@ Future<List<Map<String, dynamic>>> fetchUserJobs() async {
 }
 
 class JobListScreen extends StatelessWidget {
-  const JobListScreen({Key? key}) : super(key: key);
+  const JobListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class JobListScreen extends StatelessWidget {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -85,7 +85,7 @@ class JobListScreen extends StatelessWidget {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,
@@ -122,9 +122,9 @@ class JobListScreen extends StatelessWidget {
             future: fetchUserJobs(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(child: Text('Ошибка загрузки'));
+                return const Center(child: Text('Ошибка загрузки'));
               }
               // Фильтрация: исключаем вакансии со статусом "rejected"
               // Фильтрация: исключаем вакансии со статусом "rejected"

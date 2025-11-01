@@ -69,7 +69,7 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
 }
 
 class _basicInformation extends StatelessWidget {
-  const _basicInformation({super.key});
+  const _basicInformation();
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +131,7 @@ class _basicInformation extends StatelessWidget {
 }
 
 class _Contacts extends StatelessWidget {
-  const _Contacts({super.key});
+  const _Contacts();
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +195,7 @@ class _Contacts extends StatelessWidget {
 }
 
 class _accounts extends StatefulWidget {
-  const _accounts({super.key});
+  const _accounts();
 
   @override
   State<_accounts> createState() => _AccountsState();
@@ -266,7 +266,6 @@ class _AccountsState extends State<_accounts> {
 
 class _updateButtons extends StatelessWidget {
   const _updateButtons({
-    super.key,
     this.text = 'Добавить контакт',
     this.error = false,
   });

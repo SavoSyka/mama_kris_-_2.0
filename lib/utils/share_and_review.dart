@@ -76,7 +76,7 @@ void showShareContacts(BuildContext context, int jobId) async {
                     ),
                     SizedBox(height: 20 * scaleY),
                     // Заголовок
-                    Container(
+                    SizedBox(
                       width: 340 * scaleX,
                       child: Text(
                         'Понравилась эта вакансия?',
@@ -92,7 +92,7 @@ void showShareContacts(BuildContext context, int jobId) async {
                     ),
                     SizedBox(height: 20 * scaleY),
                     // Описание
-                    Container(
+                    SizedBox(
                       width: 340 * scaleX,
                       child: Text(
                         'Поделитесь ею с друзьями!',
@@ -173,11 +173,11 @@ void showShareContacts(BuildContext context, int jobId) async {
                             Share.share(shareText);
                             Navigator.of(context).pop(true);
                           } else {
-                            final String androidLink =
+                            const String androidLink =
                                 'https://play.google.com/store/apps/details?id=com.mama.mama_kris';
-                            final String iosLink =
+                            const String iosLink =
                                 'https://apps.apple.com/ru/app/mamakris';
-                            final String shareText =
+                            const String shareText =
                                 'Попробуйте приложение MamaKris для поиска вакансий на удаленке! '
                                 'Скачайте его по ссылке: \n\n'
                                 'Для Android: $androidLink\n'
@@ -295,7 +295,7 @@ void showShareAppNotification(BuildContext context, int viewedCount) {
                     ),
                     SizedBox(height: 20 * scaleY),
                     // Заголовок
-                    Container(
+                    SizedBox(
                       width: 340 * scaleX,
                       child: Text(
                         'Вы просмотрели $viewedCount вакансий!',
@@ -311,7 +311,7 @@ void showShareAppNotification(BuildContext context, int viewedCount) {
                     ),
                     SizedBox(height: 20 * scaleY),
                     // Описание
-                    Container(
+                    SizedBox(
                       width: 340 * scaleX,
                       child: Text(
                         'Поделитесь приложением с друзьями,\nчтобы они тоже могли найти\nинтересные вакансии.',
@@ -343,11 +343,11 @@ void showShareAppNotification(BuildContext context, int viewedCount) {
                       child: ElevatedButton(
                         onPressed: () {
                           // print("Кнопка 'Поделиться' нажата");
-                          final String androidLink =
+                          const String androidLink =
                               'https://play.google.com/store/apps/details?id=com.mama.mama_kris';
-                          final String iosLink =
+                          const String iosLink =
                               'https://apps.apple.com/ru/app/mamakris';
-                          final String shareText =
+                          const String shareText =
                               'Попробуйте приложение MamaKris для поиска вакансий на удаленке! '
                               'Скачайте его по ссылке: \n\n'
                               'Для Android: $androidLink\n'

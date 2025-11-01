@@ -6,7 +6,7 @@ final List<RouteBase> notificationRoutes = [
     name: RouteName.notificationList,
     builder: (BuildContext context, GoRouterState state) {
       return BlocProvider(
-        create: (context) => getIt<NotificationListCubit>(),
+        create: (context) => sl<NotificationListCubit>(),
         child: const NotificationListPage(),
       );
     },
@@ -18,7 +18,7 @@ final List<RouteBase> notificationRoutes = [
     builder: (BuildContext context, GoRouterState state) {
       final notificationId = state.pathParameters['id']!;
       return BlocProvider(
-        create: (context) => getIt<NotificationDetailCubit>(),
+        create: (context) => sl<NotificationDetailCubit>(),
         child: NotificationDetailPage(notificationId: notificationId),
       );
     },

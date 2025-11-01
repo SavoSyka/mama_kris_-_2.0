@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
-import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 

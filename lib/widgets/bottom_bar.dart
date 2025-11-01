@@ -10,14 +10,14 @@ class BottomBar extends StatelessWidget {
   final VoidCallback onProfileTap;
 
   const BottomBar({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.onHomeTap,
     required this.onOrdersTap,
     required this.onChatTap,
     required this.onProfileTap,
-  }) : super(key: key);
+  });
 
   Widget _buildItem(String iconPath, String label, VoidCallback onTap) {
     return Expanded(
@@ -37,7 +37,7 @@ class BottomBar extends StatelessWidget {
                 fontSize: 15 * scaleX,
                 height: 18 / 15,
                 letterSpacing: 0.03 * (15 * scaleX), // 3% от размера шрифта
-                color: Color(0xFF979AA0),
+                color: const Color(0xFF979AA0),
               ),
             ),
           ],

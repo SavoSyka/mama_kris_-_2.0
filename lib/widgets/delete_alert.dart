@@ -9,7 +9,7 @@ Future<void> showDeleteAlert(BuildContext context) {
   double scaleY = screenHeight / 956;
 
   /// Функция, которая будет вызываться при нажатии на кнопку «Удалить»
-  void _onDeletePressed() {
+  void onDeletePressed() {
     // Здесь можно добавить любую нужную логику,
     // а пока просто закроем модальный лист:
     Navigator.of(context).pop();
@@ -123,7 +123,7 @@ Future<void> showDeleteAlert(BuildContext context) {
                           child: ElevatedButton(
                             onPressed: () {
                               // Действие при нажатии
-                              _onDeletePressed();
+                              onDeletePressed();
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF00A80E),

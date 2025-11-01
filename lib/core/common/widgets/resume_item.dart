@@ -3,7 +3,6 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
-import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ResumeItem extends StatefulWidget {
@@ -115,7 +114,7 @@ class _JobListItemState extends State<ResumeItem> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 12,),
+                      const SizedBox(width: 12,),
                           Text(
                         widget.age,
                         style: const TextStyle(

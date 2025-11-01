@@ -11,6 +11,8 @@ class RouteName {
   static String loginApplicant = '/$_applicant/login';
   static String signupApplicant = '/$_applicant/signup';
   static String forgotApplicant = '/$_applicant/forgot';
+  static String verifyOptApplicant = '/$_applicant/verify';
+
 
   static String homeApplicant = '/$_applicant/home';
   static String supportDetailApplicant = '/$_applicant/support-detail';
@@ -27,9 +29,6 @@ class RouteName {
   static String createJobPageThree = '/$_employee/create/3';
   static String resumeDetail = "/$_employee/resume-detail";
 
-
-
-
   static String welcomePage = "/getStart";
   static String forceUpdate = "/force-update";
 
@@ -38,7 +37,6 @@ class RouteName {
 
   static String employesHome = "/employes-home";
   static String postJob = "/post-job";
-  static String applicantHome = "/applicant-home";
 
   static String login = "/login";
   static String welcomeSignup = "/welcome-signup";

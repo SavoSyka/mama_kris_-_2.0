@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
@@ -116,12 +115,12 @@ Future<bool?> showFavoriteContactsSheet(
             // );
             if (snapshot.connectionState == ConnectionState.waiting) {
               // print("FavoriteContactsSheet: Загрузка контактов...");
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError || snapshot.data == null) {
               // print(
               // "FavoriteContactsSheet: Ошибка или нет данных: ${snapshot.error}",
               // );
-              return Center(child: Text("Ошибка загрузки контактов"));
+              return const Center(child: Text("Ошибка загрузки контактов"));
             }
             final contact = snapshot.data!;
             // print(
@@ -204,7 +203,7 @@ Future<bool?> showFavoriteContactsSheet(
                                         contact['telegram'].toString();
                                     primaryText = telegramValue.startsWith('@')
                                         ? telegramValue
-                                        : '@' + telegramValue;
+                                        : '@$telegramValue';
                                     secondaryText =
                                         "Свяжитесь с заказчиком через Telegram";
                                     onPressedCallback = () => onTelegramPressed(
@@ -354,7 +353,7 @@ Future<bool?> showFavoriteContactsSheet(
                                     ),
                                   ),
                                 );
-                              }).toList(),
+                              }),
                               SizedBox(height: 40 * scaleY),
                               // Ряд кнопок: star и share
                               Row(

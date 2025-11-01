@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:mama_kris/utils/funcs.dart' as funcs;
 
 class MonetizationBannerScreen extends StatefulWidget {
-  const MonetizationBannerScreen({Key? key}) : super(key: key);
+  const MonetizationBannerScreen({super.key});
 
   @override
   State<MonetizationBannerScreen> createState() =>
@@ -24,7 +24,7 @@ class _MonetizationBannerScreenState extends State<MonetizationBannerScreen> {
     final choice = prefs.getString('choice');
     // Определяем целевую страницу и значение для current_page по выбору пользователя.
     final Widget targetPage =
-        (choice == 'Looking for job') ? ApplicationScreen() : MainScreen();
+        (choice == 'Looking for job') ? const ApplicationScreen() : const MainScreen();
     final String currentPage = (choice == 'Looking for job') ? 'search' : 'job';
 
     // Сохраняем данные в кэш
@@ -66,7 +66,7 @@ class _MonetizationBannerScreenState extends State<MonetizationBannerScreen> {
             left: 0,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -75,7 +75,7 @@ class _MonetizationBannerScreenState extends State<MonetizationBannerScreen> {
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: const [0.0, 0.3, 0.7, 1.0],
+                  stops: [0.0, 0.3, 0.7, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,
@@ -162,8 +162,8 @@ class _MonetizationBannerScreenState extends State<MonetizationBannerScreen> {
                     letterSpacing: -0.1 * scaleX,
                     color: Colors.black,
                   ),
-                  children: [
-                    const TextSpan(text: 'Да, предложение для меня актуально'),
+                  children: const [
+                    TextSpan(text: 'Да, предложение для меня актуально'),
                   ],
                 ),
               ),

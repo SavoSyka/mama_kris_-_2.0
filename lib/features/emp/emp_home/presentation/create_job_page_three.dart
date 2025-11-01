@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
@@ -12,9 +11,25 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
 
 class CreateJobPageThree extends StatefulWidget {
-  const CreateJobPageThree({super.key});
+  const CreateJobPageThree({
+    super.key,
+    this.speciality,
+    this.description,
+    this.salary,
+    this.salaryWithAgreement,
+    this.contactAddresses,
+    this.links,
+  });
+
+  final String? speciality;
+  final String? description;
+  final String? salary;
+  final bool? salaryWithAgreement;
+  final String? contactAddresses;
+  final String? links;
 
   @override
   _CreateJobPageThreeState createState() => _CreateJobPageThreeState();
@@ -25,20 +40,19 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(
-        title: 'Создание вакансии',
-        alignTitleToEnd: false,
-        showLeading: false,
-      ),
+      appBar: const CustomAppBar(title: 'Создание вакансии', showLeading: true),
 
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
-        child: const SafeArea(
+        child: SafeArea(
           bottom: false,
           child: Column(
             children: [
-              SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: CustomProgressBar(totalProgress: 2, filledProgress: 2),
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: SafeArea(
@@ -47,7 +61,7 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
                       child: Column(
                         children: [
                           // Основная информация -- basic information
-                          _basicInformation(),
+                          _formPreview(context),
                         ],
                       ),
                     ),
@@ -60,10 +74,110 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
       ),
     );
   }
+
+  Widget _formPreview(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+
+        children: [
+          Text(
+            widget.speciality ?? '',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w600,
+              height: 1.30,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+          Text(
+            widget.salary ?? "",
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w600,
+              height: 1.30,
+            ),
+          ),
+          SizedBox(
+            width: 311,
+            child: Text(
+              widget.description ?? '',
+              style: const TextStyle(
+                color: Color(0xFF596574),
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w500,
+                height: 1.30,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: 311,
+            child: Text(
+              "Contact information through ${widget.contactAddresses}",
+              style: const TextStyle(
+                color: Color(0xFF596574),
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w500,
+                height: 1.30,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          const CustomButtonEmployee(btnText: 'Далее'),
+
+          const SizedBox(height: 24),
+
+          CustomButtonSec(
+            btnText: '',
+            onTap: () {
+              context.pushNamed(RouteName.homeEmploye);
+            },
+            child: const Text(
+              'Рассказать',
+              style: TextStyle(
+                color: Color(0xFF0073BB),
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w600,
+                height: 1.30,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+          const SizedBox(
+            width: 311,
+            child: Text(
+              'Чтобы опубликовать вакансию необходима подписка',
+              style: TextStyle(
+                color: Color(0xFF596574),
+                fontSize: 10,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w500,
+                height: 1.30,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _basicInformation extends StatelessWidget {
-  const _basicInformation({super.key});
+  const _basicInformation();
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +249,7 @@ class _basicInformation extends StatelessWidget {
             ),
           ),
 
-SizedBox(height: 16,),
+          const SizedBox(height: 16),
           const SizedBox(
             width: 311,
             child: Text(
@@ -156,7 +270,7 @@ SizedBox(height: 16,),
 }
 
 class _Contacts extends StatelessWidget {
-  const _Contacts({super.key});
+  const _Contacts();
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +334,7 @@ class _Contacts extends StatelessWidget {
 }
 
 class _accounts extends StatefulWidget {
-  const _accounts({super.key});
+  const _accounts();
 
   @override
   State<_accounts> createState() => _AccountsState();
@@ -290,11 +404,7 @@ class _AccountsState extends State<_accounts> {
 }
 
 class _updateButtons extends StatelessWidget {
-  const _updateButtons({
-    super.key,
-    this.text = 'Добавить контакт',
-    this.error = false,
-  });
+  const _updateButtons({this.text = 'Добавить контакт', this.error = false});
   final String text;
   final bool error;
   @override

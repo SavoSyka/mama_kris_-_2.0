@@ -3,16 +3,17 @@ import 'package:mama_kris/core/constants/app_text_contents.dart';
 class FormValidations {
   FormValidations._();
 
-  static const int minPasswordLength = 6;
-  static const String passwordRequired = 'Password is required';
-  static const String otpRequired = 'OTP is required';
-  static const String otpTooShort = 'OTP must be 6 characters.';
+  static const int _minPasswordLength = 6;
+  static const String _passwordRequired = 'Требуется пароль.';
+  static const String _otpRequired = 'Требуется одноразовый пароль.';
+  static const String _otpTooShort =
+      'Одноразовый пароль должен состоять из 6 символов..';
 
   static const String passwordTooShort =
-      'Password must be at least $minPasswordLength characters';
-  static const String passwordsDoNotMatch = 'Passwords do not match';
+      "Пароль должен содержать не менее $_minPasswordLength символов";
+  static const String passwordsDoNotMatch = 'Пароли не совпадают';
   static const String sameAsOldPassword =
-      'New password must be different from old password';
+      'Новый пароль должен отличаться от старого пароля.';
 
   static String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -27,10 +28,10 @@ class FormValidations {
 
   static String? validateOTP(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return otpRequired;
+      return _otpRequired;
     }
     if (value.trim().length < 6) {
-      return otpTooShort;
+      return _otpTooShort;
     }
 
     return null;
@@ -38,21 +39,21 @@ class FormValidations {
 
   static String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return AppTextContents.emailRequired;
+      return 'AppTextContents.emailRequired';
     }
     // Basic email regex
-    if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(value)) {
-      return AppTextContents.emailInvalid;
-    }
+    // if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(value)) {
+    //   return "AppTextContents.emailInvalid;";
+    // }
     return null;
   }
 
   // Base validation for common password checks
   static String? _validateBasePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return passwordRequired;
+      return _passwordRequired;
     }
-    if (value.length < minPasswordLength) {
+    if (value.length < _minPasswordLength) {
       return passwordTooShort;
     }
 

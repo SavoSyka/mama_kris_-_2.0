@@ -1,17 +1,15 @@
 part of 'dependency_import.dart';
 
-final getIt = GetIt.instance;
+final sl = GetIt.instance;
 
 Future<void> dependencyInjection() async {
   await _initSharedPref();
   await _initLocalCache();
   await _initDio();
   await _initForceUpdate();
-  _initAuth();
-  await _initJobSearch();
-  await _initjobPosting();
-  await _initProfile();
+  await _initAuth();
   await _initNotifications();
+  await _initJobs();
 }
 
 Future<bool> refreshAccessToken() async {
@@ -24,7 +22,7 @@ Future<bool> refreshAccessToken() async {
   }
 
   try {
-    final dio = getIt<Dio>(); // Use singleton Dio instance
+    final dio = sl<Dio>(); // Use singleton Dio instance
     final response = await dio.post(
       'auth/refresh-token',
       options: Options(
@@ -84,8 +82,10 @@ Future<void> _initDio() async {
         }
 
         try {
-          final token = await getIt<AuthLocalDataSource>().getToken();
-          if (token != null && token.isNotEmpty) {
+          const token = ''; // TODO
+
+          //await sl<AuthLocalDataSource>().getToken();
+          if (token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           } else {
             debugPrint("No access token available for request");
@@ -112,8 +112,9 @@ Future<void> _initDio() async {
           if (refreshed) {
             try {
               // Retrieve the new token
-              final newToken = await getIt<AuthLocalDataSource>().getToken();
-              if (newToken != null && newToken.isNotEmpty) {
+              const newToken = ''; // TODO
+              //await sl<AuthLocalDataSource>().getToken();
+              if (newToken.isNotEmpty) {
                 // Update the original request's Authorization header
                 e.requestOptions.headers['Authorization'] = 'Bearer $newToken';
                 // Mark as retrying to prevent infinite loops
@@ -139,211 +140,142 @@ Future<void> _initDio() async {
     ),
   );
 
-  getIt.registerLazySingleton<Dio>(() => dio);
+  sl.registerLazySingleton<Dio>(() => dio);
 }
 
 Future<void> _initLocalCache() async {
   await Hive.initFlutter();
 
-  Hive.registerAdapter(SearchJobModelAdapter());
+  // Hive.registerAdapter(SearchJobModelAdapter());
   Hive.registerAdapter(NotificationModelAdapter());
 
-  final searchJobsBox = await Hive.openBox<SearchJobModel>(
-    HiveConstants.searchJobBox,
-  );
+  // final searchJobsBox = await Hive.openBox<SearchJobModel>(
+  //   HiveConstants.searchJobBox,
+  // );
 
-  getIt.registerLazySingleton<Box<SearchJobModel>>(() => searchJobsBox);
+  // sl.registerLazySingleton<Box<SearchJobModel>>(() => searchJobsBox);
 }
 
 Future<void> _initSharedPref() async {
   final prefs = await SharedPreferences.getInstance();
-  getIt.registerLazySingleton<SharedPreferences>(() => prefs);
+  sl.registerLazySingleton<SharedPreferences>(() => prefs);
 }
 
 Future<void> _initForceUpdate() async {
   // DataSource
-  getIt.registerLazySingleton<ForceUpdateRemoteDataSource>(
-    () => ForceUpdateRemoteDataSourceImpl(getIt()),
+  sl.registerLazySingleton<ForceUpdateRemoteDataSource>(
+    () => ForceUpdateRemoteDataSourceImpl(sl()),
   );
 
   // Repository
-  getIt.registerLazySingleton<ForceUpdateRepository>(
-    () => ForceUpdateRepositoryImpl(getIt()),
+  sl.registerLazySingleton<ForceUpdateRepository>(
+    () => ForceUpdateRepositoryImpl(sl()),
   );
 
   // UseCase
-  getIt.registerLazySingleton<CheckForceUpdateUseCase>(
-    () => CheckForceUpdateUseCase(getIt()),
+  sl.registerLazySingleton<CheckForceUpdateUseCase>(
+    () => CheckForceUpdateUseCase(sl()),
   );
 
-  getIt.registerFactory(() => ForceUpdateBloc(getIt()));
+  sl.registerFactory(() => ForceUpdateBloc(sl()));
 }
 
-void _initAuth() {
+Future<void> _initAuth() async {
   // Data source
-  getIt.registerLazySingleton<AuthLocalDataSource>(
-    () => AuthLocalDataSourceImpl(getIt()), // inject Dio
-  );
-  getIt.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(dio: getIt(), local: getIt()), // inject Dio
+  // sl.registerLazySingleton<AuthLocalDataSource>(
+  //   () => AuthLocalDataSourceImpl(sl()), // inject Dio
+  // );
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(sl()), // inject Dio
   );
 
   // Repository
-  getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(getIt()),
-  );
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
 
   // Use cases
-  getIt.registerLazySingleton(() => CheckEmail(getIt()));
-  getIt.registerLazySingleton(() => ValidateOtp(getIt()));
-  getIt.registerLazySingleton(() => RegisterApplicant(getIt()));
-  getIt.registerLazySingleton(() => LoginApplicant(getIt()));
-  getIt.registerLazySingleton(() => ChangePassword(getIt()));
-  getIt.registerLazySingleton(() => ForgotPasswordUsecase(getIt()));
+  sl.registerLazySingleton(() => LoginUsecase(sl()));
+  sl.registerLazySingleton(() => SignupUsecase(sl()));
+  sl.registerLazySingleton(() => CheckEmailUsecase(sl()));
+
+  sl.registerLazySingleton(() => VerifyOtpUsecase(sl()));
+  sl.registerLazySingleton(() => ResendOtpUsecase(sl()));
+  sl.registerLazySingleton(() => ForgotPasswordUsecase(sl()));
 
   // Bloc (factory → new instance per request)
-  getIt.registerFactory(
+  sl.registerFactory(
     () => AuthBloc(
-      checkEmail: getIt(),
-      validateOtp: getIt(),
-      register: getIt(),
-      login: getIt(),
-      changePassword: getIt(),
-      forgotPassword: getIt(),
-    ),
-  );
-}
+      loginUsecase: sl(),
+      signupUsecase: sl(),
+      checkEmailUsecase: sl(),
 
-Future<void> _initJobSearch() async {
-  // DataSource
-
-  getIt.registerLazySingleton<JobsLocalDataSource>(
-    () => JobsLocalDataSourceImpl(),
-  );
-
-  getIt.registerLazySingleton<JobsRemoteDataSource>(
-    () => JobsRemoteDataSourceImpl(dio: getIt(), local: getIt()),
-  );
-
-  // Repository
-  getIt.registerLazySingleton<JobsRepository>(
-    () => JobsRepositoryImpl(getIt()),
-  );
-
-  // UseCase
-  getIt.registerLazySingleton<GetQueryJobsUsecase>(
-    () => GetQueryJobsUsecase(getIt()),
-  );
-
-  getIt.registerLazySingleton<GetAllVacanciesUsecase>(
-    () => GetAllVacanciesUsecase(getIt()),
-  );
-
-  getIt.registerLazySingleton<SearchCombinedUsecase>(
-    () => SearchCombinedUsecase(getIt()),
-  );
-  // blocs
-
-  getIt.registerFactory(
-    () => ApplicantHomeBloc(
-      getAllVacanciesUsecase: getIt(),
-      searchCombinedUsecase: getIt(),
-    ),
-  );
-
-  getIt.registerFactory(() => RecentSearchesCubit(getIt()));
-
-  getIt.registerFactory(() => JobSearchCubit(getIt()));
-}
-
-Future<void> _initjobPosting() async {
-  // DataSource
-  getIt.registerLazySingleton<JobPostRemoteDataSource>(
-    () => JobPostRemoteDataSourceImpl(dio: getIt()),
-  );
-
-  // Repository
-  getIt.registerLazySingleton<JobPostRepository>(
-    () => JobPostRepositoryImpl(getIt()),
-  );
-
-  // UseCase
-  getIt.registerLazySingleton<PostJobUsecase>(() => PostJobUsecase(getIt()));
-
-  // blocs
-
-  getIt.registerFactory(() => PostJobBloc(postJobUsecase: getIt()));
-}
-
-Future<void> _initProfile() async {
-  // DataSource
-  getIt.registerLazySingleton<ProfileRemoteDataSource>(
-    () => ProfileRemoteDataSourceImpl(dio: getIt()),
-  );
-
-  // Repository
-  getIt.registerLazySingleton<ProfileRepository>(
-    () => ProfileRepositoryImpl(getIt()),
-  );
-
-  // UseCase
-  getIt.registerLazySingleton<UpdateAboutUsecase>(
-    () => UpdateAboutUsecase(getIt()),
-  );
-  getIt.registerLazySingleton<UpdateContactsUsecase>(
-    () => UpdateContactsUsecase(getIt()),
-  );
-  getIt.registerLazySingleton<UpdateEmailUsecase>(
-    () => UpdateEmailUsecase(getIt()),
-  );
-  getIt.registerLazySingleton<UpdatePasswordUsecase>(
-    () => UpdatePasswordUsecase(getIt()),
-  );
-  getIt.registerLazySingleton<VerifyEmailUsecase>(
-    () => VerifyEmailUsecase(getIt()),
-  );
-
-  // blocs
-
-  getIt.registerFactory(
-    () => ProfileUpdateBloc(
-      updateAboutUsecase: getIt(),
-      updateContactsUsecase: getIt(),
-      updateEmailUsecase: getIt(),
-      updatePasswordUsecase: getIt(),
-      verifyEmailUsecase: getIt(),
+      verifyOtpUsecase: sl(),
+      resendOtpUsecase: sl(),
+      forgotPasswordUsecase: sl(),
     ),
   );
 }
 
 Future<void> _initNotifications() async {
   // // Register LocalNotificationsService as singleton
-  // getIt.registerLazySingleton<LocalNotificationsService>(
+  // sl.registerLazySingleton<LocalNotificationsService>(
   //   () => LocalNotificationsService.instance(),
   // );
 
   // // Register FirebaseMessagingService as singleton
-  // getIt.registerLazySingleton<FirebaseMessagingService>(
+  // sl.registerLazySingleton<FirebaseMessagingService>(
   //   () => FirebaseMessagingService.instance(),
   // );
 
   // Register NotificationLocalDataSource
-  getIt.registerLazySingleton<NotificationLocalDataSource>(
+  sl.registerLazySingleton<NotificationLocalDataSource>(
     () => NotificationLocalDataSourceImpl(),
   );
 
   // Register NotificationRepository
-  getIt.registerLazySingleton<NotificationRepository>(
-    () => NotificationRepositoryImpl(getIt<NotificationLocalDataSource>()),
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(sl<NotificationLocalDataSource>()),
   );
 
   // Register NotificationListCubit
-  getIt.registerFactory<NotificationListCubit>(
-    () => NotificationListCubit(getIt<NotificationRepository>()),
+  sl.registerFactory<NotificationListCubit>(
+    () => NotificationListCubit(sl<NotificationRepository>()),
   );
 
   // Register NotificationDetailCubit
-  getIt.registerFactory<NotificationDetailCubit>(
-    () => NotificationDetailCubit(getIt<NotificationRepository>()),
+  sl.registerFactory<NotificationDetailCubit>(
+    () => NotificationDetailCubit(sl<NotificationRepository>()),
   );
+}
+
+Future<void> _initJobs() async {
+  // Data sources
+  sl.registerLazySingleton<JobRemoteDataSource>(
+    () => JobRemoteDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton<JobLocalDataSource>(() => JobLocalDataSourceImpl());
+
+  // Repository
+  sl.registerLazySingleton<JobRepository>(
+    () => JobRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => FetchJobsUseCase(sl()));
+  sl.registerLazySingleton(() => SearchJobsUseCase(sl()));
+  sl.registerLazySingleton(() => LikeJobUseCase(sl()));
+  sl.registerLazySingleton(() => DislikeJobUseCase(sl()));
+
+  // Bloc
+  sl.registerFactory(
+    () => JobBloc(
+      fetchJobsUseCase: sl(),
+      searchJobsUseCase: sl(),
+      likeJobUseCase: sl(),
+      dislikeJobUseCase: sl(),
+    ),
+  );
+}
+
+Future<void> _initApplicantJob() async {
+
 }

@@ -19,7 +19,7 @@ class CustomMultiSelectDropdown extends StatefulWidget {
   final List<Map<String, dynamic>>? items;
 
   const CustomMultiSelectDropdown({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.hintText,
@@ -27,7 +27,7 @@ class CustomMultiSelectDropdown extends StatefulWidget {
     this.activeIconPath = 'assets/dropdown/active.svg',
     this.inactiveIconPath = 'assets/dropdown/inactive.svg',
     this.items,
-  }) : super(key: key);
+  });
 
   @override
   CustomMultiSelectDropdownState createState() =>
@@ -246,7 +246,7 @@ class CustomMultiSelectDropdownState extends State<CustomMultiSelectDropdown> {
             child: _isLoading
                 ? Padding(
                     padding: EdgeInsets.all(20 * widget.scaleX),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: const Center(child: CircularProgressIndicator()),
                   )
                 : Column(
                     children: [
@@ -288,8 +288,8 @@ class CustomMultiSelectDropdownState extends State<CustomMultiSelectDropdown> {
                           ),
                         ),
                       ),
-                      Divider(
-                        color: const Color(0xFF596574),
+                      const Divider(
+                        color: Color(0xFF596574),
                         thickness: 1,
                         height: 0,
                       ),
@@ -334,7 +334,7 @@ class CustomMultiSelectDropdownState extends State<CustomMultiSelectDropdown> {
                             ),
                           ),
                         );
-                      }).toList(),
+                      }),
                     ],
                   ),
           ),

@@ -8,12 +8,12 @@ class RoleSelectionPanel extends StatelessWidget {
   final VoidCallback onEmployerPressed;
 
   const RoleSelectionPanel({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.onExecutorPressed,
     required this.onEmployerPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -16,11 +16,11 @@ class ConfidentialityPanel extends StatefulWidget {
   final VoidCallback onNext;
 
   const ConfidentialityPanel({
-    Key? key,
+    super.key,
     required this.scaleX,
     required this.scaleY,
     required this.onNext,
-  }) : super(key: key);
+  });
 
   @override
   _ConfidentialityPanelState createState() => _ConfidentialityPanelState();
@@ -42,7 +42,7 @@ class _ConfidentialityPanelState extends State<ConfidentialityPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 396 * widget.scaleX,
       height: 727 * widget.scaleY,
       child: Stack(
@@ -73,7 +73,7 @@ class _ConfidentialityPanelState extends State<ConfidentialityPanel> {
                   fontSize: 14 * widget.scaleX,
                   height: 20 / 14,
                   letterSpacing: -0.1 * widget.scaleX,
-                  color: Color(0xFF596574),
+                  color: const Color(0xFF596574),
                 ),
               ),
             ),

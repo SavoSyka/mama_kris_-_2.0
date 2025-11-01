@@ -101,7 +101,7 @@ class FirebaseMessagingService {
           data: message.data,
         );
 
-        final repository = getIt<NotificationRepository>();
+        final repository = sl<NotificationRepository>();
         await repository.saveNotification(notification);
         print('Notification saved: ${notification.id}');
       }

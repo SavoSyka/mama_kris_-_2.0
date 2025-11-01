@@ -1,5 +1,4 @@
 // vacancy_dialog.dart
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/widgets/vacancy_content.dart';
 import 'package:mama_kris/widgets/vacancies_banner.dart';
@@ -51,7 +50,7 @@ void showVacancyDialog(BuildContext context, Map<String, dynamic> vacancy) {
             Positioned(
               top: 688 * scaleY,
               left: 16 * scaleX,
-              child: VacanciesBanner(),
+              child: const VacanciesBanner(),
             ),
           ],
         ),

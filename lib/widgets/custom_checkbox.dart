@@ -11,7 +11,7 @@ class CustomCheckbox extends StatefulWidget {
   final Key? iconKey; // Новый параметр
 
   const CustomCheckbox({
-    Key? key,
+    super.key,
     required this.initialValue,
     required this.onChanged,
     required this.scaleX,
@@ -19,7 +19,7 @@ class CustomCheckbox extends StatefulWidget {
     this.activeIconPath = 'assets/checkbox/checked.svg',
     this.inactiveIconPath = 'assets/checkbox/unchecked.svg',
     this.iconKey,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomCheckbox> createState() => _CustomCheckboxState();

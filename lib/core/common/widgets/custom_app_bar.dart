@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -23,11 +24,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false, // Disable default to customize
       backgroundColor: Colors.transparent,
       centerTitle: false,
+
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
       title: alignTitleToEnd
           ? Row(
               children: [
                 const Spacer(), // Push title to the end
-                Text(title, textAlign:TextAlign.end, style: const TextStyle(color: Colors.black)),
+                Text(
+                  title,
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(color: Colors.black),
+                ),
               ],
             )
           : Text(title, style: const TextStyle(color: Colors.black)),

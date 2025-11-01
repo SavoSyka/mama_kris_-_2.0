@@ -5,16 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
-import 'package:mama_kris/core/services/firebase/firebase_messaging_service.dart';
-import 'package:mama_kris/core/services/firebase/local_notification_service.dart';
 import 'package:mama_kris/core/services/lifecycle/lifecycle_manager.dart';
 import 'package:mama_kris/core/services/routes/router.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
-import 'package:mama_kris/features/applicant_home/applications/home/bloc/applicant_home_bloc.dart';
-import 'package:mama_kris/features/applicant_home/applications/search/job_search_cubit.dart';
-import 'package:mama_kris/features/auth/applications/auth_bloc.dart';
-import 'package:mama_kris/features/employe_home/applications/post_job/post_job_bloc.dart';
-import 'package:mama_kris/features/employe_profile/applications/profile_update/bloc/profile_update_bloc.dart';
+import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +23,10 @@ import 'package:mama_kris/screens/update_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // Force status bar icons to dark
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -89,12 +88,10 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => getIt<AuthBloc>()),
-            BlocProvider(create: (_) => getIt<ForceUpdateBloc>()),
-            BlocProvider(create: (_) => getIt<JobSearchCubit>()),
-            BlocProvider(create: (_) => getIt<ApplicantHomeBloc>()),
-            BlocProvider(create: (_) => getIt<PostJobBloc>()),
-            BlocProvider(create: (_) => getIt<ProfileUpdateBloc>()),
+            BlocProvider.value(value: sl<AuthBloc>()),
+            BlocProvider.value(value: sl<JobBloc>()),
+
+            BlocProvider(create: (_) => sl<ForceUpdateBloc>()),
           ],
           child: LifecycleManager(
             child: MaterialApp.router(

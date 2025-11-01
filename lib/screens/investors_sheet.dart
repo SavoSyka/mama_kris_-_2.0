@@ -1,5 +1,4 @@
 // lib/login_sheet.dart
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/widgets/custom_text_field.dart'; // Импорт нашего виджета
 import 'package:mama_kris/utils/funcs.dart' as funcs;
@@ -89,7 +88,7 @@ void showInvestorsSheet(BuildContext context) {
                             fontSize: 14 * scaleX,
                             height: 20 / 14,
                             letterSpacing: -0.1 * scaleX,
-                            color: Color(0xFF596574),
+                            color: const Color(0xFF596574),
                           ),
                         ),
                       ),

@@ -26,7 +26,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
       if (notification != null) {
         return Right(notification);
       } else {
-        return Left(CacheFailure('Notification not found'));
+        return const Left(CacheFailure('Notification not found'));
       }
     } catch (e) {
       return Left(CacheFailure('Failed to get notification: $e'));
