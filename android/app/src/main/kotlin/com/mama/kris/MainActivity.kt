@@ -1,4 +1,4 @@
-package com.mama.mama_kris
+package com.mama.kris
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

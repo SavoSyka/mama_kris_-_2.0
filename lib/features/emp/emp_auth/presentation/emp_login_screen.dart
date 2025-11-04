@@ -9,6 +9,7 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
@@ -35,7 +36,8 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
       extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(title: ''),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+              decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
         child: SafeArea(
           child: CustomDefaultPadding(
             child: SingleChildScrollView(

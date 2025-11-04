@@ -44,7 +44,8 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
 
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
         child: SafeArea(
           bottom: false,
           child: Column(
@@ -135,7 +136,12 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
 
           const SizedBox(height: 24),
 
-          const CustomButtonEmployee(btnText: 'Далее'),
+          CustomButtonEmployee(
+            btnText: 'Далее',
+            onTap: () {
+              context.pushNamed(RouteName.homeEmploye);
+            },
+          ),
 
           const SizedBox(height: 24),
 

@@ -77,7 +77,8 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
 
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+                    decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
         child: const SafeArea(
           child: Column(
             children: [

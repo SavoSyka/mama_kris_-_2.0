@@ -55,7 +55,7 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
         alignTitleToEnd: false,
       ),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
         child: SafeArea(
           child: Column(
             children: [

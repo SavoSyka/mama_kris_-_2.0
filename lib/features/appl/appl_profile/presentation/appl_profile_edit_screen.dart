@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
@@ -7,6 +8,7 @@ import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 
 class ApplProfileEditScreen extends StatefulWidget {
@@ -21,16 +23,16 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Редактирование профиля'),
+      appBar: const CustomAppBar(title: 'Редактированиепрофиля'),
 
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
-        child: const SafeArea(
+        child: SafeArea(
           bottom: false,
           child: Column(
             children: [
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
                   child: SafeArea(
@@ -39,19 +41,24 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                       child: Column(
                         children: [
                           // Основная информация -- basic information
-                          _basicInformation(),
-                          SizedBox(height: 20),
+                          const _basicInformation(),
+                          const SizedBox(height: 20),
 
                           // Контакты -- Contacts
-                          _Contacts(),
-                          SizedBox(height: 20),
+                          const _Contacts(),
+                          const SizedBox(height: 20),
 
                           /// Специализация -- Speciliasaton
-                          _accounts(),
-                          SizedBox(height: 20),
+                          const _accounts(),
+                          const SizedBox(height: 20),
 
-                          CustomButtonApplicant(btnText: 'Сохранить изменения'),
-                          SizedBox(height: 32),
+                          CustomButtonApplicant(
+                            btnText: 'Сохранить изменения',
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          const SizedBox(height: 32),
 
                           /// Опыт работы-- Experience
                         ],
@@ -253,9 +260,24 @@ class _AccountsState extends State<_accounts> {
           ),
           const SizedBox(height: 16),
 
-          const _updateButtons(text: "Управление подпиской"),
+          _updateButtons(
+            text: "Управление подпиской",
+
+            onTap: () {
+              context.goNamed(RouteName.welcomePage);
+            },
+          ),
+
+          // delete
           const SizedBox(height: 16),
-          const _updateButtons(text: "Управление подпиской", error: true),
+          _updateButtons(
+            text: "Управление подпиской",
+            error: true,
+
+            onTap: () {
+              context.goNamed(RouteName.welcomePage);
+            },
+          ),
 
           const SizedBox(height: 24),
         ],
@@ -268,52 +290,60 @@ class _updateButtons extends StatelessWidget {
   const _updateButtons({
     this.text = 'Добавить контакт',
     this.error = false,
+    this.onTap,
   });
   final String text;
   final bool error;
+
+  final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-      clipBehavior: Clip.antiAlias,
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: error
-              ? const BorderSide(color: AppPalette.error)
-              : BorderSide.none,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        shadows: const [
-          BoxShadow(
-            color: Color(0x332E7866),
-            blurRadius: 4,
-            offset: Offset(0, 1),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 30,
-        children: [
-          Text(
-            text,
-            style: TextStyle(
-              color: error ? AppPalette.error : const Color(0xFF2E7866),
-              fontSize: 16,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
-            ),
-          ),
+    return InkWell(
+      onTap: onTap,
 
-          if (error)
-            const CustomImageView(imagePath: MediaRes.deleteIcon, width: 24),
-        ],
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        clipBehavior: Clip.antiAlias,
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            side: error
+                ? const BorderSide(color: AppPalette.error)
+                : BorderSide.none,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          shadows: const [
+            BoxShadow(
+              color: Color(0x332E7866),
+              blurRadius: 4,
+              offset: Offset(0, 1),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 30,
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                color: error ? AppPalette.error : const Color(0xFF2E7866),
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w600,
+                height: 1.30,
+              ),
+            ),
+
+            if (error)
+              const CustomImageView(imagePath: MediaRes.deleteIcon, width: 24),
+          ],
+        ),
       ),
     );
   }

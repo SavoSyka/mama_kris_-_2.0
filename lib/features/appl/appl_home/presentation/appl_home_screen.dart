@@ -18,6 +18,7 @@ import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_state.da
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_filter.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/widget/search_bottomsheet.dart';
 
 class ApplHomeScreen extends StatefulWidget {
   const ApplHomeScreen({super.key});
@@ -39,7 +40,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   }
 
   void _handleVacancyReaction({required bool isLiked}) {
-   /*
+    /*
     final state = context.read<JobBloc>().state;
     if (state is! JobLoaded || state.jobs.isEmpty) return;
 
@@ -60,6 +61,24 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
 
   void _onSearchChanged(String query) {
     context.read<JobBloc>().add(SearchJobsEvent(query));
+  }
+
+  String? _searchQuery;
+
+
+  Future<void> _openSearchSheet() async {
+    final query = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true, 
+      backgroundColor: Colors.transparent, 
+      builder: (_) => const SearchBottomSheet(),
+    );
+
+    if (query != null && query.isNotEmpty) {
+      setState(() => _searchQuery = query);
+      // Perform search logic here
+      debugPrint('🔍 Searching for: $query');
+    }
   }
 
   @override
@@ -83,7 +102,44 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                       child: CustomDefaultPadding(
                         child: Column(
                           children: [
-                            _Searchbox(onChanged: _onSearchChanged),
+                            GestureDetector(
+                              onTap: _openSearchSheet,
+                              child: 
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.search,
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      _searchQuery ?? 'Search movies...',
+                                      style: TextStyle(
+                                        color: _searchQuery == null
+                                            ? Colors.black
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            if (_searchQuery != null)
+                              Text(
+                                'Results for: $_searchQuery',
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            // _Searchbox(onChanged: _onSearchChanged),
                             const SizedBox(height: 14),
                             Container(
                               // color: Colors.red,
@@ -133,7 +189,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                             ),
 
                             const SizedBox(height: 28),
-/*
+                            /*
                             state is JobLoading
                                 ? const Center(
                                     child: CircularProgressIndicator(),

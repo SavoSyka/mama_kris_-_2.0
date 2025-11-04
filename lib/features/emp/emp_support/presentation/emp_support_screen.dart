@@ -4,6 +4,7 @@ import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/handle_launch_url.dart';
@@ -54,7 +55,8 @@ class _EmpSupportScreenState extends State<EmpSupportScreen> {
         alignTitleToEnd: false,
       ),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+              decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
         child: SafeArea(
           child: Column(
             children: [

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mama.mama_kris">
+    package="com.mama.kris">
 
     <uses-feature
         android:name="android.hardware.telephony"

@@ -3,6 +3,7 @@ import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 
 class EmpSupportDetailScreen extends StatefulWidget {
@@ -44,7 +45,8 @@ class _EmpSupportDetailScreenState extends State<EmpSupportDetailScreen> {
       extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(title: 'Статья'),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+               decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
         child: SafeArea(
           child: Column(
             children: [

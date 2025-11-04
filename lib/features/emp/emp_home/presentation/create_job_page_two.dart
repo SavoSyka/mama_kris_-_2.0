@@ -43,7 +43,8 @@ class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
 
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+            decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
         child: SafeArea(
           bottom: false,
           child: Column(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
@@ -7,6 +8,7 @@ import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 
 class EmpProfileEditScreen extends StatefulWidget {
@@ -25,7 +27,8 @@ class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
 
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
         child: const SafeArea(
           bottom: false,
           child: Column(
@@ -197,7 +200,11 @@ class _Contacts extends StatelessWidget {
           ),
 
           const SizedBox(height: 16),
-          const _updateButtons(),
+           _updateButtons(
+              onTap: () {
+              context.pushNamed(RouteName.welcomeApplicant);
+            },
+          ),
         ],
       ),
     );
@@ -236,20 +243,29 @@ class _AccountsState extends State<_accounts> {
           ),
           const SizedBox(height: 8),
 
-          const _updateButtons(text: "Управление подпиской"),
+          _updateButtons(
+            text: "Управление подпиской",
+            onTap: () {
+              context.pushNamed(RouteName.welcomePage);
+            },
+          ),
 
           const SizedBox(height: 16),
           _updateButtons(
             text: "Выйти из аккаунта",
             error: true,
             errorIcon: MediaRes.logoutIcon,
-            onTap: () {},
+            onTap: () {
+              context.pushNamed(RouteName.welcomePage);
+            },
           ),
           const SizedBox(height: 16),
           _updateButtons(
             text: "Управление подпиской",
             error: true,
-            onTap: () {},
+            onTap: () {
+              context.pushNamed(RouteName.welcomePage);
+            },
           ),
 
           const SizedBox(height: 24),
