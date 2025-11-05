@@ -40,23 +40,21 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   }
 
   void _handleVacancyReaction({required bool isLiked}) {
-    /*
     final state = context.read<JobBloc>().state;
-    if (state is! JobLoaded || state.jobs.isEmpty) return;
+    if (state is! JobLoaded || state.jobs.jobs.isEmpty) return;
 
-    final currentJob = state.jobs[currentVacancyIndex];
+    final currentJob = state.jobs.jobs[currentVacancyIndex];
     if (isLiked) {
-      context.read<JobBloc>().add(LikeJobEvent(currentJob.id));
+      context.read<JobBloc>().add(LikeJobEvent(currentJob.jobId));
     } else {
-      context.read<JobBloc>().add(DislikeJobEvent(currentJob.id));
+      context.read<JobBloc>().add(DislikeJobEvent(currentJob.jobId));
     }
 
     setState(() {
       previousVacancyIndex = currentVacancyIndex;
       slideDirection = isLiked ? -1 : 1;
-      currentVacancyIndex = (currentVacancyIndex + 1) % state.jobs.length;
+      currentVacancyIndex = (currentVacancyIndex + 1) % state.jobs.jobs.length;
     });
-*/
   }
 
   void _onSearchChanged(String query) {
@@ -65,12 +63,11 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
 
   String? _searchQuery;
 
-
   Future<void> _openSearchSheet() async {
     final query = await showModalBottomSheet<String>(
       context: context,
-      isScrollControlled: true, 
-      backgroundColor: Colors.transparent, 
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (_) => const SearchBottomSheet(),
     );
 
@@ -104,8 +101,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                           children: [
                             GestureDetector(
                               onTap: _openSearchSheet,
-                              child: 
-                              Container(
+                              child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                   vertical: 12,
@@ -189,7 +185,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                             ),
 
                             const SizedBox(height: 28),
-                            /*
+
                             state is JobLoading
                                 ? const Center(
                                     child: CircularProgressIndicator(),
@@ -202,11 +198,14 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                               const NeverScrollableScrollPhysics(),
                                           itemBuilder: (context, index) =>
                                               JobListItem(
-                                                jobTitle:
-                                                    state.jobs[index].title,
-                                                salaryRange: state
+                                                jobTitle: state
+                                                    .jobs
                                                     .jobs[index]
-                                                    .price
+                                                    .title,
+                                                salaryRange: state
+                                                    .jobs
+                                                    .jobs[index]
+                                                    .salary
                                                     .toString(),
                                                 onTap: () async {
                                                   await ApplicantJobDetail(
@@ -216,41 +215,49 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                               ),
                                           separatorBuilder: (context, index) =>
                                               const SizedBox(height: 8),
-                                          itemCount: state.jobs.length,
+                                          itemCount: state.jobs.jobs.length,
                                         )
-                                      : ApplicantJobSlider(
-                                          vacancy: {
-                                            'title': state
-                                                .jobs[currentVacancyIndex]
-                                                .title,
-                                            'description': state
-                                                .jobs[currentVacancyIndex]
-                                                .description,
-                                            'salary': state
-                                                .jobs[currentVacancyIndex]
-                                                .price
-                                                .toString(),
-                                          },
-                                          vacancyIndex: currentVacancyIndex,
-                                          previousVacancyIndex:
-                                              previousVacancyIndex,
-                                          slideDirection: slideDirection,
-                                          onInterestedPressed: () {
-                                            _handleVacancyReaction(
-                                              isLiked: true,
-                                            );
-                                          },
-                                          onNotInterestedPressed: () {
-                                            _handleVacancyReaction(
-                                              isLiked: false,
-                                            );
-                                          },
-                                        )
+                                      : Column(
+                                        children: [
+                                          Text('jobs ${state.jobs.jobs.length}'),
+                                          if(state.jobs.jobs.isNotEmpty)
+                                          ApplicantJobSlider(
+                                              vacancy: {
+                                                'title': state
+                                                    .jobs
+                                                    .jobs[currentVacancyIndex]
+                                                    .title,
+                                                'description': state
+                                                    .jobs
+                                                    .jobs[currentVacancyIndex]
+                                                    .description,
+                                                'salary': state
+                                                    .jobs
+                                                    .jobs[currentVacancyIndex]
+                                                    .salary
+                                                    .toString(),
+                                              },
+                                              vacancyIndex: currentVacancyIndex,
+                                              previousVacancyIndex:
+                                                  previousVacancyIndex,
+                                              slideDirection: slideDirection,
+                                              onInterestedPressed: () {
+                                                _handleVacancyReaction(
+                                                  isLiked: true,
+                                                );
+                                              },
+                                              onNotInterestedPressed: () {
+                                                _handleVacancyReaction(
+                                                  isLiked: false,
+                                                );
+                                              },
+                                            ),
+                                        ],
+                                      )
                                 : state is JobError
                                 ? Center(child: Text('Error: ${state.message}'))
                                 : const SizedBox.shrink(),
 
-                                */
                             const SizedBox(height: 16),
                             const _AdCards(),
                           ],

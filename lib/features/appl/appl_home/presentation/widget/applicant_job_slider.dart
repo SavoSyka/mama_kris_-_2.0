@@ -33,7 +33,7 @@ class ApplicantJobSlider extends StatelessWidget {
 
     return Container(
       width: 395 * scaleX,
-      height: screenHeight * 0.58,
+      height: screenHeight * 0.55,
       padding: const EdgeInsets.all(30),
       decoration: AppTheme.cardDecoration,
 
@@ -118,24 +118,25 @@ class ApplicantJobSlider extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 32,
-                ),
-                decoration: AppTheme.cardDecoration,
-                child: InkWell(
-                  onTap: onInterestedPressed,
-
-                  child: const Text(
-                    'Интересно',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Jost',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-
-                      color: AppPalette.primaryColor,
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                  ),
+                  decoration: AppTheme.cardDecoration,
+                  child: InkWell(
+                    onTap: onInterestedPressed,
+                
+                    child: const Text(
+                      'Interesting',// TODO Интересно
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Jost',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                
+                        color: AppPalette.primaryColor,
+                      ),
                     ),
                   ),
                 ),
@@ -143,25 +144,26 @@ class ApplicantJobSlider extends StatelessWidget {
               // Фиксированная кнопка "Неинтересно" (слева)
               const SizedBox(width: 12),
 
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 32,
-                ),
-                decoration: AppTheme.primaryColordecoration,
-                child: InkWell(
-                  onTap: onNotInterestedPressed,
-
-                  child: Text(
-                    'Неинтересно',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Jost',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18 * scaleX,
-                      height: 28 / 18,
-                      letterSpacing: -0.54 * scaleX,
-                      color: AppPalette.white,
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                  ),
+                  decoration: AppTheme.primaryColordecoration,
+                  child: InkWell(
+                    onTap: onNotInterestedPressed,
+                
+                    child: Text(
+                      'Неинтересно',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Jost',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18 * scaleX,
+                        height: 28 / 18,
+                        letterSpacing: -0.54 * scaleX,
+                        color: AppPalette.white,
+                      ),
                     ),
                   ),
                 ),

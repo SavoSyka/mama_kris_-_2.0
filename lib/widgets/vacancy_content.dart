@@ -14,7 +14,7 @@ class VacancyContent extends StatelessWidget {
 
     return Center(
       child: SizedBox(
-        height: screenHeight * 0.42, // высота должна соответствовать родителю
+        height: screenHeight * 0.4, // высота должна соответствовать родителю
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,32 +34,7 @@ class VacancyContent extends StatelessWidget {
               SizedBox(height: 10 * scaleY),
               // Описание вакансии
               Text(
-                ''' 
-                Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                   Words ending in -o: For words ending in a consonant + "o" (e.g., hero), add "-es" (heroes). However, for words ending in a vowel + "o" (e.g., video), just add "-s" (videos). There are exceptions, such as "photo" becoming "photos". 
-                   Words ending in -ff: If a word ends in "-ff", simply add "-s
-                  
-                    ''',
-                // vacancy['description'] ?? 'Нет описания',
+                vacancy['description'] ?? 'Нет описания',
                 style: TextStyle(
                   fontFamily: 'Jost',
                   fontWeight: FontWeight.w400,

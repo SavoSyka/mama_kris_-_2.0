@@ -13,6 +13,7 @@ class SearchBottomSheet extends StatefulWidget {
 
 class _SearchBottomSheetState extends State<SearchBottomSheet> {
   final TextEditingController _controller = TextEditingController();
+
   final List<String> _suggested = [
     'devloper',
     'flutter',
@@ -29,9 +30,9 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 1,
-      maxChildSize: 1,
-      minChildSize: 0.6,
+      initialChildSize: 0.9,
+      maxChildSize: 0.9,
+      minChildSize: 0.4,
       expand: false,
       builder: (context, scrollController) {
         return Container(
@@ -44,7 +45,6 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.08),
                   // 🔹 Search Input
                   TextField(
                     controller: _controller,
@@ -57,6 +57,10 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                       hintStyle: const TextStyle(color: Colors.grey),
                       filled: true,
                       fillColor: AppPalette.white,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 12,
+                      ),
                       prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -85,7 +89,7 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                             suggestion,
                             style: const TextStyle(color: Colors.black),
                           ),
-                          trailing: InkWell(child: const Icon(Icons.close)),
+                          trailing: const InkWell(child: Icon(Icons.close)),
                           // CustomImageView(imagePath: MediaRes.modalCloseIcon),
                           onTap: () => Navigator.pop(context, suggestion),
                         );

@@ -1,52 +1,40 @@
-class JobEntity {
-  final int id;
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:equatable/equatable.dart';
+
+class JobEntity extends Equatable {
+  final int jobId;
+  final int userId;
+  final int contactsId;
+
   final String title;
   final String description;
-  final int price;
-  final String status;
+  final String dateTime;
 
-  JobEntity({
-    required this.id,
+  final String salary;
+  final String status;
+  final String? firstPublishedAt;
+  const JobEntity({
+    required this.jobId,
+    required this.userId,
+    required this.contactsId,
     required this.title,
     required this.description,
-    required this.price,
+    required this.dateTime,
+    required this.salary,
     required this.status,
+    this.firstPublishedAt,
   });
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is JobEntity &&
-        other.id == id &&
-        other.title == title &&
-        other.description == description &&
-        other.price == price &&
-        other.status == status;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        price.hashCode ^
-        status.hashCode;
-  }
-
-  JobEntity copyWith({
-    int? id,
-    String? title,
-    String? description,
-    int? price,
-    String? status,
-  }) {
-    return JobEntity(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      price: price ?? this.price,
-      status: status ?? this.status,
-    );
-  }
+  // TODO: implement props
+  List<Object?> get props => [
+    jobId,
+    userId,
+    contactsId,
+    title,
+    description,
+    salary,
+    status,
+    firstPublishedAt,
+  ];
 }

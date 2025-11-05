@@ -1,33 +1,33 @@
+import 'package:flutter/cupertino.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 
 class JobModel extends JobEntity {
-  JobModel({
-    required super.id,
+  const JobModel({
+    required super.jobId,
+    required super.userId,
+    required super.contactsId,
+
     required super.title,
     required super.description,
-    required super.price,
+    required super.salary,
     required super.status,
+    super.firstPublishedAt,
+    required super.dateTime,
   });
 
   factory JobModel.fromJson(Map<String, dynamic> json) {
+    debugPrint("\n\nJobse $json");
     return JobModel(
-      id: json['id'],
+      jobId: json['jobID'],
+      userId: json['userID'],
+      contactsId: json['contactsID'],
+
       title: json['title'],
       description: json['description'],
-      price: json['price'],
+      dateTime: json['dateTime'],
+
+      salary: json['salary'],
       status: json['status'],
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'price': price,
-      'status': status,
-    };
-  }
-
-
 }

@@ -4,13 +4,15 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
+import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:mama_kris/features/appl/app_auth/data/models/user_model.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio dio;
+  final AuthLocalDataSource local;
 
-  AuthRemoteDataSourceImpl(this.dio);
+  AuthRemoteDataSourceImpl(this.dio, this.local);
 
   @override
   ResultFuture<UserModel> login(String email, String password) async {
@@ -21,9 +23,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode.toString().startsWith('2')) {
-        final userModel = UserModel.fromJson(response.data);
-        debugPrint("user succedd");
-        return Right(userModel);
+        final data = response.data as Map<String, dynamic>;
+        debugPrint('Login response: $data');
+
+        final user = UserModel.fromJson(data);
+
+        final accessToken = user.accessToken;
+        final refreshToken = user.refreshToken;
+        final userId = user.userId.toString();
+
+        await local.saveUserType(true);
+        await local.saveToken(accessToken);
+        await local.saveRefreshToken(refreshToken);
+        await local.saveUserId(userId);
+
+        return Right(user);
       } else {
         throw ApiException(
           message: response.data['message'] ?? 'Login failed',
@@ -50,10 +64,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final response = await dio.post(
         ApiConstants.register,
-        data: {'name': name, 'email': email, 'password': password},
+        data: {
+          'name': name,
+          'email': email,
+          'password': password,
+          "LookingForJob": 'Looking for job',
+        },
       );
 
       if (response.statusCode == 201) {
+        final data = response.data as DataMap;
+
+        final accessToken = data['accessToken'] as String? ?? '';
+        final refreshToken = data['refreshToken'] as String? ?? '';
+
+        await local.saveToken(accessToken);
+        await local.saveRefreshToken(refreshToken);
+
         final userModel = UserModel.fromJson(response.data['user']);
         return Right(userModel);
       } else {
@@ -107,6 +134,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode.toString().startsWith('2')) {
+        final data = response.data as Map<String, dynamic>;
+        final token = data['token'] as String? ?? '';
+
+        await local.saveToken(token);
+
         return const Right(true);
       } else {
         throw const ApiException(
