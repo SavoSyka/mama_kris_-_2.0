@@ -5,10 +5,14 @@ import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/utils/handle_launch_url.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 
 Future<String?> ApplicantJobDetail(
   BuildContext context, {
   bool showStar = true,
+  required JobEntity job,
+  VoidCallback? onLiked,
 }) {
   GlobalKey menuKey = GlobalKey();
   return showModalBottomSheet<String>(
@@ -27,7 +31,7 @@ Future<String?> ApplicantJobDetail(
           child: Column(
             children: [
               const SizedBox(height: 20),
-          
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
@@ -35,9 +39,7 @@ Future<String?> ApplicantJobDetail(
                   children: [
                     showStar
                         ? InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                            onTap: onLiked,
                             child: const CustomImageView(
                               imagePath: MediaRes.modalStarIcon,
                               width: 32,
@@ -74,11 +76,11 @@ Future<String?> ApplicantJobDetail(
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Column(
+                              Column(
                                 children: [
                                   CustomText(
-                                    text: 'Дизайнер инфорграфики',
-                                    style: TextStyle(
+                                    text: job.title,
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
                                       fontFamily: 'Manrope',
@@ -86,10 +88,10 @@ Future<String?> ApplicantJobDetail(
                                       height: 1.30,
                                     ),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Text(
-                                    '6000 - 12 000 руб',
-                                    style: TextStyle(
+                                    job.salary,
+                                    style: const TextStyle(
                                       color: Color(0xFF596574),
                                       fontSize: 12,
                                       fontFamily: 'Manrope',
@@ -99,7 +101,7 @@ Future<String?> ApplicantJobDetail(
                                   ),
                                 ],
                               ),
-                              
+
                               InkWell(
                                 onTap: () {
                                   _showJobOptionsMenu(context, menuKey);
@@ -113,55 +115,61 @@ Future<String?> ApplicantJobDetail(
                             ],
                           ),
                           const SizedBox(height: 20),
-                          const CustomText(
-                            text: '''Обязанности:
-                        Создание инфографики для презентаций, соцсетей и маркетинговых материалов.
-                          Преобразование данных в визуально понятные графики.
-                          Сотрудничество с командами для реализации проектов.
-                                              
-                         ия:
-                          Условия:
-                          Условия:
-                          Условия:
-                          Условия:
-                          Условия:
-                          Условия:
-                          Условия:
-                          Условия:
-                                              
-                        Гибкий график.
-                          Оформление по ТК.
-                            Дружный коллектив и развитие.''',
-                            style: TextStyle(fontSize: 16),
+                          CustomText(
+                            text: job.description,
+
+                            style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 48),
-                              
-                          CustomButtonSec(
-                            btnText: '',
-                            child: _contactCard(
-                              icon: MediaRes.telegramIcon,
-                              label: 'Перейти в Telegram',
+
+                          if (job.contactJobs?.telegram != null)
+                            CustomButtonSec(
+                              btnText: '',
+                              child: _contactCard(
+                                icon: MediaRes.telegramIcon,
+                                label: 'Перейти в Telegram',
+                              ),
+                              onTap: () {
+                                HandleLaunchUrl.launchTelegram(
+                                  context,
+                                  username: job.contactJobs!.telegram!,
+                                );
+                              },
                             ),
-                          ),
                           const SizedBox(height: 12),
-                              
-                          CustomButtonSec(
-                            btnText: '',
-                            child: _contactCard(
-                              icon: MediaRes.whatsappIcon,
-                              label: 'Перейти в WhatsApp',
+
+                          if (job.contactJobs?.whatsapp != null)
+                            CustomButtonSec(
+                              btnText: '',
+                              child: _contactCard(
+                                icon: MediaRes.whatsappIcon,
+                                label: 'Перейти в WhatsApp',
+                              ),
+                              onTap: () {
+                                HandleLaunchUrl.launchWhatsApp(
+                                  context,
+                                  phone: job.contactJobs!.whatsapp!,
+                                );
+                              },
                             ),
-                          ),
                           const SizedBox(height: 12),
-                              
-                          CustomButtonSec(
-                            btnText: '',
-                              
-                            child: _contactCard(
-                              icon: MediaRes.vkIcon,
-                              label: 'Перейти в VK',
+
+                          if (job.contactJobs?.vk != null)
+                            CustomButtonSec(
+                              btnText: '',
+
+                              child: _contactCard(
+                                icon: MediaRes.vkIcon,
+                                label: 'Перейти в VK',
+                              ),
+
+                              onTap: () {
+                                HandleLaunchUrl.launchVK(
+                                  context,
+                                  vkId: job.contactJobs!.vk!,
+                                );
+                              },
                             ),
-                          ),
                           const SizedBox(height: 24),
                         ],
                       ),

@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_list.dart';
 
@@ -16,10 +18,22 @@ class JobLoading extends JobState {}
 class JobLoaded extends JobState {
   final JobList jobs;
 
-  const JobLoaded(this.jobs);
+  final bool isLoadingMore;
+
+  const JobLoaded({required this.jobs, required this.isLoadingMore});
 
   @override
   List<Object> get props => [jobs];
+
+  JobLoaded copyWith({
+    JobList? jobs,
+    bool? isLoadingMore,
+  }) {
+    return JobLoaded(
+      jobs: jobs ?? this.jobs,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+    );
+  }
 }
 
 class JobError extends JobState {

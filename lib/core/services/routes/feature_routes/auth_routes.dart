@@ -64,6 +64,7 @@ final List<RouteBase> authRoutes = [
         password = extra['password'] as String;
       }
       return ApplVerifyOtpScreen(name: name, email: email, password: password);
+   
     },
   ),
 
@@ -81,6 +82,29 @@ final List<RouteBase> authRoutes = [
     name: RouteName.signupEmploye,
     builder: (BuildContext context, GoRouterState state) {
       return const EmpSignupScreen();
+    },
+  ),
+
+    GoRoute(
+    path: RouteName.verifyOtpEmployee,
+    name: RouteName.verifyOtpEmployee,
+    builder: (BuildContext context, GoRouterState state) {
+    
+
+         var name = '';
+      var email = '';
+      var password = '';
+
+      final extra = state.extra;
+
+      if (extra is DataMap) {
+        name = extra['name'] as String;
+        email = extra['email'] as String;
+        password = extra['password'] as String;
+      }
+      return EmpVerifyOtpScreen(name: name, email: email, password: password);
+   
+
     },
   ),
 ];

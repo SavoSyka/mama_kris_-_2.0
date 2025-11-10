@@ -241,6 +241,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  cupertino_country_picker:
+    dependency: "direct main"
+    description:
+      name: cupertino_country_picker
+      sha256: b74fe73be759ce05267a4fa7539f26313ca3fb461867ef8c08c21a5fbcc0ebca
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -789,6 +797,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.20.2"
+  intl_phone_field:
+    dependency: "direct main"
+    description:
+      name: intl_phone_field
+      sha256: "73819d3dfcb68d2c85663606f6842597c3ddf6688ac777f051b17814fe767bbf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   io:
     dependency: transitive
     description:
@@ -1189,6 +1205,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  simple_animations:
+    dependency: transitive
+    description:
+      name: simple_animations
+      sha256: "2f4817d7e56a8ae34f1666ba9906aed394a48c7e1568d0fcd63efefb95142dd5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1298,6 +1322,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  supercharged:
+    dependency: transitive
+    description:
+      name: supercharged
+      sha256: ab49c848b33e28243f5ce82b976736de17d0852b71d0dfbde53fbb5e2ecca7cb
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
+  supercharged_dart:
+    dependency: transitive
+    description:
+      name: supercharged_dart
+      sha256: cb95edda32eacd27664089700a750120be41daa84aa6cd2aeded46227c16b867
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   synchronized:
     dependency: transitive
     description:

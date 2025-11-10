@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
+import 'package:mama_kris/core/common/widgets/custom_error_retry.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
+import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
-
+import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 
 class ApplProfileScreen extends StatefulWidget {
   const ApplProfileScreen({super.key});
@@ -17,6 +20,15 @@ class ApplProfileScreen extends StatefulWidget {
 }
 
 class _ApplProfileScreenState extends State<ApplProfileScreen> {
+  // * ────────────── Override methods ───────────────────────
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  // * ────────────── BUILD UI ───────────────────────
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -52,36 +64,77 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
           ),
         ],
       ),
-   
+
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
-        child: const SafeArea(
+        child: SafeArea(
           child: Column(
             children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: CustomDefaultPadding(
-                    child: Column(
-                      children: [
-                        // Принимает заказы -- Accept Orders
-                        _AcceptOrders(),
-                        SizedBox(height: 20),
+              BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  if (state is UserLoading) {
+                    return const Row(
+                      children: [Expanded(child: IPhoneLoader(height: 200))],
+                    );
+                  } else if (state is UserError) {
+                    return Expanded(
+                      child: Container(
+                        color: Colors.blue,
 
-                        // Контакты -- Contacts
-                        _Contacts(),
-                        SizedBox(height: 20),
+                        child: Container(
+                          color: Colors.red,
+                          height: double.infinity,
+                          child: SingleChildScrollView(
+                            child: Center(
+                              child: CustomDefaultPadding(
+                                child: Column(
+                                  children: [
+                                    CustomErrorRetry(
+                                      errorMessage: state.message,
+                                      onTap: () {},
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (state is UserLoaded) {
+                    final user = state.user;
+                    return Expanded(
+                      child: SingleChildScrollView(
+                        child: CustomDefaultPadding(
+                          child: Column(
+                            children: [
+                              // Принимает заказы -- Accept Orders
+                              _AcceptOrders(
+                                name: user.name,
+                                birthDate: user.birthDate,
+                              ),
+                              const SizedBox(height: 20),
+                      
+                              // Контакты -- Contacts
+                              _Contacts(email: user.email, phone: user.phone),
+                              const SizedBox(height: 20),
+                      
+                              /// Специализация -- Speciliasaton
+                              const _Specalisations(),
+                              const SizedBox(height: 20),
+                      
+                              /// Опыт работы-- Experience
+                              const _Experiences(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }
 
-                        /// Специализация -- Speciliasaton
-                        _Specalisations(),
-                        SizedBox(height: 20),
-
-                        /// Опыт работы-- Experience
-                        _Experiences(),
-                      ],
-                    ),
-                  ),
-                ),
+                  return Text("sttate ${state.runtimeType}");
+                },
               ),
             ],
           ),
@@ -92,7 +145,9 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
 }
 
 class _AcceptOrders extends StatelessWidget {
-  const _AcceptOrders();
+  const _AcceptOrders({this.name, this.birthDate});
+  final String? name;
+  final String? birthDate;
 
   @override
   Widget build(BuildContext context) {
@@ -129,9 +184,9 @@ class _AcceptOrders extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Кристина Гордова',
-                style: TextStyle(
+              Text(
+                "$name",
+                style: const TextStyle(
                   color: AppPalette.primaryColor,
                   fontSize: 20,
                   fontFamily: 'Manrope',
@@ -141,9 +196,9 @@ class _AcceptOrders extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              const Text(
-                '23.08.1999 (26 лет)',
-                style: TextStyle(
+              Text(
+                '$birthDate (26 лет)',
+                style: const TextStyle(
                   color: AppPalette.greyDark,
 
                   fontSize: 12,
@@ -161,19 +216,21 @@ class _AcceptOrders extends StatelessWidget {
 }
 
 class _Contacts extends StatelessWidget {
-  const _Contacts();
+  const _Contacts({this.email, this.phone});
+  final String? email;
+  final String? phone;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
-      child: const Row(
+      child: Row(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Контакты',
                 style: TextStyle(
                   color: Colors.black,
@@ -184,14 +241,14 @@ class _Contacts extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               Row(
                 children: [
-                  Icon(Icons.email, color: AppPalette.primaryColor),
-                  SizedBox(width: 16),
+                  const Icon(Icons.email, color: AppPalette.primaryColor),
+                  const SizedBox(width: 16),
                   Text(
-                    'MamaKris@gmail.com',
-                    style: TextStyle(
+                    "$email",
+                    style: const TextStyle(
                       color: Color(0xFF596574),
                       fontSize: 16,
                       fontFamily: 'Manrope',
@@ -202,25 +259,27 @@ class _Contacts extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(height: 8),
+              if (phone != null && phone!.isNotEmpty) ...[
+                const SizedBox(height: 8),
 
-              Row(
-                children: [
-                  Icon(Icons.phone, color: AppPalette.primaryColor),
-                  SizedBox(width: 16),
-                  Text(
-                    '+79997773322',
-                    style: TextStyle(
-                      color: Color(0xFF596574),
-                      fontSize: 16,
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.w500,
-                      height: 1.30,
+                Row(
+                  children: [
+                    const Icon(Icons.phone, color: AppPalette.primaryColor),
+                    const SizedBox(width: 16),
+                    Text(
+                      "$phone",
+
+                      style: const TextStyle(
+                        color: Color(0xFF596574),
+                        fontSize: 16,
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.w500,
+                        height: 1.30,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-
+                  ],
+                ),
+              ],
               // * Telegram, VK, whatsapp action cards -- left
             ],
           ),

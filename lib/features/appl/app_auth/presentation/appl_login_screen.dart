@@ -17,6 +17,7 @@ import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 
 class ApplLoginScreen extends StatefulWidget {
   const ApplLoginScreen({super.key});
@@ -26,7 +27,9 @@ class ApplLoginScreen extends StatefulWidget {
 }
 
 class _ApplLoginScreenState extends State<ApplLoginScreen> {
-  final emailController = TextEditingController(text: 'roobbi@yopmail.com');
+  final emailController = TextEditingController(text: 'emproobbi@yopmail.com');
+
+  // final emailController = TextEditingController(text: 'roobbi@yopmail.com');
   final passwordController = TextEditingController(text: '123321123');
   final _formKey = GlobalKey<FormState>();
 
@@ -56,7 +59,15 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                   listener: (context, state) {
                     debugPrint('auth state $state');
                     if (state is AuthSuccess) {
-                      context.goNamed(RouteName.homeApplicant);
+                      context.read<UserBloc>().add(
+                        GetUserProfileEvent(user: state.user.user),
+                      );
+
+                      if (state.user.subscription.active) {
+                        context.goNamed(RouteName.homeApplicant);
+                      } else {
+                        context.goNamed(RouteName.subscription);
+                      }
                     } else if (state is AuthFailure) {
                       ScaffoldMessenger.of(
                         context,

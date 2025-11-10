@@ -1,0 +1,17 @@
+Completed Features
+
+Job Display Formats
+Successfully implemented fetching and rendering of job listings in both slider and list views, providing users with flexible browsing options.
+Dynamic Pagination
+
+Enabled infinite scrolling: Additional jobs are automatically fetched when the user reaches the bottom of the screen.
+Trigger-based loading: When the user expresses interest in a job (resulting in its removal from the current view) and fewer than 5 jobs remain visible, the system proactively fetches the next batch of jobs.
+
+
+Data Refresh Mechanism
+Implemented screen refresh functionality to retrieve the latest job data, ensuring users always have access to up-to-date opportunities.
+Liked Jobs Management
+Developed a dedicated section to display all jobs marked as "liked" by the user, enabling easy tracking and review of preferred opportunities.
+Employee Contact Integration
+Enabled seamless navigation from job listings to direct contact with employees via provided contact information, streamlining the application and communication process.
+

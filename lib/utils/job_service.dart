@@ -97,7 +97,9 @@ class JobService {
       if (refreshed) return deleteContact(contactId);
     }
 
-    // print("📥 Ответ (удаление контакта): ${response.statusCode}");
+    // print("📥 Ответ (удаление контакта): 
+    // ${response.statusCode}");
+    
     return response.statusCode == 200;
   }
 

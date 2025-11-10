@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
@@ -11,6 +12,9 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/widget/applicant_job_filter.dart';
 
 class EmpResumeScreen extends StatefulWidget {
@@ -23,136 +27,139 @@ class EmpResumeScreen extends StatefulWidget {
 class _EmpResumeScreenState extends State<EmpResumeScreen> {
   bool isFavorite = false;
 
-  final List<Map<String, dynamic>> jobs = [
-    {
-      'name': 'Егорова Ирина',
-      'role': 'Develop and maintain software applications.',
-      'age': '19 лет',
-    },
-    {
-      'name': 'Егорова Ирина',
-      'role': 'Oversee product development and strategy.',
-      'age': '19 лет',
-    },
-    {
-      'name': 'Егорова Ирина',
-      'role': 'Create user interfaces and experiences.',
-      'age': '19 лет',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(
-        title: 'Резюме',
-        showLeading: false,
-        alignTitleToEnd: false,
-      ),
-      body: Container(
-                   decoration: const BoxDecoration(color: AppPalette.empBgColor),
-
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: CustomDefaultPadding(
-                    child: Column(
-                      children: [
-                        const _Searchbox(),
-                        const SizedBox(height: 14),
-                        Container(
-                          // color: Colors.red,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isFavorite = true;
-                                      });
-                                    },
-                                    child: _FilterCard(
-                                      isSelected: isFavorite,
-                                      text: 'Все',
+    return BlocProvider(
+      create: (context) =>
+          context.read<ResumeBloc>()
+            ..add(FetchResumesEvent(isFavorite: isFavorite)),
+      child: CustomScaffold(
+        extendBodyBehindAppBar: true,
+        appBar: const CustomAppBar(
+          title: 'Резюме',
+          showLeading: false,
+          alignTitleToEnd: false,
+        ),
+        body: Container(
+          decoration: const BoxDecoration(color: AppPalette.empBgColor),
+          child: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: CustomDefaultPadding(
+                      child: Column(
+                        children: [
+                          const _Searchbox(),
+                          const SizedBox(height: 14),
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isFavorite = true;
+                                        });
+                                      },
+                                      child: _FilterCard(
+                                        isSelected: isFavorite,
+                                        text: 'Все',
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isFavorite = false;
-                                      });
-                                    },
-                                    child: _FilterCard(
-                                      isSelected: !isFavorite,
-                                      text: 'Избранные',
+                                    const SizedBox(width: 12),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isFavorite = false;
+                                        });
+                                      },
+                                      child: _FilterCard(
+                                        isSelected: !isFavorite,
+                                        text: 'Избранные',
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-
-                              InkWell(
-                                onTap: () async {
-                                  ResumeFilter(context);
-                                },
-                                child: const CustomImageView(
-                                  imagePath: MediaRes.btnFilter,
-                                  width: 48,
+                                  ],
                                 ),
-                              ),
-                            ],
+                                InkWell(
+                                  onTap: () async {
+                                    ResumeFilter(context);
+                                  },
+                                  child: const CustomImageView(
+                                    imagePath: MediaRes.btnFilter,
+                                    width: 48,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-
-                        const SizedBox(height: 28),
-
-                        !isFavorite
-                            ? ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) => ResumeItem(
-                                  name: jobs[index]['name'] ?? 'No Title',
-                                  role: jobs[index]['role'] ?? 'No Salary',
-                                  age: jobs[index]['age'] ?? 'No Salary',
-
-                                  onTap: () async {
-                                    context.pushNamed(RouteName.resumeDetail);
-                                    // await ApplicantJobDetail(context);
-                                  },
-                                ),
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 8),
-                                itemCount: jobs.length,
-                              )
-                            : ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) => ResumeItem(
-                                  name: jobs[index]['name'] ?? 'No Title',
-                                  role: jobs[index]['role'] ?? 'No Salary',
-                                  age: jobs[index]['age'] ?? 'No Salary',
-                                  onTap: () async {
-                                    context.pushNamed(RouteName.resumeDetail);
-                                    // await ApplicantJobDetail(context);
-                                  },
-                                ),
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 8),
-                                itemCount: jobs.length,
-                              ),
-
-                        const SizedBox(height: 16),
-                      ],
+                          const SizedBox(height: 28),
+                          BlocBuilder<ResumeBloc, ResumeState>(
+                            builder: (context, state) {
+                              if (state is ResumeLoadingState) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (state is ResumeErrorState) {
+                                return Center(
+                                  child: Text('Error: ${state.message}'),
+                                );
+                              } else if (state is ResumeLoadedState) {
+                                final users = state.users.resume;
+                                return !isFavorite
+                                    ? ListView.separated(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) =>
+                                            ResumeItem(
+                                              name: users[index].name,
+                                              role: users[index].role,
+                                              age: users[index].age,
+                                              onTap: () async {
+                                                context.pushNamed(
+                                                  RouteName.resumeDetail,
+                                                );
+                                              },
+                                            ),
+                                        separatorBuilder: (context, index) =>
+                                            const SizedBox(height: 8),
+                                        itemCount: users.length,
+                                      )
+                                    : ListView.separated(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) =>
+                                            ResumeItem(
+                                              name: users[index].name,
+                                              role: users[index].role,
+                                              age: users[index].age,
+                                              onTap: () async {
+                                                context.pushNamed(
+                                                  RouteName.resumeDetail,
+                                                );
+                                              },
+                                            ),
+                                        separatorBuilder: (context, index) =>
+                                            const SizedBox(height: 8),
+                                        itemCount: users.length,
+                                      );
+                              } else {
+                                return const Center(child: Text('No data'));
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

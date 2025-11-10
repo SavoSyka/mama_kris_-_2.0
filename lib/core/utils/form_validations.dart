@@ -39,12 +39,13 @@ class FormValidations {
 
   static String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'AppTextContents.emailRequired';
+      return AppTextContents.emailRequired;
     }
-    // Basic email regex
-    // if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(value)) {
-    //   return "AppTextContents.emailInvalid;";
-    // }
+    // Simple email validation
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value)) {
+      return AppTextContents.emailInvalid;
+    }
     return null;
   }
 
@@ -82,6 +83,68 @@ class FormValidations {
     }
     if (value != newPassword) {
       return passwordsDoNotMatch;
+    }
+    return null;
+  }
+
+  // ------------------- CONTACTS -------------------
+  /// Validates contact form fields.
+  /// - [name] is required (e.g., "Telegram", "VK", "WhatsApp")
+  /// - [link] or [phone] is optional but validated if provided.
+  static String? validateContactName(String? name) {
+    if (name == null || name.trim().isEmpty) {
+      return 'Введите название контакта (например, Telegram, VK).';
+    }
+    if (name.trim().length < 2) {
+      return 'Название контакта слишком короткое.';
+    }
+    return null;
+  }
+
+  static String? validateContactLink(String? value, {String? platform}) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional field
+    }
+
+    final trimmed = value.trim();
+
+    // 1. Allow phone numbers (international format)
+    final phonePattern = RegExp(r'^\+?[1-9]\d{1,14}$');
+    if (phonePattern.hasMatch(trimmed.replaceAll(RegExp(r'[-\s()]'), ''))) {
+      return null; // Valid phone
+    }
+
+    // 2. Allow usernames (with or without @)
+    final usernamePattern = RegExp(r'^@?[\w\.\d_]{3,}$');
+    if (usernamePattern.hasMatch(trimmed.replaceAll('@', ''))) {
+      return null; // Valid username
+    }
+
+    // 3. Allow short app links: t.me/, wa.me/, vk.me/, etc.
+    final shortLinkPattern = RegExp(
+      r'^(t\.me|wa\.me|vk\.me|m\.me|telegram\.me|whatsapp\.com)\/[\w\d._-]+',
+      caseSensitive: false,
+    );
+    if (shortLinkPattern.hasMatch(trimmed)) {
+      return null;
+    }
+
+    // 4. Allow full URLs (http/https)
+
+    // 5. Platform-specific hints
+    final hint = platform != null
+        ? 'Enter a valid $platform username, link, or phone'
+        : 'Enter a valid link, username, or phone';
+
+    return hint;
+  }
+
+  static String? validatePhone(String? value) {
+    if (value == null || value.trim().isEmpty) return null; // optional
+
+    final phoneRegex = RegExp(r'^\+?[0-9]{7,15}$');
+    if (!phoneRegex.hasMatch(value)) {
+      return 'Введите корректный номер телефона.';
     }
     return null;
   }

@@ -11,6 +11,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
 
 class CreateJobPageThree extends StatefulWidget {
@@ -20,16 +21,16 @@ class CreateJobPageThree extends StatefulWidget {
     this.description,
     this.salary,
     this.salaryWithAgreement,
-    this.contactAddresses,
-    this.links,
+    this.contactAddress,
+    this.link,
   });
 
   final String? speciality;
   final String? description;
   final String? salary;
   final bool? salaryWithAgreement;
-  final String? contactAddresses;
-  final String? links;
+  final ContactEntity? contactAddress;
+  final String? link;
 
   @override
   _CreateJobPageThreeState createState() => _CreateJobPageThreeState();
@@ -95,26 +96,30 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
             ),
           ),
 
-          const SizedBox(height: 8),
-          Text(
-            widget.salary ?? "",
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
+          if (!(widget.salaryWithAgreement ?? false)) ...[
+            const SizedBox(height: 12),
+
+            Text(
+              widget.salary ?? "",
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w600,
+                height: 1.30,
+              ),
             ),
-          ),
+          ],
+          const SizedBox(height: 16),
+
           SizedBox(
-            width: 311,
             child: Text(
               widget.description ?? '',
               style: const TextStyle(
                 color: Color(0xFF596574),
                 fontSize: 16,
                 fontFamily: 'Manrope',
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 height: 1.30,
               ),
             ),
@@ -122,15 +127,21 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
           const SizedBox(height: 16),
           SizedBox(
             width: 311,
-            child: Text(
-              "Contact information through ${widget.contactAddresses}",
-              style: const TextStyle(
-                color: Color(0xFF596574),
-                fontSize: 16,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w500,
-                height: 1.30,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Contact information through",
+                  style: TextStyle(
+                    color: Color(0xFF596574),
+                    fontSize: 16,
+                    fontFamily: 'Manrope',
+                    fontWeight: FontWeight.w500,
+                    height: 1.30,
+                  ),
+                ),
+                contactPreview(widget.contactAddress),
+              ],
             ),
           ),
 
@@ -459,4 +470,100 @@ class _updateButtons extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget contactPreview(ContactEntity? contact) {
+  if (contact == null) {
+    return const Text(
+      "No contact selected",
+      style: TextStyle(color: Colors.grey, fontSize: 14, fontFamily: 'Manrope'),
+    );
+  }
+
+  // Collect available contact fields dynamically
+  final contactDetails = <Map<String, String>>[];
+  if (contact.telegram != null && contact.telegram!.isNotEmpty) {
+    contactDetails.add({'label': 'Telegram', 'value': contact.telegram!});
+  }
+  if (contact.whatsapp != null && contact.whatsapp!.isNotEmpty) {
+    contactDetails.add({'label': 'WhatsApp', 'value': contact.whatsapp!});
+  }
+  if (contact.email != null && contact.email!.isNotEmpty) {
+    contactDetails.add({'label': 'Email', 'value': contact.email!});
+  }
+  if (contact.vk != null && contact.vk!.isNotEmpty) {
+    contactDetails.add({'label': 'VK', 'value': contact.vk!});
+  }
+  if (contact.phone != null && contact.phone!.isNotEmpty) {
+    contactDetails.add({'label': 'Phone', 'value': contact.phone!});
+  }
+
+  return Container(
+    width: double.infinity,
+    margin: const EdgeInsets.only(top: 12),
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF7F9FB),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: const Color(0xFFE3E8EF)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Contact header
+        Row(
+          children: [
+            const Icon(
+              Icons.person_outline,
+              color: Color(0xFF2F80ED),
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              contact.name ?? "Unnamed Contact",
+              style: const TextStyle(
+                color: Color(0xFF1F2937),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Manrope',
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+
+        // List contact channels (Telegram, Email, etc.)
+        ...contactDetails.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              children: [
+                Text(
+                  "${item['label']}: ",
+                  style: const TextStyle(
+                    color: Color(0xFF596574),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Manrope',
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    item['value']!,
+                    style: const TextStyle(
+                      color: Color(0xFF111827),
+                      fontSize: 14,
+                      fontFamily: 'Manrope',
+                      fontWeight: FontWeight.w400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

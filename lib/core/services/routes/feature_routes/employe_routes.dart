@@ -21,56 +21,51 @@ final List<RouteBase> employeRoutes = [
     },
   ),
 
-GoRoute(
-  path: RouteName.createJobPageTwo,
-  name: RouteName.createJobPageTwo,
-  builder: (BuildContext context, GoRouterState state) {
-    // Receive data passed via extra
-    final extra = state.extra as Map<String, dynamic>? ?? {};
+  GoRoute(
+    path: RouteName.createJobPageTwo,
+    name: RouteName.createJobPageTwo,
+    builder: (BuildContext context, GoRouterState state) {
+      // Receive data passed via extra
+      final extra = state.extra as Map<String, dynamic>? ?? {};
 
-    final salary = extra['salary'];
-    final speciality = extra['speciality'];
-    final description = extra['description'];
-    final salaryWithAgreement = extra['salaryWithAgreement'];
-    final contactAddresses = extra['contactAddresses'];
-    final links = extra['links'];
+      final salary = extra['salary'];
+      final speciality = extra['speciality'];
+      final description = extra['description'];
+      final salaryWithAgreement = extra['salaryWithAgreement'];
 
-    return CreateJobPageTwo(
-      salary: salary,
-      speciality: speciality,
-      description: description,
-      salaryWithAgreement: salaryWithAgreement,
-    );
-  },
-),
+      return CreateJobPageTwo(
+        salary: salary,
+        speciality: speciality,
+        description: description,
+        salaryWithAgreement: salaryWithAgreement,
+      );
+    },
+  ),
 
+  GoRoute(
+    path: RouteName.createJobPageThree,
+    name: RouteName.createJobPageThree,
+    builder: (BuildContext context, GoRouterState state) {
+      // Receive data passed via extra
+      final extra = state.extra as Map<String, dynamic>? ?? {};
 
-GoRoute(
-  path: RouteName.createJobPageThree,
-  name: RouteName.createJobPageThree,
-  builder: (BuildContext context, GoRouterState state) {
-    // Receive data passed via extra
-    final extra = state.extra as Map<String, dynamic>? ?? {};
+      final salary = extra['salary'];
+      final speciality = extra['speciality'];
+      final description = extra['description'];
+      final salaryWithAgreement = extra['salaryWithAgreement'];
+      final contactAddress = extra['contactAddress'];
+      final link = extra['link'];
 
-    final salary = extra['salary'];
-    final speciality = extra['speciality'];
-    final description = extra['description'];
-    final salaryWithAgreement = extra['salaryWithAgreement'];
-    final contactAddresses = extra['contactAddresses'];
-    final links = extra['links'];
-
-    return CreateJobPageThree(
-      salary: salary,
-      speciality: speciality,
-      description: description,
-      salaryWithAgreement: salaryWithAgreement,
-      contactAddresses: contactAddresses,
-      links: links,
-    );
-  },
-),
-
-
+      return CreateJobPageThree(
+        salary: salary,
+        speciality: speciality,
+        description: description,
+        salaryWithAgreement: salaryWithAgreement,
+        contactAddress: contactAddress,
+        link: link,
+      );
+    },
+  ),
 
   GoRoute(
     path: RouteName.employesHome,
@@ -87,7 +82,4 @@ GoRoute(
       return const EmpResumeScreenDetail();
     },
   ),
-
-
-
 ];

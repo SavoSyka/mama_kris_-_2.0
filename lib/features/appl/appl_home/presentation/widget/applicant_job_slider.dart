@@ -29,7 +29,6 @@ class ApplicantJobSlider extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     double scaleX = screenWidth / 428;
-    double scaleY = screenHeight / 956;
 
     return Container(
       width: 395 * scaleX,
@@ -170,6 +169,7 @@ class ApplicantJobSlider extends StatelessWidget {
               ),
             ],
           ),
+       
         ],
       ),
     );

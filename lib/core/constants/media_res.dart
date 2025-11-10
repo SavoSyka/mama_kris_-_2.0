@@ -59,11 +59,10 @@ class MediaRes {
   static const googleIcon = '$_baseIcons/google_icon.png';
   static const appleIcon = '$_baseIcons/apple_icon.png';
 
-
   static const logoutIcon = '$_baseIcons/logout_icon.png';
   static const dropDownIcon = '$_baseIcons/drop_down_icon.png';
   static const emailOtp = '$_baseIcons/email_icon.png';
 
-
-
+  static const empUnmarkedBox = '$_baseIcons/emp_unmarked_box.png';
+  static const empMarkedBox = '$_baseIcons/emp_marked_box.png';
 }

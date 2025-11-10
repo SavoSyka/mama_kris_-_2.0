@@ -13,7 +13,6 @@ class RouteName {
   static String forgotApplicant = '/$_applicant/forgot';
   static String verifyOptApplicant = '/$_applicant/verify';
 
-
   static String homeApplicant = '/$_applicant/home';
   static String supportDetailApplicant = '/$_applicant/support-detail';
   static String editProfileApplicant = '/$_applicant/edit-profile';
@@ -22,6 +21,9 @@ class RouteName {
   static const String _employee = '/auth/emp';
   static String loginEmploye = '/$_employee/login';
   static String signupEmploye = '/$_employee/signup';
+  static String verifyOtpEmployee = '/$_employee/verify';
+  static String forgotEmployee = '/$_employee/forgot';
+
   static String homeEmploye = '/$_employee/home';
   static String createJobPageOne = '/$_employee/create/1';
 
@@ -31,6 +33,12 @@ class RouteName {
 
   static String welcomePage = "/getStart";
   static String forceUpdate = "/force-update";
+
+  static String subscription = "/subscription";
+
+
+
+
 
   static String welcomeApplicant = "/welcome-applicant";
   static String welcomeEmploye = "/welcome-employe";

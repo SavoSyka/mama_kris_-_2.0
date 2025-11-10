@@ -5,6 +5,7 @@ import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
+import 'package:mama_kris/core/common/widgets/custom_phone_picker.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
@@ -106,6 +107,13 @@ class _basicInformation extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
+          CustomPhonePicker(
+            initialPhoneNumber: '+251912345678',
+            defaultCountryCode: 'ET',
+            onChanged: (fullNumber) {
+              print('Phone changed: $fullNumber');
+            },
+          ),
           CustomInputText(
             hintText: 'Кристина',
             labelText: "Имя",

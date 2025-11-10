@@ -1,0 +1,217 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:mama_kris/core/constants/api_constants.dart';
+import 'package:mama_kris/core/error/failures.dart';
+import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/utils/typedef.dart';
+import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
+import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_remote_data_source.dart';
+import 'package:mama_kris/features/appl/app_auth/data/models/user_model.dart';
+import 'package:mama_kris/features/emp/emp_auth/data/data_sources/emp_auth_remote_data_source.dart';
+import 'package:mama_kris/features/emp/emp_auth/data/models/emp_user_model.dart';
+
+class EmpAuthRemoteDataSourceImpl implements EmpAuthRemoteDataSource {
+  final Dio dio;
+
+  EmpAuthRemoteDataSourceImpl(this.dio);
+
+  @override
+  ResultFuture<EmpUserModel> login(String email, String password) async {
+    try {
+      final postData = {
+        'email': email,
+        'password': password,
+        'HaveVacancies': true,
+      };
+
+      final local = sl<AuthLocalDataSource>();
+      final response = await dio.post(ApiConstants.login, data: postData);
+
+      if (response.statusCode.toString().startsWith('2')) {
+        final data = response.data as Map<String, dynamic>;
+        debugPrint('Login response: $data');
+
+        final user = EmpUserModel.fromJson(data);
+
+        final accessToken = user.accessToken;
+        final refreshToken = user.refreshToken;
+        final userId = user.userId.toString();
+
+        await local.saveUserType(true);
+        await local.saveToken(accessToken);
+        await local.saveRefreshToken(refreshToken);
+        await local.saveUserId(userId);
+
+        return Right(user);
+      } else {
+        throw ApiException(
+          message: response.data['message'] ?? 'Login failed',
+          statusCode: response.statusCode ?? 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      debugPrint("erroro $e");
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  ResultFuture<EmpUserModel> signup(
+    String name,
+    String email,
+    String password,
+  ) async {
+    try {
+      final local = sl<AuthLocalDataSource>();
+      final postData = {
+        'name': name,
+        'email': email,
+        'password': password,
+        "HaveVacancies": 'Have vacancies',
+      };
+
+      debugPrint("post data for signup $postData");
+
+      final response = await dio.post(ApiConstants.register, data: postData);
+
+      if (response.statusCode == 201) {
+        final data = response.data as DataMap;
+
+        final accessToken = data['accessToken'] as String? ?? '';
+        final refreshToken = data['refreshToken'] as String? ?? '';
+
+        await local.saveToken(accessToken);
+        await local.saveRefreshToken(refreshToken);
+
+        final userModel = EmpUserModel.fromJson(response.data['user']);
+        return Right(userModel);
+      } else {
+        throw ApiException(
+          message: response.data['message'] ?? 'Signup failed',
+          statusCode: response.statusCode ?? 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  ResultFuture<bool> checkEmail(String email) async {
+    try {
+      final response = await dio.post(
+        ApiConstants.checkEmail,
+        data: {'email': email},
+      );
+
+      if (response.statusCode == 201) {
+        return const Right(true);
+      } else {
+        throw const ApiException(
+          message: "Invalid Email address11",
+          statusCode: 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  ResultFuture<bool> verifyOtp(String email, String otp) async {
+    try {
+      final local = sl<AuthLocalDataSource>();
+
+      final response = await dio.post(
+        ApiConstants.validateCode,
+        data: {'email': email, 'verificationCode': otp},
+      );
+
+      if (response.statusCode.toString().startsWith('2')) {
+        final data = response.data as Map<String, dynamic>;
+        final token = data['token'] as String? ?? '';
+
+        await local.saveToken(token);
+
+        return const Right(true);
+      } else {
+        throw const ApiException(
+          message: 'OTP verification failed',
+          statusCode: 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  ResultFuture<bool> resendOtp(String email) async {
+    try {
+      final response = await dio.post(
+        ApiConstants.validateCode, // Assuming resend uses same endpoint
+        data: {'email': email},
+      );
+
+      if (response.statusCode == 200) {
+        return const Right(true);
+      } else {
+        throw const ApiException(message: 'Resend OTP failed', statusCode: 500);
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  ResultFuture<bool> forgotPassword(String email) async {
+    try {
+      final response = await dio.post(
+        ApiConstants.forgotPassword,
+        data: {'email': email},
+      );
+
+      if (response.statusCode == 200) {
+        return const Right(true);
+      } else {
+        throw const ApiException(
+          message: 'Forgot password failed',
+          statusCode: 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+}

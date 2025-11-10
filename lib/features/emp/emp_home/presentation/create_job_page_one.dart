@@ -22,7 +22,26 @@ class CreateJobPageOne extends StatefulWidget {
 
 class _CreateJobPageOneState extends State<CreateJobPageOne> {
   final TextEditingController _speciality = TextEditingController();
-  final TextEditingController _description = TextEditingController();
+  final TextEditingController _description = TextEditingController(
+    text: '''
+
+Шукаємо Senior Full-stack JavaScript розробника з досвідом у проєктуванні хайлод систем, який зможе очолити розробку нової навантаженої платформи для онлайн-маркетингу.
+Про команду: 
+Trackiffy - SaaS-платформа для керування трафіком. Ми розробляємо рішення, що допомагають медіабаінговим компаніям ...
+
+Шукаємо Senior Full-stack JavaScript розробника з досвідом у проєктуванні хайлод систем, який зможе очолити розробку нової навантаженої платформи для онлайн-маркетингу.
+Про команду: 
+Trackiffy - SaaS-платформа для керування трафіком. Ми розробляємо рішення, що допомагають медіабаінговим компаніям ...
+
+Шукаємо Senior Full-stack JavaScript розробника з досвідом у проєктуванні хайлод систем, який зможе очолити розробку нової навантаженої платформи для онлайн-маркетингу.
+Про команду: 
+Trackiffy - SaaS-платформа для керування трафіком. Ми розробляємо рішення, що допомагають медіабаінговим компаніям ...
+
+Шукаємо Senior Full-stack JavaScript розробника з досвідом у проєктуванні хайлод систем, який зможе очолити розробку нової навантаженої платформи для онлайн-маркетингу.
+Про команду: 
+Trackiffy - SaaS-платформа для керування трафіком. Ми розробляємо рішення, що допомагають медіабаінговим компаніям ...
+''',
+  );
 
   final TextEditingController _salary = TextEditingController();
   bool _salaryWithAgreement = false;
@@ -34,7 +53,7 @@ class _CreateJobPageOneState extends State<CreateJobPageOne> {
 
       body: Container(
         width: double.infinity,
-           decoration: const BoxDecoration(color: AppPalette.empBgColor),
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
         child: SafeArea(
           bottom: false,
@@ -103,15 +122,16 @@ class _CreateJobPageOneState extends State<CreateJobPageOne> {
           ),
           const SizedBox(height: 16),
 
-          CustomInputText(
-            hintText: '10000',
-            labelText: "Оплата",
-            controller: _salary,
-          ),
-             const SizedBox(height: 16),
+          if (!_salaryWithAgreement)
+            CustomInputText(
+              hintText: '10000',
+              labelText: "Оплата",
+              controller: _salary,
+              keyboardType: TextInputType.number,
+            ),
+          const SizedBox(height: 16),
 
-
-              Row(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               InkWell(
@@ -122,23 +142,19 @@ class _CreateJobPageOneState extends State<CreateJobPageOne> {
                 },
                 child: Image.asset(
                   _salaryWithAgreement
-                      ? MediaRes.markedBox
-                      : MediaRes.unMarkedBox,
+                      ? MediaRes.empMarkedBox
+                      : MediaRes.empUnmarkedBox,
                   width: 28,
                 ),
               ),
               const SizedBox(width: 8),
 
               const Expanded(
-                child: CustomText(
-                  text: "Оплата по договоренности"
-                  
-                ),
+                child: CustomText(text: "Оплата по договоренности"),
               ),
             ],
           ),
           const SizedBox(height: 16),
-       
 
           CustomButtonEmployee(
             btnText: 'Далее',
@@ -149,23 +165,17 @@ class _CreateJobPageOneState extends State<CreateJobPageOne> {
                   'salary': _salary.text,
                   'speciality': _speciality.text,
                   "description": _description.text,
-                  "salaryWithAgreement":  _salaryWithAgreement
+                  "salaryWithAgreement": _salaryWithAgreement,
                 },
               );
             },
           ),
 
           const SizedBox(height: 24),
-
-      
         ],
       ),
     );
   }
-
-
-
-
 }
 
 class _Contacts extends StatelessWidget {

@@ -59,13 +59,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAxrlXE_0mK3_Vzz7pS3ZOzSw7975NbBfI',
-    appId: '1:86099763542:ios:a1096ef74abc566e53f6f7',
+    appId: '1:86099763542:ios:935986abf5d903f853f6f7',
     messagingSenderId: '86099763542',
     projectId: 'mamakris-0',
     storageBucket: 'mamakris-0.firebasestorage.app',
     androidClientId: '86099763542-6a8m3c858i41tskj7rbt4fl3026q6aic.apps.googleusercontent.com',
-    iosClientId: '86099763542-kul9cn6r27g48uspqnr9vll2b29ql5q5.apps.googleusercontent.com',
-    iosBundleId: 'com.mama.mamaKris',
+    iosClientId: '86099763542-9tgb2dqc63hj0utf8fc9mvve0fplc8e1.apps.googleusercontent.com',
+    iosBundleId: 'com.mama.kris',
   );
 
 }

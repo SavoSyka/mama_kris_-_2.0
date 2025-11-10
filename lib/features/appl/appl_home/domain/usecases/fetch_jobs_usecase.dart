@@ -4,13 +4,13 @@ import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dar
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_list.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/repositories/job_repository.dart';
 
-class FetchJobsUseCase extends UsecaseWithoutParams<JobList> {
+class FetchJobsUseCase extends UsecaseWithParams<JobList, int> {
   final JobRepository repository;
 
   FetchJobsUseCase(this.repository);
 
   @override
-  ResultFuture<JobList> call() async {
-    return await repository.fetchJobs();
+  ResultFuture<JobList> call(int page) async {
+    return await repository.fetchJobs(page:page);
   }
 }

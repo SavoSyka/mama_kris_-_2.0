@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {
@@ -59,7 +60,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<String> getToken() async {
-    return prefs.getString(_tokenKey) ?? "";
+    final token = prefs.getString(_tokenKey) ?? "";
+
+    debugPrint("Token used for this service [[[ $token  ]]] ");
+    return token;
   }
 
   @override

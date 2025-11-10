@@ -1,10 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
+import 'package:mama_kris/core/common/widgets/custom_error_retry.dart';
+import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/job_list_item.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/appl/appl_favorite/presentation/bloc/liked_job_bloc_bloc.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
 
 class ApplFavoriteScreen extends StatefulWidget {
@@ -15,113 +23,190 @@ class ApplFavoriteScreen extends StatefulWidget {
 }
 
 class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
-  int currentVacancyIndex = 0;
-  int previousVacancyIndex = 0;
-  int slideDirection = -1;
+  final ScrollController _scrollController = ScrollController();
+  Timer? _debounceTimer;
 
-  bool isSlider = false;
+  // * ────────────────────── State Variable declarations ended  ───────────────────────
 
-  final List<Map<String, dynamic>> jobs = [
-    {
-      'title': 'Software Engineer',
-      'description': 'Develop and maintain software applications.',
-      'salary': '100000',
-    },
-    {
-      'title': 'Product Manager',
-      'description': 'Oversee product development and strategy.',
-      'salary': '120000',
-    },
-    {
-      'title': 'Designer',
-      'description': 'Create user interfaces and experiences.',
-      'salary': '90000',
-    },
-  ];
+  // * ────────────────────── Overrided Methods ───────────────────────
 
+  @override
+  void initState() {
+    super.initState();
+    handleFetchJobs();
+    _scrollController.addListener(_scrollListener);
+  }
 
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    _scrollController
+      ..removeListener(_scrollListener)
+      ..dispose();
+    super.dispose();
+  }
+
+  // * ────────────── BUILD UI Started Ended ───────────────────────
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-        extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Мои заказы',
-      showLeading: false,
-      alignTitleToEnd: false,
+      extendBodyBehindAppBar: true,
+      appBar: const CustomAppBar(
+        title: 'Мои заказы',
+        showLeading: false,
+        alignTitleToEnd: false,
       ),
 
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: CustomDefaultPadding(
-                    child: Column(
-                      children: [
-                        ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => JobListItem(
-                            jobTitle: jobs[index]['title'] ?? 'No Title',
-                            salaryRange: jobs[index]['salary'] ?? 'No Salary',
-                            onTap: () async {
-                              await ApplicantJobDetail(context, showStar: false);
-                            },
-                            showAddToFavorite: false,
+          child: CustomDefaultPadding(
+            top: 0, 
+            bottom: 0,
+            child: BlocBuilder<LikedJobBlocBloc, LikedJobBlocState>(
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    if (state is LikedJobLoading)
+                      const Expanded(
+                        child: Center(
+                          child: Row(
+                            children: [
+                              Expanded(child: IPhoneLoader(height: 200)),
+                            ],
                           ),
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 8),
-                          itemCount: jobs.length,
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+                      )
+                    else if (state is LikedJobError)
+                      Expanded(
+                        child: Center(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: CustomErrorRetry(
+                                  hasDefaultMargin: true,
+                                  errorMessage: state.message,
+                                  onTap: () {},
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else if (state is LikedJobLoadedState)
+                      Expanded(
+                        child: ListView.separated(
+                          controller: _scrollController,
+                          // shrinkWrap: true,
+                          // physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            if (index < state.jobs.likedJob.length) {
+                              final job = state.jobs.likedJob[index];
+                              return JobListItem(
+                                jobTitle:
+                                    "${job.job.title}",
+                                salaryRange: job.job.salary.toString(),
+                                onTap: () async => await ApplicantJobDetail(
+                                  context,
+                                  job: job.job,
+                                  showStar: false,
+
+                                  onLiked: () async {
+                                    context.read<JobBloc>().add(
+                                      LikeJobEvent(job.jobId),
+                                    );
+                                    Navigator.maybePop(context);
+                                  },
+                                ),
+                              );
+                            } else if (state.jobs.hasNextPage) {
+                              // Loader at bottom
+                              return const IPhoneLoader();
+                            }
+                            return null;
+                          },
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 8),
+                          itemCount: state.jobs.likedJob.length + 1,
+                        ),
+
+                        /*
+                             SingleChildScrollView(
+                              controller: _scrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+            
+                              child: 
+                              CustomDefaultPadding(
+                                child: 
+                                
+                                Column(
+                                  children: [
+            
+                                    // ListView.separated(
+                                    //   shrinkWrap: true,
+                                    //   physics: const NeverScrollableScrollPhysics(),
+                                    //   itemBuilder: (context, index) => JobListItem(
+                                    //     jobTitle: jobs[index]['title'] ?? 'No Title',
+                                    //     salaryRange: jobs[index]['salary'] ?? 'No Salary',
+                                    //     onTap: () async {
+                                    //       // TODO job should be paassed from the list
+                                    //       // await ApplicantJobDetail(context, showStar: false);
+                                    //     },
+                                    //     showAddToFavorite: false,
+                                    //   ),
+                                    //   separatorBuilder: (context, index) =>
+                                    //       const SizedBox(height: 8),
+                                    //   itemCount: jobs.length,
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          */
+                      ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
     );
   }
-}
 
-class _AdCards extends StatelessWidget {
-  const _AdCards();
+  // * 0. ────────────────────── SCROLL LISTENER ───────────────────────
+  void _scrollListener() {
+    // 1. Not a loaded state → ignore
+    final state = context.read<LikedJobBlocBloc>().state;
+    // debugPrint("scrolling ${state.runtimeType}");
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-      decoration: AppTheme.cardDecoration,
-      child: const Column(
-        children: [
-          CustomText(
-            text: 'Место для рекламы',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF12902A),
-              fontSize: 20,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 10),
-          CustomText(
-            text: 'Нажмите, чтобы оставить заявку',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF596574),
-              fontSize: 16,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
+    if (state is! LikedJobLoadedState) return;
+
+    // 2. Already loading more or no next page → ignore
+    if (state.isLoadingMore || !state.jobs.hasNextPage) return;
+
+    // 3. Not near the bottom (80 % of max) → ignore
+    final max = _scrollController.position.maxScrollExtent;
+    final cur = _scrollController.position.pixels;
+    if (cur < max * 0.8) return;
+
+    // 4. Debounce – fire **once** every seconds
+    if (_debounceTimer?.isActive ?? false) return;
+    _debounceTimer = Timer(const Duration(seconds: 1), () {
+      final nextPage = state.jobs.currentPage + 1;
+      _loadMoreJobs(nextPage);
+    });
+  }
+
+  // * 1. ────────────── Helper functions started ───────────────────────
+
+  void _loadMoreJobs(int page) {
+    context.read<LikedJobBlocBloc>().add(LikedLoadNextJobsPageEvent(page));
+  }
+
+  void handleFetchJobs() {
+    context.read<LikedJobBlocBloc>().add(const FetchLikedJobEvent());
   }
 }

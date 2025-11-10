@@ -11,6 +11,6 @@ class AppRouter {
 
 
 
-     ...authRoutes, ...employeRoutes, ...jobRoutes, ...notificationRoutes,],
+     ...authRoutes, ...employeRoutes, ...jobRoutes, ...notificationRoutes, ...subscriptions],
   );
 }

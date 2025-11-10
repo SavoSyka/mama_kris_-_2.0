@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/entities/contact_job.dart';
 
 class JobEntity extends Equatable {
   final int jobId;
@@ -13,6 +14,7 @@ class JobEntity extends Equatable {
   final String salary;
   final String status;
   final String? firstPublishedAt;
+  final ContactJobs? contactJobs;
   const JobEntity({
     required this.jobId,
     required this.userId,
@@ -23,10 +25,10 @@ class JobEntity extends Equatable {
     required this.salary,
     required this.status,
     this.firstPublishedAt,
+     this.contactJobs,
   });
 
   @override
-  // TODO: implement props
   List<Object?> get props => [
     jobId,
     userId,
@@ -36,5 +38,6 @@ class JobEntity extends Equatable {
     salary,
     status,
     firstPublishedAt,
+    contactJobs,
   ];
 }

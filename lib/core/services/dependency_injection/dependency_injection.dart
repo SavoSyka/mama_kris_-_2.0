@@ -10,6 +10,10 @@ Future<void> dependencyInjection() async {
   await _initAuth();
   await _initNotifications();
   await _initJobs();
+  await initAppAuthInjection();
+  await _initEmpAuth();
+  await _initResumes();
+  await _initSubscriptions();
 }
 
 Future<void> _initLocalCache() async {
@@ -133,16 +137,113 @@ Future<void> _initJobs() async {
   sl.registerLazySingleton(() => SearchJobsUseCase(sl()));
   sl.registerLazySingleton(() => LikeJobUseCase(sl()));
   sl.registerLazySingleton(() => DislikeJobUseCase(sl()));
+  sl.registerLazySingleton(() => FetchLikedJobs(sl()));
+  sl.registerLazySingleton(() => FilterJobsUsecase(sl()));
 
-  // Bloc
+  // *────────────────────── JOB Bloc──────────────────────
   sl.registerFactory(
     () => JobBloc(
       fetchJobsUseCase: sl(),
       searchJobsUseCase: sl(),
       likeJobUseCase: sl(),
       dislikeJobUseCase: sl(),
+      filterJobsUsecase: sl(),
     ),
   );
+
+  // *────────────────────── Liked JOB Bloc──────────────────────
+  sl.registerFactory(() => LikedJobBlocBloc(fetchLikedJobs: sl()));
+}
+
+Future<void> initAppAuthInjection() async {
+  // -------- DATA SOURCES --------
+  sl.registerLazySingleton<UserRemoteDataSource>(
+    () => UserRemoteDataSourceImpl(sl()),
+  );
+
+  // -------- REPOSITORY --------
+  sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
+
+  // -------- USE CASE --------
+  sl.registerLazySingleton<GetUserProfileUseCase>(
+    () => GetUserProfileUseCase(sl()),
+  );
+
+  // -------- BLOC --------
+  sl.registerFactory<UserBloc>(() => UserBloc(getUserProfileUseCase: sl()));
+}
+
+Future<void> _initEmpAuth() async {
+  // Data source
+
+  sl.registerLazySingleton<EmpAuthRemoteDataSource>(
+    () => EmpAuthRemoteDataSourceImpl(sl()), // inject Dio
+  );
+
+  // Repository
+  sl.registerLazySingleton<EmpAuthRepository>(
+    () => EmpAuthRepositoryImpl(sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => EmpLoginUsecase(sl()));
+  sl.registerLazySingleton(() => EmpSignupUsecase(sl()));
+  sl.registerLazySingleton(() => EmpCheckEmailUsecase(sl()));
+
+  sl.registerLazySingleton(() => EmpVerifyOtpUsecase(sl()));
+  sl.registerLazySingleton(() => EmpResendOtpUsecase(sl()));
+  sl.registerLazySingleton(() => EmpForgotPasswordUsecase(sl()));
+
+  // Bloc (factory → new instance per request)
+  sl.registerFactory(
+    () => EmpAuthBloc(
+      loginUsecase: sl(),
+      signupUsecase: sl(),
+      checkEmailUsecase: sl(),
+
+      verifyOtpUsecase: sl(),
+      resendOtpUsecase: sl(),
+      forgotPasswordUsecase: sl(),
+    ),
+  );
+
+  sl.registerFactory(() => EmpUserBloc());
 }
 
 Future<void> _initApplicantJob() async {}
+
+Future<void> _initResumes() async {
+  // Data sources
+  sl.registerLazySingleton<ResumeRemoteDataSource>(
+    () => ResumeRemoteDataSourceImpl(sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<ResumeRepository>(
+    () => ResumeRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => FetchResumeUsecase(sl()));
+
+  // Bloc
+  sl.registerFactory(() => ResumeBloc(fetchResumeUsecase: sl()));
+}
+
+Future<void> _initSubscriptions() async {
+  // Data sources
+  sl.registerLazySingleton<SubscriptionRemoteDataSource>(
+    () => SubscriptionRemoteDataSourceImpl(sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<SubscriptionRepository>(
+    () => SubscriptionRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => GetTariffsUsecase(sl()));
+
+  // Bloc
+  sl.registerFactory(() => SubscriptionBloc(getTariffsUsecase: sl()));
+}

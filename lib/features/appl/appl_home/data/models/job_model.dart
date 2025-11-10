@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:mama_kris/features/appl/appl_home/data/models/contact_jobs_model.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 
 class JobModel extends JobEntity {
@@ -13,10 +14,14 @@ class JobModel extends JobEntity {
     required super.status,
     super.firstPublishedAt,
     required super.dateTime,
+    required super.contactJobs,
   });
 
   factory JobModel.fromJson(Map<String, dynamic> json) {
-    debugPrint("\n\nJobse $json");
+    final contact = json['contacts'] != null
+        ? ContactJobsModel.fromJson(json['contacts'])
+        : null;
+    // debugPrint("contact Job $contact");
     return JobModel(
       jobId: json['jobID'],
       userId: json['userID'],
@@ -28,6 +33,7 @@ class JobModel extends JobEntity {
 
       salary: json['salary'],
       status: json['status'],
+      contactJobs: contact,
     );
   }
 }

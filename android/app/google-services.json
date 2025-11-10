@@ -51,6 +51,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:86099763542:android:a3b8bdfaaa08413b53f6f7",
+        "android_client_info": {
+          "package_name": "com.mama.kris"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "86099763542-a94uom1ijlqu6jp263dtc43dvgd540np.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6JKIXtGJPlYYv30hfQXlcyukdzwem_tA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "86099763542-a94uom1ijlqu6jp263dtc43dvgd540np.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "86099763542-9fs901c6ene14dpk6vjnk8rk7jaoit5o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.lhlhlh"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:86099763542:android:7c7fd22ae44e007753f6f7",
         "android_client_info": {
           "package_name": "com.mama.mama_kris"

@@ -19,7 +19,7 @@ class CustomInputText extends StatefulWidget {
   final int maxLines;
   final String labelText;
   final bool hasGreyBg;
-
+  final Function(String)? onChanged;
   const CustomInputText({
     super.key,
     required this.hintText,
@@ -36,7 +36,7 @@ class CustomInputText extends StatefulWidget {
     this.labelText = '',
     this.suffixIcon,
     this.hasGreyBg = false,
-
+    this.onChanged,
   });
 
   @override
@@ -76,7 +76,6 @@ class _CustomInputTextState extends State<CustomInputText> {
           keyboardType: widget.keyboardType,
           validator: widget.validator,
           style: const TextStyle(fontSize: 14),
-          
 
           onTapOutside: (val) {
             FocusScope.of(context).unfocus();
@@ -84,11 +83,14 @@ class _CustomInputTextState extends State<CustomInputText> {
           minLines: widget.minLines,
           maxLines: widget.maxLines,
 
+          onChanged: widget.onChanged,
           onTap: widget.onTap,
           decoration: InputDecoration(
             // label: const CustomText(text: 'teddxt'),
             filled: true,
-            fillColor: widget.hasGreyBg ? AppPalette.grey.withValues(alpha: 0.2) : AppPalette.white ,
+            fillColor: widget.hasGreyBg
+                ? AppPalette.grey.withValues(alpha: 0.2)
+                : AppPalette.white,
             prefixIcon: widget.prefixIcon,
             suffixIcon:
                 widget.suffixIcon ??
@@ -106,9 +108,13 @@ class _CustomInputTextState extends State<CustomInputText> {
 
             hint: Text(
               widget.hintText,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppPalette.greyDark),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: AppPalette.greyDark,
+              ),
             ),
-            
+
             contentPadding: const EdgeInsets.symmetric(
               vertical: 16,
               horizontal: 12,

@@ -81,31 +81,39 @@ class _JobListItemState extends State<JobListItem> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomText(
-                  text: widget.jobTitle,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Manrope',
-                    fontWeight: FontWeight.w600,
-                    height: 1.30,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomText(
+                          text: widget.jobTitle,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'Manrope',
+                            fontWeight: FontWeight.w600,
+                            height: 1.30,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  widget.salaryRange,
-                  style: const TextStyle(
-                    color: Color(0xFF596574),
-                    fontSize: 12,
-                    fontFamily: 'Manrope',
-                    fontWeight: FontWeight.w500,
-                    height: 1.30,
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.salaryRange,
+                    style: const TextStyle(
+                      color: Color(0xFF596574),
+                      fontSize: 12,
+                      fontFamily: 'Manrope',
+                      fontWeight: FontWeight.w500,
+                      height: 1.30,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             InkWell(
               onTap: () {

@@ -17,10 +17,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   ResultFuture<UserModel> login(String email, String password) async {
     try {
-      final response = await dio.post(
-        ApiConstants.login,
-        data: {'email': email, 'password': password},
-      );
+      final postData = {
+        'email': email,
+        'password': password,
+        'HaveVacancies': false,
+      };
+      final response = await dio.post(ApiConstants.login, data: postData);
 
       if (response.statusCode.toString().startsWith('2')) {
         final data = response.data as Map<String, dynamic>;

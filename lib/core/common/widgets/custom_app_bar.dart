@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
-  final bool showLeading; // Control whether to show the back button
+  final bool showLeading;
   final VoidCallback? onLeadingPressed;
-  final bool alignTitleToEnd; // New parameter to align title to the end
-
+  final bool alignTitleToEnd;
+  final bool isEmployee;
   const CustomAppBar({
     super.key,
     required this.title,
     this.actions,
     this.showLeading = true,
     this.onLeadingPressed,
-    this.alignTitleToEnd = true, // Default to left-aligned
+    this.alignTitleToEnd = true,
+    this.isEmployee = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false, // Disable default to customize
+      automaticallyImplyLeading: false,
       backgroundColor: Colors.transparent,
       centerTitle: false,
 
@@ -50,7 +52,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 decoration: AppTheme.cardDecoration.copyWith(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.arrow_back_ios_new, size: 20),
+                child: Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 20,
+
+                  color: isEmployee
+                      ? AppPalette.empPrimaryColor
+                      : AppPalette.primaryColor,
+                ),
               ),
               tooltip: 'Назад',
               splashRadius: 24,
