@@ -12,6 +12,7 @@ Future<void> dependencyInjection() async {
   await _initJobs();
   await initAppAuthInjection();
   await _initEmpAuth();
+  await _initEmpJobs();
   await _initResumes();
   await _initSubscriptions();
 }
@@ -208,6 +209,26 @@ Future<void> _initEmpAuth() async {
   );
 
   sl.registerFactory(() => EmpUserBloc());
+}
+
+Future<void> _initEmpJobs() async {
+  // Data sources
+  sl.registerLazySingleton<EmpJobRemoteDataSource>(
+    () => EmpJobRemoteDataSourceImpl(sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<EmpJobRepository>(
+    () => EmpJobRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => CreateJobUseCase(sl()));
+  sl.registerLazySingleton(() => FetchEmpJobsUseCase(sl()));
+
+  // Cubit
+  sl.registerFactory(() => CreateJobCubit(createJobUseCase: sl()));
+  sl.registerFactory(() => FetchEmpJobsCubit(fetchEmpJobsUseCase: sl()));
 }
 
 Future<void> _initApplicantJob() async {}

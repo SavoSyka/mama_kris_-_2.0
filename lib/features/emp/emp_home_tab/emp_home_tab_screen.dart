@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_cubit.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/emp_home_screen.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_screen.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/emp_resume_screen.dart';
@@ -19,13 +22,25 @@ class EmpHomeTabScreen extends StatefulWidget {
 class _ApplHomeTabScreenState extends State<EmpHomeTabScreen> {
   late int _selectedIndex;
 
-  final List<Widget> _pages = const [
-    EmpHomeScreen(),
-    EmpResumeScreen(),
-    EmpSupportScreen(),
+  late final List<Widget> _pages;
 
-    EmpProfileScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    debugPrint("init state ${widget.pageIndex} ");
+    setState(() {
+      _selectedIndex = widget.pageIndex;
+    });
+    _pages = [
+      BlocProvider(
+        create: (context) => sl<FetchEmpJobsCubit>(),
+        child: const EmpHomeScreen(),
+      ),
+      const EmpResumeScreen(),
+      const EmpSupportScreen(),
+      const EmpProfileScreen(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -33,15 +48,6 @@ class _ApplHomeTabScreenState extends State<EmpHomeTabScreen> {
     });
   }
 
-  @override
-  void initState() {
-    debugPrint("init state ${widget.pageIndex} ");
-    setState(() {
-      _selectedIndex = widget.pageIndex;
-    });
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   void didUpdateWidget(EmpHomeTabScreen oldWidget) {

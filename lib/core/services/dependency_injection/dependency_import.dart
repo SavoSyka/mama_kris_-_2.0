@@ -82,6 +82,14 @@ import 'package:mama_kris/features/emp/emp_resume/domain/usecases/fetch_resume_u
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart' as emp_user_bloc;
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
+import 'package:mama_kris/features/emp/emp_home/data/data_sources/emp_job_remote_data_source.dart';
+import 'package:mama_kris/features/emp/emp_home/data/data_sources/emp_job_remote_data_source_impl.dart';
+import 'package:mama_kris/features/emp/emp_home/data/repositories/emp_job_repository_impl.dart';
+import 'package:mama_kris/features/emp/emp_home/domain/repositories/emp_job_repository.dart';
+import 'package:mama_kris/features/emp/emp_home/domain/usecases/create_job_usecase.dart';
+import 'package:mama_kris/features/emp/emp_home/domain/usecases/fetch_emp_jobs_usecase.dart';
+import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
+import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'dependency_injection.dart';

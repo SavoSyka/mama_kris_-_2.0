@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
@@ -12,72 +13,82 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
+import 'package:mama_kris/features/emp/emp_home/domain/entities/create_job_params.dart';
+import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
+import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_state.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
 
 class CreateJobPageThree extends StatefulWidget {
-  const CreateJobPageThree({
-    super.key,
-    this.speciality,
-    this.description,
-    this.salary,
-    this.salaryWithAgreement,
-    this.contactAddress,
-    this.link,
-  });
-
-  final String? speciality;
-  final String? description;
-  final String? salary;
-  final bool? salaryWithAgreement;
-  final ContactEntity? contactAddress;
-  final String? link;
+  const CreateJobPageThree({super.key});
 
   @override
   _CreateJobPageThreeState createState() => _CreateJobPageThreeState();
 }
 
 class _CreateJobPageThreeState extends State<CreateJobPageThree> {
+  late Map<String, dynamic> extra;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    extra = GoRouterState.of(context).extra as Map<String, dynamic>;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Создание вакансии', showLeading: true),
+    return BlocConsumer<CreateJobCubit, CreateJobState>(
+      listener: (context, state) {
+        if (state is CreateJobSuccess) {
+          context.pushNamed(RouteName.homeEmploye);
+        } else if (state is CreateJobError) {
+          // Show error
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      builder: (context, state) {
+        return CustomScaffold(
+          extendBodyBehindAppBar: true,
+          appBar: const CustomAppBar(title: 'Создание вакансии', showLeading: true),
 
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(color: AppPalette.empBgColor),
+          body: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
-        child: SafeArea(
-          bottom: false,
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CustomProgressBar(totalProgress: 2, filledProgress: 2),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: SafeArea(
-                    child: CustomDefaultPadding(
-                      bottom: 0,
-                      child: Column(
-                        children: [
-                          // Основная информация -- basic information
-                          _formPreview(context),
-                        ],
+            child: SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CustomProgressBar(totalProgress: 2, filledProgress: 2),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: SafeArea(
+                        child: CustomDefaultPadding(
+                          bottom: 0,
+                          child: Column(
+                            children: [
+                              // Основная информация -- basic information
+                              _formPreview(context, state),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget _formPreview(BuildContext context) {
+  Widget _formPreview(BuildContext context, CreateJobState state) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
@@ -86,7 +97,7 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
 
         children: [
           Text(
-            widget.speciality ?? '',
+            extra['speciality'] ?? '',
             style: const TextStyle(
               color: Colors.black,
               fontSize: 20,
@@ -96,11 +107,11 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
             ),
           ),
 
-          if (!(widget.salaryWithAgreement ?? false)) ...[
+          if (!(extra['salaryWithAgreement'] ?? false)) ...[
             const SizedBox(height: 12),
 
             Text(
-              widget.salary ?? "",
+              extra['salary'] ?? "",
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -114,7 +125,7 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
 
           SizedBox(
             child: Text(
-              widget.description ?? '',
+              extra['description'] ?? '',
               style: const TextStyle(
                 color: Color(0xFF596574),
                 fontSize: 16,
@@ -140,7 +151,7 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
                     height: 1.30,
                   ),
                 ),
-                contactPreview(widget.contactAddress),
+                contactPreview(extra['contactAddress']),
               ],
             ),
           ),
@@ -148,10 +159,20 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
           const SizedBox(height: 24),
 
           CustomButtonEmployee(
-            btnText: 'Далее',
-            onTap: () {
-              context.pushNamed(RouteName.homeEmploye);
-            },
+            btnText: state is CreateJobLoading ? 'Создание...' : 'Далее',
+            onTap: state is CreateJobLoading
+                ? null
+                : () {
+                    final params = CreateJobParams(
+                      title: extra['speciality'],
+                      description: extra['description'],
+                      salary: extra['salary'],
+                      salaryWithAgreement: extra['salaryWithAgreement'],
+                      contactsID: (extra['contactAddress'] as ContactEntity).contactsID ?? 0,
+                      link: extra['links'],
+                    );
+                    context.read<CreateJobCubit>().createJob(params);
+                  },
           ),
 
           const SizedBox(height: 24),

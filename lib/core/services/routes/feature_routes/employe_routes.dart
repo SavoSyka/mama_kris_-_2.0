@@ -46,23 +46,9 @@ final List<RouteBase> employeRoutes = [
     path: RouteName.createJobPageThree,
     name: RouteName.createJobPageThree,
     builder: (BuildContext context, GoRouterState state) {
-      // Receive data passed via extra
-      final extra = state.extra as Map<String, dynamic>? ?? {};
-
-      final salary = extra['salary'];
-      final speciality = extra['speciality'];
-      final description = extra['description'];
-      final salaryWithAgreement = extra['salaryWithAgreement'];
-      final contactAddress = extra['contactAddress'];
-      final link = extra['link'];
-
-      return CreateJobPageThree(
-        salary: salary,
-        speciality: speciality,
-        description: description,
-        salaryWithAgreement: salaryWithAgreement,
-        contactAddress: contactAddress,
-        link: link,
+      return BlocProvider(
+        create: (context) => sl<CreateJobCubit>(),
+        child: const CreateJobPageThree(),
       );
     },
   ),
