@@ -11,6 +11,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/emp/emp_auth/data/models/emp_user_profile_model.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/emp_user_contact.dart';
@@ -36,7 +37,7 @@ class CreateJobPageTwo extends StatefulWidget {
 }
 
 class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
-  final TextEditingController _contact = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _link = TextEditingController();
 
@@ -84,13 +85,15 @@ class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
   ContactEntity? selectedContact;
 
   Widget formData(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: AppTheme.cardDecoration,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
 
-        children: [
+          children: [
           GestureDetector(
             onTap: () async {
               final cont = await _openContactSheet(context);
@@ -135,30 +138,40 @@ class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
           CustomInputText(
             hintText: 'Текст',
             labelText: "Ссылка",
-            controller: TextEditingController(),
+            controller: _link,
+            validator: FormValidations.validateContactLink,
           ),
           const SizedBox(height: 16),
 
           CustomButtonEmployee(
             btnText: 'Далее',
             onTap: () {
-              context.pushNamed(
-                RouteName.createJobPageThree,
-                extra: {
-                  'salary': widget.salary,
-                  'speciality': widget.speciality,
-                  "description": widget.description,
-                  "salaryWithAgreement": widget.salaryWithAgreement,
-                  'contactAddress': selectedContact,
-                  'links': _link.text,
-                },
-              );
+              if (_formKey.currentState?.validate() ?? false) {
+                if (selectedContact == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Пожалуйста, выберите контакт.')),
+                  );
+                  return;
+                }
+                context.pushNamed(
+                  RouteName.createJobPageThree,
+                  extra: {
+                    'salary': widget.salary,
+                    'speciality': widget.speciality,
+                    "description": widget.description,
+                    "salaryWithAgreement": widget.salaryWithAgreement,
+                    'contactAddress': selectedContact,
+                    'links': _link.text,
+                  },
+                );
+              }
             },
           ),
 
           const SizedBox(height: 24),
         ],
       ),
+    ),
     );
   }
 

@@ -11,6 +11,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
 
 class CreateJobPageOne extends StatefulWidget {
@@ -21,26 +22,11 @@ class CreateJobPageOne extends StatefulWidget {
 }
 
 class _CreateJobPageOneState extends State<CreateJobPageOne> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final TextEditingController _speciality = TextEditingController();
   final TextEditingController _description = TextEditingController(
-    text: '''
 
-Шукаємо Senior Full-stack JavaScript розробника з досвідом у проєктуванні хайлод систем, який зможе очолити розробку нової навантаженої платформи для онлайн-маркетингу.
-Про команду: 
-Trackiffy - SaaS-платформа для керування трафіком. Ми розробляємо рішення, що допомагають медіабаінговим компаніям ...
-
-Шукаємо Senior Full-stack JavaScript розробника з досвідом у проєктуванні хайлод систем, який зможе очолити розробку нової навантаженої платформи для онлайн-маркетингу.
-Про команду: 
-Trackiffy - SaaS-платформа для керування трафіком. Ми розробляємо рішення, що допомагають медіабаінговим компаніям ...
-
-Шукаємо Senior Full-stack JavaScript розробника з досвідом у проєктуванні хайлод систем, який зможе очолити розробку нової навантаженої платформи для онлайн-маркетингу.
-Про команду: 
-Trackiffy - SaaS-платформа для керування трафіком. Ми розробляємо рішення, що допомагають медіабаінговим компаніям ...
-
-Шукаємо Senior Full-stack JavaScript розробника з досвідом у проєктуванні хайлод систем, який зможе очолити розробку нової навантаженої платформи для онлайн-маркетингу.
-Про команду: 
-Trackiffy - SaaS-платформа для керування трафіком. Ми розробляємо рішення, що допомагають медіабаінговим компаніям ...
-''',
   );
 
   final TextEditingController _salary = TextEditingController();
@@ -87,13 +73,15 @@ Trackiffy - SaaS-платформа для керування трафіком. 
   }
 
   Widget _formData(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: AppTheme.cardDecoration,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
 
-        children: [
+          children: [
           const Text(
             '',
             style: TextStyle(
@@ -110,6 +98,7 @@ Trackiffy - SaaS-платформа для керування трафіком. 
             hintText: 'Выбрать',
             labelText: "Кого ищете?",
             controller: _speciality,
+            validator: FormValidations.validateJobTitle,
           ),
           const SizedBox(height: 8),
 
@@ -119,6 +108,7 @@ Trackiffy - SaaS-платформа для керування трафіком. 
             controller: _description,
             minLines: 8,
             maxLines: 12,
+            validator: FormValidations.validateJobDescription,
           ),
           const SizedBox(height: 16),
 
@@ -128,6 +118,7 @@ Trackiffy - SaaS-платформа для керування трафіком. 
               labelText: "Оплата",
               controller: _salary,
               keyboardType: TextInputType.number,
+              validator: (value) => FormValidations.validateSalary(value, _salaryWithAgreement),
             ),
           const SizedBox(height: 16),
 
@@ -159,21 +150,24 @@ Trackiffy - SaaS-платформа для керування трафіком. 
           CustomButtonEmployee(
             btnText: 'Далее',
             onTap: () {
-              context.pushNamed(
-                RouteName.createJobPageTwo,
-                extra: {
-                  'salary': _salary.text,
-                  'speciality': _speciality.text,
-                  "description": _description.text,
-                  "salaryWithAgreement": _salaryWithAgreement,
-                },
-              );
+              if (_formKey.currentState?.validate() ?? false) {
+                context.pushNamed(
+                  RouteName.createJobPageTwo,
+                  extra: {
+                    'salary': _salary.text,
+                    'speciality': _speciality.text,
+                    "description": _description.text,
+                    "salaryWithAgreement": _salaryWithAgreement,
+                  },
+                );
+              }
             },
           ),
 
           const SizedBox(height: 24),
         ],
       ),
+    ),
     );
   }
 }

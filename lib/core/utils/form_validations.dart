@@ -148,4 +148,48 @@ class FormValidations {
     }
     return null;
   }
+
+  // ------------------- JOB CREATION -------------------
+  static String? validateJobTitle(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Название вакансии обязательно.';
+    }
+    if (value.trim().length < 3) {
+      return 'Название вакансии должно содержать не менее 3 символов.';
+    }
+    if (value.trim().length > 100) {
+      return 'Название вакансии не должно превышать 100 символов.';
+    }
+    return null;
+  }
+
+  static String? validateJobDescription(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Описание вакансии обязательно.';
+    }
+    if (value.trim().length < 10) {
+      return 'Описание вакансии должно содержать не менее 10 символов.';
+    }
+    if (value.trim().length > 2000) {
+      return 'Описание вакансии не должно превышать 2000 символов.';
+    }
+    return null;
+  }
+
+  static String? validateSalary(String? value, bool salaryWithAgreement) {
+    if (salaryWithAgreement) {
+      return null; // No validation needed if agreement is checked
+    }
+    if (value == null || value.trim().isEmpty) {
+      return 'Зарплата обязательна, если не выбрана "по договоренности".';
+    }
+    final salary = double.tryParse(value.trim());
+    if (salary == null) {
+      return 'Зарплата должна быть числом.';
+    }
+    if (salary <= 0) {
+      return 'Зарплата должна быть положительной.';
+    }
+    return null;
+  }
 }

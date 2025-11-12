@@ -10,14 +10,10 @@ class ResumeModel extends ResumeEntity {
 
   factory ResumeModel.fromJson(Map<String, dynamic> json) {
     return ResumeModel(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      role: json['role'] as String,
-      age: json['age'] as String,
+      id: json['userID'] as int, // Safe: API returns int
+      name: json['name'] as String? ?? 'Unknown', // Fallback if null
+      role: 'role', // TODO: Replace with actual field when available
+      age: json['age']?.toString() ?? '' , // Convert int/null to String?
     );
   }
-
-
-
-
 }

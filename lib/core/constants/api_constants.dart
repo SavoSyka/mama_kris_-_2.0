@@ -36,7 +36,7 @@ class ApiConstants {
   static const getContacts = 'contacts';
 
   // users
-  static getUsers(String userID) => "users/search/$userID";
+  static const getUsers = "users/search/profiles";
 
   static const getTariffs = "tariffs";
 

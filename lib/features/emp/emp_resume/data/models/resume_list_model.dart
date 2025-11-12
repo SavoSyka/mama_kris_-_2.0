@@ -9,15 +9,16 @@ class ResumeListModel extends ResumeList {
   });
 
   factory ResumeListModel.fromJson(Map<String, dynamic> json) {
-    final List<dynamic> usersJson = json['users'] as List<dynamic>;
+    final List<dynamic> usersJson = json['data'] as List<dynamic>;
     final List<ResumeModel> resume = usersJson
         .map((userJson) => ResumeModel.fromJson(userJson as Map<String, dynamic>))
         .toList();
 
     return ResumeListModel(
       resume: resume,
-      totalPages: json['totalPages'] as int,
-      currentPage: json['currentPage'] as int,
+      totalPages: json['totalPages']  != null ? json['totalPages']  as int: 0 ,
+      currentPage: json['currentPage']  != null ? json['currentPage']  as int: 0 ,
+
     );
   }
 

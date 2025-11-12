@@ -28,9 +28,7 @@ class ResumeRemoteDataSourceImpl implements ResumeRemoteDataSource {
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
       final response = await dio.get(
-        ApiConstants.getUsers(
-          userID,
-        ), // Assuming this endpoint exists, similar to getJobs
+        ApiConstants.getUsers,
         queryParameters: queryParameters,
       );
 
