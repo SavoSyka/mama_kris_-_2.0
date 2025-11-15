@@ -3,7 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/lifecycle/lifecycle_manager.dart';
 import 'package:mama_kris/core/services/routes/router.dart';
@@ -32,7 +34,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+  await initializeDateFormatting('ru_RU', null);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // Force status bar icons to dark
   SystemChrome.setSystemUIOverlayStyle(
@@ -93,9 +95,6 @@ void main() async {
         BlocProvider(create: (_) => sl<SubscriptionBloc>()),
         BlocProvider(create: (context) => sl<EmpUserBloc>()),
         BlocProvider(create: (context) => sl<CreateJobCubit>()),
-
-
-
       ],
       child: const MyApp(),
     ),
@@ -117,6 +116,21 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             routerConfig: AppRouter.router,
             theme: AppTheme.lightTheme,
+
+            supportedLocales: const [Locale('en', 'US'), Locale('ru', 'RU')],
+
+            localizationsDelegates: const [
+              // Material localization
+              GlobalMaterialLocalizations.delegate,
+
+              // Widgets localization
+              GlobalWidgetsLocalizations.delegate,
+
+              // Cupertino localization (REQUIRED for CupertinoDatePicker)
+              GlobalCupertinoLocalizations.delegate,
+            ],
+
+            locale: const Locale('ru', 'RU'),
             // home: const AppInitializer(),
           ),
         );

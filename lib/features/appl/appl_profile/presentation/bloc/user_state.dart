@@ -23,3 +23,13 @@ class UserError extends UserState {
 
   const UserError(this.message);
 }
+
+class UserUpdating extends UserState {
+  const UserUpdating();
+}
+
+class UserUpdated extends UserState {
+  final UserProfileEntity user;
+
+  const UserUpdated(this.user);
+}

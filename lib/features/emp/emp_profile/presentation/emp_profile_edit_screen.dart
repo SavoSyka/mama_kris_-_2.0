@@ -16,6 +16,9 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/widget/emp_view_basic_information.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_delete_icon_dialog.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_logout_dialog.dart';
 
 class EmpProfileEditScreen extends StatefulWidget {
   const EmpProfileEditScreen({super.key});
@@ -48,7 +51,7 @@ class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
                       child: Column(
                         children: [
                           // Основная информация -- basic information
-                          _basicInformation(),
+                          EmpViewBasicInformation(),
                           SizedBox(height: 20),
 
                           // Контакты -- Contacts
@@ -72,70 +75,6 @@ class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _basicInformation extends StatelessWidget {
-  const _basicInformation();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-          const Text(
-            'Основная информация',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: 'Гордова',
-            labelText: "Фамилия",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: 'Кристина',
-            labelText: "Имя",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: '23.08.1999',
-            labelText: "Дата рождения",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: 'MamaKris@gmail.com',
-            labelText: "Почта",
-            controller: TextEditingController(),
-            hasGreyBg: true,
-            readOnly: true,
-          ),
-          CustomInputText(
-            hintText: '+79997773322',
-            labelText: "Номер телефона",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 24),
-        ],
       ),
     );
   }
@@ -186,7 +125,7 @@ class ContactsWidget extends StatelessWidget {
             ),
 
             const SizedBox(height: 12),
-            _buildEmptyState(context, showText:  false),
+            _buildEmptyState(context, showText: false),
           ],
         ],
       ),
@@ -196,18 +135,18 @@ class ContactsWidget extends StatelessWidget {
   Widget _buildEmptyState(BuildContext context, {bool showText = true}) {
     return Column(
       children: [
-        if(showText)...[
-        const SizedBox(height: 8),
-        const Text(
-          "У вас пока нет контактов.\nСоздайте новый контакт, чтобы добавить способы связи.",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: CupertinoColors.systemGrey,
-            fontSize: 14,
-            height: 1.4,
+        if (showText) ...[
+          const SizedBox(height: 8),
+          const Text(
+            "У вас пока нет контактов.\nСоздайте новый контакт, чтобы добавить способы связи.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: CupertinoColors.systemGrey,
+              fontSize: 14,
+              height: 1.4,
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
         ],
         ElevatedButton.icon(
           onPressed: () async {
@@ -426,9 +365,10 @@ class _AccountsState extends State<_accounts> {
           const SizedBox(height: 8),
 
           _updateButtons(
-            text: "Управление подпиской",
+            text:
+                "Manage Subscription", //"Управление подпиской", // manage subscription
             onTap: () {
-              context.pushNamed(RouteName.welcomePage);
+              context.pushNamed(RouteName.subscription);
             },
           ),
 
@@ -438,15 +378,22 @@ class _AccountsState extends State<_accounts> {
             error: true,
             errorIcon: MediaRes.logoutIcon,
             onTap: () {
-              context.pushNamed(RouteName.welcomePage);
+              showLogoutDialog(context, () {
+                print("Account deleted");
+              });
             },
           ),
           const SizedBox(height: 16),
           _updateButtons(
             text: "Управление подпиской",
             error: true,
+
             onTap: () {
-              context.pushNamed(RouteName.welcomePage);
+              showDeleteAccountDialog(context, () {
+                print("Account deleted");
+                context.pushNamed(RouteName.welcomePage);
+              });
+              // context.pushNamed(RouteName.welcomePage);
             },
           ),
 

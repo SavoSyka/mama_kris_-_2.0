@@ -23,3 +23,13 @@ class EmpUserError extends EmpUserState {
 
   const EmpUserError(this.message);
 }
+
+class EmpUserUpdating extends EmpUserState {
+  const EmpUserUpdating();
+}
+
+class EmpUserUpdated extends EmpUserState {
+  final EmpUserProfileEntity user;
+
+  const EmpUserUpdated(this.user);
+}

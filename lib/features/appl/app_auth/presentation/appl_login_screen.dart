@@ -27,9 +27,9 @@ class ApplLoginScreen extends StatefulWidget {
 }
 
 class _ApplLoginScreenState extends State<ApplLoginScreen> {
-  final emailController = TextEditingController(text: 'emproobbi@yopmail.com');
+  // final emailController = TextEditingController(text: 'emproobbi@yopmail.com');
 
-  // final emailController = TextEditingController(text: 'roobbi@yopmail.com');
+  final emailController = TextEditingController(text: 'roobbi@yopmail.com');
   final passwordController = TextEditingController(text: '123321123');
   final _formKey = GlobalKey<FormState>();
 

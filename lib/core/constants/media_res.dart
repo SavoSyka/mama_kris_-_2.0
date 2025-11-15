@@ -65,4 +65,6 @@ class MediaRes {
 
   static const empUnmarkedBox = '$_baseIcons/emp_unmarked_box.png';
   static const empMarkedBox = '$_baseIcons/emp_marked_box.png';
+  static const calendarIcon = '$_baseIcons/calendar.png';
+
 }

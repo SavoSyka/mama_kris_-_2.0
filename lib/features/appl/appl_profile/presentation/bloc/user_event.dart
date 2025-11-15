@@ -8,3 +8,8 @@ class GetUserProfileEvent extends UserEvent {
   final UserProfileEntity user;
   const GetUserProfileEvent({required this.user});
 }
+
+class UpdateUserProfileEvent extends UserEvent {
+  final UserProfileEntity updatedUser;
+  const UpdateUserProfileEvent({required this.updatedUser});
+}

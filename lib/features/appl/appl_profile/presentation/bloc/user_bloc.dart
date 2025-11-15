@@ -14,6 +14,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       : _getUserProfileUseCase = getUserProfileUseCase,
         super(const UserInitial()) {
     on<GetUserProfileEvent>(_onGetUserProfile);
+    on<UpdateUserProfileEvent>(_onUpdateUserProfile);
   }
 
   Future<void> _onGetUserProfile(
@@ -28,5 +29,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       (failure) => emit(UserError(failure.message ?? 'Something went wrong')),
       (user) => emit(UserLoaded(user)),
     );
+  }
+
+  Future<void> _onUpdateUserProfile(
+    UpdateUserProfileEvent event,
+    Emitter<UserState> emit,
+  ) async {
+    emit(const UserUpdating());
+    // Simulate API call
+    await Future.delayed(const Duration(seconds: 1));
+    emit(UserUpdated(event.updatedUser));
   }
 }

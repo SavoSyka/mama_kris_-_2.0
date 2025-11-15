@@ -192,4 +192,98 @@ class FormValidations {
     }
     return null;
   }
+
+  static String? validateDateOfBirth(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Дата рождения обязательна.';
+    }
+    final date = DateTime.tryParse(value);
+    if (date == null) {
+      return 'Введите корректную дату.';
+    }
+    final now = DateTime.now();
+    if (date.isAfter(now)) {
+      return 'Дата рождения не может быть в будущем.';
+    }
+    final age = now.year - date.year - (now.month < date.month || (now.month == date.month && now.day < date.day) ? 1 : 0);
+    if (age < 18) {
+      return 'Возраст должен быть не менее 18 лет.';
+    }
+    return null;
+  }
+
+  static String? validateBio(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional
+    }
+    if (value.length > 500) {
+      return 'Био не должно превышать 500 символов.';
+    }
+    return null;
+  }
+
+  static String? validatePosition(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Должность обязательна.';
+    }
+    if (value.trim().length < 2) {
+      return 'Должность должна содержать не менее 2 символов.';
+    }
+    return null;
+  }
+
+  static String? validateCompany(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Компания обязательна.';
+    }
+    if (value.trim().length < 2) {
+      return 'Название компании должно содержать не менее 2 символов.';
+    }
+    return null;
+  }
+
+  static String? validateWorkStartDate(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Дата начала обязательна.';
+    }
+    final date = DateTime.tryParse(value);
+    if (date == null) {
+      return 'Введите корректную дату начала.';
+    }
+    if (date.isAfter(DateTime.now())) {
+      return 'Дата начала не может быть в будущем.';
+    }
+    return null;
+  }
+
+  static String? validateWorkEndDate(String? value, String? startDate, bool isPresent) {
+    if (isPresent) return null;
+    if (value == null || value.trim().isEmpty) {
+      return 'Дата окончания обязательна, если не выбрано "По настоящее время".';
+    }
+    final endDate = DateTime.tryParse(value);
+    if (endDate == null) {
+      return 'Введите корректную дату окончания.';
+    }
+    if (startDate != null) {
+      final start = DateTime.tryParse(startDate);
+      if (start != null && endDate.isBefore(start)) {
+        return 'Дата окончания не может быть раньше даты начала.';
+      }
+    }
+    if (endDate.isAfter(DateTime.now())) {
+      return 'Дата окончания не может быть в будущем.';
+    }
+    return null;
+  }
+
+  static String? validateWorkDescription(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional
+    }
+    if (value.length > 1000) {
+      return 'Описание не должно превышать 1000 символов.';
+    }
+    return null;
+  }
 }
