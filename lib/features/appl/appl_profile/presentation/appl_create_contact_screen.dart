@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
@@ -9,18 +10,20 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 
-class CreateEditContactPage extends StatefulWidget {
-  final ContactEntity? contact; // if null, create new
+class ApplCreateContactScreen extends StatefulWidget {
+  final ApplContactEntity? contact; // if null, create new
 
-  const CreateEditContactPage({super.key, this.contact});
+  const ApplCreateContactScreen({super.key, this.contact});
 
   @override
-  State<CreateEditContactPage> createState() => _CreateEditContactPageState();
+  State<ApplCreateContactScreen> createState() =>
+      _ApplCreateContactScreenState();
 }
 
-class _CreateEditContactPageState extends State<CreateEditContactPage> {
+class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
   late TextEditingController _nameController;
   late TextEditingController _telegramController;
   late TextEditingController _whatsappController;
@@ -55,7 +58,7 @@ class _CreateEditContactPageState extends State<CreateEditContactPage> {
   }
 
   void _saveContact() {
-    final newContact = ContactEntity(
+    final newContact = ApplContactEntity(
       name: _nameController.text.trim(),
       telegram: _telegramController.text.trim(),
       whatsapp: _whatsappController.text.trim(),
@@ -120,9 +123,9 @@ class _CreateEditContactPageState extends State<CreateEditContactPage> {
 
             const SizedBox(height: 32),
 
-            CustomButtonEmployee(btnText: "Save Contact", onTap: _saveContact),
+            CustomButtonApplicant(btnText: "Save Contact", onTap: _saveContact),
 
-            const SizedBox(height: 16),
+            if (widget.contact != null)...[ const SizedBox(height: 16),
             _updateButtons(
               text: "Управление подпиской",
               error: true,
@@ -132,7 +135,7 @@ class _CreateEditContactPageState extends State<CreateEditContactPage> {
 
                 // context.pushNamed(RouteName.welcomePage);
               },
-            ),
+            ),],
 
             const SizedBox(height: 32),
           ],

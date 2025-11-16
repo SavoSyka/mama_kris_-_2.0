@@ -22,12 +22,24 @@ class UserProfileModel extends UserProfileEntity {
     super.about,
     super.workExperience,
     super.age,
+    super.contacts,
+    super.defaultContact,
   });
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) {
     final workExperience = json['workExperience'] != null
         ? json['workExperience'] as List
         : [];
+
+           final contactData = json['contacts'] != null
+        ? json['contacts'] as List
+        : [];
+
+
+        final cont =
+         contactData
+        .map((experience) => ApplContactModel.fromJson(experience))
+        .toList();
 
     final wExp = workExperience
         .map((experience) => WorkExperienceModel.fromJson(experience))
@@ -64,6 +76,7 @@ class UserProfileModel extends UserProfileEntity {
       about: json['about'],
       workExperience: wExp,
       age: json['age'],
+      contacts:  cont
     );
   }
 }
@@ -91,5 +104,50 @@ class WorkExperienceModel extends ApplWorkExperienceEntity {
       endDate: json['endDate'],
       isPresent: json['isPresent'] ?? false,
     );
+  }
+}
+
+
+
+
+class ApplContactModel extends ApplContactEntity {
+  const ApplContactModel({
+    super.contactsID,
+    super.name,
+    super.telegram,
+    super.email,
+    super.phone,
+    super.whatsapp,
+    super.vk,
+    super.link,
+    super.userID,
+  });
+
+  factory ApplContactModel.fromJson(Map<String, dynamic> json) {
+    return ApplContactModel(
+      contactsID: json['contactsID'] as int?,
+      name: json['name'] as String?,
+      telegram: json['telegram'] as String?,
+      email: json['email'] as String?,
+      phone: json['phone'] as String?,
+      whatsapp: json['whatsapp'] as String?,
+      vk: json['vk'] as String?,
+      link: json['link'] as String?,
+      userID: json['userID'] as int?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'contactsID': contactsID,
+      'name': name,
+      'telegram': telegram,
+      'email': email,
+      'phone': phone,
+      'whatsapp': whatsapp,
+      'vk': vk,
+      'link': link,
+      'userID': userID,
+    };
   }
 }

@@ -11,8 +11,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final GetUserProfileUseCase _getUserProfileUseCase;
 
   UserBloc({required GetUserProfileUseCase getUserProfileUseCase})
-      : _getUserProfileUseCase = getUserProfileUseCase,
-        super(const UserInitial()) {
+    : _getUserProfileUseCase = getUserProfileUseCase,
+      super(const UserInitial()) {
     on<GetUserProfileEvent>(_onGetUserProfile);
     on<UpdateUserProfileEvent>(_onUpdateUserProfile);
   }
@@ -21,14 +21,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     GetUserProfileEvent event,
     Emitter<UserState> emit,
   ) async {
-    emit(const UserLoading());
-
-    final result = await _getUserProfileUseCase();
-
-    result.fold(
-      (failure) => emit(UserError(failure.message ?? 'Something went wrong')),
-      (user) => emit(UserLoaded(user)),
-    );
+    emit(UserLoaded(event.user));
   }
 
   Future<void> _onUpdateUserProfile(

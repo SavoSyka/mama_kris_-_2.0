@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
@@ -9,8 +10,10 @@ import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/widget/build_error_card.dart';
 
 class ApplProfileScreen extends StatefulWidget {
   const ApplProfileScreen({super.key});
@@ -78,30 +81,7 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
                       children: [Expanded(child: IPhoneLoader(height: 200))],
                     );
                   } else if (state is UserError) {
-                    return Expanded(
-                      child: Container(
-                        color: Colors.blue,
-
-                        child: Container(
-                          color: Colors.red,
-                          height: double.infinity,
-                          child: SingleChildScrollView(
-                            child: Center(
-                              child: CustomDefaultPadding(
-                                child: Column(
-                                  children: [
-                                    CustomErrorRetry(
-                                      errorMessage: state.message,
-                                      onTap: () {},
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
+                    return BuildErrorCard(message: state.message);
                   } else if (state is UserLoaded) {
                     final user = state.user;
                     return Expanded(
@@ -115,17 +95,19 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
                                 birthDate: user.birthDate,
                               ),
                               const SizedBox(height: 20),
-                      
+
                               // Контакты -- Contacts
                               _Contacts(email: user.email, phone: user.phone),
                               const SizedBox(height: 20),
-                      
+
                               /// Специализация -- Speciliasaton
-                              const _Specalisations(),
+                              _Specalisations(
+                                specializations: user.specializations,
+                              ),
                               const SizedBox(height: 20),
-                      
+
                               /// Опыт работы-- Experience
-                              const _Experiences(),
+                              _Experiences(experience: user.workExperience),
                             ],
                           ),
                         ),
@@ -290,10 +272,17 @@ class _Contacts extends StatelessWidget {
 }
 
 class _Specalisations extends StatelessWidget {
-  const _Specalisations();
+  const _Specalisations({this.specializations});
+
+  final List<String>? specializations;
 
   @override
   Widget build(BuildContext context) {
+    // If empty or null → return nothing
+    if (specializations == null || specializations!.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
@@ -315,22 +304,13 @@ class _Specalisations extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              Row(
+              // Dynamic items with wrap
+              Wrap(
                 spacing: 8,
-                children: [
-                  _specialisationItem("Дизайнер"),
-                  _specialisationItem("Маркетолог"),
-                  _specialisationItem("Ассистент"),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-              Row(
-                spacing: 8,
-                children: [
-                  _specialisationItem("Видеомонтаж"),
-                  _specialisationItem("Контекстная реклама"),
-                ],
+                runSpacing: 12,
+                children: specializations!
+                    .map((item) => _specialisationItem(item))
+                    .toList(),
               ),
             ],
           ),
@@ -349,136 +329,138 @@ class _Specalisations extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 6,
-        children: [
-          Text(
-            text,
-            style: const TextStyle(
-              color: Color(0xFF2E7866),
-              fontSize: 12,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
-            ),
-          ),
-        ],
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Color(0xFF2E7866),
+          fontSize: 12,
+          fontFamily: 'Manrope',
+          fontWeight: FontWeight.w600,
+          height: 1.30,
+        ),
       ),
     );
   }
 }
 
 class _Experiences extends StatelessWidget {
-  const _Experiences();
+  final List<ApplWorkExperienceEntity>? experience;
+  const _Experiences({this.experience});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Опыт работы',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
+    if (experience == null) {
+      return const SizedBox.shrink();
+    } else {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: AppTheme.cardDecoration,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Опыт работы',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w600,
+                height: 1.30,
+              ),
             ),
-          ),
 
-          const SizedBox(height: 24),
-          _expereinceItems(
-            title: "Creative Agency «PixelCraft»",
-            position: "Дизайнер",
-            datePeriod: "12.09.2023 - 11.12.2025",
-          ),
-          const SizedBox(height: 12),
+            const SizedBox(height: 24),
 
-          _expereinceItems(
-            title: "Creative Agency «PixelCraft»",
-            position: "Дизайнер",
-            datePeriod: "12.09.2023 - 11.12.2025",
-          ),
-          const SizedBox(height: 12),
-
-          _expereinceItems(
-            title: "Creative Agency «PixelCraft»",
-            position: "Дизайнер",
-            datePeriod: "12.09.2023 - 11.12.2025",
-          ),
-          const SizedBox(height: 12),
-
-          _expereinceItems(
-            title: "Creative Agency «PixelCraft»",
-            position: "Дизайнер",
-            datePeriod: "12.09.2023 - 11.12.2025",
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _expereinceItems({
-    required String title,
-    required String position,
-    required String datePeriod,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 1, color: Color(0x7F2E7866)),
-          borderRadius: BorderRadius.circular(10),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: experience!.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final work = experience![index];
+                return _buildExperienceCard(context, work);
+              },
+            ),
+          ],
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            position,
-            style: const TextStyle(
-              color: AppPalette.primaryColor,
-              fontSize: 12,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
-            ),
-          ),
-          const SizedBox(height: 4),
+      );
+    }
+  }
 
-          Text(
-            datePeriod,
-            style: const TextStyle(
-              color: Color(0xFF596574),
-              fontSize: 12,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w500,
-              height: 1.30,
-            ),
-          ),
-        ],
+  Widget _buildExperienceCard(
+    BuildContext context,
+    ApplWorkExperienceEntity exp,
+  ) {
+    return GestureDetector(
+      onTap: () async {
+        HapticFeedback.lightImpact();
+        // TODO: Navigate to edit page
+        // await Navigator.push(...);
+      },
+      child: _expereinceItems(
+        title: exp.company ?? "Компания не указана",
+        position: exp.position ?? "Должность не указана",
+        datePeriod: exp.isPresent == true
+            ? "${exp.startDate ?? ''} — наст. время"
+            : "${exp.startDate ?? ''} — ${exp.endDate ?? ''}",
       ),
     );
   }
+}
+
+Widget _expereinceItems({
+  required String title,
+  required String position,
+  required String datePeriod,
+}) {
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    decoration: ShapeDecoration(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(width: 1, color: Color(0x7F2E7866)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontFamily: 'Manrope',
+            fontWeight: FontWeight.w600,
+            height: 1.30,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          position,
+          style: const TextStyle(
+            color: AppPalette.primaryColor,
+            fontSize: 12,
+            fontFamily: 'Manrope',
+            fontWeight: FontWeight.w600,
+            height: 1.30,
+          ),
+        ),
+        const SizedBox(height: 4),
+
+        Text(
+          datePeriod,
+          style: const TextStyle(
+            color: Color(0xFF596574),
+            fontSize: 12,
+            fontFamily: 'Manrope',
+            fontWeight: FontWeight.w500,
+            height: 1.30,
+          ),
+        ),
+      ],
+    ),
+  );
 }

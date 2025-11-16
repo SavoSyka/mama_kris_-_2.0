@@ -20,6 +20,9 @@ class UserProfileEntity {
   final List<ApplWorkExperienceEntity>? workExperience;
   final dynamic age;
 
+  final List<ApplContactEntity>? contacts;
+  final ApplContactEntity? defaultContact;
+
   const UserProfileEntity({
     this.userID,
     this.email,
@@ -39,6 +42,8 @@ class UserProfileEntity {
     this.about,
     this.workExperience,
     this.age,
+    this.contacts,
+    this.defaultContact,
   });
 }
 
@@ -99,4 +104,41 @@ class Eduaction extends Equatable {
   @override
   // TODO: implement props
   List<Object?> get props => [endDate, program, startDate, organization];
+}
+
+class ApplContactEntity extends Equatable {
+  final int? contactsID;
+  final String? name;
+  final String? telegram;
+  final String? email;
+  final String? phone;
+  final String? whatsapp;
+  final String? vk;
+  final String? link;
+  final int? userID;
+
+  const ApplContactEntity({
+    this.contactsID,
+    this.name,
+    this.telegram,
+    this.email,
+    this.phone,
+    this.whatsapp,
+    this.vk,
+    this.link,
+    this.userID,
+  });
+
+  @override
+  List<Object?> get props => [
+    contactsID,
+    name,
+    telegram,
+    email,
+    phone,
+    whatsapp,
+    vk,
+    link,
+    userID,
+  ];
 }

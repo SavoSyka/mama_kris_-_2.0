@@ -305,35 +305,31 @@ class _WorkExperienceFormState extends State<_WorkExperienceForm> {
             validator: FormValidations.validateWorkStartDate,
           ),
           const SizedBox(height: 12),
-          Row(
+             if(!widget.data.isPresent)
+             CustomDateInput(
+               controller: widget.data.endDateController,
+               label: 'Дата окончания',
+               validator: (value) => FormValidations.validateWorkEndDate(
+                 value,
+                 widget.data.startDateController.text,
+                 widget.data.isPresent,
+               ),
+             ),
+          const SizedBox(height: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: CustomDateInput(
-                  controller: widget.data.endDateController,
-                  label: 'Дата окончания',
-                  validator: (value) => FormValidations.validateWorkEndDate(
-                    value,
-                    widget.data.startDateController.text,
-                    widget.data.isPresent,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                children: [
-                  const Text('По настоящее время'),
-                  Checkbox(
-                    value: widget.data.isPresent,
-                    onChanged: (value) {
-                      setState(() {
-                        widget.data.isPresent = value ?? false;
-                        if (widget.data.isPresent) {
-                          widget.data.endDateController.clear();
-                        }
-                      });
-                    },
-                  ),
-                ],
+              const Text('По настоящее время'),
+              Checkbox(
+                value: widget.data.isPresent,
+                onChanged: (value) {
+                  setState(() {
+                    widget.data.isPresent = value ?? false;
+                    if (widget.data.isPresent) {
+                      widget.data.endDateController.clear();
+                    }
+                  });
+                },
               ),
             ],
           ),

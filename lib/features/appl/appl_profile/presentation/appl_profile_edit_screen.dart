@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
@@ -11,6 +12,12 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_basic_info.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_work_experience.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_contact_widget.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_work_experience_widget.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_delete_icon_dialog.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_logout_dialog.dart';
 
 class ApplProfileEditScreen extends StatefulWidget {
   const ApplProfileEditScreen({super.key});
@@ -46,7 +53,10 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                           const SizedBox(height: 20),
 
                           // Контакты -- Contacts
-                          const _Contacts(),
+                          const ApplContactWidget(),
+                          const SizedBox(height: 20),
+
+                          const ApplWorkExperienceWidget(),
                           const SizedBox(height: 20),
 
                           /// Специализация -- Speciliasaton
@@ -104,20 +114,18 @@ class _basicInformation extends StatelessWidget {
             hintText: 'Гордова',
             labelText: "Фамилия",
             controller: TextEditingController(),
+            readOnly: true,
+
           ),
           const SizedBox(height: 8),
 
-          CustomPhonePicker(
-            initialPhoneNumber: '+251912345678',
-            defaultCountryCode: 'ET',
-            onChanged: (fullNumber) {
-              print('Phone changed: $fullNumber');
-            },
-          ),
+      
           CustomInputText(
             hintText: 'Кристина',
             labelText: "Имя",
             controller: TextEditingController(),
+            readOnly: true,
+
           ),
           const SizedBox(height: 8),
 
@@ -125,6 +133,8 @@ class _basicInformation extends StatelessWidget {
             hintText: '23.08.1999',
             labelText: "Дата рождения",
             controller: TextEditingController(),
+            readOnly: true,
+
           ),
           const SizedBox(height: 8),
 
@@ -132,12 +142,40 @@ class _basicInformation extends StatelessWidget {
             hintText: 'MamaKris@gmail.com',
             labelText: "Почта",
             controller: TextEditingController(),
+            readOnly: true,
           ),
-          CustomInputText(
-            hintText: '+79997773322',
-            labelText: "Номер телефона",
-            controller: TextEditingController(),
+
+          const SizedBox(height: 24),
+
+
+              ElevatedButton.icon(
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const ApplProfileEditBasicInfo(),
+              ),
+            );
+          },
+          icon: const Icon(CupertinoIcons.pen, color: Colors.white, size: 18),
+          label: const Text(
+            "Добавить опыт работы",
+            style: TextStyle(fontSize: 15, color: Colors.white),
           ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppPalette.primaryColor,
+            minimumSize: const Size(double.infinity, 48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+    
+          // CustomInputText(
+          //   hintText: '+79997773322',
+          //   labelText: "Номер телефона",
+          //   controller: TextEditingController(),
+          // ),
           const SizedBox(height: 24),
         ],
       ),
@@ -217,7 +255,7 @@ class _accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<_accounts> {
-  bool _acceptOrders =
+  final bool _acceptOrders =
       false; // Default to false, can be loaded from preferences or API
 
   @override
@@ -239,54 +277,68 @@ class _AccountsState extends State<_accounts> {
               height: 1.30,
             ),
           ),
-          const SizedBox(height: 8),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              const Text(
-                'Принимать заказы',
-                style: TextStyle(
-                  color: Color(0xFF596574),
-                  fontSize: 16,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w500,
-                  height: 1.30,
-                ),
-              ),
-              const Spacer(),
-              Switch(
-                value: _acceptOrders,
-                onChanged: (bool value) {
-                  setState(() {
-                    _acceptOrders = value;
-                  });
-                  // TODO: Save the preference to backend or local storage
-                },
-                activeThumbColor: AppPalette.primaryColor,
-              ),
-            ],
+
+          // Row(
+          //   children: [
+          //     const Text(
+          //       'Принимать заказы',
+          //       style: TextStyle(
+          //         color: Color(0xFF596574),
+          //         fontSize: 16,
+          //         fontFamily: 'Manrope',
+          //         fontWeight: FontWeight.w500,
+          //         height: 1.30,
+          //       ),
+          //     ),
+          //     const Spacer(),
+          //     Switch(
+          //       value: _acceptOrders,
+          //       onChanged: (bool value) {
+          //         setState(() {
+          //           _acceptOrders = value;
+          //         });
+          //         // TODO: Save the preference to backend or local storage
+          //       },
+          //       activeThumbColor: AppPalette.primaryColor,
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(height: 16),
+          _updateButtons(
+            text:
+                "Manage Subscription", //"Управление подпиской", // manage subscription
+            onTap: () {
+              context.pushNamed(RouteName.subscription);
+            },
           ),
           const SizedBox(height: 16),
 
           _updateButtons(
-            text: "Управление подпиской",
-
+            text: "Выйти из аккаунта",
+            error: true,
+            errorIcon: MediaRes.logoutIcon,
             onTap: () {
-              context.goNamed(RouteName.welcomePage);
+              showLogoutDialog(context, () {
+                print("Account logout");
+              });
             },
           ),
-
-          // delete
           const SizedBox(height: 16),
           _updateButtons(
             text: "Управление подпиской",
             error: true,
 
             onTap: () {
-              context.goNamed(RouteName.welcomePage);
+              showDeleteAccountDialog(context, () {
+                print("Account deleted");
+                context.pushNamed(RouteName.welcomePage);
+              });
+              // context.pushNamed(RouteName.welcomePage);
             },
           ),
 
+          // delete
           const SizedBox(height: 24),
         ],
       ),
@@ -299,9 +351,11 @@ class _updateButtons extends StatelessWidget {
     this.text = 'Добавить контакт',
     this.error = false,
     this.onTap,
+    this.errorIcon,
   });
   final String text;
   final bool error;
+  final String? errorIcon;
 
   final VoidCallback? onTap;
 
@@ -347,9 +401,11 @@ class _updateButtons extends StatelessWidget {
                 height: 1.30,
               ),
             ),
-
             if (error)
-              const CustomImageView(imagePath: MediaRes.deleteIcon, width: 24),
+              CustomImageView(
+                imagePath: errorIcon ?? MediaRes.deleteIcon,
+                width: 24,
+              ),
           ],
         ),
       ),

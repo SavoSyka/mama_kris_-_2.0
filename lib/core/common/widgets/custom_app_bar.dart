@@ -35,11 +35,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: alignTitleToEnd
           ? Row(
               children: [
-                const Spacer(), // Push title to the end
-                Text(
-                  title,
-                  textAlign: TextAlign.end,
-                  style: const TextStyle(color: Colors.black),
+                // const Spacer(), // Push title to the end
+                Expanded(
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.end,
+                    style: const TextStyle(color: Colors.black),
+                    softWrap: true,
+                  ),
                 ),
               ],
             )
