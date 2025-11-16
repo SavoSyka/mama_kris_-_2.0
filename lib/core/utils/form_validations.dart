@@ -252,13 +252,7 @@ class FormValidations {
     if (value == null || value.trim().isEmpty) {
       return 'Дата начала обязательна.';
     }
-    final date = DateTime.tryParse(value);
-    if (date == null) {
-      return 'Введите корректную дату начала.';
-    }
-    if (date.isAfter(DateTime.now())) {
-      return 'Дата начала не может быть в будущем.';
-    }
+
     return null;
   }
 

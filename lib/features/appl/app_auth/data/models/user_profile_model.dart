@@ -31,13 +31,11 @@ class UserProfileModel extends UserProfileEntity {
         ? json['workExperience'] as List
         : [];
 
-           final contactData = json['contacts'] != null
+    final contactData = json['contacts'] != null
         ? json['contacts'] as List
         : [];
 
-
-        final cont =
-         contactData
+    final cont = contactData
         .map((experience) => ApplContactModel.fromJson(experience))
         .toList();
 
@@ -76,7 +74,7 @@ class UserProfileModel extends UserProfileEntity {
       about: json['about'],
       workExperience: wExp,
       age: json['age'],
-      contacts:  cont
+      contacts: cont,
     );
   }
 }
@@ -106,9 +104,7 @@ class WorkExperienceModel extends ApplWorkExperienceEntity {
     );
   }
 
-
-
-    factory WorkExperienceModel.fromEntity(ApplWorkExperienceEntity entity) {
+  factory WorkExperienceModel.fromEntity(ApplWorkExperienceEntity entity) {
     return WorkExperienceModel(
       position: entity.position,
       company: entity.company,
@@ -119,10 +115,19 @@ class WorkExperienceModel extends ApplWorkExperienceEntity {
       isPresent: entity.isPresent,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "position": position,
+      "company": company,
+      "location": location,
+      "description": description,
+      "startDate": startDate,
+      "endDate": endDate,
+      "isPresent": isPresent,
+    };
+  }
 }
-
-
-
 
 class ApplContactModel extends ApplContactEntity {
   const ApplContactModel({

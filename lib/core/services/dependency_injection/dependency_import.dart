@@ -28,6 +28,8 @@ import 'package:mama_kris/features/appl/appl_profile/data/repository_impl/user_r
 import 'package:mama_kris/features/appl/appl_profile/domain/repository/user_repository.dart';
 import 'package:mama_kris/features/appl/appl_profile/domain/usecase/get_user_data.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_user_account_usecase.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_work_experience_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/data/data_sources/emp_auth_remote_data_source.dart';
 import 'package:mama_kris/features/emp/emp_auth/data/data_sources/emp_auth_remote_data_source_impl.dart';

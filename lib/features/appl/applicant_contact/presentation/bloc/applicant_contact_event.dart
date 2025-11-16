@@ -22,10 +22,7 @@ class UpdateApplicantContactEvent extends ApplicantContactEvent {
   final String id;
   final ApplicantContact contact;
 
-  const UpdateApplicantContactEvent({
-    required this.id,
-    required this.contact,
-  });
+  const UpdateApplicantContactEvent({required this.id, required this.contact});
 }
 
 /// Event to delete an applicant contact by ID.
@@ -33,4 +30,17 @@ class DeleteApplicantContactEvent extends ApplicantContactEvent {
   final String id;
 
   const DeleteApplicantContactEvent({required this.id});
+}
+
+class UpdateApplicantExperience extends ApplicantContactEvent {
+  final List<ApplWorkExperienceEntity> experience;
+
+  const UpdateApplicantExperience({required this.experience});
+}
+
+
+
+class DeleteUserAccountEvent extends ApplicantContactEvent {
+
+  const DeleteUserAccountEvent();
 }

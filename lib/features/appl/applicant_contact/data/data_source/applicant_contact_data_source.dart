@@ -25,4 +25,7 @@ abstract class ApplicantContactDataSource {
   Future<bool> updateExperience(
     List<WorkExperienceModel> experience,
   );
+
+  Future<bool> deleteUserAccount();
+
 }

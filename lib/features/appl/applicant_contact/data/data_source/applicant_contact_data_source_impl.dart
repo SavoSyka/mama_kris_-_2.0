@@ -138,12 +138,40 @@ class ApplicantContactDataSourceImpl implements ApplicantContactDataSource {
 
   @override
   Future<bool> updateExperience(List<WorkExperienceModel> experience) async {
-
-
-  try {
+    try {
       final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
-      final response = await dio.put(ApiConstants.deleteContact(userId, id));
+      final List<Map<String, dynamic>> experienceJson = experience
+          .map((e) => e.toJson())
+          .toList();
+
+      final response = await dio.put(
+        ApiConstants.updateUser(userId),
+        data: {"workExperience": experienceJson},
+      );
+
+      if (response.statusCode.toString().startsWith('2')) {
+        debugPrint("Experience updated");
+        return true;
+      } else {
+        throw ApiException(
+          message: response.statusMessage,
+          statusCode: response.statusCode ?? 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<bool> deleteUserAccount() async {
+    try {
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
+
+      final response = await dio.delete(ApiConstants.deleteUserAcct(userId,));
 
       if (response.statusCode.toString().startsWith('2')) {
         debugPrint("Contact is deleted");

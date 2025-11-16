@@ -1,10 +1,13 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/entity/applicant_contact.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/create_applicant_contact.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_applicant_contact.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_user_account_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/get_all_applicant_contacts.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_applicant_contact.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_work_experience_usecase.dart';
 
 part 'applicant_contact_event.dart';
 part 'applicant_contact_state.dart';
@@ -17,21 +20,30 @@ class ApplicantContactBloc
   final UpdateApplicantContactUseCase _updateUseCase;
   final DeleteApplicantContactUseCase _deleteUseCase;
   final GetAllApplicantContactsUseCase _getAllUseCase;
+  final UpdateWorkExperienceUseCase _updateWorkExperienceUseCase;
+
+  final DeleteUserAccountUsecase _deleteUserAccountUsecase;
 
   ApplicantContactBloc({
     required CreateApplicantContactUseCase createUseCase,
     required UpdateApplicantContactUseCase updateUseCase,
     required DeleteApplicantContactUseCase deleteUseCase,
     required GetAllApplicantContactsUseCase getAllUseCase,
+    required UpdateWorkExperienceUseCase updateWorkExperienceUseCase,
+    required DeleteUserAccountUsecase deleteUserAccountUsecase,
   }) : _createUseCase = createUseCase,
        _updateUseCase = updateUseCase,
        _deleteUseCase = deleteUseCase,
        _getAllUseCase = getAllUseCase,
+       _updateWorkExperienceUseCase = updateWorkExperienceUseCase,
+       _deleteUserAccountUsecase = deleteUserAccountUsecase,
        super(const ApplicantContactInitial()) {
     on<LoadApplicantContactsEvent>(_onLoadContacts);
     on<CreateApplicantContactEvent>(_onCreateContact);
     on<UpdateApplicantContactEvent>(_onUpdateContact);
     on<DeleteApplicantContactEvent>(_onDeleteContact);
+    on<UpdateApplicantExperience>(_onUpdateWorkExperience);
+    on<DeleteUserAccountEvent>(_onDeleteAccount);
   }
 
   Future<void> _onLoadContacts(
@@ -87,9 +99,55 @@ class ApplicantContactBloc
         emit(ApplicantContactError(failure.message));
       },
       (success) {
-    debugPrint("Deleting operation succed}");
+        debugPrint("Deleting operation succed}");
 
         emit(const ApplicantContactDeleted());
+      },
+    );
+  }
+
+  Future<void> _onUpdateWorkExperience(
+    UpdateApplicantExperience event,
+    Emitter<ApplicantContactState> emit,
+  ) async {
+    emit(const ApplicantContactLoading());
+    final result = await _updateWorkExperienceUseCase(event.experience);
+
+    debugPrint("Udating work expereinces");
+
+    result.fold(
+      (failure) {
+        debugPrint("Erro happen  ${failure.message}");
+        emit(ApplicantContactError(failure.message));
+      },
+      (success) {
+        debugPrint("Deleting operation succed}");
+
+        emit(const ApplicantWorkExpereinceUpdated());
+      },
+    );
+  }
+
+  Future<void> _onDeleteAccount(
+    DeleteUserAccountEvent event,
+    Emitter<ApplicantContactState> emit,
+  ) async {
+    emit(const ApplicantContactLoading());
+
+    Future.delayed(Duration(seconds: 1));
+    final result = await _deleteUserAccountUsecase();
+
+    debugPrint("Deleting  User Account");
+
+    result.fold(
+      (failure) {
+        debugPrint("Erro happen  ${failure.message}");
+        emit(ApplicantContactError(failure.message));
+      },
+      (success) {
+        debugPrint("Deleting operation succed}");
+
+        emit(const UserAccountDeleted());
       },
     );
   }

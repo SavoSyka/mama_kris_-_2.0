@@ -11,7 +11,10 @@ abstract class ApplicantContactRepository {
 
   /// Updates an existing applicant contact by ID.
   /// Returns the updated contact.
-  ResultFuture<ApplicantContact> updateContact(String id, ApplicantContact contact);
+  ResultFuture<ApplicantContact> updateContact(
+    String id,
+    ApplicantContact contact,
+  );
 
   /// Deletes an applicant contact by ID.
   /// Returns true if deletion was successful.
@@ -25,11 +28,9 @@ abstract class ApplicantContactRepository {
   /// Returns an empty list if none found.
   ResultFuture<List<ApplicantContact>> getAllContacts();
 
+  ResultFuture<bool> updateExperience(
+    List<ApplWorkExperienceEntity> experience,
+  );
 
-  ResultFuture<bool> updateExperience(List<ApplWorkExperienceEntity> experience);
-
-
-
-
-  
+  ResultFuture<bool> deleteUserAccount();
 }

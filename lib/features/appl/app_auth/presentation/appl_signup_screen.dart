@@ -26,7 +26,11 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
   bool _acceptPrivacyPolicy = false;
   bool _acceptTermsOfUse = false;
 
-  final emailController = TextEditingController(text: 'mowerem676@dwakm.com');
+  // final emailController = TextEditingController(text: 'mowerem676@dwakm.com');
+
+  final emailController = TextEditingController(text: 'xanawam595@gusronk.com');
+
+  
   final nameController = TextEditingController(text: 'robby one');
 
   final passwordController = TextEditingController(text: '123321123');

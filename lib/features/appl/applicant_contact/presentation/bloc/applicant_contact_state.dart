@@ -47,3 +47,11 @@ class ApplicantContactError extends ApplicantContactState {
 
   const ApplicantContactError(this.message);
 }
+
+class ApplicantWorkExpereinceUpdated extends ApplicantContactState {
+  const ApplicantWorkExpereinceUpdated();
+}
+
+class UserAccountDeleted extends ApplicantContactState {
+  const UserAccountDeleted();
+}

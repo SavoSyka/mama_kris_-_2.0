@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
@@ -8,6 +9,7 @@ import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
@@ -26,6 +28,7 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 
 class ApplProfileEditWorkExperience extends StatefulWidget {
   const ApplProfileEditWorkExperience({super.key, this.experience});
@@ -39,6 +42,8 @@ class ApplProfileEditWorkExperience extends StatefulWidget {
 class ApplProfileEditWorkExperienceState
     extends State<ApplProfileEditWorkExperience> {
   final List<WorkExperienceFormData> _experiences = [];
+
+  List<ApplWorkExperienceEntity> updateFinalist = [];
 
   final _formKey = GlobalKey<FormState>();
 
@@ -94,12 +99,34 @@ class ApplProfileEditWorkExperienceState
     final userState = context.read<UserBloc>().state;
     if (userState is! UserLoaded) return;
 
-    final updatedUser = userState.user.copyWith(
-      workExperience: _experiences.map((e) => e.toEntity()).toList(),
-    );
+    /// Convert form data → entities
+    final newExperiences = _experiences.map((e) => e.toEntity()).toList();
 
-    context.read<UserBloc>().add(
-      UpdateUserProfileEvent(updatedUser: updatedUser),
+    /// Existing experience from user profile
+    final previousExperiences = userState.user.workExperience ?? [];
+
+    /// If editing a single item, replace only that one
+    List<ApplWorkExperienceEntity> finalList;
+
+    if (widget.experience != null) {
+      finalList = previousExperiences.map((exp) {
+        if (exp == widget.experience) {
+          return newExperiences.first; // updated version
+        }
+        return exp;
+      }).toList();
+    } else {
+      /// Creating: append or overwrite all
+      finalList = [...newExperiences];
+    }
+
+    setState(() {
+      updateFinalist = finalList;
+    });
+
+    /// Dispatch Bloc event
+    context.read<ApplicantContactBloc>().add(
+      UpdateApplicantExperience(experience: finalList),
     );
   }
 
@@ -124,8 +151,11 @@ class ApplProfileEditWorkExperienceState
                     bottom: 0,
                     child: BlocListener<UserBloc, UserState>(
                       listener: (context, state) {
-                        if (state is UserUpdated) {
-                          Navigator.pop(context);
+                        if (state is UserLoaded) {
+                          context.pushReplacementNamed(
+                            RouteName.editProfileApplicant,
+                            extra: {'pageIndex': 3},
+                          );
                         } else if (state is UserError) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(state.message)),
@@ -165,9 +195,21 @@ class ApplProfileEditWorkExperienceState
                             ],
 
                             const SizedBox(height: 32),
-                            BlocBuilder<UserBloc, UserState>(
+                            BlocConsumer<
+                              ApplicantContactBloc,
+                              ApplicantContactState
+                            >(
+                              listener: (context, state) {
+                                if (state is ApplicantWorkExpereinceUpdated) {
+                                  context.read<UserBloc>().add(
+                                    UpdateWorkExperienceEvent(updateFinalist),
+                                  );
+                                }
+                              },
+
                               builder: (context, state) {
-                                final loading = state is UserUpdating;
+                                final loading =
+                                    state is ApplicantContactLoading;
                                 return Column(
                                   children: [
                                     CustomButtonApplicant(

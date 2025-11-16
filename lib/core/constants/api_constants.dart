@@ -45,4 +45,12 @@ class ApiConstants {
       "contacts/$userId/$contactId";
   static deleteContact(String userId, String contactId) =>
       "contacts/$userId/$contactId";
+
+  static  updateUser(String userId) => "users/$userId/update-info";
+
+  static  deleteUserAcct(String userId) => "users/$userId";
+
+
+
+
 }

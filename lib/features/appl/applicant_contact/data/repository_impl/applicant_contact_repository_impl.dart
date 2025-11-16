@@ -86,4 +86,14 @@ class ApplicantContactRepositoryImpl implements ApplicantContactRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<bool> deleteUserAccount() async {
+    try {
+      final result = await _dataSource.deleteUserAccount();
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

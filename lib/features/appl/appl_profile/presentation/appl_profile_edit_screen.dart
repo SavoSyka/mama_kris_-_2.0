@@ -9,6 +9,7 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_phone_picker.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/common/widgets/show_ios_loader.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
@@ -18,6 +19,7 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_e
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_contact_widget.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_work_experience_widget.dart';
+import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_delete_icon_dialog.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_logout_dialog.dart';
 
@@ -51,7 +53,7 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                       child: Column(
                         children: [
                           // Основная информация -- basic information
-                           _basicInformation(),
+                          _basicInformation(),
                           const SizedBox(height: 20),
 
                           // Контакты -- Contacts
@@ -102,8 +104,6 @@ class _basicInformation extends StatelessWidget {
       name = userState.user.name;
       dob = userState.user.birthDate;
       email = userState.user.email;
-
-
     }
 
     return Container(
@@ -328,16 +328,33 @@ class _AccountsState extends State<_accounts> {
             },
           ),
           const SizedBox(height: 16),
-          _updateButtons(
-            text: "Управление подпиской",
-            error: true,
-
-            onTap: () {
-              showDeleteAccountDialog(context, () {
-                print("Account deleted");
+          BlocConsumer<ApplicantContactBloc, ApplicantContactState>(
+            listener: (context, state) {
+              if (state is ApplicantContactLoading) {
+                showIOSLoader(context);
+              } else {
+                Navigator.pop(context);
                 context.pushNamed(RouteName.welcomePage);
-              });
-              // context.pushNamed(RouteName.welcomePage);
+              }
+              // TODO: implement listener
+            },
+            builder: (context, state) {
+              return _updateButtons(
+                text: "Управление подпиской",
+                error: true,
+
+                onTap: () {
+                  showDeleteAccountDialog(context, () {
+                    print("Account deleted");
+
+                    context.read<ApplicantContactBloc>().add(
+                      const DeleteUserAccountEvent(),
+                    );
+                    // context.pushNamed(RouteName.welcomePage);
+                  });
+                  // context.pushNamed(RouteName.welcomePage);
+                },
+              );
             },
           ),
 

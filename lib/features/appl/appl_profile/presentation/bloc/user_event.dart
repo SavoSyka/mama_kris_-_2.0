@@ -28,3 +28,8 @@ class DeleteContactEvent extends UserEvent {
   final int contactId;
   DeleteContactEvent(this.contactId);
 }
+
+class UpdateWorkExperienceEvent extends UserEvent {
+  final List<ApplWorkExperienceEntity> updated;
+  UpdateWorkExperienceEvent(this.updated);
+}

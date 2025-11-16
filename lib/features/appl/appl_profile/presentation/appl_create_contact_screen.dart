@@ -138,7 +138,7 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
           return BlocListener<UserBloc, UserState>(
             listener: (context, state) {
               if (state is UserLoaded) {
-                context.pushNamed(
+                context.goNamed(
                   RouteName.homeApplicant,
                   extra: {'pageIndex': 3},
                 );
