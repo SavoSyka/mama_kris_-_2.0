@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
@@ -10,7 +11,11 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/entity/applicant_contact.dart';
+import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 
 class ApplCreateContactScreen extends StatefulWidget {
@@ -30,6 +35,8 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
   late TextEditingController _emailController;
   late TextEditingController _vkController;
   late TextEditingController _phoneController;
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -58,17 +65,33 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
   }
 
   void _saveContact() {
-    final newContact = ApplContactEntity(
+    if (!_formKey.currentState!.validate()) return;
+    final localContact = ApplicantContact(
+      contactId: 0, // MOCKID i donn use it in my ocee
       name: _nameController.text.trim(),
       telegram: _telegramController.text.trim(),
       whatsapp: _whatsappController.text.trim(),
       email: _emailController.text.trim(),
       vk: _vkController.text.trim(),
       phone: _phoneController.text.trim(),
+      userId: 0, // MOCKID i donn use it in my ocee
     );
 
     // Return the created/edited contact to the previous page
-    Navigator.pop(context, newContact);
+    // Navigator.pop(context, newContact);
+
+    if (widget.contact == null) {
+      context.read<ApplicantContactBloc>().add(
+        CreateApplicantContactEvent(contact: localContact),
+      );
+    } else {
+      context.read<ApplicantContactBloc>().add(
+        UpdateApplicantContactEvent(
+          contact: localContact,
+          id: widget.contact?.contactsID.toString() ?? '',
+        ),
+      );
+    }
   }
 
   @override
@@ -78,69 +101,166 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
         title: widget.contact == null ? 'Create Contact' : 'Edit Contact',
         isEmployee: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            CustomInputText(
-              labelText: "Name",
-              hintText: "Enter contact name",
-              controller: _nameController,
-            ),
-            const SizedBox(height: 16),
-            CustomInputText(
-              labelText: "Telegram",
-              hintText: "@username",
-              controller: _telegramController,
-            ),
-            const SizedBox(height: 16),
-            CustomInputText(
-              labelText: "WhatsApp",
-              hintText: "+123456789",
-              controller: _whatsappController,
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 16),
-            CustomInputText(
-              labelText: "Email",
-              hintText: "example@email.com",
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 16),
-            CustomInputText(
-              labelText: "VK",
-              hintText: "vk.com/username",
-              controller: _vkController,
-            ),
-            const SizedBox(height: 16),
-            CustomInputText(
-              labelText: "Phone",
-              hintText: "+1234567890",
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-            ),
+      body: BlocConsumer<ApplicantContactBloc, ApplicantContactState>(
+        listener: (context, state) {
+          debugPrint("state after deleted $state");
+          if (state is ApplicantContactCreated) {
+            final cont = ApplContactEntity(
+              name: state.contact.name,
+              contactsID: state.contact.contactId,
+              email: state.contact.email,
+              telegram: state.contact.telegram,
+              userID: state.contact.userId,
+              phone: state.contact.phone,
+              vk: state.contact.vk,
+              whatsapp: state.contact.whatsapp,
+            );
+            updateCreatedContact(cont);
+          } else if (state is ApplicantContactUpdated) {
+            final cont = ApplContactEntity(
+              name: state.contact.name,
+              contactsID: state.contact.contactId,
+              email: state.contact.email,
+              telegram: state.contact.telegram,
+              userID: state.contact.userId,
+              phone: state.contact.phone,
+              vk: state.contact.vk,
+              whatsapp: state.contact.whatsapp,
+            );
+            updateEditedContact(cont);
+          } else if (state is ApplicantContactDeleted) {
+            debugPrint("Contact deleted in ui");
+            updateDeletedContact();
+          }
+          // TODO: implement listener
+        },
+        builder: (context, state) {
+          return BlocListener<UserBloc, UserState>(
+            listener: (context, state) {
+              if (state is UserLoaded) {
+                context.pushNamed(
+                  RouteName.homeApplicant,
+                  extra: {'pageIndex': 3},
+                );
+              }
+              // TODO: implement listener
+            },
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    CustomInputText(
+                      labelText: "Name",
+                      hintText: "Enter contact name",
+                      controller: _nameController,
+                      validator: FormValidations.validateName,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "Telegram",
+                      hintText: "@username",
+                      controller: _telegramController,
+                      validator: (value) => FormValidations.contactTelegram(
+                        value,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "WhatsApp",
+                      hintText: "+123456789",
+                      controller: _whatsappController,
+                      keyboardType: TextInputType.phone,
+                      validator: (value) => FormValidations.contactWhatsApp(
+                        value,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "Email",
+                      hintText: "example@email.com",
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) =>
+                          FormValidations.contactEmail(value),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "VK",
+                      hintText: "vk.com/username",
+                      controller: _vkController,
+                      validator: (value) => FormValidations.contactVk(
+                        value,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "Phone",
+                      hintText: "+1234567890",
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      validator: (value) =>
+                          FormValidations.validatePhone(value),
+                    ),
 
-            const SizedBox(height: 32),
+                    const SizedBox(height: 32),
 
-            CustomButtonApplicant(btnText: "Save Contact", onTap: _saveContact),
+                    CustomButtonApplicant(
+                      btnText: "Save Contact",
+                      onTap: _saveContact,
+                      isLoading: state is ApplicantContactLoading,
+                      isBtnActive: state is! ApplicantContactLoading,
+                    ),
 
-            if (widget.contact != null)...[ const SizedBox(height: 16),
-            _updateButtons(
-              text: "Управление подпиской",
-              error: true,
-              onTap: () {
-                Navigator.maybePop(context);
-                Navigator.maybePop(context);
+                    if (widget.contact != null) ...[
+                      const SizedBox(height: 16),
+                      _updateButtons(
+                        text: "Управление подпиской",
+                        error: true,
+                        onTap: () {
+                          debugPrint(
+                            "Contact Deleted ${widget.contact!.contactsID!}",
+                          );
 
-                // context.pushNamed(RouteName.welcomePage);
-              },
-            ),],
+                          context.read<ApplicantContactBloc>().add(
+                            DeleteApplicantContactEvent(
+                              id: widget.contact?.contactsID.toString() ?? '',
+                            ),
+                          );
 
-            const SizedBox(height: 32),
-          ],
-        ),
+                          // context.pushNamed(RouteName.welcomePage);
+                        },
+                      ),
+                    ],
+
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
+    );
+  }
+
+  // * ────────────── update contacts after create ───────────────────────
+
+  void updateCreatedContact(ApplContactEntity conta) {
+    context.read<UserBloc>().add(AddContactEvent(conta));
+  }
+  // * ────────────── update contacts after edit ───────────────────────
+
+  void updateEditedContact(ApplContactEntity conta) {
+    context.read<UserBloc>().add(EditContactEvent(conta));
+  }
+
+  // * ────────────── update contacts after delete ───────────────────────
+  void updateDeletedContact() {
+    debugPrint("Contact Deleted ${widget.contact!.contactsID!}");
+    context.read<UserBloc>().add(
+      DeleteContactEvent(widget.contact!.contactsID!),
     );
   }
 }

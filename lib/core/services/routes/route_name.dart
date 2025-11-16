@@ -17,6 +17,14 @@ class RouteName {
   static String supportDetailApplicant = '/$_applicant/support-detail';
   static String editProfileApplicant = '/$_applicant/edit-profile';
 
+  static String editProfileBasicInfoApplicant = '/$_applicant/edit-basic-info';
+  static String editProfileContactInfoApplicant = '/$_applicant/edit-contact-info';
+  static String editProfileworkExpereinceInfoApplicant = '/$_applicant/edit-work-expereince';
+  static String editProfileEducationInfoApplicant = '/$_applicant/edit-education-info';
+
+
+
+
   // * EMPLOYE ROUTES
   static const String _employee = '/auth/emp';
   static String loginEmploye = '/$_employee/login';

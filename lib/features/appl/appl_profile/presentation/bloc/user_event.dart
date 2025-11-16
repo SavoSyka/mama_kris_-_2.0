@@ -13,3 +13,18 @@ class UpdateUserProfileEvent extends UserEvent {
   final UserProfileEntity updatedUser;
   const UpdateUserProfileEvent({required this.updatedUser});
 }
+
+class AddContactEvent extends UserEvent {
+  final ApplContactEntity newContact;
+  AddContactEvent(this.newContact);
+}
+
+class EditContactEvent extends UserEvent {
+  final ApplContactEntity updatedContact;
+  EditContactEvent(this.updatedContact);
+}
+
+class DeleteContactEvent extends UserEvent {
+  final int contactId;
+  DeleteContactEvent(this.contactId);
+}

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
 class UserProfileEntity {
@@ -45,6 +46,52 @@ class UserProfileEntity {
     this.contacts,
     this.defaultContact,
   });
+
+  UserProfileEntity copyWith({
+    int? userID,
+    String? email,
+    String? name,
+    String? phone,
+    String? dateTime,
+    String? signedIn,
+    String? choice,
+    String? appleID,
+    String? role,
+    String? provider,
+    dynamic? defaultContactId,
+    List<String>? specializations,
+    List<String>? specializationsNorm,
+    String? birthDate,
+    dynamic? education,
+    dynamic? about,
+    List<ApplWorkExperienceEntity>? workExperience,
+    dynamic? age,
+    List<ApplContactEntity>? contacts,
+    ApplContactEntity? defaultContact,
+  }) {
+    return UserProfileEntity(
+      userID: userID ?? this.userID,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      dateTime: dateTime ?? this.dateTime,
+      signedIn: signedIn ?? this.signedIn,
+      choice: choice ?? this.choice,
+      appleID: appleID ?? this.appleID,
+      role: role ?? this.role,
+      provider: provider ?? this.provider,
+      defaultContactId: defaultContactId ?? this.defaultContactId,
+      specializations: specializations ?? this.specializations,
+      specializationsNorm: specializationsNorm ?? this.specializationsNorm,
+      birthDate: birthDate ?? this.birthDate,
+      education: education ?? this.education,
+      about: about ?? this.about,
+      workExperience: workExperience ?? this.workExperience,
+      age: age ?? this.age,
+      contacts: contacts ?? this.contacts,
+      defaultContact: defaultContact ?? this.defaultContact,
+    );
+  }
 }
 
 class ApplWorkExperienceEntity {

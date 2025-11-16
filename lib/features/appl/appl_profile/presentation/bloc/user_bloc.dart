@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_entity.dart';
 import 'package:mama_kris/features/appl/app_auth/data/models/user_profile_model.dart';
@@ -14,7 +15,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     : _getUserProfileUseCase = getUserProfileUseCase,
       super(const UserInitial()) {
     on<GetUserProfileEvent>(_onGetUserProfile);
-    on<UpdateUserProfileEvent>(_onUpdateUserProfile);
+    on<AddContactEvent>(_onAddContact);
+    on<EditContactEvent>(_onEditContact);
+    on<DeleteContactEvent>(_onDeleteContact);
   }
 
   Future<void> _onGetUserProfile(
@@ -24,13 +27,61 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     emit(UserLoaded(event.user));
   }
 
-  Future<void> _onUpdateUserProfile(
-    UpdateUserProfileEvent event,
+  // * ───────────── update contacts after create ───────────────────────
+  Future<void> _onAddContact(
+    AddContactEvent event,
     Emitter<UserState> emit,
   ) async {
-    emit(const UserUpdating());
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 1));
-    emit(UserUpdated(event.updatedUser));
+    final currentState = state;
+
+    if (currentState is UserLoaded) {
+      final List<ApplContactEntity> updatedContacts = [
+        event.newContact,
+        ...?currentState.user.contacts,
+      ];
+
+      debugPrint(" 🔐🔐🔐🔐 Contact updated");
+      emit(UserLoaded(currentState.user.copyWith(contacts: updatedContacts)));
+      debugPrint(" 🔐🔐 emitted state $state");
+    }
+  }
+
+  // * ───────────── update contacts after edit ─────────────────────────
+  Future<void> _onEditContact(
+    EditContactEvent event,
+    Emitter<UserState> emit,
+  ) async {
+    final currentState = state;
+
+    if (currentState is UserLoaded) {
+      final updatedContacts = currentState.user.contacts?.map((c) {
+        if (c.contactsID == event.updatedContact.contactsID) {
+          return event.updatedContact;
+        }
+        return c;
+      }).toList();
+
+      debugPrint(" 🔐🔐🔐🔐 Contact Edited");
+      emit(UserLoaded(currentState.user.copyWith(contacts: updatedContacts)));
+      debugPrint(" 🔐🔐 Edited emitted state $state");
+    }
+  }
+
+  // * ───────────── update contacts after delete ───────────────────────
+  Future<void> _onDeleteContact(
+    DeleteContactEvent event,
+    Emitter<UserState> emit,
+  ) async {
+    final currentState = state;
+
+    if (currentState is UserLoaded) {
+      final updatedContacts = currentState.user.contacts
+          ?.where((c) => c.contactsID != event.contactId)
+          .toList();
+
+      debugPrint(" 🔐🔐🔐🔐 Contact Deleted");
+      emit(UserLoaded(currentState.user.copyWith(contacts: updatedContacts)));
+      debugPrint(" 🔐🔐 Edited Deleted state $state");
+    }
   }
 }

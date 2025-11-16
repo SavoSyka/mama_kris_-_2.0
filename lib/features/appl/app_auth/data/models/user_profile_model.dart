@@ -105,6 +105,20 @@ class WorkExperienceModel extends ApplWorkExperienceEntity {
       isPresent: json['isPresent'] ?? false,
     );
   }
+
+
+
+    factory WorkExperienceModel.fromEntity(ApplWorkExperienceEntity entity) {
+    return WorkExperienceModel(
+      position: entity.position,
+      company: entity.company,
+      location: entity.location,
+      description: entity.description,
+      startDate: entity.startDate,
+      endDate: entity.endDate,
+      isPresent: entity.isPresent,
+    );
+  }
 }
 
 

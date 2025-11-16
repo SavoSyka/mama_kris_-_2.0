@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_create_contact_screen.dart';
@@ -79,11 +81,7 @@ class ApplContactWidget extends StatelessWidget {
         ],
         ElevatedButton.icon(
           onPressed: () async {
-         await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ApplCreateContactScreen()),
-            );
-         
+            context.pushNamed(RouteName.editProfileContactInfoApplicant);
           },
           icon: const Icon(CupertinoIcons.add, color: Colors.white, size: 18),
           label: const Text(
@@ -106,16 +104,11 @@ class ApplContactWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         HapticFeedback.lightImpact();
-        final updatedContact = await Navigator.push<ApplContactEntity>(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ApplCreateContactScreen(contact: contact),
-          ),
-        );
 
-        if (updatedContact != null) {
-          // TODO: trigger Bloc update for updated contact
-        }
+        context.pushNamed(
+          RouteName.editProfileContactInfoApplicant,
+          extra: {"contact": contact},
+        );
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -224,38 +217,40 @@ class ApplContactWidget extends StatelessWidget {
   }
 }
 
-
 Widget _buildSmartRow({
   required IconData icon,
   required String value,
   required Color platformColor,
 }) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: platformColor.withOpacity(0.12),
-            borderRadius: BorderRadius.circular(8),
+  if (value.isEmpty) {
+    return const SizedBox.shrink();
+  } else {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: platformColor.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 15, color: platformColor),
           ),
-          child: Icon(icon, size: 15, color: platformColor),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: 15,
-              color: CupertinoColors.label.withOpacity(0.95),
-              fontWeight: FontWeight.w500,
-              letterSpacing: -0.2,
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 15,
+                color: CupertinoColors.label.withOpacity(0.95),
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.2,
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
-

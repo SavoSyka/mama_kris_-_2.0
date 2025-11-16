@@ -121,15 +121,21 @@ class _CustomDateInputState extends State<CustomDateInput> {
                     padding: EdgeInsets.fromLTRB(16.w, 8, 16.w, 16.w),
                     child: CustomButtonEmployee(
                       onTap: () {
-                        final formatted = DateFormat.yMMMMd(
+                        final pretty = DateFormat.yMMMMd(
                           'ru_RU',
                         ).format(selectedDate);
+                        final raw = DateFormat(
+                          'dd.MM.yyyy',
+                        ).format(selectedDate);
 
-                        widget.controller.text = formatted;
+                        widget.controller.text = raw;
 
-                        debugPrint("FOrmated date $formatted");
+                        debugPrint("Pretty: $pretty");
+                        debugPrint("Raw saved to controller: $raw");
+
                         Navigator.pop(context);
                       },
+
                       isLoading: false,
                       btnText: 'Set',
                     ),

@@ -42,4 +42,68 @@ final List<RouteBase> jobRoutes = [
       return ApplHomeTabScreen(pageIndex: extra['pageIndex'] as int);
     },
   ),
+
+
+  GoRoute(
+    path: RouteName.editProfileApplicant,
+    name: RouteName.editProfileApplicant,
+    builder: (BuildContext context, GoRouterState state) {
+      return const ApplProfileEditScreen();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.editProfileContactInfoApplicant,
+    name: RouteName.editProfileContactInfoApplicant,
+    builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+      return ApplCreateContactScreen(
+        contact: extra['contact'] != null
+            ? extra['contact'] as ApplContactEntity
+            : null,
+      );
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.editProfileBasicInfoApplicant,
+    name: RouteName.editProfileBasicInfoApplicant,
+    builder: (BuildContext context, GoRouterState state) {
+      return const ApplProfileEditBasicInfo();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.editProfileworkExpereinceInfoApplicant,
+    name: RouteName.editProfileworkExpereinceInfoApplicant,
+    builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+
+      return  ApplProfileEditWorkExperience(
+          experience: extra['experience'] != null
+            ? extra['experience'] as ApplWorkExperienceEntity
+            : null,
+      );
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.editProfileEducationInfoApplicant,
+    name: RouteName.editProfileEducationInfoApplicant,
+    builder: (BuildContext context, GoRouterState state) {
+      return const ApplProfileEditWorkExperience();
+    },
+  ),
+
+  /*
+
+
+  static String editProfileBasicInfoApplicant = '/$_applicant/edit-basic-info';
+  static String editProfileContactInfoApplicant = '/$_applicant/edit-contact-info';
+  static String editProfileworkExpereinceInfoApplicant = '/$_applicant/edit-work-expereince';
+  static String editProfileEducationInfoApplicant = '/$_applicant/edit-education-info';
+
+*/
 ];

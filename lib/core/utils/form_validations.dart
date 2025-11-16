@@ -205,7 +205,13 @@ class FormValidations {
     if (date.isAfter(now)) {
       return 'Дата рождения не может быть в будущем.';
     }
-    final age = now.year - date.year - (now.month < date.month || (now.month == date.month && now.day < date.day) ? 1 : 0);
+    final age =
+        now.year -
+        date.year -
+        (now.month < date.month ||
+                (now.month == date.month && now.day < date.day)
+            ? 1
+            : 0);
     if (age < 18) {
       return 'Возраст должен быть не менее 18 лет.';
     }
@@ -256,7 +262,11 @@ class FormValidations {
     return null;
   }
 
-  static String? validateWorkEndDate(String? value, String? startDate, bool isPresent) {
+  static String? validateWorkEndDate(
+    String? value,
+    String? startDate,
+    bool isPresent,
+  ) {
     if (isPresent) return null;
     if (value == null || value.trim().isEmpty) {
       return 'Дата окончания обязательна, если не выбрано "По настоящее время".';
@@ -285,5 +295,61 @@ class FormValidations {
       return 'Описание не должно превышать 1000 символов.';
     }
     return null;
+  }
+
+  /// Email Validator - light check
+  /// --------------------------------------------------------
+  static String? contactEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional
+    }
+
+    final regex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+    if (!regex.hasMatch(value)) return 'Enter a valid email';
+
+    return null; // valid
+  }
+
+  /// --------------------------------------------------------
+  /// WhatsApp Phone Validator (light rule)
+  /// --------------------------------------------------------
+  static String? contactWhatsApp(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional
+    }
+    final regex = RegExp(r'^\+?\d{7,15}$');
+
+    if (!regex.hasMatch(value)) return 'Enter a valid WhatsApp number';
+
+    return null; // valid
+  }
+
+  /// --------------------------------------------------------
+  /// Telegram Username Validator
+  /// --------------------------------------------------------
+  static String? contactTelegram(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional
+    }
+    final regex = RegExp(r'^@?[a-zA-Z0-9_]{5,32}$');
+
+    if (!regex.hasMatch(value)) return 'Enter a valid Telegram username';
+
+    return null; // valid
+  }
+
+  /// --------------------------------------------------------
+  /// VK Link Validator
+  /// --------------------------------------------------------
+  static String? contactVk(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional
+    }
+    final regex = RegExp(r'^(https?:\/\/)?(www\.)?vk\.com\/[A-Za-z0-9_.]+$');
+
+    if (!regex.hasMatch(value)) return 'Enter a valid VK profile link';
+
+    return null; // valid
   }
 }

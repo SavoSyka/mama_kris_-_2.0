@@ -1,0 +1,163 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:mama_kris/core/constants/api_constants.dart';
+import 'package:mama_kris/core/error/failures.dart';
+import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
+import 'package:mama_kris/features/appl/app_auth/data/models/user_profile_model.dart';
+import 'package:mama_kris/features/appl/applicant_contact/data/data_source/applicant_contact_data_source.dart';
+import 'package:mama_kris/features/appl/applicant_contact/data/model/applicant_contact_model.dart';
+import 'package:uuid/uuid.dart';
+
+/// Mock implementation of ApplicantContactDataSource for testing and development.
+/// Uses in-memory storage to simulate API operations.
+class ApplicantContactDataSourceImpl implements ApplicantContactDataSource {
+  final Dio dio;
+
+  ApplicantContactDataSourceImpl({required this.dio});
+
+  @override
+  Future<ApplicantContactModel> createContact(
+    ApplicantContactModel contact,
+  ) async {
+    try {
+      debugPrint("contact to create ${contact.toJson()}");
+      final postData = contact.toJson();
+
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
+      final response = await dio.post(
+        ApiConstants.createContact(userId),
+        data: postData,
+      );
+
+      if (response.statusCode.toString().startsWith('2')) {
+        final json = response.data;
+        return ApplicantContactModel.fromJson(json);
+      } else {
+        throw ApiException(
+          message: response.statusMessage,
+          statusCode: response.statusCode ?? 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<ApplicantContactModel> updateContact(
+    String id,
+    ApplicantContactModel contact,
+  ) async {
+    try {
+      final postData = contact.toJson();
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
+
+      final response = await dio.put(
+        ApiConstants.updateContact(userId, id),
+        data: postData,
+      );
+
+      if (response.statusCode.toString().startsWith('2')) {
+        final json = response.data;
+        return ApplicantContactModel.fromJson(json);
+      } else {
+        throw ApiException(
+          message: response.statusMessage,
+          statusCode: response.statusCode ?? 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<bool> deleteContact(String id) async {
+    try {
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
+
+      final response = await dio.delete(ApiConstants.deleteContact(userId, id));
+
+      if (response.statusCode.toString().startsWith('2')) {
+        debugPrint("Contact is deleted");
+        return true;
+      } else {
+        throw ApiException(
+          message: response.statusMessage,
+          statusCode: response.statusCode ?? 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<ApplicantContactModel?> getContact(String id) async {
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    return const ApplicantContactModel(
+      userId: 0,
+      contactId: 0,
+
+      name: "contact.name,",
+      email: " contact.email",
+      phone: "contact.phone",
+      telegram: "",
+      whatsapp: '',
+      vk: '',
+    );
+  }
+
+  @override
+  Future<List<ApplicantContactModel>> getAllContacts() async {
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    return [
+      const ApplicantContactModel(
+        userId: 0,
+        contactId: 0,
+        name: "contact.name,",
+        email: " contact.email",
+        phone: "contact.phone",
+        telegram: "",
+        whatsapp: '',
+        vk: '',
+      ),
+    ];
+  }
+
+  @override
+  Future<bool> updateExperience(List<WorkExperienceModel> experience) async {
+
+
+  try {
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
+
+      final response = await dio.put(ApiConstants.deleteContact(userId, id));
+
+      if (response.statusCode.toString().startsWith('2')) {
+        debugPrint("Contact is deleted");
+        return true;
+      } else {
+        throw ApiException(
+          message: response.statusMessage,
+          statusCode: response.statusCode ?? 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+}

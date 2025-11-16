@@ -14,6 +14,7 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart
 import 'package:mama_kris/features/appl/appl_favorite/presentation/bloc/liked_job_bloc_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
@@ -95,6 +96,8 @@ void main() async {
         BlocProvider(create: (_) => sl<SubscriptionBloc>()),
         BlocProvider(create: (context) => sl<EmpUserBloc>()),
         BlocProvider(create: (context) => sl<CreateJobCubit>()),
+        BlocProvider(create: (context) => sl<ApplicantContactBloc>()),
+
       ],
       child: const MyApp(),
     ),

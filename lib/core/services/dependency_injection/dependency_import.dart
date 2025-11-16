@@ -90,6 +90,15 @@ import 'package:mama_kris/features/emp/emp_home/domain/usecases/create_job_useca
 import 'package:mama_kris/features/emp/emp_home/domain/usecases/fetch_emp_jobs_usecase.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_cubit.dart';
+import 'package:mama_kris/features/appl/applicant_contact/data/data_source/applicant_contact_data_source.dart';
+import 'package:mama_kris/features/appl/applicant_contact/data/data_source/applicant_contact_data_source_impl.dart';
+import 'package:mama_kris/features/appl/applicant_contact/data/repository_impl/applicant_contact_repository_impl.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/repository/applicant_contact_repository.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/create_applicant_contact.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_applicant_contact.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/get_all_applicant_contacts.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_applicant_contact.dart';
+import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'dependency_injection.dart';

@@ -40,4 +40,9 @@ class ApiConstants {
 
   static const getTariffs = "tariffs";
 
+  static createContact(String userId) => "contacts/$userId";
+  static updateContact(String userId, String contactId) =>
+      "contacts/$userId/$contactId";
+  static deleteContact(String userId, String contactId) =>
+      "contacts/$userId/$contactId";
 }

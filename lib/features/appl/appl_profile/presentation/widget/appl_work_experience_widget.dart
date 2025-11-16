@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_work_experience.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
@@ -79,12 +81,7 @@ class ApplWorkExperienceWidget extends StatelessWidget {
         ],
         ElevatedButton.icon(
           onPressed: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const ApplProfileEditWorkExperience(),
-              ),
-            );
+            context.pushNamed(RouteName.editProfileworkExpereinceInfoApplicant);
           },
           icon: const Icon(CupertinoIcons.add, color: Colors.white, size: 18),
           label: const Text(
@@ -99,7 +96,6 @@ class ApplWorkExperienceWidget extends StatelessWidget {
             ),
           ),
         ),
-    
       ],
     );
   }
@@ -115,26 +111,18 @@ class ApplWorkExperienceWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         HapticFeedback.lightImpact();
-        // TODO: Navigate to edit page
-        // await Navigator.push(...);
+
+        context.pushNamed(
+          RouteName.editProfileworkExpereinceInfoApplicant,
+          extra: {"experience": exp},
+        );
       },
-      child: 
-    GestureDetector(
-    onTap: ()async {
-              await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const ApplProfileEditWorkExperience(),
-              ),
-            );
-    },
-        child: _experienceItems(
-          title: exp.company ?? "Компания не указана",
-          position: exp.position ?? "Должность не указана",
-          datePeriod: exp.isPresent == true
-              ? "${exp.startDate ?? ''} — наст. время"
-              : "${exp.startDate ?? ''} — ${exp.endDate ?? ''}",
-        ),
+      child: _experienceItems(
+        title: exp.company ?? "Компания не указана",
+        position: exp.position ?? "Должность не указана",
+        datePeriod: exp.isPresent == true
+            ? "${exp.startDate ?? ''} — наст. время"
+            : "${exp.startDate ?? ''} — ${exp.endDate ?? ''}",
       ),
     );
   }
@@ -196,7 +184,7 @@ Widget _experienceItems({
             ],
           ),
         ),
-  
+
         const Icon(CupertinoIcons.pencil),
       ],
     ),
