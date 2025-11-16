@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
@@ -31,10 +32,26 @@ class ApplProfileEditBasicInfoState extends State<ApplProfileEditBasicInfo> {
   void initState() {
     super.initState();
     final userState = context.read<UserBloc>().state;
-    if (userState is UserLoaded) {
-      _nameController.text = userState.user.name ?? '';
-      _dobController.text = userState.user.birthDate ?? '';
+   if (userState is UserLoaded) {
+    _nameController.text = userState.user.name ?? '';
+
+    final rawDob = userState.user.birthDate;
+
+    if (rawDob != null && rawDob.isNotEmpty) {
+      try {
+        // Parse backend format (YYYY-MM-DD)
+        final parsed = DateTime.parse(rawDob);
+
+        // Convert to Russian readable format
+        final formatted = DateFormat.yMMMMd('ru_RU').format(parsed);
+
+        _dobController.text = formatted;
+      } catch (e) {
+        // fallback
+        _dobController.text = rawDob;
+      }
     }
+  }
   }
 
   @override

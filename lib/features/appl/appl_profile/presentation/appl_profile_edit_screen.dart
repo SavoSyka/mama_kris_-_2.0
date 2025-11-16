@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
@@ -14,6 +15,7 @@ import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_basic_info.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_work_experience.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_contact_widget.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_work_experience_widget.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_delete_icon_dialog.dart';
@@ -49,7 +51,7 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                       child: Column(
                         children: [
                           // Основная информация -- basic information
-                          const _basicInformation(),
+                           _basicInformation(),
                           const SizedBox(height: 20),
 
                           // Контакты -- Contacts
@@ -63,12 +65,12 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                           const _accounts(),
                           const SizedBox(height: 20),
 
-                          CustomButtonApplicant(
-                            btnText: 'Сохранить изменения',
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                          ),
+                          // CustomButtonApplicant(
+                          //   btnText: 'Сохранить изменения',
+                          //   onTap: () {
+                          //     Navigator.pop(context);
+                          //   },
+                          // ),
                           const SizedBox(height: 32),
 
                           /// Опыт работы-- Experience
@@ -87,10 +89,23 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
 }
 
 class _basicInformation extends StatelessWidget {
-  const _basicInformation();
+  _basicInformation();
+  String? name;
+  String? email;
+  String? dob;
 
   @override
   Widget build(BuildContext context) {
+    final userState = context.read<UserBloc>().state;
+
+    if (userState is UserLoaded) {
+      name = userState.user.name;
+      dob = userState.user.birthDate;
+      email = userState.user.email;
+
+
+    }
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
@@ -113,64 +128,52 @@ class _basicInformation extends StatelessWidget {
           CustomInputText(
             hintText: 'Гордова',
             labelText: "Фамилия",
-            controller: TextEditingController(),
+            controller: TextEditingController(text: name),
             readOnly: true,
-
           ),
-          const SizedBox(height: 8),
 
-      
-          CustomInputText(
-            hintText: 'Кристина',
-            labelText: "Имя",
-            controller: TextEditingController(),
-            readOnly: true,
-
-          ),
           const SizedBox(height: 8),
 
           CustomInputText(
-            hintText: '23.08.1999',
+            hintText: '',
             labelText: "Дата рождения",
-            controller: TextEditingController(),
+            controller: TextEditingController(text: dob),
             readOnly: true,
-
           ),
           const SizedBox(height: 8),
 
           CustomInputText(
             hintText: 'MamaKris@gmail.com',
             labelText: "Почта",
-            controller: TextEditingController(),
+            controller: TextEditingController(text: email),
             readOnly: true,
           ),
 
           const SizedBox(height: 24),
 
-
-              ElevatedButton.icon(
-          onPressed: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const ApplProfileEditBasicInfo(),
+          ElevatedButton.icon(
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const ApplProfileEditBasicInfo(),
+                ),
+              );
+            },
+            icon: const Icon(CupertinoIcons.pen, color: Colors.white, size: 18),
+            label: const Text(
+              "Добавить опыт работы",
+              style: TextStyle(fontSize: 15, color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppPalette.primaryColor,
+              minimumSize: const Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
               ),
-            );
-          },
-          icon: const Icon(CupertinoIcons.pen, color: Colors.white, size: 18),
-          label: const Text(
-            "Добавить опыт работы",
-            style: TextStyle(fontSize: 15, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppPalette.primaryColor,
-            minimumSize: const Size(double.infinity, 48),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
             ),
           ),
-        ),
-    
+
           // CustomInputText(
           //   hintText: '+79997773322',
           //   labelText: "Номер телефона",

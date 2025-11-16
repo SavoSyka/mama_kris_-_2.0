@@ -106,16 +106,16 @@ class ApplContactWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         HapticFeedback.lightImpact();
-        // final updatedContact = await Navigator.push<ApplContactEntity>(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (_) => CreateEditContactPage(contact: contact),
-        //   ),
-        // );
+        final updatedContact = await Navigator.push<ApplContactEntity>(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ApplCreateContactScreen(contact: contact),
+          ),
+        );
 
-        // if (updatedContact != null) {
-        //   // TODO: trigger Bloc update for updated contact
-        // }
+        if (updatedContact != null) {
+          // TODO: trigger Bloc update for updated contact
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(16),

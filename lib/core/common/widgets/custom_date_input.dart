@@ -52,8 +52,9 @@ class _CustomDateInputState extends State<CustomDateInput> {
     // Parsing existing text safely
     if (widget.controller.text.isNotEmpty) {
       try {
-        selectedDate = DateFormat.yMMMMd('ru_RU')
-            .parse(widget.controller.text); // now parse Russian output
+        selectedDate = DateFormat.yMMMMd(
+          'ru_RU',
+        ).parse(widget.controller.text); // now parse Russian output
       } catch (_) {
         selectedDate = DateTime(maxYear);
       }
@@ -80,7 +81,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomBottomSheetHeader(
-                    title:'Выберите дату рождения',
+                    title: 'Выберите дату рождения',
                     onClose: () {
                       Navigator.pop(context);
                     },
@@ -120,10 +121,13 @@ class _CustomDateInputState extends State<CustomDateInput> {
                     padding: EdgeInsets.fromLTRB(16.w, 8, 16.w, 16.w),
                     child: CustomButtonEmployee(
                       onTap: () {
-                        final formatted =
-                            DateFormat.yMMMMd('ru_RU').format(selectedDate);
+                        final formatted = DateFormat.yMMMMd(
+                          'ru_RU',
+                        ).format(selectedDate);
 
                         widget.controller.text = formatted;
+
+                        debugPrint("FOrmated date $formatted");
                         Navigator.pop(context);
                       },
                       isLoading: false,
