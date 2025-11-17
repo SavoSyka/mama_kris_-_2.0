@@ -15,6 +15,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
@@ -45,6 +46,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   String? _searchQuery;
   String? _minSalary;
   String? _maxSalary;
+  bool? _byAgreement;
 
   final ScrollController _scrollController = ScrollController();
   Timer? _debounceTimer;
@@ -104,9 +106,10 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
               if (state is JobLoaded) {
                 final jobs = state.jobs.jobs;
 
-                if (jobs.isEmpty) return Container(child:  EmptyJobView(
-                  onRefresh: _handleRefresh,
-                ));
+                if (jobs.isEmpty)
+                  return Container(
+                    child: EmptyJobView(onRefresh: _handleRefresh),
+                  );
 
                 return RefreshIndicator(
                   onRefresh: _handleRefresh,
@@ -191,7 +194,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     final filter = await ApplicantJobFilter(
                                       context,
                                     );
-                                    // if (filter != null) _applyFilters(filter);
+                                    if (filter != null) _applyFilters(filter);
                                   },
                                   child: const CustomImageView(
                                     imagePath: MediaRes.btnFilter,
@@ -337,6 +340,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
         title: _searchQuery,
         minSalary: _minSalary,
         maxSalary: _maxSalary,
+        salaryWithAgreement: _byAgreement,
       ),
     );
   }
@@ -425,6 +429,34 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     } else {
       // header + jobs + optional bottom loader
       return 1 + jobsLength + (hasNextPage ? 1 : 0);
+    }
+  }
+
+  void _applyFilters(DataMap filter) {
+    debugPrint("FIlter $filter");
+
+    if (filter['agreement'] != null && (filter['agreement'] as bool) == true) {
+      debugPrint("BY Agreemenet ${filter['agreement']}");
+
+      setState(() {
+        _byAgreement = true;
+        _minSalary = null;
+        _maxSalary = null;
+      });
+
+      _handleFilters();
+    } else {
+      final min = filter['min'].toString();
+      final max = filter['max'].toString();
+
+      setState(() {
+        _byAgreement = false;
+        _minSalary = min;
+        _maxSalary = max;
+      });
+
+      _handleFilters();
+      debugPrint("minimum and maimum $min, ... $max");
     }
   }
 

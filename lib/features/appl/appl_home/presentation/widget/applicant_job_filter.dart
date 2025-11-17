@@ -20,6 +20,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
 
   bool showByAgreement = false;
   Map<String, dynamic>? result;
+  double dynamicMax = 1000; // initial slider max
 
   await showModalBottomSheet<Map<String, dynamic>>(
     context: context,
@@ -28,7 +29,6 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
     builder: (_) => StatefulBuilder(
       builder: (BuildContext ctx, StateSetter setModalState) {
         Timer? debounce;
-        double dynamicMax = 1000; // initial slider max
 
         // Apply filter
         void applyFilter() {

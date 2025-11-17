@@ -68,7 +68,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                       if (state.user.subscription.active) {
                         context.goNamed(RouteName.homeApplicant);
                       } else {
-                        context.goNamed(RouteName.homeApplicant);
+                        context.goNamed(RouteName.subscription);
                       }
                     } else if (state is AuthFailure) {
                       ScaffoldMessenger.of(
