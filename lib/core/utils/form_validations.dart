@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 
 class FormValidations {
@@ -193,30 +194,53 @@ class FormValidations {
     return null;
   }
 
-  static String? validateDateOfBirth(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Дата рождения обязательна.';
-    }
-    final date = DateTime.tryParse(value);
-    if (date == null) {
-      return 'Введите корректную дату.';
-    }
-    final now = DateTime.now();
-    if (date.isAfter(now)) {
-      return 'Дата рождения не может быть в будущем.';
-    }
-    final age =
-        now.year -
-        date.year -
-        (now.month < date.month ||
-                (now.month == date.month && now.day < date.day)
-            ? 1
-            : 0);
-    if (age < 18) {
-      return 'Возраст должен быть не менее 18 лет.';
-    }
-    return null;
+
+static String? validateDateOfBirth(String? value) {
+  if (value == null || value.trim().isEmpty) {
+    return 'Дата рождения обязательна.';
   }
+
+  final formats = [
+    DateFormat('yyyy-MM-dd'),   // backend format
+    DateFormat('dd.MM.yyyy'),   // your old raw format
+    DateFormat('dd/MM/yyyy'),   // alternative
+  ];
+
+  DateTime? date;
+
+  // Try all formats until one succeeds
+  for (final f in formats) {
+    try {
+      date = f.parseStrict(value);
+      break;
+    } catch (_) {}
+  }
+
+  // If still null: invalid
+  if (date == null) {
+    return 'Введите корректную дату.';
+  }
+
+  final now = DateTime.now();
+
+  if (date.isAfter(now)) {
+    return 'Дата рождения не может быть в будущем.';
+  }
+
+  // Age calculation
+  final age = now.year -
+      date.year -
+      (now.month < date.month ||
+              (now.month == date.month && now.day < date.day)
+          ? 1
+          : 0);
+
+  if (age < 18) {
+    return 'Возраст должен быть не менее 18 лет.';
+  }
+
+  return null;
+}
 
   static String? validateBio(String? value) {
     if (value == null || value.trim().isEmpty) {

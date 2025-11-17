@@ -7,6 +7,7 @@ import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_user_account_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/get_all_applicant_contacts.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_applicant_contact.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_basic_info_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_work_experience_usecase.dart';
 
 part 'applicant_contact_event.dart';
@@ -23,7 +24,7 @@ class ApplicantContactBloc
   final UpdateWorkExperienceUseCase _updateWorkExperienceUseCase;
 
   final DeleteUserAccountUsecase _deleteUserAccountUsecase;
-
+  final UpdateBasicInfoUsecase _basicInfoUsecase;
   ApplicantContactBloc({
     required CreateApplicantContactUseCase createUseCase,
     required UpdateApplicantContactUseCase updateUseCase,
@@ -31,12 +32,14 @@ class ApplicantContactBloc
     required GetAllApplicantContactsUseCase getAllUseCase,
     required UpdateWorkExperienceUseCase updateWorkExperienceUseCase,
     required DeleteUserAccountUsecase deleteUserAccountUsecase,
+    required UpdateBasicInfoUsecase basicInfoUsecase,
   }) : _createUseCase = createUseCase,
        _updateUseCase = updateUseCase,
        _deleteUseCase = deleteUseCase,
        _getAllUseCase = getAllUseCase,
        _updateWorkExperienceUseCase = updateWorkExperienceUseCase,
        _deleteUserAccountUsecase = deleteUserAccountUsecase,
+       _basicInfoUsecase = basicInfoUsecase,
        super(const ApplicantContactInitial()) {
     on<LoadApplicantContactsEvent>(_onLoadContacts);
     on<CreateApplicantContactEvent>(_onCreateContact);
@@ -44,6 +47,7 @@ class ApplicantContactBloc
     on<DeleteApplicantContactEvent>(_onDeleteContact);
     on<UpdateApplicantExperience>(_onUpdateWorkExperience);
     on<DeleteUserAccountEvent>(_onDeleteAccount);
+    on<UpdatingBasicInfoEvent>(_onUpdateBasicInfo);
   }
 
   Future<void> _onLoadContacts(
@@ -132,9 +136,9 @@ class ApplicantContactBloc
     DeleteUserAccountEvent event,
     Emitter<ApplicantContactState> emit,
   ) async {
-    emit(const ApplicantContactLoading());
+    emit(const AccountDeleteLoadingState());
 
-    Future.delayed(Duration(seconds: 1));
+    Future.delayed(const Duration(seconds: 1));
     final result = await _deleteUserAccountUsecase();
 
     debugPrint("Deleting  User Account");
@@ -148,6 +152,33 @@ class ApplicantContactBloc
         debugPrint("Deleting operation succed}");
 
         emit(const UserAccountDeleted());
+      },
+    );
+  }
+
+  Future<void> _onUpdateBasicInfo(
+    UpdatingBasicInfoEvent event,
+    Emitter<ApplicantContactState> emit,
+  ) async {
+    debugPrint("error");
+    emit(const ApplicantContactLoading());
+
+    Future.delayed(const Duration(microseconds: 200));
+    final result = await _basicInfoUsecase(
+      UpdateBasicInfoParams(name: event.name, dob: event.dob),
+    );
+
+    debugPrint("Updating  User Account name and dob");
+
+    result.fold(
+      (failure) {
+        debugPrint("Erro happen in updating name and dob  ${failure.message}");
+        emit(ApplicantContactError(failure.message));
+      },
+      (success) {
+        debugPrint("updating name operation succed}");
+
+        emit(const UserBasicInfoUpdated());
       },
     );
   }

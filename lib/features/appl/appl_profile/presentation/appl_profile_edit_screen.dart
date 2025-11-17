@@ -322,17 +322,18 @@ class _AccountsState extends State<_accounts> {
             error: true,
             errorIcon: MediaRes.logoutIcon,
             onTap: () {
-              showLogoutDialog(context, () {
+              showLogoutDialog(context, isApplicant: true, () {
                 print("Account logout");
+                context.pushNamed(RouteName.welcomePage);
               });
             },
           ),
           const SizedBox(height: 16),
           BlocConsumer<ApplicantContactBloc, ApplicantContactState>(
             listener: (context, state) {
-              if (state is ApplicantContactLoading) {
+              if (state is AccountDeleteLoadingState) {
                 showIOSLoader(context);
-              } else {
+              } else if (state is UserAccountDeleted) {
                 Navigator.pop(context);
                 context.pushNamed(RouteName.welcomePage);
               }

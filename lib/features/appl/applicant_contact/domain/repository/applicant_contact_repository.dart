@@ -33,4 +33,7 @@ abstract class ApplicantContactRepository {
   );
 
   ResultFuture<bool> deleteUserAccount();
+
+  ResultFuture<bool> updateBasicInfo({required String name, required String dob});
+
 }

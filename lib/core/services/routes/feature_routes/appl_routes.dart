@@ -43,7 +43,6 @@ final List<RouteBase> jobRoutes = [
     },
   ),
 
-
   GoRoute(
     path: RouteName.editProfileApplicant,
     name: RouteName.editProfileApplicant,
@@ -70,7 +69,10 @@ final List<RouteBase> jobRoutes = [
     path: RouteName.editProfileBasicInfoApplicant,
     name: RouteName.editProfileBasicInfoApplicant,
     builder: (BuildContext context, GoRouterState state) {
-      return const ApplProfileEditBasicInfo();
+      return BlocProvider(
+        create: (context) => sl<ApplicantContactBloc>(),
+        child: const ApplProfileEditBasicInfo(),
+      );
     },
   ),
 
@@ -80,9 +82,8 @@ final List<RouteBase> jobRoutes = [
     builder: (BuildContext context, GoRouterState state) {
       final extra = state.extra as Map<String, dynamic>? ?? {};
 
-
-      return  ApplProfileEditWorkExperience(
-          experience: extra['experience'] != null
+      return ApplProfileEditWorkExperience(
+        experience: extra['experience'] != null
             ? extra['experience'] as ApplWorkExperienceEntity
             : null,
       );

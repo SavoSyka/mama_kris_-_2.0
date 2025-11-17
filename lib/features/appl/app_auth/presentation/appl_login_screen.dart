@@ -29,9 +29,9 @@ class ApplLoginScreen extends StatefulWidget {
 class _ApplLoginScreenState extends State<ApplLoginScreen> {
   // final emailController = TextEditingController(text: 'emproobbi@yopmail.com');
 
-  final emailController = TextEditingController(text: 'xanawam595@gusronk.com');
+  // final emailController = TextEditingController(text: 'toli@yopmail.com');
 
-  // final emailController = TextEditingController(text: 'roobbi@yopmail.com');
+  final emailController = TextEditingController(text: 'roobbi@yopmail.com');
   final passwordController = TextEditingController(text: '123321123');
   final _formKey = GlobalKey<FormState>();
 
@@ -68,7 +68,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                       if (state.user.subscription.active) {
                         context.goNamed(RouteName.homeApplicant);
                       } else {
-                        context.goNamed(RouteName.subscription);
+                        context.goNamed(RouteName.homeApplicant);
                       }
                     } else if (state is AuthFailure) {
                       ScaffoldMessenger.of(

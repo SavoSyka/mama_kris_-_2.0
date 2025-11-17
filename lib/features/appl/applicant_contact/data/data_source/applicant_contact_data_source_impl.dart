@@ -171,7 +171,42 @@ class ApplicantContactDataSourceImpl implements ApplicantContactDataSource {
     try {
       final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
-      final response = await dio.delete(ApiConstants.deleteUserAcct(userId,));
+      final response = await dio.delete(ApiConstants.deleteUserAcct(userId));
+
+      if (response.statusCode.toString().startsWith('2')) {
+        debugPrint("Contact is deleted");
+        return true;
+      } else {
+        throw ApiException(
+          message: response.statusMessage,
+          statusCode: response.statusCode ?? 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<bool> updateBasicInfo({
+    required String name,
+    required String dob,
+  }) async {
+    try {
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
+
+      // final queryParams = {"name": " robby three", "birthDate": "2009-11-01"};
+
+      final postData = {"name": name, "birthDate": dob};
+
+      debugPrint("Query params $postData");
+
+      final response = await dio.put(
+        ApiConstants.updateUser(userId),
+        data: postData,
+      );
 
       if (response.statusCode.toString().startsWith('2')) {
         debugPrint("Contact is deleted");

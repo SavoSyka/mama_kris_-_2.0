@@ -96,4 +96,17 @@ class ApplicantContactRepositoryImpl implements ApplicantContactRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<bool> updateBasicInfo({
+    required String name,
+    required String dob,
+  }) async {
+    try {
+      final result = await _dataSource.updateBasicInfo(name: name, dob: dob);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

@@ -30,16 +30,19 @@ class CustomDateInput extends StatefulWidget {
 }
 
 class _CustomDateInputState extends State<CustomDateInput> {
-  final _dateFormat = DateFormat('dd/MM/yyyy');
   DateTime? _selectedDate;
 
   @override
   void initState() {
     super.initState();
+
+    // Load saved backend format yyyy-MM-dd
     if (widget.controller.text.isNotEmpty) {
       try {
-        _selectedDate = _dateFormat.parse(widget.controller.text);
-      } catch (_) {}
+        _selectedDate = DateFormat('yyyy-MM-dd').parse(widget.controller.text);
+      } catch (_) {
+        _selectedDate = null;
+      }
     }
   }
 
@@ -49,12 +52,10 @@ class _CustomDateInputState extends State<CustomDateInput> {
 
     DateTime selectedDate;
 
-    // Parsing existing text safely
+    // Parse controller value (backend format)
     if (widget.controller.text.isNotEmpty) {
       try {
-        selectedDate = DateFormat.yMMMMd(
-          'ru_RU',
-        ).parse(widget.controller.text); // now parse Russian output
+        selectedDate = DateFormat('yyyy-MM-dd').parse(widget.controller.text);
       } catch (_) {
         selectedDate = DateTime(maxYear);
       }
@@ -82,17 +83,14 @@ class _CustomDateInputState extends State<CustomDateInput> {
                 children: [
                   CustomBottomSheetHeader(
                     title: 'Выберите дату рождения',
-                    onClose: () {
-                      Navigator.pop(context);
-                    },
+                    onClose: () => Navigator.pop(context),
                   ),
 
-                  // Date Picker
                   SizedBox(
                     height: 200,
                     child: Localizations.override(
                       context: context,
-                      locale: const Locale('ru', 'RU'), // Russian picker
+                      locale: const Locale('ru', 'RU'),
                       child: CupertinoTheme(
                         data: CupertinoThemeData(
                           textTheme: CupertinoTextThemeData(
@@ -121,21 +119,26 @@ class _CustomDateInputState extends State<CustomDateInput> {
                     padding: EdgeInsets.fromLTRB(16.w, 8, 16.w, 16.w),
                     child: CustomButtonEmployee(
                       onTap: () {
-                        final pretty = DateFormat.yMMMMd(
-                          'ru_RU',
-                        ).format(selectedDate);
-                        final raw = DateFormat(
-                          'dd.MM.yyyy',
+                        final backend = DateFormat(
+                          'yyyy-MM-dd',
                         ).format(selectedDate);
 
-                        widget.controller.text = raw;
+                        setState(() {
+                          widget.controller.text = backend;
+                        });
 
-                        debugPrint("Pretty: $pretty");
-                        debugPrint("Raw saved to controller: $raw");
+                        widget
+                            .controller
+                            .selection = TextSelection.fromPosition(
+                          TextPosition(offset: widget.controller.text.length),
+                        );
+
+                        debugPrint(
+                          "Saved to controller: ${widget.controller.text}",
+                        );
 
                         Navigator.pop(context);
                       },
-
                       isLoading: false,
                       btnText: 'Set',
                     ),
@@ -157,7 +160,6 @@ class _CustomDateInputState extends State<CustomDateInput> {
       controller: widget.controller,
       keyboardType: TextInputType.none,
       validator: widget.validator ?? FormValidations.validateDateOfBirth,
-
       suffixIcon: InkWell(
         onTap: showBirthDateDialog,
         child: Container(
@@ -172,10 +174,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
           ),
         ),
       ),
-
-      onTap: () {
-        showBirthDateDialog();
-      },
+      onTap: showBirthDateDialog,
     );
   }
 }

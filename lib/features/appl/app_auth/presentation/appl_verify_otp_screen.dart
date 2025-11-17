@@ -15,6 +15,7 @@ import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:pinput/pinput.dart';
 
 class ApplVerifyOtpScreen extends StatefulWidget {
@@ -64,7 +65,17 @@ class _ApplVerifyOtpScreenState extends State<ApplVerifyOtpScreen> {
                 ),
                 child: BlocListener<AuthBloc, AuthState>(
                   listener: (context, state) {
-                    if (state is AuthOtpVerified) {
+                    if (state is AuthSuccess) {
+                      context.read<UserBloc>().add(
+                        GetUserProfileEvent(user: state.user.user),
+                      );
+
+                      if (state.user.subscription.active) {
+                        context.goNamed(RouteName.homeApplicant);
+                      } else {
+                        context.goNamed(RouteName.subscription);
+                      }
+                    } else if (state is AuthOtpVerified) {
                       // * if email validation passed we have to register user by giiving his PII
                       context.read<AuthBloc>().add(
                         SignupEvent(
@@ -73,7 +84,7 @@ class _ApplVerifyOtpScreenState extends State<ApplVerifyOtpScreen> {
                           password: widget.password,
                         ),
                       );
-                      context.goNamed(RouteName.homeApplicant);
+                      // context.goNamed(RouteName.homeApplicant);
                     } else if (state is AuthOtpResent) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('OTP отправлен повторно')),

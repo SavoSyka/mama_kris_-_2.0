@@ -251,6 +251,7 @@ Future<void> _initApplicantContact() async {
 
   sl.registerLazySingleton(() => UpdateWorkExperienceUseCase(sl()));
   sl.registerLazySingleton(() => DeleteUserAccountUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateBasicInfoUsecase(sl()));
 
   // Bloc
   sl.registerFactory(
@@ -261,6 +262,7 @@ Future<void> _initApplicantContact() async {
       getAllUseCase: sl(),
       updateWorkExperienceUseCase: sl(),
       deleteUserAccountUsecase: sl(),
+      basicInfoUsecase: sl(),
     ),
   );
 }

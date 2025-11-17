@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 
-void showLogoutDialog(BuildContext context, VoidCallback onLogout) {
+void showLogoutDialog(BuildContext context, VoidCallback onLogout, {bool isApplicant = false}) {
   showCupertinoDialog(
     context: context,
     barrierDismissible: true, // tap outside to dismiss
@@ -23,9 +24,9 @@ void showLogoutDialog(BuildContext context, VoidCallback onLogout) {
             onPressed: () {
               Navigator.of(context).pop(); // Cancel
             },
-            child: const Text(
+            child:  Text(
               'Cancel',
-              style: TextStyle(color: CupertinoColors.activeBlue),
+              style: TextStyle(color: isApplicant ? AppPalette.primaryColor : AppPalette.empPrimaryColor),
             ),
           ),
           CupertinoDialogAction(

@@ -55,3 +55,13 @@ class ApplicantWorkExpereinceUpdated extends ApplicantContactState {
 class UserAccountDeleted extends ApplicantContactState {
   const UserAccountDeleted();
 }
+
+
+
+class UserBasicInfoUpdated extends ApplicantContactState {
+  const UserBasicInfoUpdated();
+}
+
+class AccountDeleteLoadingState extends ApplicantContactState {
+  const AccountDeleteLoadingState();
+}

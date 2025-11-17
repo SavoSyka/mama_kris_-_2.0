@@ -17,6 +17,7 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/appl_create_co
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_basic_info.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_work_experience.dart';
+import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_login_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_signup_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_verify_otp_screen.dart';

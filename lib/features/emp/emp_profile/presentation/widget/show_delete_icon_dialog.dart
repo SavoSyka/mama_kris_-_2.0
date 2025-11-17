@@ -1,7 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 
-void showDeleteAccountDialog(BuildContext context, VoidCallback onDelete) {
+void showDeleteAccountDialog(
+  BuildContext context,
+  VoidCallback onDelete, {
+  bool isApplicant = false,
+}) {
   showCupertinoDialog(
     context: context,
     barrierDismissible: true, // Allow tap outside to dismiss
@@ -24,9 +29,14 @@ void showDeleteAccountDialog(BuildContext context, VoidCallback onDelete) {
             onPressed: () {
               Navigator.of(context).pop(); // Cancel
             },
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: CupertinoColors.activeBlue),
+
+              style: TextStyle(
+                color: isApplicant
+                    ? AppPalette.primaryColor
+                    : AppPalette.empPrimaryColor,
+              ),
             ),
           ),
           CupertinoDialogAction(
@@ -35,9 +45,7 @@ void showDeleteAccountDialog(BuildContext context, VoidCallback onDelete) {
               onDelete(); // Perform delete action
             },
             isDestructiveAction: true,
-            child: const Text(
-              'Delete',
-            ),
+            child: const Text('Delete'),
           ),
         ],
       );

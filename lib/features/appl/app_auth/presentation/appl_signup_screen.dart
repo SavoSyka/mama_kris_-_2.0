@@ -30,7 +30,6 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
 
   final emailController = TextEditingController(text: 'xanawam595@gusronk.com');
 
-  
   final nameController = TextEditingController(text: 'robby one');
 
   final passwordController = TextEditingController(text: '123321123');
@@ -107,6 +106,7 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                     labelText: "Полное имя",
                                     controller: nameController,
                                     validator: FormValidations.validateName,
+                                    keyboardType: TextInputType.name,
                                   ),
                                   const SizedBox(height: 12),
                                   CustomInputText(
@@ -114,6 +114,7 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                     labelText: "Email",
                                     controller: emailController,
                                     validator: FormValidations.validateEmail,
+                                    keyboardType: TextInputType.emailAddress,
                                   ),
                                   const SizedBox(height: 12),
                                   CustomInputText(

@@ -44,3 +44,13 @@ class DeleteUserAccountEvent extends ApplicantContactEvent {
 
   const DeleteUserAccountEvent();
 }
+
+
+class UpdatingBasicInfoEvent extends ApplicantContactEvent {
+final String name;
+final String dob;
+
+  const UpdatingBasicInfoEvent({
+    required this.name, required this.dob, 
+  });
+}

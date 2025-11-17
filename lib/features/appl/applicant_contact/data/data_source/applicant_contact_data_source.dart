@@ -22,10 +22,9 @@ abstract class ApplicantContactDataSource {
   /// Retrieves all applicant contacts.
   Future<List<ApplicantContactModel>> getAllContacts();
 
-  Future<bool> updateExperience(
-    List<WorkExperienceModel> experience,
-  );
+  Future<bool> updateExperience(List<WorkExperienceModel> experience);
 
   Future<bool> deleteUserAccount();
 
+  Future<bool> updateBasicInfo({required String name, required String dob});
 }

@@ -12,6 +12,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 
@@ -77,34 +78,13 @@ class ApplProfileEditBasicInfoState extends State<ApplProfileEditBasicInfo> {
 
   void _save() {
     if (_formKey.currentState?.validate() ?? false) {
-      final userState = context.read<EmpUserBloc>().state;
-      if (userState is EmpUserLoaded) {
-        final updatedUser = EmpUserProfileEntity(
-          userID: userState.user.userID,
-          email: userState.user.email,
-          name: _nameController.text.trim(),
-          phone: userState.user.phone,
-          dateTime: userState.user.dateTime,
-          signedIn: userState.user.signedIn,
-          choice: userState.user.choice,
-          appleID: userState.user.appleID,
-          role: userState.user.role,
-          provider: userState.user.provider,
-          defaultContactId: userState.user.defaultContactId,
-          specializations: userState.user.specializations,
-          specializationsNorm: userState.user.specializationsNorm,
-          birthDate: DateTime.tryParse(_dobController.text),
-          education: userState.user.education,
 
-          age: userState.user.age,
-          workExperience: userState.user.workExperience,
-          contacts: userState.user.contacts,
-          defaultContact: userState.user.defaultContact,
-        );
-        context.read<EmpUserBloc>().add(
-          EmpUpdateUserProfileEvent(updatedUser: updatedUser),
-        );
-      }
+          context.read<ApplicantContactBloc>().add(
+        UpdatingBasicInfoEvent(name: _nameController.text, dob: _dobController.text),
+      );
+
+
+   
     }
   }
 
@@ -118,7 +98,7 @@ class ApplProfileEditBasicInfoState extends State<ApplProfileEditBasicInfo> {
       extendBodyBehindAppBar: true,
 
       appBar: const CustomAppBar(
-        title: 'Редактирование основной информации',
+        title: 'Robby Редактирование основной информации',
         alignTitleToEnd: true,
       ),
       body: Container(
@@ -134,83 +114,72 @@ class ApplProfileEditBasicInfoState extends State<ApplProfileEditBasicInfo> {
                   child: SafeArea(
                     child: CustomDefaultPadding(
                       bottom: 0,
-                      child: BlocListener<EmpUserBloc, EmpUserState>(
-                        listener: (context, state) {
-                          if (state is EmpUserUpdated) {
-                            Navigator.of(context).pop();
-                          } else if (state is EmpUserError) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(state.message)),
-                            );
-                          }
-                        },
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: AppTheme.cardDecoration,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Основная информация',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        fontFamily: 'Manrope',
-                                        fontWeight: FontWeight.w600,
-                                        height: 1.30,
-                                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: AppTheme.cardDecoration,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Основная информация',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontFamily: 'Manrope',
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.30,
                                     ),
-                                    const SizedBox(height: 24),
-                                    CustomInputText(
-                                      hintText: 'Введите полное имя',
-                                      labelText: "Полное имя",
-                                      controller: _nameController,
-                                      validator: FormValidations.validateName,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  CustomInputText(
+                                    hintText: 'Введите полное имя',
+                                    labelText: "Полное имя",
+                                    controller: _nameController,
+                                    validator: FormValidations.validateName,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  CustomDateInput(
+                                    controller: _dobController,
+                                    label: 'Дата рождения',
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 32),
+                            BlocBuilder<ApplicantContactBloc, ApplicantContactState>(
+                              builder: (context, state) {
+                                final isLoading = state is ApplicantContactLoading;
+                                return Column(
+                                  children: [
+                                    CustomButtonApplicant(
+                                      btnText: isLoading
+                                          ? 'Сохранение...'
+                                          : 'Сохранить',
+                                      onTap: isLoading ? null : _save,
+                                      isLoading: isLoading,
                                     ),
                                     const SizedBox(height: 16),
-                                    CustomDateInput(
-                                      controller: _dobController,
-                                      label: 'Дата рождения',
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 32),
-                              BlocBuilder<EmpUserBloc, EmpUserState>(
-                                builder: (context, state) {
-                                  final isLoading = state is EmpUserUpdating;
-                                  return Column(
-                                    children: [
-                                      CustomButtonApplicant(
-                                        btnText: isLoading
-                                            ? 'Сохранение...'
-                                            : 'Сохранить',
-                                        onTap: isLoading ? null : _save,
-                                        isLoading: isLoading,
-                                      ),
-                                      const SizedBox(height: 16),
-                                      TextButton(
-                                        onPressed: isLoading ? null : _cancel,
-                                        child: const Text(
-                                          'Отмена',
-                                          style: TextStyle(
-                                            color: AppPalette.primaryColor,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                    TextButton(
+                                      onPressed: isLoading ? null : _cancel,
+                                      child: const Text(
+                                        'Отмена',
+                                        style: TextStyle(
+                                          color: AppPalette.primaryColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                    ],
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 32),
-                            ],
-                          ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 32),
+                          ],
                         ),
                       ),
                     ),

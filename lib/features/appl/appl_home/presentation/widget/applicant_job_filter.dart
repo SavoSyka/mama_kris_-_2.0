@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
@@ -6,13 +7,8 @@ import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 
-/// Returns:
-///   - {'min': 150, 'max': 1200}   // from text fields or slider
-///   - {'agreement': true}         // if "по договоренности" is checked
-///   - null                        // if dismissed
 Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
-  // --- state that survives the modal ---
-  final RangeValues initialSlider = const RangeValues(20, 1000);
+  const RangeValues initialSlider = RangeValues(20, 1000);
   RangeValues currentSlider = initialSlider;
 
   final TextEditingController fromCtrl = TextEditingController(
@@ -29,16 +25,16 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    elevation: 0,
-    useSafeArea: true,
-    isDismissible: true,
     builder: (_) => StatefulBuilder(
       builder: (BuildContext ctx, StateSetter setModalState) {
+        Timer? debounce;
+        double dynamicMax = 1000; // initial slider max
+
+        // Apply filter
         void applyFilter() {
           if (showByAgreement) {
             result = {'agreement': true};
           } else {
-            // 1. Try text fields first
             final double? from = double.tryParse(fromCtrl.text);
             final double? to = double.tryParse(toCtrl.text);
 
@@ -47,30 +43,77 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
               min = from.round();
               max = to.round();
             } else {
-              // 2. Fallback to slider
               min = currentSlider.start.round();
               max = currentSlider.end.round();
             }
 
             result = {'min': min, 'max': max};
           }
-
-          // Print exactly what you want
-          if (result!['agreement'] == true) {
-            debugPrint('User selected: по договоренности');
-          } else {
-            debugPrint('User selected: ${result!['min']}-${result!['max']}');
-          }
-
           Navigator.pop(ctx, result);
         }
+
+        // Update FROM FIELD
+
+        void onFromChanged(String val) {
+          if (debounce?.isActive ?? false) debounce!.cancel();
+
+          debounce = Timer(const Duration(milliseconds: 300), () {
+            double? from = double.tryParse(fromCtrl.text);
+            double? to = double.tryParse(toCtrl.text);
+
+            if (from == null || from < 0) from = 0;
+
+            setModalState(() {
+              // if from > to → pull "to" upward
+              if (to != null && from! > to!) {
+                to = from;
+                toCtrl.text = to!.round().toString();
+              }
+
+              fromCtrl.text = from!.round().toString();
+
+              currentSlider = RangeValues(
+                from.clamp(0, dynamicMax),
+                currentSlider.end.clamp(from, dynamicMax),
+              );
+            });
+          });
+        }
+
+    
+    void onToChanged(String val) {
+  if (debounce?.isActive ?? false) debounce!.cancel();
+  debounce = Timer(const Duration(milliseconds: 300), () {
+    final toValue = double.tryParse(toCtrl.text) ?? 0;
+    final fromValue = double.tryParse(fromCtrl.text) ?? 0;
+
+    setModalState(() {
+      // Expand max if needed
+      if (toValue > dynamicMax) dynamicMax = toValue;
+      if (fromValue > dynamicMax) dynamicMax = fromValue;
+
+      // Enforce from <= to
+      final validFrom = fromValue < toValue ? fromValue : toValue;
+      final validTo = toValue > fromValue ? toValue : fromValue;
+
+      currentSlider = RangeValues(
+        validFrom.clamp(0, dynamicMax),
+        validTo.clamp(0, dynamicMax),
+      );
+
+      fromCtrl.text = currentSlider.start.round().toString();
+      toCtrl.text = currentSlider.end.round().toString();
+    });
+  });
+}
 
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
           child: Column(
             children: [
               const SizedBox(height: 20),
-              // Close button
+
+              // close button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -86,19 +129,21 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                   ],
                 ),
               ),
+
               const SizedBox(height: 40),
-              // White container
+
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(36)),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(36),
+                    ),
                   ),
                   child: SafeArea(
                     child: SingleChildScrollView(
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const CustomText(
@@ -108,10 +153,11 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                               fontSize: 16,
                               fontFamily: 'Manrope',
                               fontWeight: FontWeight.w600,
-                              height: 1.30,
                             ),
                           ),
+
                           const SizedBox(height: 20),
+
                           // Text fields
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,6 +169,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                                   labelText: 'От',
                                   controller: fromCtrl,
                                   keyboardType: TextInputType.number,
+                                  onChanged: onFromChanged,
                                 ),
                               ),
                               SizedBox(
@@ -132,26 +179,45 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                                   labelText: 'До',
                                   controller: toCtrl,
                                   keyboardType: TextInputType.number,
+                                  onChanged: onToChanged,
                                 ),
                               ),
                             ],
                           ),
+
                           const SizedBox(height: 24),
+
                           // Slider
                           RangeSlider(
                             values: currentSlider,
                             min: 0,
-                            max: 1000,
-                            divisions: 10,
+                            max: dynamicMax,
+                            divisions: dynamicMax > 100
+                                ? dynamicMax.round()
+                                : 100,
                             labels: RangeLabels(
                               currentSlider.start.round().toString(),
                               currentSlider.end.round().toString(),
                             ),
-                            onChanged: (newValues) {
-                              currentSlider = newValues;
-                              setModalState(() {});
+                            onChanged: (values) {
+                              setModalState(() {
+                                if (values.end > dynamicMax) {
+                                  dynamicMax = values.end;
+                                }
+                                currentSlider = RangeValues(
+                                  values.start.clamp(0, dynamicMax),
+                                  values.end.clamp(0, dynamicMax),
+                                );
+                                fromCtrl.text = currentSlider.start
+                                    .round()
+                                    .toString();
+                                toCtrl.text = currentSlider.end
+                                    .round()
+                                    .toString();
+                              });
                             },
                           ),
+
                           const Text(
                             'Зарплата',
                             style: TextStyle(
@@ -159,13 +225,13 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                               fontSize: 16,
                               fontFamily: 'Manrope',
                               fontWeight: FontWeight.w600,
-                              height: 1.30,
                             ),
                           ),
+
                           const SizedBox(height: 20),
-                          // Checkbox
+
+                          // checkbox
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               InkWell(
                                 onTap: () => setModalState(() {
@@ -181,17 +247,21 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                               const SizedBox(width: 8),
                               const Expanded(
                                 child: CustomText(
-                                  text: "Показывать вакансии “по договоренности”",
+                                  text:
+                                      "Показывать вакансии “по договоренности”",
                                 ),
                               ),
                             ],
                           ),
+
                           const SizedBox(height: 16),
-                          // Apply button
+
+                          // button
                           CustomButtonApplicant(
                             btnText: 'Найти',
                             onTap: applyFilter,
                           ),
+
                           const SizedBox(height: 24),
                         ],
                       ),
