@@ -51,7 +51,7 @@ class EmpJobRemoteDataSourceImpl implements EmpJobRemoteDataSource {
     try {
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
-      final queryParameters = {"page": page, "pageSize": 10, "status": status};
+      final queryParameters = {"page": page, "pageSize": 10, "statuses": status};
 
       final response = await dio.get(
         ApiConstants.getUserJob(userID),
