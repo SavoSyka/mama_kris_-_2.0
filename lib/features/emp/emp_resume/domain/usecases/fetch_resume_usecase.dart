@@ -18,6 +18,6 @@ class FetchResumeUsecase extends UsecaseWithParams<ResumeList, FetchResumeParams
 
   @override
   ResultFuture<ResumeList> call(FetchResumeParams params) async {
-    return await repository.fetchUsers(page: params.page, isFavorite:  params.isFavorite);
+    return await repository.fetchUsers(page: params.page, isFavorite:  params.isFavorite, searchQuery: params.searchQuery);
   }
 }

@@ -95,9 +95,15 @@ import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remot
 import 'package:mama_kris/features/emp/emp_resume/data/repositories/resume_repository_impl.dart' as emp_user_repo_impl;
 import 'package:mama_kris/features/emp/emp_resume/domain/repositories/resume_repository.dart' as emp_user_repo;
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/fetch_resume_usecase.dart';
+import 'package:mama_kris/features/emp/emp_resume/domain/usecases/search_speciality_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart' as emp_user_bloc;
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_bloc.dart';
+import 'package:mama_kris/features/emp/emp_resume/data/data_sources/speciality_remote_data_source.dart';
+import 'package:mama_kris/features/emp/emp_resume/data/data_sources/speciality_remote_data_source_impl.dart';
+import 'package:mama_kris/features/emp/emp_resume/data/repositories/speciality_repository_impl.dart';
+import 'package:mama_kris/features/emp/emp_resume/domain/repositories/speciality_repository.dart';
 import 'package:mama_kris/features/emp/emp_home/data/data_sources/emp_job_remote_data_source.dart';
 import 'package:mama_kris/features/emp/emp_home/data/data_sources/emp_job_remote_data_source_impl.dart';
 import 'package:mama_kris/features/emp/emp_home/data/repositories/emp_job_repository_impl.dart';

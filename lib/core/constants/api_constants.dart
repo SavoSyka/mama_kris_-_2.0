@@ -47,13 +47,12 @@ class ApiConstants {
   static deleteContact(String userId, String contactId) =>
       "contacts/$userId/$contactId";
 
-  static  updateUser(String userId) => "users/$userId/update-info";
+  static updateUser(String userId) => "users/$userId/update-info";
 
-  static  deleteUserAcct(String userId) => "users/$userId";
-  static String  loginWIthGoogle = "auth/google/login";
+  static deleteUserAcct(String userId) => "users/$userId";
+  static String loginWIthGoogle = "auth/google/login";
 
+  static String getSpeciality = 'jobs/autocomplete';
 
-
-
-
+  static const favoriteProfiles = "favorite-profiles";
 }

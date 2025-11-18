@@ -9,8 +9,8 @@ abstract class ResumeEvent extends Equatable {
 
 class FetchResumesEvent extends ResumeEvent {
   final bool isFavorite;
-
-  const FetchResumesEvent({required this.isFavorite});
+  final String? searchQuery;
+  const FetchResumesEvent({required this.isFavorite, this.searchQuery});
 }
 
 class LoadNextResumePageEvent extends ResumeEvent {
@@ -26,11 +26,12 @@ class LoadNextResumePageEvent extends ResumeEvent {
   List<Object> get props => [nextPage];
 }
 
-
 class UpdateFavoritingEvent extends ResumeEvent {
   final bool isFavorited;
-  final String  userId;
+  final String userId;
 
-
-  const UpdateFavoritingEvent({required this.isFavorited, required this.userId});
+  const UpdateFavoritingEvent({
+    required this.isFavorited,
+    required this.userId,
+  });
 }

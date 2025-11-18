@@ -20,6 +20,7 @@ class ResumeRepositoryImpl implements ResumeRepository {
       final value = await remoteDataSource.fetchUsers(
         page: page,
         isFavorite: isFavorite,
+        searchQuery:searchQuery
       );
       return Right(value);
     } catch (e) {

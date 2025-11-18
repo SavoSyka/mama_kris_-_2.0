@@ -8,5 +8,8 @@ abstract class ResumeRepository {
     String? searchQuery,
   });
 
-  ResultFuture<bool> updatedFavoriting({required String userId, required bool isFavorited});
+  ResultFuture<bool> updatedFavoriting({
+    required String userId,
+    required bool isFavorited,
+  });
 }

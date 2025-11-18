@@ -310,20 +310,28 @@ Future<void> _initResumes() async {
   sl.registerLazySingleton<ResumeRemoteDataSource>(
     () => ResumeRemoteDataSourceImpl(sl()),
   );
+  sl.registerLazySingleton<SpecialityRemoteDataSource>(
+    () => SpecialityRemoteDataSourceImpl(sl()),
+  );
 
   // Repository
   sl.registerLazySingleton<ResumeRepository>(
     () => ResumeRepositoryImpl(remoteDataSource: sl()),
   );
+  sl.registerLazySingleton<SpecialityRepository>(
+    () => SpecialityRepositoryImpl(remoteDataSource: sl()),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => FetchResumeUsecase(sl()));
   sl.registerLazySingleton(() => LikeResumeUsecase(sl()));
+  sl.registerLazySingleton(() => SearchSpecialityUsecase(sl()));
 
   // Bloc
   sl.registerFactory(
     () => ResumeBloc(fetchResumeUsecase: sl(), likeResumeUsecase: sl()),
   );
+  sl.registerFactory(() => SpecialitySearchBloc(searchSpecialityUsecase: sl()));
 }
 
 Future<void> _initSubscriptions() async {

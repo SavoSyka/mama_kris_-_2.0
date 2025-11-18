@@ -33,7 +33,7 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
     emit(ResumeLoadingState());
     try {
       final result = await fetchResumeUsecase(
-        FetchResumeParams(page: 1, isFavorite: event.isFavorite),
+        FetchResumeParams(page: 1, isFavorite: event.isFavorite, searchQuery: event.searchQuery),
       );
 
       result.fold(

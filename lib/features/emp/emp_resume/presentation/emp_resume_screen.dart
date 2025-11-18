@@ -16,8 +16,7 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
-import 'package:mama_kris/features/emp/emp_resume/presentation/widget/applicant_job_detail.dart';
-import 'package:mama_kris/features/emp/emp_resume/presentation/widget/applicant_job_filter.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/widget/resume_speciality_search_page.dart';
 
 class EmpResumeScreen extends StatefulWidget {
   const EmpResumeScreen({super.key});
@@ -30,6 +29,7 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
   // * ────────────────────── State Variable declarations ended  ───────────────────────
 
   bool isFavorite = false;
+  String _searchQuery = '';
 
   // * ────────────────────── Overriding Methods  ───────────────────────
 
@@ -63,7 +63,30 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                     child: CustomDefaultPadding(
                       child: Column(
                         children: [
-                          const _Searchbox(),
+                          GestureDetector(
+                            onTap: _onFiltering,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.search, color: Colors.grey),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    _searchQuery ?? 'Search jobs...',
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
                           const SizedBox(height: 14),
                           Container(
                             child: Row(
@@ -103,10 +126,7 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                                   ],
                                 ),
                                 InkWell(
-                                  onTap: () async {
-                                    EmployeResumesFilter(context);
-                                    // ResumeFilter(context);
-                                  },
+                                  onTap: _onFiltering,
                                   child: const CustomImageView(
                                     imagePath: MediaRes.btnFilter,
                                     width: 48,
@@ -119,7 +139,7 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                           BlocBuilder<ResumeBloc, ResumeState>(
                             builder: (context, state) {
                               if (state is ResumeLoadingState) {
-                                return IPhoneLoader();
+                                return const IPhoneLoader();
                               } else if (state is ResumeErrorState) {
                                 return Center(
                                   child: Text('Error: ${state.message}'),
@@ -168,27 +188,33 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
   void _loadMoreResumes(int page) {
     context.read<ResumeBloc>().add(FetchResumesEvent(isFavorite: isFavorite));
   }
-}
 
-class _Searchbox extends StatelessWidget {
-  const _Searchbox();
+  void filterBasedOnSpecilaity() {
+    context.read<ResumeBloc>().add(FetchResumesEvent(isFavorite: isFavorite, searchQuery: _searchQuery));
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return CustomInputText(
-      hintText: 'Текст',
-      labelText: "Имя",
+  void _onFiltering() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ResumeSpecialitySearchPage(
+          onSpecialitySelected: (selectedSpeciality) {
+            if (selectedSpeciality.isNotEmpty &&
+                _searchQuery != selectedSpeciality) {
+              setState(() {
+                _searchQuery = selectedSpeciality;
+              });
 
-      controller: TextEditingController(),
-      suffixIcon: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: CustomImageView(
-          imagePath: MediaRes.search,
-          width: 12,
-          height: 12,
+              filterBasedOnSpecilaity();
+            }
+            // Do whatever you want with the selected speciality
+            print('Selected: $selectedSpeciality');
+          },
         ),
       ),
     );
+    // EmployeResumesFilter(context);
+    // ResumeFilter(context);
   }
 }
 
@@ -208,44 +234,6 @@ class _FilterCard extends StatelessWidget {
             : null,
       ),
       child: CustomText(text: text),
-    );
-  }
-}
-
-class _AdCards extends StatelessWidget {
-  const _AdCards();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-      decoration: AppTheme.cardDecoration,
-      child: const Column(
-        children: [
-          CustomText(
-            text: 'Место для рекламы',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF12902A),
-              fontSize: 20,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 10),
-          CustomText(
-            text: 'Нажмите, чтобы оставить заявку',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF596574),
-              fontSize: 16,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

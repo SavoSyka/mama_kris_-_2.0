@@ -17,18 +17,21 @@ class ResumeRemoteDataSourceImpl implements ResumeRemoteDataSource {
   Future<ResumeListModel> fetchUsers({
     required int page,
     required bool isFavorite,
+    String? searchQuery
   }) async {
     try {
       final queryParameters = {
         "excludeViewed": false,
         "pageSize": 10,
         "page": page,
+        'q': searchQuery
       };
 
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
       final response = await dio.get(
-        ApiConstants.getUsers,
+              isFavorite ? ApiConstants.favoriteProfiles : ApiConstants.getUsers,
+
         queryParameters: queryParameters,
       );
 
