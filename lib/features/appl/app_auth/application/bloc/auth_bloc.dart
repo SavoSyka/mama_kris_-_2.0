@@ -5,8 +5,10 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dar
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/check_email_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_usecase.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_with_google_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/signup_usecase.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/usecases/update_password_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/verify_otp_usecase.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -18,6 +20,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ResendOtpUsecase resendOtpUsecase;
   final ForgotPasswordUsecase forgotPasswordUsecase;
 
+  final LoginWithGoogleUsecase loginWithGoogleUsecase;
+  final UpdatePasswordUsecase updatePasswordUsecase;
 
   AuthBloc({
     required this.loginUsecase,
@@ -27,6 +31,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.verifyOtpUsecase,
     required this.resendOtpUsecase,
     required this.forgotPasswordUsecase,
+    required this.loginWithGoogleUsecase,
+    required this.updatePasswordUsecase,
+
   }) : super(AuthInitial()) {
     on<LoginEvent>(_onLoginEvent);
     on<SignupEvent>(_onSignupEvent);
@@ -35,6 +42,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<VerifyOtpEvent>(_onVerifyOtpEvent);
     on<ResendOtpEvent>(_onResendOtpEvent);
     on<ForgotPasswordEvent>(_onForgotPasswordEvent);
+    on<LoginWithGoogleEvent>(_onLoginWithGoogle);
+    on<UpdatePasswordEvent>(_onUpdatePassword);
   }
 
   Future<void> _onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {
@@ -68,15 +77,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
-
-
-    Future<void> _onCheckEmail(
+  Future<void> _onCheckEmail(
     CheckEmailEvent event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
     final result = await checkEmailUsecase(
-      CheckEmailParams(email: event.email,),
+      CheckEmailParams(email: event.email),
     );
 
     result.fold(
@@ -125,6 +132,40 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthFailure(failure.message)),
       (success) => emit(AuthPasswordReset()),
+    );
+  }
+
+  Future<void> _onLoginWithGoogle(
+    LoginWithGoogleEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final result = await loginWithGoogleUsecase(
+      LoginWithGoogleParams(idToken: event.idToken),
+    );
+
+    result.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (success) {
+        debugPrint("Logged in successfully");
+      },
+
+      //  emit(AuthPasswordReset()),
+    );
+  }
+
+  Future<void> _onUpdatePassword(
+    UpdatePasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final result = await updatePasswordUsecase(
+      UpdatePasswordParams(newPassword: event.newPassword),
+    );
+
+    result.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (success) => emit(AuthPasswordUpdated()),
     );
   }
 }

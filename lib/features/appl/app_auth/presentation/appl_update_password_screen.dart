@@ -14,17 +14,18 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 
-class ApplForgotPasswordScreen extends StatefulWidget {
-  const ApplForgotPasswordScreen({super.key});
+class ApplUpdatePasswordScreen extends StatefulWidget {
+  const ApplUpdatePasswordScreen({super.key});
 
   @override
-  State<ApplForgotPasswordScreen> createState() =>
-      _ApplForgotPasswordScreenState();
+  State<ApplUpdatePasswordScreen> createState() =>
+      _ApplUpdatePasswordScreenState();
 }
 
-class _ApplForgotPasswordScreenState extends State<ApplForgotPasswordScreen> {
+class _ApplUpdatePasswordScreenState extends State<ApplUpdatePasswordScreen> {
   // final emailController = TextEditingController(text: 'xanawam595@gusronk.com');
-  final emailController = TextEditingController(text: 'emproobbi@yopmail.com');
+  final password = TextEditingController(text: '123321123');
+  final confirmPassword = TextEditingController(text: '123321123');
 
   final _formKey = GlobalKey<FormState>();
 
@@ -47,21 +48,13 @@ class _ApplForgotPasswordScreenState extends State<ApplForgotPasswordScreen> {
                 ),
                 child: BlocListener<AuthBloc, AuthState>(
                   listener: (context, state) {
-                    if (state is AuthPasswordReset) {
+                    if (state is AuthPasswordUpdated) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Инструкции отправлены на email'),
                         ),
                       );
-                      context.goNamed(
-                        RouteName.verifyOptApplicant,
-                        extra: {
-                          "email": emailController.text,
-                          'source': 'forgot',
-                          'name': '',
-                          'password': "",
-                        },
-                      );
+                      context.goNamed(RouteName.loginApplicant);
                     } else if (state is AuthFailure) {
                       ScaffoldMessenger.of(
                         context,
@@ -96,10 +89,21 @@ class _ApplForgotPasswordScreenState extends State<ApplForgotPasswordScreen> {
                                   ),
                                   const SizedBox(height: 20),
                                   CustomInputText(
-                                    hintText: 'example@email.com',
-                                    labelText: "Email",
-                                    controller: emailController,
-                                    validator: FormValidations.validateEmail,
+                                    hintText: 'enter your new password',
+                                    labelText: "password",
+                                    controller: password,
+                                    validator: FormValidations.validatePassword,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomInputText(
+                                    hintText: 'enter your confirm password',
+                                    labelText: "Confirm Password",
+                                    controller: confirmPassword,
+                                    validator: (value) =>
+                                        FormValidations.validateConfirmPassword(
+                                          value,
+                                          password.text,
+                                        ),
                                   ),
                                   const SizedBox(height: 42),
                                   CustomButtonApplicant(
@@ -110,8 +114,8 @@ class _ApplForgotPasswordScreenState extends State<ApplForgotPasswordScreen> {
                                     onTap: () {
                                       if (_formKey.currentState!.validate()) {
                                         context.read<AuthBloc>().add(
-                                          ForgotPasswordEvent(
-                                            email: emailController.text,
+                                          UpdatePasswordEvent(
+                                            newPassword: password.text,
                                           ),
                                         );
                                       }

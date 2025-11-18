@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
+import 'package:mama_kris/core/utils/get_platform_type.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_remote_data_source.dart';
@@ -189,8 +190,69 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: {'email': email},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode.toString().startsWith('2')) {
         return const Right(true);
+      } else {
+        throw const ApiException(
+          message: 'Forgot password failed',
+          statusCode: 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<bool> loginWithGoogle({required String idToken}) async {
+    try {
+      // Platform-specific header
+      final Map<String, dynamic> requestHeaders = {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'provider': platformType,
+      };
+
+      final response = await dio.post(
+        ApiConstants.loginWIthGoogle,
+        data: {'idToken': idToken},
+        options: Options(headers: {...dio.options.headers, ...requestHeaders}),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("Response from API for Google login: ${response.data}");
+        return true;
+      } else {
+        throw const ApiException(
+          message: 'Login with Google failed',
+          statusCode: 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<bool> updatePassword(String newPassword) async {
+    try {
+      final response = await dio.post(
+        ApiConstants.updatePassword,
+        data: {'newPassword': newPassword},
+      );
+
+      if (response.statusCode.toString().startsWith('2')) {
+        return true;
       } else {
         throw const ApiException(
           message: 'Forgot password failed',

@@ -9,6 +9,8 @@ import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
+import 'package:mama_kris/features/appl/app_auth/presentation/appl_forgot_password_screen.dart';
+import 'package:mama_kris/features/appl/app_auth/presentation/appl_update_password_screen.dart';
 import 'package:mama_kris/features/appl/app_auth/presentation/appl_verify_otp_screen.dart';
 import 'package:mama_kris/features/appl/appl_home_tab/appl_home_tab_screen.dart';
 import 'package:mama_kris/features/appl/app_auth/presentation/appl_login_screen.dart';

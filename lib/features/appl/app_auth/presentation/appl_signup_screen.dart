@@ -69,6 +69,7 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                       context.pushNamed(
                         RouteName.verifyOptApplicant,
                         extra: {
+                          'source': 'signup',
                           'email': emailController.text,
                           'name': nameController.text,
                           'password': passwordController.text,

@@ -76,6 +76,8 @@ Future<void> _initAuth() async {
   sl.registerLazySingleton(() => VerifyOtpUsecase(sl()));
   sl.registerLazySingleton(() => ResendOtpUsecase(sl()));
   sl.registerLazySingleton(() => ForgotPasswordUsecase(sl()));
+  sl.registerLazySingleton(() => LoginWithGoogleUsecase(sl()));
+  sl.registerLazySingleton(() => UpdatePasswordUsecase(sl()));
 
   // Bloc (factory → new instance per request)
   sl.registerFactory(
@@ -87,6 +89,8 @@ Future<void> _initAuth() async {
       verifyOtpUsecase: sl(),
       resendOtpUsecase: sl(),
       forgotPasswordUsecase: sl(),
+      loginWithGoogleUsecase: sl(),
+      updatePasswordUsecase: sl(),
     ),
   );
 }

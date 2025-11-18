@@ -26,7 +26,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  ResultFuture<UserEntity> signup(String name, String email, String password) async {
+  ResultFuture<UserEntity> signup(
+    String name,
+    String email,
+    String password,
+  ) async {
     try {
       final result = await remoteDataSource.signup(name, email, password);
       return result.fold(
@@ -55,8 +59,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-
-    @override
+  @override
   ResultFuture<bool> checkEmail(String email) async {
     try {
       final result = await remoteDataSource.checkEmail(email);
@@ -94,6 +97,31 @@ class AuthRepositoryImpl implements AuthRepository {
         (failure) => Left(failure),
         (success) => Right(success),
       );
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<bool> loginWithGoogle({required String idToken}) async {
+    try {
+      final result = await remoteDataSource.loginWithGoogle(idToken: idToken);
+
+      return Right(result);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<bool> updatePassword(String newPassword) async {
+    try {
+      final result = await remoteDataSource.updatePassword(newPassword);
+      return const Right(true);
     } on ApiException catch (e) {
       return Left(ServerFailure(e.message));
     } catch (e) {

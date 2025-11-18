@@ -17,8 +17,10 @@ import 'package:mama_kris/features/appl/app_auth/domain/repositories/auth_reposi
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/check_email_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_usecase.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_with_google_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/signup_usecase.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/usecases/update_password_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:mama_kris/features/appl/appl_favorite/presentation/bloc/liked_job_bloc_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/usecases/fetch_liked_jobs.dart';

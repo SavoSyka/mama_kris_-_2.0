@@ -68,3 +68,21 @@ class ForgotPasswordEvent extends AuthEvent {
   @override
   List<Object?> get props => [email];
 }
+
+class LoginWithGoogleEvent extends AuthEvent {
+  final String idToken;
+
+  const LoginWithGoogleEvent({required this.idToken});
+
+  @override
+  List<Object?> get props => [idToken];
+}
+
+class UpdatePasswordEvent extends AuthEvent {
+  final String newPassword;
+
+  const UpdatePasswordEvent({required this.newPassword});
+
+  @override
+  List<Object?> get props => [newPassword];
+}

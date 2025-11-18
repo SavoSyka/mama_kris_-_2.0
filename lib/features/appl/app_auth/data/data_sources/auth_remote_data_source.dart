@@ -9,4 +9,8 @@ abstract class AuthRemoteDataSource {
 
   ResultFuture<bool> resendOtp(String email);
   ResultFuture<bool> forgotPassword(String email);
+  Future<bool> loginWithGoogle({required String idToken});
+  Future<bool> updatePassword(String newPassword);
+
+
 }

@@ -55,16 +55,37 @@ final List<RouteBase> authRoutes = [
       var name = '';
       var email = '';
       var password = '';
-
+      var isFrom = '';
       final extra = state.extra;
 
       if (extra is DataMap) {
         name = extra['name'] as String;
         email = extra['email'] as String;
         password = extra['password'] as String;
+        isFrom = extra['source'] as String;
       }
-      return ApplVerifyOtpScreen(name: name, email: email, password: password);
-   
+      return ApplVerifyOtpScreen(
+        name: name,
+        email: email,
+        password: password,
+        isFrom: isFrom,
+      );
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.forgotApplicant,
+    name: RouteName.forgotApplicant,
+    builder: (BuildContext context, GoRouterState state) {
+      return const ApplForgotPasswordScreen();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.updateApplicantPwd,
+    name: RouteName.updateApplicantPwd,
+    builder: (BuildContext context, GoRouterState state) {
+      return const ApplUpdatePasswordScreen();
     },
   ),
 
@@ -85,13 +106,11 @@ final List<RouteBase> authRoutes = [
     },
   ),
 
-    GoRoute(
+  GoRoute(
     path: RouteName.verifyOtpEmployee,
     name: RouteName.verifyOtpEmployee,
     builder: (BuildContext context, GoRouterState state) {
-    
-
-         var name = '';
+      var name = '';
       var email = '';
       var password = '';
 
@@ -103,8 +122,6 @@ final List<RouteBase> authRoutes = [
         password = extra['password'] as String;
       }
       return EmpVerifyOtpScreen(name: name, email: email, password: password);
-   
-
     },
   ),
 ];

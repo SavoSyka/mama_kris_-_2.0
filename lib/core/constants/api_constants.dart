@@ -8,6 +8,7 @@ class ApiConstants {
 
   static const checkEmail = 'auth/check-email';
   static const forgotPassword = 'auth/reset-password-email';
+  static const updatePassword = 'auth/change-password';
 
   static const validateCode = 'auth/verify-code';
   static const register = 'auth/register';
@@ -49,6 +50,8 @@ class ApiConstants {
   static  updateUser(String userId) => "users/$userId/update-info";
 
   static  deleteUserAcct(String userId) => "users/$userId";
+  static String  loginWIthGoogle = "auth/google/login";
+
 
 
 

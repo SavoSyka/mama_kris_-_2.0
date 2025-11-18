@@ -10,4 +10,7 @@ abstract class AuthRepository {
   ResultFuture<bool> verifyOtp(String email, String otp);
   ResultFuture<bool> resendOtp(String email);
   ResultFuture<bool> forgotPassword(String email);
+  ResultFuture<bool> updatePassword(String newPassword);
+
+  ResultFuture<bool> loginWithGoogle({required String idToken});
 }

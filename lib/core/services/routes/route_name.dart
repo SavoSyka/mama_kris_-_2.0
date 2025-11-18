@@ -11,6 +11,9 @@ class RouteName {
   static String loginApplicant = '/$_applicant/login';
   static String signupApplicant = '/$_applicant/signup';
   static String forgotApplicant = '/$_applicant/forgot';
+  static String updateApplicantPwd = '/$_applicant/update-pwd';
+  static String changeApplicantPwd = '/$_applicant/change-pwd';
+
   static String verifyOptApplicant = '/$_applicant/verify';
 
   static String homeApplicant = '/$_applicant/home';

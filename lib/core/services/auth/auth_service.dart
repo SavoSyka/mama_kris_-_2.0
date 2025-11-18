@@ -5,35 +5,44 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart'; // ← Add this pac
 
 class AuthService {
   // ==================== GOOGLE SIGN-IN ====================
-  Future<User?> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+Future<Map<String, dynamic>?> signInWithGoogle() async {
+  try {
+    // Step 1: Google Sign-In
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) return null;
 
-      if (googleUser == null) {
-        return null; // User canceled
-      }
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+    final String? idToken = googleAuth.idToken;       // ← Send this to backend
+    final String? accessToken = googleAuth.accessToken;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+    // Step 2: Firebase Sign-in
+    final OAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: accessToken,
+      idToken: idToken,
+    );
 
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+    final UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
 
-      debugPrint("Signed in with Google: ${userCredential.user?.displayName}");
-      return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      debugPrint('Firebase Auth Error (Google): ${e.message}');
-      return null;
-    } catch (e) {
-      debugPrint('Error during Google Sign-In: $e');
-      return null;
-    }
+    final user = userCredential.user;
+
+    // Step 3: Return everything you need
+    return {
+      "firebaseUser": user,
+      "googleIdToken": idToken,
+      "googleAccessToken": accessToken,
+      "email": googleUser.email,
+      "name": googleUser.displayName,
+      "photoUrl": googleUser.photoUrl,
+    };
+  } catch (e) {
+    debugPrint("Google Sign-In Error: $e");
+    return null;
   }
+}
+
 
   // ==================== APPLE SIGN-IN ====================
   Future<User?> signInWithApple() async {

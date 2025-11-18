@@ -176,6 +176,9 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                         onPressed: () {
                                           // TODO: Navigate to forgot password
                                           debugPrint('forgot password');
+                                          context.pushNamed(
+                                            RouteName.forgotApplicant,
+                                          );
                                         },
                                       ),
                                       CustomTextButton(
@@ -212,6 +215,12 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
   Future<void> signInWithGoogle() async {
     await AuthService().signOut();
     final user = await AuthService().signInWithGoogle();
+
+    if (user != null) {
+      final idToken = user['googleIdToken'];
+      debugPrint("Id token $idToken");
+      context.read<AuthBloc>().add(LoginWithGoogleEvent(idToken: idToken));
+    }
 
     debugPrint("user data $user");
 

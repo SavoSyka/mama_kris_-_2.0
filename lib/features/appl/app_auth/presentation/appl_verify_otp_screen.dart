@@ -24,10 +24,12 @@ class ApplVerifyOtpScreen extends StatefulWidget {
     required this.name,
     required this.password,
     required this.email,
+    required this.isFrom,
   });
   final String name;
   final String password;
   final String email;
+  final String isFrom;
 
   @override
   State<ApplVerifyOtpScreen> createState() => _ApplVerifyOtpScreenState();
@@ -77,13 +79,18 @@ class _ApplVerifyOtpScreenState extends State<ApplVerifyOtpScreen> {
                       }
                     } else if (state is AuthOtpVerified) {
                       // * if email validation passed we have to register user by giiving his PII
-                      context.read<AuthBloc>().add(
-                        SignupEvent(
-                          name: widget.name,
-                          email: widget.email,
-                          password: widget.password,
-                        ),
-                      );
+
+                      if (widget.isFrom == 'signup') {
+                        context.read<AuthBloc>().add(
+                          SignupEvent(
+                            name: widget.name,
+                            email: widget.email,
+                            password: widget.password,
+                          ),
+                        );
+                      } else if (widget.isFrom == 'forgot') {
+                        context.pushNamed(RouteName.updateApplicantPwd);
+                      }
                       // context.goNamed(RouteName.homeApplicant);
                     } else if (state is AuthOtpResent) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -199,12 +206,13 @@ class _ApplVerifyOtpScreenState extends State<ApplVerifyOtpScreen> {
                                   CustomButtonApplicant(
                                     btnText: 'Подтвердить',
                                     isBtnActive: state is! AuthLoading,
+                                    isLoading: state is AuthLoading,
+
                                     onTap: () {
                                       if (_formKey.currentState!.validate()) {
-                                        // TODO: Get email from signup or shared preferences
                                         context.read<AuthBloc>().add(
                                           VerifyOtpEvent(
-                                            email: 'user@example.com',
+                                            email: widget.email,
                                             otp: otpController.text,
                                           ),
                                         );

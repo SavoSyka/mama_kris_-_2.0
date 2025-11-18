@@ -29,6 +29,8 @@ class AuthOtpResent extends AuthState {}
 
 class AuthPasswordReset extends AuthState {}
 
+class AuthPasswordUpdated extends AuthState {}
+
 class AuthFailure extends AuthState {
   final String message;
 
