@@ -43,6 +43,7 @@ final List<RouteBase> jobRoutes = [
     },
   ),
 
+
   GoRoute(
     path: RouteName.editProfileApplicant,
     name: RouteName.editProfileApplicant,

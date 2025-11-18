@@ -33,3 +33,10 @@ class UpdateWorkExperienceEvent extends UserEvent {
   final List<ApplWorkExperienceEntity> updated;
   UpdateWorkExperienceEvent(this.updated);
 }
+
+class UpdateBasicInfo extends UserEvent {
+  final String name;
+  final String dob;
+
+  UpdateBasicInfo({required this.name, required this.dob});
+}

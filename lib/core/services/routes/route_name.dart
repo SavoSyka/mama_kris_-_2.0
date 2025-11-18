@@ -18,12 +18,12 @@ class RouteName {
   static String editProfileApplicant = '/$_applicant/edit-profile';
 
   static String editProfileBasicInfoApplicant = '/$_applicant/edit-basic-info';
-  static String editProfileContactInfoApplicant = '/$_applicant/edit-contact-info';
-  static String editProfileworkExpereinceInfoApplicant = '/$_applicant/edit-work-expereince';
-  static String editProfileEducationInfoApplicant = '/$_applicant/edit-education-info';
-
-
-
+  static String editProfileContactInfoApplicant =
+      '/$_applicant/edit-contact-info';
+  static String editProfileworkExpereinceInfoApplicant =
+      '/$_applicant/edit-work-expereince';
+  static String editProfileEducationInfoApplicant =
+      '/$_applicant/edit-education-info';
 
   // * EMPLOYE ROUTES
   static const String _employee = '/auth/emp';
@@ -39,19 +39,26 @@ class RouteName {
   static String createJobPageThree = '/$_employee/create/3';
   static String resumeDetail = "/$_employee/resume-detail";
 
+  static String editProfileEmployee = '/$_employee/edit-profile';
+
+  static String editProfileBasicInfoEmployee = '/$_employee/edit-basic-info';
+  static String editProfileContactInfoEmployee =
+      '/$_employee/edit-contact-info';
+  static String editProfileworkExpereinceInfoEmployee =
+      '/$_employee/edit-work-expereince';
+  static String editProfileEducationInfoEmployee =
+      '/$_employee/edit-education-info';
+
+
+
   static String welcomePage = "/getStart";
   static String forceUpdate = "/force-update";
 
   static String subscription = "/subscription";
 
-
-
-
-
   static String welcomeApplicant = "/welcome-applicant";
   static String welcomeEmploye = "/welcome-employe";
 
-  static String employesHome = "/employes-home";
   static String postJob = "/post-job";
 
   static String login = "/login";

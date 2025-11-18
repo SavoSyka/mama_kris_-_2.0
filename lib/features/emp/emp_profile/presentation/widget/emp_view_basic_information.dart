@@ -1,17 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
-import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
-import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact.dart';
+import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_edit_basic_info.dart';
 
 class EmpViewBasicInformation extends StatelessWidget {
-  const EmpViewBasicInformation({super.key});
+  EmpViewBasicInformation({super.key});
+
+  String? name;
+  String? email;
+  String? dob;
 
   @override
   Widget build(BuildContext context) {
+    final userState = context.read<EmpUserBloc>().state;
+
+    if (userState is EmpUserLoaded) {
+      name = userState.user.name;
+      dob = userState.user.birthDate;
+      email = userState.user.email;
+    }
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
@@ -34,28 +46,26 @@ class EmpViewBasicInformation extends StatelessWidget {
           CustomInputText(
             hintText: 'Гордова',
             labelText: "Фамилия",
-            controller: TextEditingController(),
+            controller: TextEditingController(text: name),
+            readOnly: true,
+
           ),
           const SizedBox(height: 8),
 
-          CustomInputText(
-            hintText: 'Кристина',
-            labelText: "Имя",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
-
+     
           CustomInputText(
             hintText: '23.08.1999',
             labelText: "Дата рождения",
-            controller: TextEditingController(),
+            controller: TextEditingController(text: dob),
+            readOnly: true,
+
           ),
           const SizedBox(height: 8),
 
           CustomInputText(
             hintText: 'MamaKris@gmail.com',
             labelText: "Почта",
-            controller: TextEditingController(),
+            controller: TextEditingController(text: email),
             hasGreyBg: true,
             readOnly: true,
           ),

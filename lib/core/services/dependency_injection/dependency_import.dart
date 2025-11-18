@@ -48,6 +48,16 @@ import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remot
 import 'package:mama_kris/features/emp/emp_resume/data/repositories/resume_repository_impl.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/repositories/resume_repository.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
+import 'package:mama_kris/features/emp/employe_contact/data/data_source/employee_contact_data_source.dart';
+import 'package:mama_kris/features/emp/employe_contact/data/data_source/employee_contact_data_source_impl.dart';
+import 'package:mama_kris/features/emp/employe_contact/data/repository_impl/employee_contact_repository_impl.dart';
+import 'package:mama_kris/features/emp/employe_contact/domain/repository/employee_contact_repository.dart';
+import 'package:mama_kris/features/emp/employe_contact/domain/usecase/create_employee_contact.dart';
+import 'package:mama_kris/features/emp/employe_contact/domain/usecase/delete_employee_account_usecase.dart';
+import 'package:mama_kris/features/emp/employe_contact/domain/usecase/delete_employee_contact.dart';
+import 'package:mama_kris/features/emp/employe_contact/domain/usecase/update_employee_basic_info_usecase.dart';
+import 'package:mama_kris/features/emp/employe_contact/domain/usecase/update_employee_contact.dart';
+import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
 import 'package:mama_kris/features/notifications/domain/models/notification_model.dart';
 import 'package:mama_kris/features/subscription/application/bloc/subscription_bloc.dart';
 import 'package:mama_kris/features/subscription/data/data_source/subscription_remote_data_source.dart';

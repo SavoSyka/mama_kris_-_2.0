@@ -15,7 +15,7 @@ import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
-import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact_screen.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/emp_view_basic_information.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_delete_icon_dialog.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_logout_dialog.dart';
@@ -38,11 +38,11 @@ class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
         width: double.infinity,
         decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
-        child: const SafeArea(
+        child: SafeArea(
           bottom: false,
           child: Column(
             children: [
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
                   child: SafeArea(
@@ -52,18 +52,20 @@ class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
                         children: [
                           // Основная информация -- basic information
                           EmpViewBasicInformation(),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
                           // Контакты -- Contacts
-                          ContactsWidget(),
-                          SizedBox(height: 20),
+                          const ContactsWidget(),
+                          const SizedBox(height: 20),
 
                           /// Специализация -- Speciliasaton
-                          _accounts(),
-                          SizedBox(height: 20),
+                          const _accounts(),
+                          const SizedBox(height: 20),
 
-                          CustomButtonEmployee(btnText: 'Сохранить изменения'),
-                          SizedBox(height: 32),
+                          const CustomButtonEmployee(
+                            btnText: 'Сохранить изменения',
+                          ),
+                          const SizedBox(height: 32),
 
                           /// Опыт работы-- Experience
                         ],
@@ -150,13 +152,10 @@ class ContactsWidget extends StatelessWidget {
         ],
         ElevatedButton.icon(
           onPressed: () async {
-            final newContact = await Navigator.push<ContactEntity>(
-              context,
-              MaterialPageRoute(builder: (_) => const CreateEditContactPage()),
+            final newContact = context.pushNamed(
+              RouteName.editProfileContactInfoEmployee,
             );
-            if (newContact != null) {
-              // TODO: trigger Bloc update for new contact
-            }
+            // TODO: trigger Bloc update for new contact
           },
           icon: const Icon(CupertinoIcons.add, color: Colors.white, size: 18),
           label: const Text(
@@ -179,16 +178,11 @@ class ContactsWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         HapticFeedback.lightImpact();
-        final updatedContact = await Navigator.push<ContactEntity>(
-          context,
-          MaterialPageRoute(
-            builder: (_) => CreateEditContactPage(contact: contact),
-          ),
+        final updatedContact = context.pushNamed(
+          RouteName.editProfileContactInfoEmployee,
         );
 
-        if (updatedContact != null) {
-          // TODO: trigger Bloc update for updated contact
-        }
+        // TODO: trigger Bloc update for updated contact
       },
       child: Container(
         padding: const EdgeInsets.all(16),

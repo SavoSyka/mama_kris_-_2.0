@@ -9,7 +9,7 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_create_contact_screen.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
-import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact_screen.dart';
 
 class ApplContactWidget extends StatelessWidget {
   const ApplContactWidget({super.key});

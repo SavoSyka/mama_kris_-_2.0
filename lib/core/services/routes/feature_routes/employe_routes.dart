@@ -53,13 +53,6 @@ final List<RouteBase> employeRoutes = [
     },
   ),
 
-  GoRoute(
-    path: RouteName.employesHome,
-    name: RouteName.employesHome,
-    builder: (BuildContext context, GoRouterState state) {
-      return const EmployeTabScreen();
-    },
-  ),
 
   GoRoute(
     path: RouteName.resumeDetail,
@@ -68,4 +61,44 @@ final List<RouteBase> employeRoutes = [
       return const EmpResumeScreenDetail();
     },
   ),
+
+
+
+  GoRoute(
+    path: RouteName.editProfileEmployee,
+    name: RouteName.editProfileEmployee,
+    builder: (BuildContext context, GoRouterState state) {
+      return const EmpProfileEditScreen();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.editProfileContactInfoEmployee,
+    name: RouteName.editProfileContactInfoEmployee,
+    builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+      return EmpCreateContactScreen(
+        contact: extra['contact'] != null
+            ? extra['contact'] as ContactEntity
+            : null,
+      );
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.editProfileBasicInfoEmployee,
+    name: RouteName.editProfileBasicInfoEmployee,
+    builder: (BuildContext context, GoRouterState state) {
+      return BlocProvider(
+        create: (context) => sl<EmployeeContactBloc>(),
+        child: const EmpProfileEditBasicInfo(),
+      );
+    },
+  ),
+
+
+
+
+
 ];

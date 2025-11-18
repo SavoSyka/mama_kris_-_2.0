@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
+import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/widget/build_error_card.dart';
+import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_edit_screen.dart';
 
 class EmpProfileScreen extends StatefulWidget {
@@ -27,12 +33,7 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const EmpProfileEditScreen(),
-                ),
-              );
+              context.pushNamed(RouteName.editProfileEmployee);
             },
             icon: Container(
               padding: const EdgeInsets.all(6),
@@ -54,32 +55,51 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
 
       body: Container(
         width: double.infinity,
-              decoration: const BoxDecoration(color: AppPalette.empBgColor),
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
-        child: const SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: CustomDefaultPadding(
-                    child: Column(
-                      children: [
-                        // Принимает заказы -- Accept Orders
-                        _AcceptOrders(),
-                        SizedBox(height: 20),
+        child: SafeArea(
+          child: BlocBuilder<EmpUserBloc, EmpUserState>(
+            builder: (context, state) {
+              if (state is EmpUserLoading) {
+                return const Row(
+                  children: [Expanded(child: IPhoneLoader(height: 200))],
+                );
+              } else if (state is EmpUserError) {
+                return BuildErrorCard(message: state.message);
+              } else if (state is EmpUserLoaded) {
+                final user = state.user;
 
-                        // Контакты -- Contacts
-                        _Contacts(),
-                        SizedBox(height: 20),
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: CustomDefaultPadding(
+                          child: Column(
+                            children: [
+                              // Принимает заказы -- Accept Orders
+                              _AcceptOrders(
+                                name: user.name,
+                                birthDate: user.birthDate,
+                              ),
+                              const SizedBox(height: 20),
 
-                        /// Специализация -- Speciliasaton
-                        _Specalisations(),
-                      ],
+                              // Контакты -- Contacts
+                              const _Contacts(),
+                              const SizedBox(height: 20),
+
+                              /// Специализация -- Speciliasaton
+                              const _Specalisations(),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ],
+                  ],
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
           ),
         ),
       ),
@@ -88,7 +108,9 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
 }
 
 class _AcceptOrders extends StatelessWidget {
-  const _AcceptOrders();
+  const _AcceptOrders({this.name, this.birthDate});
+  final String? name;
+  final String? birthDate;
 
   @override
   Widget build(BuildContext context) {
@@ -125,9 +147,9 @@ class _AcceptOrders extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Ярослав Гордов',
-                style: TextStyle(
+              Text(
+                '$name',
+                style: const TextStyle(
                   color: AppPalette.empPrimaryColor,
 
                   fontSize: 20,
@@ -235,7 +257,7 @@ class _Specalisations extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -248,7 +270,7 @@ class _Specalisations extends StatelessWidget {
               height: 1.30,
             ),
           ),
-      
+
           SizedBox(height: 24),
           Row(
             children: [

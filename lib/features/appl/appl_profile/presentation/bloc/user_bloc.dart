@@ -19,6 +19,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<EditContactEvent>(_onEditContact);
     on<DeleteContactEvent>(_onDeleteContact);
     on<UpdateWorkExperienceEvent>(_onUpdateWork);
+
+    on<UpdateBasicInfo>(_onUpdateBasicInfo);
+
   }
 
   Future<void> _onGetUserProfile(
@@ -100,4 +103,29 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       debugPrint(" 🔐🔐 emitted state $state");
     }
   }
+
+  // * ───────────── update contacts after edit basic info ─────────────────────────
+Future<void> _onUpdateBasicInfo(
+  UpdateBasicInfo event,
+  Emitter<UserState> emit,
+) async {
+  final currentState = state;
+
+  if (currentState is UserLoaded) {
+    
+    // Update user model
+    final updatedUser = currentState.user.copyWith(
+      name: event.name,
+      birthDate: event.dob,
+    );
+
+    debugPrint("🔐 Basic Info Updated");
+
+    // Emit new state with updated user
+    emit(UserLoaded(updatedUser));
+
+    debugPrint("🔐 Emitted updated user: $updatedUser");
+  }
+}
+
 }

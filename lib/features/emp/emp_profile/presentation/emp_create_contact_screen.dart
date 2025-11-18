@@ -1,0 +1,330 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
+import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
+import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
+import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
+import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/core/utils/form_validations.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/entity/applicant_contact.dart';
+import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
+import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
+import 'package:mama_kris/features/emp/employe_contact/domain/entity/employee_contact.dart';
+import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
+
+class EmpCreateContactScreen extends StatefulWidget {
+  final ContactEntity? contact; // if null, create new
+
+  const EmpCreateContactScreen({super.key, this.contact});
+
+  @override
+  State<EmpCreateContactScreen> createState() => _EmpCreateContactScreenState();
+}
+
+class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
+  late TextEditingController _nameController;
+  late TextEditingController _telegramController;
+  late TextEditingController _whatsappController;
+  late TextEditingController _emailController;
+  late TextEditingController _vkController;
+  late TextEditingController _phoneController;
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.contact?.name ?? '');
+    _telegramController = TextEditingController(
+      text: widget.contact?.telegram ?? '',
+    );
+    _whatsappController = TextEditingController(
+      text: widget.contact?.whatsapp ?? '',
+    );
+    _emailController = TextEditingController(text: widget.contact?.email ?? '');
+    _vkController = TextEditingController(text: widget.contact?.vk ?? '');
+    _phoneController = TextEditingController(text: widget.contact?.phone ?? '');
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _telegramController.dispose();
+    _whatsappController.dispose();
+    _emailController.dispose();
+    _vkController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  void _saveContact() {
+    if (!_formKey.currentState!.validate()) return;
+    final localContact = EmployeeContact(
+      contactId: 0, // MOCKID i donn use it in my ocee
+      name: _nameController.text.trim(),
+      telegram: _telegramController.text.trim(),
+      whatsapp: _whatsappController.text.trim(),
+      email: _emailController.text.trim(),
+      vk: _vkController.text.trim(),
+      phone: _phoneController.text.trim(),
+      userId: 0, // MOCKID i donn use it in my ocee
+    );
+
+    // Return the created/edited contact to the previous page
+    // Navigator.pop(context, newContact);
+
+    if (widget.contact == null) {
+      context.read<EmployeeContactBloc>().add(
+        CreateEmployeeContactEvent(contact: localContact),
+      );
+    } else {
+      context.read<EmployeeContactBloc>().add(
+        UpdateEmployeeContactEvent(
+          contact: localContact,
+          id: widget.contact?.contactsID.toString() ?? '',
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScaffold(
+      appBar: CustomAppBar(
+        title: widget.contact == null ? 'Create Contact' : 'Edit Contact',
+        isEmployee: true,
+      ),
+      body: BlocConsumer<EmployeeContactBloc, EmployeeContactState>(
+        listener: (context, state) {
+          debugPrint("state after deleted $state");
+          if (state is EmployeeContactCreated) {
+            final cont = ContactEntity(
+              name: state.contact.name,
+              contactsID: state.contact.contactId,
+              email: state.contact.email,
+              telegram: state.contact.telegram,
+              userID: state.contact.userId,
+              phone: state.contact.phone,
+              vk: state.contact.vk,
+              whatsapp: state.contact.whatsapp,
+            );
+            updateCreatedContact(cont);
+          } else if (state is EmployeeContactUpdated) {
+            final cont = ContactEntity(
+              name: state.contact.name,
+              contactsID: state.contact.contactId,
+              email: state.contact.email,
+              telegram: state.contact.telegram,
+              userID: state.contact.userId,
+              phone: state.contact.phone,
+              vk: state.contact.vk,
+              whatsapp: state.contact.whatsapp,
+            );
+            updateEditedContact(cont);
+          } else if (state is EmployeeContactDeleted) {
+            debugPrint("Contact deleted in ui");
+            updateDeletedContact();
+          }
+          // TODO: implement listener
+        },
+        builder: (context, state) {
+          return BlocListener<EmpUserBloc, EmpUserState>(
+            listener: (context, state) {
+              if (state is EmpUserLoaded) {
+                context.goNamed(
+                  RouteName.homeEmploye,
+                  extra: {'pageIndex': 3},
+                );
+              }
+              // TODO: implement listener
+            },
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    CustomInputText(
+                      labelText: "Name",
+                      hintText: "Enter contact name",
+                      controller: _nameController,
+                      validator: FormValidations.validateName,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "Telegram",
+                      hintText: "@username",
+                      controller: _telegramController,
+                      validator: (value) =>
+                          FormValidations.contactTelegram(value),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "WhatsApp",
+                      hintText: "+123456789",
+                      controller: _whatsappController,
+                      keyboardType: TextInputType.phone,
+                      validator: (value) =>
+                          FormValidations.contactWhatsApp(value),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "Email",
+                      hintText: "example@email.com",
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) => FormValidations.contactEmail(value),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "VK",
+                      hintText: "vk.com/username",
+                      controller: _vkController,
+                      validator: (value) => FormValidations.contactVk(value),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomInputText(
+                      labelText: "Phone",
+                      hintText: "+1234567890",
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      validator: (value) =>
+                          FormValidations.validatePhone(value),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    CustomButtonEmployee(
+                      btnText: "Save Contact",
+                      onTap: _saveContact,
+                      isLoading: state is EmployeeContactLoading,
+                      isBtnActive: state is! EmployeeContactLoading,
+                    ),
+
+                    if (widget.contact != null) ...[
+                      const SizedBox(height: 16),
+                      _updateButtons(
+                        text: "Управление подпиской",
+                        error: true,
+                        onTap: () {
+                          debugPrint(
+                            "Contact Deleted ${widget.contact!.contactsID!}",
+                          );
+
+                          context.read<EmployeeContactBloc>().add(
+                            DeleteEmployeeContactEvent(
+                              id: widget.contact?.contactsID.toString() ?? '',
+                            ),
+                          );
+
+                          // context.pushNamed(RouteName.welcomePage);
+                        },
+                      ),
+                    ],
+
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // * ────────────── update contacts after create ───────────────────────
+
+  void updateCreatedContact(ContactEntity conta) {
+    context.read<EmpUserBloc>().add(EmpAddContactEvent(conta));
+  }
+  // * ────────────── update contacts after edit ───────────────────────
+
+  void updateEditedContact(ContactEntity conta) {
+    context.read<EmpUserBloc>().add(EmpEditContactEvent(conta));
+  }
+
+  // * ────────────── update contacts after delete ───────────────────────
+  void updateDeletedContact() {
+    debugPrint("Contact Deleted ${widget.contact!.contactsID!}");
+    context.read<EmpUserBloc>().add(
+      EmpDeleteContactEvent(widget.contact!.contactsID!),
+    );
+  }
+}
+
+class _updateButtons extends StatelessWidget {
+  const _updateButtons({
+    this.text = 'Добавить контакт',
+    this.error = false,
+    this.errorIcon,
+
+    this.onTap,
+  });
+  final String text;
+  final bool error;
+  final String? errorIcon;
+
+  final VoidCallback? onTap;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        clipBehavior: Clip.antiAlias,
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            side: error
+                ? const BorderSide(color: AppPalette.error)
+                : BorderSide.none,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          shadows: const [
+            BoxShadow(
+              color: Color(0x332E7866),
+              blurRadius: 4,
+              offset: Offset(0, 1),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 30,
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                color: error ? AppPalette.error : AppPalette.empPrimaryColor,
+                fontSize: 16,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w600,
+                height: 1.30,
+              ),
+            ),
+
+            if (error)
+              CustomImageView(
+                imagePath: errorIcon ?? MediaRes.deleteIcon,
+                width: 24,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}

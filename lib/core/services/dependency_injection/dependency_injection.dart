@@ -16,6 +16,7 @@ Future<void> dependencyInjection() async {
   await _initApplicantContact();
   await _initResumes();
   await _initSubscriptions();
+  await _initEmployeeContact();
 }
 
 Future<void> _initLocalCache() async {
@@ -261,6 +262,37 @@ Future<void> _initApplicantContact() async {
       deleteUseCase: sl(),
       getAllUseCase: sl(),
       updateWorkExperienceUseCase: sl(),
+      deleteUserAccountUsecase: sl(),
+      basicInfoUsecase: sl(),
+    ),
+  );
+}
+
+Future<void> _initEmployeeContact() async {
+  // Data source
+  sl.registerLazySingleton<EmployeeContactDataSource>(
+    () => EmployeeContactDataSourceImpl(dio: sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<EmployeeContactRepository>(
+    () => EmployeeContactRepositoryImpl(sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => CreateEmployeeContact(sl()));
+  sl.registerLazySingleton(() => UpdateEmployeeContact(sl()));
+  sl.registerLazySingleton(() => DeleteEmployeeContact(sl()));
+
+  sl.registerLazySingleton(() => DeleteEmployeeAccountUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateEmployeeBasicInfoUsecase(sl()));
+
+  // Bloc
+  sl.registerFactory(
+    () => EmployeeContactBloc(
+      createUseCase: sl(),
+      updateUseCase: sl(),
+      deleteUseCase: sl(),
       deleteUserAccountUsecase: sl(),
       basicInfoUsecase: sl(),
     ),

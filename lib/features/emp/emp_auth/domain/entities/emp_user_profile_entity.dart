@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
 class EmpUserProfileEntity {
@@ -45,6 +46,52 @@ class EmpUserProfileEntity {
     this.contacts,
     this.defaultContact,
   });
+
+  EmpUserProfileEntity copyWith({
+    int? userID,
+    String? email,
+    String? name,
+    String? phone,
+    String? dateTime,
+    String? signedIn,
+    String? choice,
+    String? appleID,
+    String? role,
+    String? provider,
+    dynamic? defaultContactId,
+    dynamic? specializations,
+    dynamic? specializationsNorm,
+    dynamic? birthDate,
+    dynamic? education,
+    dynamic? about,
+    dynamic? age,
+    List<WorkExperienceEntity>? workExperience,
+    List<ContactEntity>? contacts,
+    ContactEntity? defaultContact,
+  }) {
+    return EmpUserProfileEntity(
+      userID: userID ?? this.userID,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      dateTime: dateTime ?? this.dateTime,
+      signedIn: signedIn ?? this.signedIn,
+      choice: choice ?? this.choice,
+      appleID: appleID ?? this.appleID,
+      role: role ?? this.role,
+      provider: provider ?? this.provider,
+      defaultContactId: defaultContactId ?? this.defaultContactId,
+      specializations: specializations ?? this.specializations,
+      specializationsNorm: specializationsNorm ?? this.specializationsNorm,
+      birthDate: birthDate ?? this.birthDate,
+      education: education ?? this.education,
+      about: about ?? this.about,
+      age: age ?? this.age,
+      workExperience: workExperience ?? this.workExperience,
+      contacts: contacts ?? this.contacts,
+      defaultContact: defaultContact ?? this.defaultContact,
+    );
+  }
 }
 
 class WorkExperienceEntity extends Equatable {
@@ -64,6 +111,22 @@ class WorkExperienceEntity extends Equatable {
 
   @override
   List<Object?> get props => [role, company, description, startDate, endDate];
+
+  WorkExperienceEntity copyWith({
+    String? role,
+    String? company,
+    String? description,
+    String? startDate,
+    String? endDate,
+  }) {
+    return WorkExperienceEntity(
+      role: role ?? this.role,
+      company: company ?? this.company,
+      description: description ?? this.description,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+    );
+  }
 }
 
 class ContactEntity extends Equatable {
@@ -101,4 +164,28 @@ class ContactEntity extends Equatable {
     link,
     userID,
   ];
+
+  ContactEntity copyWith({
+    int? contactsID,
+    String? name,
+    String? telegram,
+    String? email,
+    String? phone,
+    String? whatsapp,
+    String? vk,
+    String? link,
+    int? userID,
+  }) {
+    return ContactEntity(
+      contactsID: contactsID ?? this.contactsID,
+      name: name ?? this.name,
+      telegram: telegram ?? this.telegram,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      whatsapp: whatsapp ?? this.whatsapp,
+      vk: vk ?? this.vk,
+      link: link ?? this.link,
+      userID: userID ?? this.userID,
+    );
+  }
 }

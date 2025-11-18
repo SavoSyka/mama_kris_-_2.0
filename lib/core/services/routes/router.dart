@@ -18,6 +18,7 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_e
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_work_experience.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_login_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_signup_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_verify_otp_screen.dart';
@@ -27,7 +28,11 @@ import 'package:mama_kris/features/emp/emp_home/presentation/create_job_page_thr
 import 'package:mama_kris/features/emp/emp_home/presentation/create_job_page_two.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
 import 'package:mama_kris/features/emp/emp_home_tab/emp_home_tab_screen.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact_screen.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_edit_basic_info.dart';
+import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_edit_screen.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/emp_resume_screen_detail.dart';
+import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
 import 'package:mama_kris/features/notifications/applications/notification_detail/bloc/notification_detail_cubit.dart';
 import 'package:mama_kris/features/notifications/applications/notification_list/bloc/notification_list_cubit.dart';
 import 'package:mama_kris/features/notifications/presentations/pages/notification_detail_page.dart';
