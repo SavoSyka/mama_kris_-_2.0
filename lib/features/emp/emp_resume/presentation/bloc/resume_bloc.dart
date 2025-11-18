@@ -2,15 +2,27 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/fetch_resume_usecase.dart';
+import 'package:mama_kris/features/emp/emp_resume/domain/usecases/like_resume_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
 
 class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
   final FetchResumeUsecase fetchResumeUsecase;
+  final LikeResumeUsecase likeResumeUsecase;
 
-  ResumeBloc({required this.fetchResumeUsecase}) : super(ResumeInitialState()) {
+
+  ResumeBloc({
+    required this.fetchResumeUsecase,
+    required this.likeResumeUsecase,
+
+  
+  }) : super(ResumeInitialState()) {
     on<FetchResumesEvent>(_onFetchUsers);
     on<LoadNextResumePageEvent>(_onLoadNextUsersPage);
+    on<UpdateFavoritingEvent>(_onUpdatingFavorite);
+
+
+    
   }
 
   //* ────────────────────── FETCH FIRST PAGE ──────────────────────
@@ -82,4 +94,48 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
       emit(ResumeErrorState(e.toString()));
     }
   }
+
+
+  // * ────────────────────── LOAD NEXT PAGE ───────────────────────
+Future<void> _onUpdatingFavorite(
+  UpdateFavoritingEvent event,
+  Emitter<ResumeState> emit,
+) async {
+  final currentState = state;
+
+  if (currentState is! ResumeLoadedState) return;
+
+  try {
+    final result = await likeResumeUsecase(
+      LikedResumeParams(
+        userId: event.userId,
+        isFavorited: event.isFavorited,
+      ),
+    );
+
+    result.fold(
+      (failure) => emit(ResumeErrorState(failure.message)),
+      (_) {
+        // NEW LIST AFTER REMOVING UNLIKED USER
+        final updatedList = currentState.users.resume
+            .where((resume) => resume.id != event.userId)
+            .toList();
+
+        emit(
+          ResumeLoadedState(
+            users: currentState.users.copyWith(
+              resume: updatedList,
+            ),
+            isLoadingMore: false,
+          ),
+        );
+      },
+    );
+  } catch (e, stack) {
+    debugPrint('Favorite update error: $e\n$stack');
+    emit(ResumeErrorState(e.toString()));
+  }
+}
+
+
 }

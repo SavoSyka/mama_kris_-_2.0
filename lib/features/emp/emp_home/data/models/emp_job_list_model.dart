@@ -14,25 +14,23 @@ class EmpJobListModel {
     required this.hasNextPage,
   });
 
-  factory EmpJobListModel.fromJson(dynamic json) {
-    List<dynamic> jobList = [];
+factory EmpJobListModel.fromJson(Map<String, dynamic> json) {
+  final jobList = json['data'] as List<dynamic>? ?? [];
 
-    if (json is List) {
-      jobList = json;
-    } else if (json is Map<String, dynamic> && json['jobs'] != null) {
-      jobList = json['jobs'];
-    }
+  final jobs = jobList
+      .map((job) => EmpJobModel.fromJson(job as Map<String, dynamic>))
+      .toList();
 
-    final jobs = jobList
-        .map((job) => EmpJobModel.fromJson(job as Map<String, dynamic>))
-        .toList();
+  final page = json['page'] ?? 1;
+  final pageSize = json['pageSize'] ?? jobs.length;
+  final total = json['total'] ?? jobs.length;
 
-    // Default pagination if not provided
-    return EmpJobListModel(
-      jobs: jobs,
-      currentPage: json is Map ? (json['currentPage'] ?? 1) : 1,
-      totalPage: json is Map ? (json['totalPage'] ?? 1) : 1,
-      hasNextPage: jobs.length >= 10, // Assume 10 = pageSize
-    );
-  }
+  return EmpJobListModel(
+    jobs: jobs,
+    currentPage: page,
+    totalPage: (total / pageSize).ceil(),
+    hasNextPage: page * pageSize < total,
+  );
+}
+
 }

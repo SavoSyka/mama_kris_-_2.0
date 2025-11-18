@@ -10,6 +10,6 @@ class CreateJobUseCase extends UsecaseWithParams<void, CreateJobParams> {
 
   @override
   ResultFuture<void> call(CreateJobParams params) async {
-    return await repository.createJob(params);
+    return await repository.createOrUpdateJob(params);
   }
 }

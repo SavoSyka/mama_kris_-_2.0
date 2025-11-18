@@ -47,6 +47,7 @@ import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remot
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source_impl.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/repositories/resume_repository_impl.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/repositories/resume_repository.dart';
+import 'package:mama_kris/features/emp/emp_resume/domain/usecases/like_resume_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/employe_contact/data/data_source/employee_contact_data_source.dart';
 import 'package:mama_kris/features/emp/employe_contact/data/data_source/employee_contact_data_source_impl.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_text_button.dart';
@@ -11,6 +12,7 @@ import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/auth/auth_service.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
@@ -133,6 +135,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                     onTap: () {
                                       // TODO: Implement Google sign in
                                       debugPrint('signInWithGoogle');
+                                      signInWithGoogle();
                                     },
                                     child: const Row(
                                       children: [
@@ -200,5 +203,18 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
         ),
       ),
     );
+  }
+
+  // * 1. ────────────── Helper functions started ───────────────────────
+
+  // * 1. ────────────── Google login called here started ───────────────────────
+
+  Future<void> signInWithGoogle() async {
+    await AuthService().signOut();
+    final user = await AuthService().signInWithGoogle();
+
+    debugPrint("user data $user");
+
+    debugPrint('');
   }
 }

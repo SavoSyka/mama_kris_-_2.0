@@ -22,6 +22,7 @@ import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_login_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_signup_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_verify_otp_screen.dart';
+import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.dart';
 
 import 'package:mama_kris/features/emp/emp_home/presentation/create_job_page_one.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/create_job_page_three.dart';

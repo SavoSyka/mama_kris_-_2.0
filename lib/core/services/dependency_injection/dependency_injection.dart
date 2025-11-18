@@ -314,9 +314,12 @@ Future<void> _initResumes() async {
 
   // Use cases
   sl.registerLazySingleton(() => FetchResumeUsecase(sl()));
+  sl.registerLazySingleton(() => LikeResumeUsecase(sl()));
 
   // Bloc
-  sl.registerFactory(() => ResumeBloc(fetchResumeUsecase: sl()));
+  sl.registerFactory(
+    () => ResumeBloc(fetchResumeUsecase: sl(), likeResumeUsecase: sl()),
+  );
 }
 
 Future<void> _initSubscriptions() async {

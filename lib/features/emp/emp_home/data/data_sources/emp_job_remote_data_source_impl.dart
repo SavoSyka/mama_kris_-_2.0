@@ -51,7 +51,11 @@ class EmpJobRemoteDataSourceImpl implements EmpJobRemoteDataSource {
     try {
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
-      final queryParameters = {"page": page, "pageSize": 10, "statuses": status};
+      final queryParameters = {
+        "page": page,
+        "pageSize": 10,
+        "statuses": status,
+      };
 
       final response = await dio.get(
         ApiConstants.getUserJob(userID),
@@ -59,6 +63,7 @@ class EmpJobRemoteDataSourceImpl implements EmpJobRemoteDataSource {
       );
 
       if (response.statusCode.toString().startsWith('2')) {
+        debugPrint("Fetched job ${response.data}");
         final jobList = EmpJobListModel.fromJson(response.data);
         return jobList;
       } else {
@@ -77,5 +82,4 @@ class EmpJobRemoteDataSourceImpl implements EmpJobRemoteDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
-
 }

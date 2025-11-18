@@ -5,6 +5,7 @@ class CreateJobParams {
   final bool salaryWithAgreement;
   final int contactsID;
   final String? link;
+  final int? jobId; // For updates
 
   CreateJobParams({
     required this.title,
@@ -13,5 +14,6 @@ class CreateJobParams {
     required this.salaryWithAgreement,
     required this.contactsID,
     this.link,
+    this.jobId,
   });
 }

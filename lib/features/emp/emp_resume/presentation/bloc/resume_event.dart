@@ -25,3 +25,12 @@ class LoadNextResumePageEvent extends ResumeEvent {
   @override
   List<Object> get props => [nextPage];
 }
+
+
+class UpdateFavoritingEvent extends ResumeEvent {
+  final bool isFavorited;
+  final String  userId;
+
+
+  const UpdateFavoritingEvent({required this.isFavorited, required this.userId});
+}

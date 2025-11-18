@@ -14,6 +14,8 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/emp/emp_auth/data/models/emp_user_profile_model.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
+import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/entities/contact_job.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/emp_user_contact.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
@@ -25,12 +27,14 @@ class CreateJobPageTwo extends StatefulWidget {
     this.description,
     this.salary,
     this.salaryWithAgreement,
+    this.job,
   });
 
   final String? speciality;
   final String? description;
   final String? salary;
   final bool? salaryWithAgreement;
+  final EmpJobEntity? job;
 
   @override
   _CreateJobPageTwoState createState() => _CreateJobPageTwoState();
@@ -39,7 +43,17 @@ class CreateJobPageTwo extends StatefulWidget {
 class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _link = TextEditingController();
+  late final TextEditingController _link;
+  late ContactJobs? selectedContact;
+
+  @override
+  void initState() {
+    super.initState();
+    _link = TextEditingController(text: widget.job?.contactJobs?.link ?? '');
+    selectedContact = widget.job?.contactJobs;
+
+    debugPrint("Contact jobs  ${widget.job?.title} ");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,8 +96,6 @@ class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
     );
   }
 
-  ContactEntity? selectedContact;
-
   Widget formData(BuildContext context) {
     return Form(
       key: _formKey,
@@ -94,84 +106,113 @@ class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-          GestureDetector(
-            onTap: () async {
-              final cont = await _openContactSheet(context);
-              setState(() {
-                selectedContact = cont;
-              });
-            }, // same callback as before
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      selectedContact != null
-                          ? selectedContact?.name ?? ""
-                          : 'select contact',
-                      style: TextStyle(
-                        color: "_selectedOptions".isEmpty
-                            ? Colors.grey
-                            : Colors.black,
-                        fontSize: 14,
+            GestureDetector(
+              onTap: () async {
+                final cont = await _openContactSheet(context);
+                setState(() {
+                  selectedContact = cont != null
+                      ? ContactJobs(
+                          contactsID: cont.contactsID,
+                          name: cont.name,
+                          telegram: cont.telegram,
+                          email: cont.email,
+                          phone: cont.phone,
+                          whatsapp: cont.whatsapp,
+                          vk: cont.vk,
+                          link: cont.link,
+                        )
+                      : null;
+                });
+              }, // same callback as before
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 12,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedContact != null
+                            ? selectedContact?.name ?? ""
+                            : 'select contact',
+                        style: TextStyle(
+                          color: "_selectedOptions".isEmpty
+                              ? Colors.grey
+                              : Colors.black,
+                          fontSize: 14,
+                        ),
+                        softWrap: true,
                       ),
-                      softWrap: true,
                     ),
-                  ),
-                  const CustomImageView(
-                    imagePath: MediaRes.dropDownIcon,
-                    width: 20,
-                  ),
-                ],
+                    const CustomImageView(
+                      imagePath: MediaRes.dropDownIcon,
+                      width: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(height: 32),
+            const SizedBox(height: 32),
 
-          CustomInputText(
-            hintText: 'Текст',
-            labelText: "Ссылка",
-            controller: _link,
-            validator: FormValidations.validateContactLink,
-          ),
-          const SizedBox(height: 16),
+            CustomInputText(
+              hintText: 'Текст',
+              labelText: "Ссылка",
+              controller: _link,
+              validator: FormValidations.validateContactLink,
+            ),
+            const SizedBox(height: 16),
 
-          CustomButtonEmployee(
-            btnText: 'Далее',
-            onTap: () {
-              if (_formKey.currentState?.validate() ?? false) {
-                if (selectedContact == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Пожалуйста, выберите контакт.')),
+            CustomButtonEmployee(
+              btnText: 'Далее',
+              onTap: () {
+                if (_formKey.currentState?.validate() ?? false) {
+                  if (selectedContact == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Пожалуйста, выберите контакт.'),
+                      ),
+                    );
+                    return;
+                  }
+
+                  final jobEntity = widget.job!.copyWith(
+                    contactJobs: selectedContact,
+                    links: _link.text
+                    
                   );
-                  return;
-                }
-                context.pushNamed(
-                  RouteName.createJobPageThree,
-                  extra: {
-                    'salary': widget.salary,
-                    'speciality': widget.speciality,
-                    "description": widget.description,
-                    "salaryWithAgreement": widget.salaryWithAgreement,
-                    'contactAddress': selectedContact,
-                    'links': _link.text,
-                  },
-                );
-              }
-            },
-          ),
 
-          const SizedBox(height: 24),
-        ],
+                  context.pushNamed(
+                    RouteName.createJobPageThree,
+                    extra: {'job': jobEntity},
+                  );
+
+                  // context.pushNamed(
+                  //   RouteName.createJobPageThree,
+                  //   extra: {
+                  //     'salary': widget.salary,
+                  //     'speciality': widget.speciality,
+                  //     "description": widget.description,
+                  //     "salaryWithAgreement": widget.salaryWithAgreement,
+                  //     'contactAddress': selectedContact,
+                  //     'links': _link.text,
+                  //     'jobId': widget.job?.jobId,
+                  //   },
+                  // );
+                }
+              },
+            ),
+
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
-    ),
     );
   }
 

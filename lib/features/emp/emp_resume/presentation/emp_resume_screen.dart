@@ -5,6 +5,7 @@ import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
+import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/resume_item.dart';
@@ -15,6 +16,7 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/widget/applicant_job_detail.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/widget/applicant_job_filter.dart';
 
 class EmpResumeScreen extends StatefulWidget {
@@ -25,7 +27,18 @@ class EmpResumeScreen extends StatefulWidget {
 }
 
 class _EmpResumeScreenState extends State<EmpResumeScreen> {
+  // * ────────────────────── State Variable declarations ended  ───────────────────────
+
   bool isFavorite = false;
+
+  // * ────────────────────── Overriding Methods  ───────────────────────
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadResumes();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +73,12 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        setState(() {
-                                          isFavorite = true;
-                                        });
+                                        if (!isFavorite) {
+                                          setState(() {
+                                            isFavorite = true;
+                                          });
+                                          _loadResumes();
+                                        }
                                       },
                                       child: _FilterCard(
                                         isSelected: isFavorite,
@@ -72,9 +88,12 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                                     const SizedBox(width: 12),
                                     InkWell(
                                       onTap: () {
-                                        setState(() {
-                                          isFavorite = false;
-                                        });
+                                        if (isFavorite) {
+                                          setState(() {
+                                            isFavorite = false;
+                                          });
+                                          _loadResumes();
+                                        }
                                       },
                                       child: _FilterCard(
                                         isSelected: !isFavorite,
@@ -85,7 +104,8 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                                 ),
                                 InkWell(
                                   onTap: () async {
-                                    ResumeFilter(context);
+                                    EmployeResumesFilter(context);
+                                    // ResumeFilter(context);
                                   },
                                   child: const CustomImageView(
                                     imagePath: MediaRes.btnFilter,
@@ -99,54 +119,28 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                           BlocBuilder<ResumeBloc, ResumeState>(
                             builder: (context, state) {
                               if (state is ResumeLoadingState) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
+                                return IPhoneLoader();
                               } else if (state is ResumeErrorState) {
                                 return Center(
                                   child: Text('Error: ${state.message}'),
                                 );
                               } else if (state is ResumeLoadedState) {
                                 final users = state.users.resume;
-                                return !isFavorite
-                                    ? ListView.separated(
-                                        shrinkWrap: true,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) =>
-                                            ResumeItem(
-                                              name: users[index].name,
-                                              role: users[index].role,
-                                              age: users[index].age,
-                                              onTap: () async {
-                                                context.pushNamed(
-                                                  RouteName.resumeDetail,
-                                                );
-                                              },
-                                            ),
-                                        separatorBuilder: (context, index) =>
-                                            const SizedBox(height: 8),
-                                        itemCount: users.length,
-                                      )
-                                    : ListView.separated(
-                                        shrinkWrap: true,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) =>
-                                            ResumeItem(
-                                              name: users[index].name,
-                                              role: users[index].role,
-                                              age: users[index].age,
-                                              onTap: () async {
-                                                context.pushNamed(
-                                                  RouteName.resumeDetail,
-                                                );
-                                              },
-                                            ),
-                                        separatorBuilder: (context, index) =>
-                                            const SizedBox(height: 8),
-                                        itemCount: users.length,
-                                      );
+                                return ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) => ResumeItem(
+                                    name: users[index].name,
+                                    role: users[index].role,
+                                    age: users[index].age,
+                                    onTap: () async {
+                                      context.pushNamed(RouteName.resumeDetail);
+                                    },
+                                  ),
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(height: 8),
+                                  itemCount: users.length,
+                                );
                               } else {
                                 return const Center(child: Text('No data'));
                               }
@@ -164,6 +158,15 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
         ),
       ),
     );
+  }
+
+  // * ────────────────────── Helper Methods ───────────────────────
+  void _loadResumes() {
+    context.read<ResumeBloc>().add(FetchResumesEvent(isFavorite: isFavorite));
+  }
+
+  void _loadMoreResumes(int page) {
+    context.read<ResumeBloc>().add(FetchResumesEvent(isFavorite: isFavorite));
   }
 }
 

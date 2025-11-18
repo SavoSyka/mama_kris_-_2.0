@@ -52,4 +52,40 @@ class ResumeRemoteDataSourceImpl implements ResumeRemoteDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
+  
+  @override
+  Future<bool> updatedFavoriting({required String userId, required bool isFavorited}) async{
+      try {
+      final queryParameters = {
+        "userId": userId,
+        "isFavorited": isFavorited,
+      };
+
+      final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
+
+      final response = await dio.get(
+        ApiConstants.getUsers,
+        queryParameters: queryParameters,
+      );
+
+      if (response.statusCode.toString().startsWith('2')) {
+        final userList = ResumeListModel.fromJson(response.data);
+
+        return true;
+      } else {
+        throw ApiException(
+          message: response.data['message'] ?? 'Fetch users failed',
+          statusCode: response.statusCode ?? 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      debugPrint("erroro $e");
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
 }

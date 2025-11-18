@@ -48,15 +48,14 @@ class _ApplHomeTabScreenState extends State<EmpHomeTabScreen> {
     });
   }
 
-
-  @override
-  void didUpdateWidget(EmpHomeTabScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-      _selectedIndex = widget.pageIndex.clamp(0, _pages.length - 1);
-      debugPrint("Updated selectedIndex to ${widget.pageIndex}");
-    });
-  }
+  // @override
+  // void didUpdateWidget(EmpHomeTabScreen oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   setState(() {
+  //     _selectedIndex = widget.pageIndex.clamp(0, _pages.length - 1);
+  //     debugPrint("Updated selectedIndex to ${widget.pageIndex}");
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

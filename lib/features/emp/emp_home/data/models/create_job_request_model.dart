@@ -7,6 +7,7 @@ class CreateJobRequestModel {
   final String title;
   final int contactsID;
   final String firstPublishedAt;
+  final int? jobID;
 
   CreateJobRequestModel({
     required this.userID,
@@ -17,6 +18,7 @@ class CreateJobRequestModel {
     required this.title,
     required this.contactsID,
     required this.firstPublishedAt,
+    this.jobID,
   });
 
   factory CreateJobRequestModel.fromJson(Map<String, dynamic> json) {
@@ -33,7 +35,7 @@ class CreateJobRequestModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    final map = {
       'userID': userID,
       'description': description,
       'dateTime': dateTime,
@@ -43,5 +45,9 @@ class CreateJobRequestModel {
       'contactsID': contactsID,
       'firstPublishedAt': firstPublishedAt,
     };
+    if (jobID != null) {
+      map['jobID'] = jobID!;
+    }
+    return map;
   }
 }

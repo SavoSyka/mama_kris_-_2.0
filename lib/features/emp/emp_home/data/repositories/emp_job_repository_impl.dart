@@ -17,7 +17,7 @@ class EmpJobRepositoryImpl implements EmpJobRepository {
   EmpJobRepositoryImpl({required this.remoteDataSource});
 
   @override
-  ResultFuture<void> createJob(CreateJobParams params) async {
+  ResultFuture<void> createOrUpdateJob(CreateJobParams params) async {
     try {
       final userID = int.tryParse(await sl<AuthLocalDataSource>().getUserId().toString()) ?? 1;
 
@@ -30,6 +30,7 @@ class EmpJobRepositoryImpl implements EmpJobRepository {
         title: params.title,
         contactsID: params.contactsID,
         firstPublishedAt: '3', // default
+        jobID: params.jobId, // For updates
       );
 
       await remoteDataSource.createJob(request);

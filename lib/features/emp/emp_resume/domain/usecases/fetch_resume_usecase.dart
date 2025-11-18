@@ -6,7 +6,9 @@ import 'package:mama_kris/features/emp/emp_resume/domain/repositories/resume_rep
 class FetchResumeParams {
   final int page;
   final bool isFavorite;
-  FetchResumeParams({required this.page, required this.isFavorite});
+  final String? searchQuery;
+
+  FetchResumeParams({required this.page, required this.isFavorite, this.searchQuery});
 }
 
 class FetchResumeUsecase extends UsecaseWithParams<ResumeList, FetchResumeParams> {

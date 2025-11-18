@@ -11,6 +11,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_cubit.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_state.dart';
 
@@ -143,10 +144,14 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
                                       : null;
                                   if (job == null) return Container();
                                   return _JobCard(
-                                    jobTitle: job.title,
-                                    salaryRange: job.salary,
-                                    onTap: () {
-                                      // TODO: Navigate to job detail
+                                    job: job,
+                                    filterType: selectedFilter,
+                                    onEdit: () {
+                                      debugPrint("jonnnn ${job.contactJobs}");
+                                      context.pushNamed(
+                                        RouteName.createJobPageOne,
+                                        extra: {'job': job},
+                                      );
                                     },
                                   );
                                 },
@@ -249,19 +254,19 @@ class _AdCards extends StatelessWidget {
 
 class _JobCard extends StatelessWidget {
   const _JobCard({
-    required this.jobTitle,
-    required this.salaryRange,
-    required this.onTap,
+    required this.job,
+    required this.filterType,
+    required this.onEdit,
   });
 
-  final String jobTitle;
-  final String salaryRange;
-  final VoidCallback onTap;
+  final EmpJobEntity job;
+  final FilterType filterType;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: filterType == FilterType.active ? null : onEdit,
       child: Container(
         decoration: AppTheme.cardDecoration,
         padding: const EdgeInsets.all(16),
@@ -272,7 +277,7 @@ class _JobCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    jobTitle,
+                    job.title,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -280,7 +285,7 @@ class _JobCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Salary: $salaryRange',
+                    'Salary: ${job.salary}',
                     style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],

@@ -12,26 +12,30 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/entities/contact_job.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_home/domain/entities/create_job_params.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_state.dart';
+import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
 
 class CreateJobPageThree extends StatefulWidget {
-  const CreateJobPageThree({super.key});
+  const CreateJobPageThree({super.key, this.job});
+
+  final EmpJobEntity? job;
 
   @override
   _CreateJobPageThreeState createState() => _CreateJobPageThreeState();
 }
 
 class _CreateJobPageThreeState extends State<CreateJobPageThree> {
-  late Map<String, dynamic> extra;
+  // late Map<String, dynamic> extra;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    extra = GoRouterState.of(context).extra as Map<String, dynamic>;
+    // extra = GoRouterState.of(context).extra as Map<String, dynamic>;
   }
 
   @override
@@ -42,15 +46,18 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
           context.pushNamed(RouteName.homeEmploye);
         } else if (state is CreateJobError) {
           // Show error
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
         return CustomScaffold(
           extendBodyBehindAppBar: true,
-          appBar: const CustomAppBar(title: 'Создание вакансии', showLeading: true),
+          appBar: const CustomAppBar(
+            title: 'Создание вакансии',
+            showLeading: true,
+          ),
 
           body: Container(
             width: double.infinity,
@@ -62,7 +69,10 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
                 children: [
                   const Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: CustomProgressBar(totalProgress: 2, filledProgress: 2),
+                    child: CustomProgressBar(
+                      totalProgress: 2,
+                      filledProgress: 2,
+                    ),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -97,7 +107,7 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
 
         children: [
           Text(
-            extra['speciality'] ?? '',
+            widget.job?.title ?? '',
             style: const TextStyle(
               color: Colors.black,
               fontSize: 20,
@@ -107,11 +117,13 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
             ),
           ),
 
-          if (!(extra['salaryWithAgreement'] ?? false)) ...[
+          if (widget.job?.salaryWithAgreement ?? false) ...[
             const SizedBox(height: 12),
 
             Text(
-              extra['salary'] ?? "",
+              widget.job?.salary ?? '',
+
+              // extra['salary'] ?? "",
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -125,7 +137,8 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
 
           SizedBox(
             child: Text(
-              extra['description'] ?? '',
+              widget.job?.description ?? '',
+
               style: const TextStyle(
                 color: Color(0xFF596574),
                 fontSize: 16,
@@ -151,7 +164,7 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
                     height: 1.30,
                   ),
                 ),
-                contactPreview(extra['contactAddress']),
+                contactPreview(widget.job!.contactJobs),
               ],
             ),
           ),
@@ -164,14 +177,17 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
                 ? null
                 : () {
                     final params = CreateJobParams(
-                      title: extra['speciality'],
-                      description: extra['description'],
-                      salary: extra['salary'],
-                      salaryWithAgreement: extra['salaryWithAgreement'],
-                      contactsID: (extra['contactAddress'] as ContactEntity).contactsID ?? 0,
-                      link: extra['links'],
+                      title: widget.job!.title,
+                      description: widget.job!.description,
+                      salary: widget.job!.salary,
+                      salaryWithAgreement:
+                          widget.job!.salaryWithAgreement ?? false,
+                      contactsID: widget.job!.contactJobs!.contactsID!,
+
+                      link: widget.job!.links ?? "",
+                      jobId: widget.job!.jobId,
                     );
-                    context.read<CreateJobCubit>().createJob(params);
+                    context.read<CreateJobCubit>().createOrUpdateJob(params);
                   },
           ),
 
@@ -214,162 +230,6 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
   }
 }
 
-class _basicInformation extends StatelessWidget {
-  const _basicInformation();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-          const SizedBox(
-            width: 311,
-            child: Text(
-              'Оператор Call-Центра',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
-                height: 1.30,
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 8),
-          const Text(
-            'от 6000 руб',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
-            ),
-          ),
-          const SizedBox(
-            width: 311,
-            child: Text(
-              'Принимаем входящие звонки и консультируем клиентов по готовому скрипту. Ваша задача — помогать, отвечать на вопросы и передавать заказы менеджерам. Подходит для работы из дома в удобное время.',
-              style: TextStyle(
-                color: Color(0xFF596574),
-                fontSize: 16,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w500,
-                height: 1.30,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          const CustomButtonEmployee(btnText: 'Далее'),
-
-          const SizedBox(height: 24),
-
-          CustomButtonSec(
-            btnText: '',
-            onTap: () {
-              // context.pushNamed(Ro uteName.createJobPageOne);
-            },
-            child: const Text(
-              'Рассказать',
-              style: TextStyle(
-                color: Color(0xFF0073BB),
-                fontSize: 16,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
-                height: 1.30,
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 16),
-          const SizedBox(
-            width: 311,
-            child: Text(
-              'Чтобы опубликовать вакансию необходима подписка',
-              style: TextStyle(
-                color: Color(0xFF596574),
-                fontSize: 10,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w500,
-                height: 1.30,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Contacts extends StatelessWidget {
-  const _Contacts();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-          const Text(
-            'Контакты',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: 'Telegram',
-            labelText: "Как с вами связаться?",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: '******',
-            labelText: "Ссылка",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: 'VK',
-            labelText: "Как с вами связаться?",
-            controller: TextEditingController(),
-          ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: '*****',
-            labelText: "Ссылка",
-            controller: TextEditingController(),
-          ),
-          CustomInputText(
-            hintText: '+79997773322',
-            labelText: "Номер телефона",
-            controller: TextEditingController(),
-          ),
-
-          const SizedBox(height: 16),
-          const _updateButtons(),
-        ],
-      ),
-    );
-  }
-}
 
 class _accounts extends StatefulWidget {
   const _accounts();
@@ -493,7 +353,7 @@ class _updateButtons extends StatelessWidget {
   }
 }
 
-Widget contactPreview(ContactEntity? contact) {
+Widget contactPreview(ContactJobs? contact) {
   if (contact == null) {
     return const Text(
       "No contact selected",

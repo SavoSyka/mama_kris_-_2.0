@@ -8,6 +8,7 @@ import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
@@ -50,7 +51,9 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
       appBar: const CustomAppBar(title: "Signup"),
       extendBodyBehindAppBar: true,
       body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
         child: SafeArea(
           bottom: false,
           child: CustomDefaultPadding(

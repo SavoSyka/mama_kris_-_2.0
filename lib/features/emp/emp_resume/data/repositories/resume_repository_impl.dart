@@ -14,11 +14,28 @@ class ResumeRepositoryImpl implements ResumeRepository {
   ResultFuture<ResumeList> fetchUsers({
     required int page,
     required bool isFavorite,
+    String? searchQuery,
   }) async {
     try {
       final value = await remoteDataSource.fetchUsers(
         page: page,
         isFavorite: isFavorite,
+      );
+      return Right(value);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<bool> updatedFavoriting({
+    required String userId,
+    required bool isFavorited,
+  }) async {
+    try {
+      final value = await remoteDataSource.updatedFavoriting(
+        userId: userId,
+        isFavorited: isFavorited,
       );
       return Right(value);
     } catch (e) {

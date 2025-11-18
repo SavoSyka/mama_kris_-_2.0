@@ -47,7 +47,8 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
       extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(title: ''),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
         child: SafeArea(
           child: CustomDefaultPadding(
             child: SingleChildScrollView(

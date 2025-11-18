@@ -8,7 +8,7 @@ class CreateJobCubit extends Cubit<CreateJobState> {
 
   CreateJobCubit({required this.createJobUseCase}) : super(CreateJobInitial());
 
-  Future<void> createJob(CreateJobParams params) async {
+  Future<void> createOrUpdateJob(CreateJobParams params) async {
     emit(CreateJobLoading());
     try {
       final result = await createJobUseCase(params);

@@ -9,6 +9,7 @@ final List<RouteBase> employeRoutes = [
           ? state.extra as DataMap
           : {"pageIndex": 0};
       debugPrint("extra $extra");
+
       return EmpHomeTabScreen(pageIndex: extra['pageIndex'] as int);
     },
   ),
@@ -17,7 +18,10 @@ final List<RouteBase> employeRoutes = [
     path: RouteName.createJobPageOne,
     name: RouteName.createJobPageOne,
     builder: (BuildContext context, GoRouterState state) {
-      return const CreateJobPageOne();
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+      final jobEntity = extra['job'] as EmpJobEntity?;
+      return CreateJobPageOne(job: jobEntity);
     },
   ),
 
@@ -26,19 +30,23 @@ final List<RouteBase> employeRoutes = [
     name: RouteName.createJobPageTwo,
     builder: (BuildContext context, GoRouterState state) {
       // Receive data passed via extra
+
+      // final salary = extra['salary'];
+      // final speciality = extra['speciality'];
+      // final description = extra['description'];
+      // final salaryWithAgreement = extra['salaryWithAgreement'];
+
       final extra = state.extra as Map<String, dynamic>? ?? {};
 
-      final salary = extra['salary'];
-      final speciality = extra['speciality'];
-      final description = extra['description'];
-      final salaryWithAgreement = extra['salaryWithAgreement'];
+      final jobEntity = extra['job'] as EmpJobEntity?;
+      return CreateJobPageTwo(job: jobEntity);
 
-      return CreateJobPageTwo(
-        salary: salary,
-        speciality: speciality,
-        description: description,
-        salaryWithAgreement: salaryWithAgreement,
-      );
+      // return CreateJobPageTwo(
+      //   salary: salary,
+      //   speciality: speciality,
+      //   description: description,
+      //   salaryWithAgreement: salaryWithAgreement,
+      // );
     },
   ),
 
@@ -46,13 +54,16 @@ final List<RouteBase> employeRoutes = [
     path: RouteName.createJobPageThree,
     name: RouteName.createJobPageThree,
     builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+      final jobEntity = extra['job'] as EmpJobEntity?;
+
       return BlocProvider(
         create: (context) => sl<CreateJobCubit>(),
-        child: const CreateJobPageThree(),
+        child: CreateJobPageThree(job: jobEntity),
       );
     },
   ),
-
 
   GoRoute(
     path: RouteName.resumeDetail,
@@ -61,8 +72,6 @@ final List<RouteBase> employeRoutes = [
       return const EmpResumeScreenDetail();
     },
   ),
-
-
 
   GoRoute(
     path: RouteName.editProfileEmployee,
@@ -96,9 +105,4 @@ final List<RouteBase> employeRoutes = [
       );
     },
   ),
-
-
-
-
-
 ];

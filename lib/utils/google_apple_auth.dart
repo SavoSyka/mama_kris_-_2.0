@@ -178,6 +178,7 @@ Future<void> signInWithGoogle(BuildContext context) async {
     // print('🔐 [Google Sign-In] Старт входа');
 
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+   
     if (googleUser == null) {
       // print('❌ [Google Sign-In] Пользователь отменил вход');
       return;
