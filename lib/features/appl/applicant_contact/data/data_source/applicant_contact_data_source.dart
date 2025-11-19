@@ -27,4 +27,6 @@ abstract class ApplicantContactDataSource {
   Future<bool> deleteUserAccount();
 
   Future<bool> updateBasicInfo({required String name, required String dob});
+
+  Future<bool> logout();
 }

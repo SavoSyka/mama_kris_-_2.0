@@ -113,4 +113,10 @@ class EmployeeContactRepositoryImpl implements EmployeeContactRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+  
+  @override
+  ResultFuture<bool> logout() {
+    // TODO: implement logout
+    throw UnimplementedError();
+  }
 }

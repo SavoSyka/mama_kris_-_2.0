@@ -325,9 +325,13 @@ class _AccountsState extends State<_accounts> {
             onTap: () {
               showLogoutDialog(context, isApplicant: true, () {
                 print("Account logout");
+
+                context.read<ApplicantContactBloc>().add(
+                  const LogoutAccountEvent(),
+                );
+                AuthService().signOut();
                 context.pushNamed(RouteName.welcomePage);
 
-                AuthService().signOut();
               });
             },
           ),

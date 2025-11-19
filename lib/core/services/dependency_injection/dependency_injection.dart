@@ -203,7 +203,6 @@ Future<void> _initEmpAuth() async {
   sl.registerLazySingleton(() => EmpLoginWithGoogleUsecase(sl()));
   sl.registerLazySingleton(() => EmpUpdatePasswordUsecase(sl()));
 
-
   // Bloc (factory → new instance per request)
   sl.registerFactory(
     () => EmpAuthBloc(
@@ -215,7 +214,7 @@ Future<void> _initEmpAuth() async {
       resendOtpUsecase: sl(),
       forgotPasswordUsecase: sl(),
       loginWithGoogleUsecase: sl(),
-      updatePasswordUsecase: sl()
+      updatePasswordUsecase: sl(),
     ),
   );
 
@@ -263,6 +262,8 @@ Future<void> _initApplicantContact() async {
   sl.registerLazySingleton(() => DeleteUserAccountUsecase(sl()));
   sl.registerLazySingleton(() => UpdateBasicInfoUsecase(sl()));
 
+  sl.registerLazySingleton(() => LogoutUsecase(sl()));
+
   // Bloc
   sl.registerFactory(
     () => ApplicantContactBloc(
@@ -273,6 +274,7 @@ Future<void> _initApplicantContact() async {
       updateWorkExperienceUseCase: sl(),
       deleteUserAccountUsecase: sl(),
       basicInfoUsecase: sl(),
+      logoutUsecase: sl(),
     ),
   );
 }
@@ -295,6 +297,7 @@ Future<void> _initEmployeeContact() async {
 
   sl.registerLazySingleton(() => DeleteEmployeeAccountUsecase(sl()));
   sl.registerLazySingleton(() => UpdateEmployeeBasicInfoUsecase(sl()));
+  sl.registerLazySingleton(() => LogoutEmployeeUsecase(sl()));
 
   // Bloc
   sl.registerFactory(
@@ -304,6 +307,7 @@ Future<void> _initEmployeeContact() async {
       deleteUseCase: sl(),
       deleteUserAccountUsecase: sl(),
       basicInfoUsecase: sl(),
+      logoutEmployeeUsecase: sl()
     ),
   );
 }
@@ -361,8 +365,8 @@ Future<void> _initSubscriptions() async {
   sl.registerLazySingleton(() => InitiatePaymentUsecase(sl()));
 
   // Bloc
-  sl.registerFactory(() => SubscriptionBloc(
-    getTariffsUsecase: sl(),
-    initiatePaymentUsecase: sl(),
-  ));
+  sl.registerFactory(
+    () =>
+        SubscriptionBloc(getTariffsUsecase: sl(), initiatePaymentUsecase: sl()),
+  );
 }

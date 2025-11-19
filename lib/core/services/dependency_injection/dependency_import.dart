@@ -31,6 +31,7 @@ import 'package:mama_kris/features/appl/appl_profile/domain/repository/user_repo
 import 'package:mama_kris/features/appl/appl_profile/domain/usecase/get_user_data.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_user_account_usecase.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/logout_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_basic_info_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_work_experience_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
@@ -61,6 +62,7 @@ import 'package:mama_kris/features/emp/employe_contact/domain/repository/employe
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/create_employee_contact.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/delete_employee_account_usecase.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/delete_employee_contact.dart';
+import 'package:mama_kris/features/emp/employe_contact/domain/usecase/logout_employee_usecase.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/update_employee_basic_info_usecase.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/update_employee_contact.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';

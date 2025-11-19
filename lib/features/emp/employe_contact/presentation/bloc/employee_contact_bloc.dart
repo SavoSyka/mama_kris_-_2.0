@@ -4,6 +4,7 @@ import 'package:mama_kris/features/emp/employe_contact/domain/entity/employee_co
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/create_employee_contact.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/delete_employee_account_usecase.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/delete_employee_contact.dart';
+import 'package:mama_kris/features/emp/employe_contact/domain/usecase/logout_employee_usecase.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/update_employee_basic_info_usecase.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/update_employee_contact.dart';
 
@@ -12,23 +13,23 @@ part 'employee_contact_state.dart';
 
 /// BLoC for managing applicant contacts.
 /// Handles create, update, delete, and load operations with reactive state management.
-/// 
+///
 class EmployeeContactBloc
     extends Bloc<EmployeeContactEvent, EmployeeContactState> {
-      
   final CreateEmployeeContact _createUseCase;
   final UpdateEmployeeContact _updateUseCase;
   final DeleteEmployeeContact _deleteUseCase;
 
   final DeleteEmployeeAccountUsecase _deleteUserAccountUsecase;
   final UpdateEmployeeBasicInfoUsecase _basicInfoUsecase;
-
+  final LogoutEmployeeUsecase logoutEmployeeUsecase;
   EmployeeContactBloc({
     required CreateEmployeeContact createUseCase,
     required UpdateEmployeeContact updateUseCase,
     required DeleteEmployeeContact deleteUseCase,
     required DeleteEmployeeAccountUsecase deleteUserAccountUsecase,
     required UpdateEmployeeBasicInfoUsecase basicInfoUsecase,
+    required this.logoutEmployeeUsecase,
   }) : _createUseCase = createUseCase,
        _updateUseCase = updateUseCase,
        _deleteUseCase = deleteUseCase,
@@ -40,9 +41,8 @@ class EmployeeContactBloc
     on<DeleteEmployeeContactEvent>(_onDeleteContact);
     on<DeleteUserAccountEvent>(_onDeleteAccount);
     on<UpdatingBasicInfoEvent>(_onUpdateBasicInfo);
+    on<EmpLogoutAccountEvent>(_onLogoutAccount);
   }
-
-
 
   Future<void> _onCreateContact(
     CreateEmployeeContactEvent event,
@@ -92,7 +92,6 @@ class EmployeeContactBloc
     );
   }
 
-
   Future<void> _onDeleteAccount(
     DeleteUserAccountEvent event,
     Emitter<EmployeeContactState> emit,
@@ -140,6 +139,27 @@ class EmployeeContactBloc
         debugPrint("updating name operation succed}");
 
         emit(const UserBasicInfoUpdated());
+      },
+    );
+  }
+
+  Future<void> _onLogoutAccount(
+    EmpLogoutAccountEvent event,
+    Emitter<EmployeeContactState> emit,
+  ) async {
+    emit(const EmployeeContactLoading());
+
+    final result = await logoutEmployeeUsecase();
+
+    result.fold(
+      (failure) {
+        debugPrint("Erro happen  during login out ${failure.message}");
+        emit(EmployeeContactError(failure.message));
+      },
+      (success) {
+        debugPrint("User logged out operation succed}");
+
+        emit(const EmpUserLoggedOutState());
       },
     );
   }

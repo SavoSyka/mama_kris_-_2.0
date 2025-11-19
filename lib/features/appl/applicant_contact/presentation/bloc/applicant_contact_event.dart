@@ -38,19 +38,17 @@ class UpdateApplicantExperience extends ApplicantContactEvent {
   const UpdateApplicantExperience({required this.experience});
 }
 
-
-
 class DeleteUserAccountEvent extends ApplicantContactEvent {
-
   const DeleteUserAccountEvent();
 }
 
-
 class UpdatingBasicInfoEvent extends ApplicantContactEvent {
-final String name;
-final String dob;
+  final String name;
+  final String dob;
 
-  const UpdatingBasicInfoEvent({
-    required this.name, required this.dob, 
-  });
+  const UpdatingBasicInfoEvent({required this.name, required this.dob});
+}
+
+class LogoutAccountEvent extends ApplicantContactEvent {
+  const LogoutAccountEvent();
 }

@@ -223,4 +223,11 @@ class ApplicantContactDataSourceImpl implements ApplicantContactDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
+
+  @override
+  Future<bool> logout() async {
+    await sl<AuthLocalDataSource>().clearAll();
+
+    return true;
+  }
 }

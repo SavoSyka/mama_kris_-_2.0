@@ -109,4 +109,10 @@ class ApplicantContactRepositoryImpl implements ApplicantContactRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+  
+  @override
+  ResultFuture<bool> logout() {
+    // TODO: implement logout
+    throw UnimplementedError();
+  }
 }

@@ -26,12 +26,12 @@ abstract class EmployeeContactRepository {
 
   ResultFuture<List<EmployeeContact>> getAllContacts();
 
-
-
   ResultFuture<bool> deleteUserAccount();
 
   ResultFuture<bool> updateBasicInfo({
     required String name,
     required String dob,
   });
+
+  ResultFuture<bool> logout();
 }

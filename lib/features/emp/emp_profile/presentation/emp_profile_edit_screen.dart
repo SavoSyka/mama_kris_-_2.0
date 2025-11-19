@@ -9,8 +9,10 @@ import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/common/widgets/show_ios_loader.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/auth/auth_service.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
@@ -19,6 +21,7 @@ import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_conta
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/emp_view_basic_information.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_delete_icon_dialog.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_logout_dialog.dart';
+import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
 
 class EmpProfileEditScreen extends StatefulWidget {
   const EmpProfileEditScreen({super.key});
@@ -374,20 +377,48 @@ class _AccountsState extends State<_accounts> {
             onTap: () {
               showLogoutDialog(context, () {
                 print("Account deleted");
+
+                context.read<EmployeeContactBloc>().add(
+                  const EmpLogoutAccountEvent(),
+                );
+                AuthService().signOut();
+
+                context.pushNamed(RouteName.welcomePage);
               });
             },
           ),
           const SizedBox(height: 16),
-          _updateButtons(
-            text: "Управление подпиской",
-            error: true,
-
-            onTap: () {
-              showDeleteAccountDialog(context, () {
-                print("Account deleted");
+          BlocConsumer<EmployeeContactBloc, EmployeeContactState>(
+            listener: (context, state) {
+              if (state is AccountDeleteLoadingState) {
+                showIOSLoader(context);
+              } else if (state is UserAccountDeleted) {
+                Navigator.pop(context);
+                context.read<EmployeeContactBloc>().add(
+                  const EmpLogoutAccountEvent(),
+                );
+                AuthService().signOut();
                 context.pushNamed(RouteName.welcomePage);
-              });
-              // context.pushNamed(RouteName.welcomePage);
+              }
+              // TODO: implement listener
+            },
+            builder: (context, state) {
+              return _updateButtons(
+                text: "Управление подпиской",
+                error: true,
+
+                onTap: () {
+                  showDeleteAccountDialog(context, () {
+                    print("Account deleted");
+
+                    context.read<EmployeeContactBloc>().add(
+                      const DeleteUserAccountEvent(),
+                    );
+                    // context.pushNamed(RouteName.welcomePage);
+                  });
+                  // context.pushNamed(RouteName.welcomePage);
+                },
+              );
             },
           ),
 

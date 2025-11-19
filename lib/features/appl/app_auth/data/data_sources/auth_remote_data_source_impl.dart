@@ -40,6 +40,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await local.saveRefreshToken(refreshToken);
         await local.saveUserId(userId);
 
+        // Save full user data for persistent login
+        await local.saveUser(data['user']);
+
         return Right(user);
       } else {
         throw ApiException(
@@ -268,6 +271,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
-
-
 }

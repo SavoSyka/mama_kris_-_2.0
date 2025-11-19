@@ -6,6 +6,7 @@ import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/create_
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_applicant_contact.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_user_account_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/get_all_applicant_contacts.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/logout_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_applicant_contact.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_basic_info_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_work_experience_usecase.dart';
@@ -25,6 +26,7 @@ class ApplicantContactBloc
 
   final DeleteUserAccountUsecase _deleteUserAccountUsecase;
   final UpdateBasicInfoUsecase _basicInfoUsecase;
+  final LogoutUsecase logoutUsecase;
   ApplicantContactBloc({
     required CreateApplicantContactUseCase createUseCase,
     required UpdateApplicantContactUseCase updateUseCase,
@@ -33,6 +35,7 @@ class ApplicantContactBloc
     required UpdateWorkExperienceUseCase updateWorkExperienceUseCase,
     required DeleteUserAccountUsecase deleteUserAccountUsecase,
     required UpdateBasicInfoUsecase basicInfoUsecase,
+    required this.logoutUsecase,
   }) : _createUseCase = createUseCase,
        _updateUseCase = updateUseCase,
        _deleteUseCase = deleteUseCase,
@@ -48,6 +51,7 @@ class ApplicantContactBloc
     on<UpdateApplicantExperience>(_onUpdateWorkExperience);
     on<DeleteUserAccountEvent>(_onDeleteAccount);
     on<UpdatingBasicInfoEvent>(_onUpdateBasicInfo);
+    on<LogoutAccountEvent>(_onLogoutAccount);
   }
 
   Future<void> _onLoadContacts(
@@ -179,6 +183,27 @@ class ApplicantContactBloc
         debugPrint("updating name operation succed}");
 
         emit(const UserBasicInfoUpdated());
+      },
+    );
+  }
+
+  Future<void> _onLogoutAccount(
+    LogoutAccountEvent event,
+    Emitter<ApplicantContactState> emit,
+  ) async {
+    emit(const AccountDeleteLoadingState());
+
+    final result = await logoutUsecase();
+
+    result.fold(
+      (failure) {
+        debugPrint("Erro happen  during login out ${failure.message}");
+        emit(ApplicantContactError(failure.message));
+      },
+      (success) {
+        debugPrint("User logged out operation succed}");
+
+        emit(const UserLoggedOutState());
       },
     );
   }

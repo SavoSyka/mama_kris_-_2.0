@@ -39,10 +39,13 @@ class EmpAuthRemoteDataSourceImpl implements EmpAuthRemoteDataSource {
         final refreshToken = user.refreshToken;
         final userId = user.userId.toString();
 
-        await local.saveUserType(true);
+        await local.saveUserType(false);
         await local.saveToken(accessToken);
         await local.saveRefreshToken(refreshToken);
         await local.saveUserId(userId);
+
+        // Save full user data for persistent login
+        await local.saveUser(data['user']);
 
         return Right(user);
       } else {

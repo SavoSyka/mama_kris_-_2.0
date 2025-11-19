@@ -65,3 +65,7 @@ class UserBasicInfoUpdated extends ApplicantContactState {
 class AccountDeleteLoadingState extends ApplicantContactState {
   const AccountDeleteLoadingState();
 }
+
+class UserLoggedOutState extends ApplicantContactState {
+  const UserLoggedOutState();
+}

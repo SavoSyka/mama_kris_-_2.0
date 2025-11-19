@@ -56,12 +56,14 @@ class UserAccountDeleted extends EmployeeContactState {
   const UserAccountDeleted();
 }
 
-
-
 class UserBasicInfoUpdated extends EmployeeContactState {
   const UserBasicInfoUpdated();
 }
 
 class AccountDeleteLoadingState extends EmployeeContactState {
   const AccountDeleteLoadingState();
+}
+
+class EmpUserLoggedOutState extends EmployeeContactState {
+  const EmpUserLoggedOutState();
 }

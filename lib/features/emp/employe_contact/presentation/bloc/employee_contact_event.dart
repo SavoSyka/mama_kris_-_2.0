@@ -42,3 +42,7 @@ class UpdatingBasicInfoEvent extends EmployeeContactEvent {
 
   const UpdatingBasicInfoEvent({required this.name, required this.dob});
 }
+
+class EmpLogoutAccountEvent extends EmployeeContactEvent {
+  const EmpLogoutAccountEvent();
+}
