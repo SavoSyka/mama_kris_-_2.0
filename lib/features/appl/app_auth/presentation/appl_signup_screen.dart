@@ -48,7 +48,7 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: const CustomAppBar(title: "Signup"),
+      appBar: const CustomAppBar(title: ""),
       extendBodyBehindAppBar: true,
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),

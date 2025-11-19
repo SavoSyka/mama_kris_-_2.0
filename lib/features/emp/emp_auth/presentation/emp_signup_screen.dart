@@ -50,7 +50,7 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: const CustomAppBar(title: "Signup"),
+      appBar: const CustomAppBar(title: ""),
       extendBodyBehindAppBar: true,
       body: Container(
         decoration: const BoxDecoration(color: AppPalette.empBgColor),
@@ -260,4 +260,5 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
       ),
     );
   }
+
 }

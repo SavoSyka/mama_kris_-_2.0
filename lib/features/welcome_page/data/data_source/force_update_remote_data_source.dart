@@ -21,9 +21,9 @@ class ForceUpdateRemoteDataSourceImpl implements ForceUpdateRemoteDataSource {
     required String platformType,
   }) async {
     try {
-      final response = await dio.get(
+      final response = await dio.post(
         ApiConstants.forceUpdate,
-        queryParameters: {"versionNumber": versionNumber, "platformType": platformType},
+        data: {"versionNumber": versionNumber, "platformType": platformType},
       );
       return ForceUpdateModel.fromJson(response.data);
     } on DioException catch (e) {

@@ -111,7 +111,7 @@ class _ApplHomeTabScreenState extends State<ApplHomeTabScreen> {
                     ? AppPalette.primaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.profile,
+              label: "Профиль",
             ),
           ],
         ),

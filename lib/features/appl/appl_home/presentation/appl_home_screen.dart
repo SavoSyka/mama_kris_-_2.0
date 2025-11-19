@@ -26,6 +26,7 @@ import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/empty_job_view.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/filter_action_buttons.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/home_search_page.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/widget/resume_speciality_search_page.dart';
 
 class ApplHomeScreen extends StatefulWidget {
   const ApplHomeScreen({super.key});
@@ -413,19 +414,47 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     context.read<JobBloc>().add(SearchJobsEvent(query));
   }
 
-  Future<void> _openSearchPage() async {
-    final query = await Navigator.of(
+  
+
+  void _openSearchPage() async {
+    Navigator.push(
       context,
-    ).push<String>(MaterialPageRoute(builder: (_) => const HomeSearchPage()));
+      MaterialPageRoute(
+        builder: (context) => ResumeSpecialitySearchPage(
+          isApplicant: true,
+          onSpecialitySelected: (selectedSpeciality) {
+            if (selectedSpeciality.isNotEmpty &&
+                _searchQuery != selectedSpeciality) {
+              setState(() {
+                _searchQuery = selectedSpeciality;
+              });
 
-    if (query != null && query.isNotEmpty) {
-      setState(() => _searchQuery = query);
-      _handleFilters();
-      // Trigger your Bloc search event
-
-      debugPrint('Searching for: $query');
-    }
+              _handleFilters();
+            }
+            // Do whatever you want with the selected speciality
+            print('Selected: $selectedSpeciality');
+          },
+        ),
+      ),
+    );
+  
   }
+
+  
+  
+  // Future<void> _openSearchPage() async {
+  //   final query = await Navigator.of(
+  //     context,
+  //   ).push<String>(MaterialPageRoute(builder: (_) => const HomeSearchPage()));
+
+  //   if (query != null && query.isNotEmpty) {
+  //     setState(() => _searchQuery = query);
+  //     _handleFilters();
+  //     // Trigger your Bloc search event
+
+  //     debugPrint('Searching for: $query');
+  //   }
+  // }
 
   int _calculateItemCount(int jobsLength, bool hasNextPage, bool isSliderMode) {
     // 1 for header + content

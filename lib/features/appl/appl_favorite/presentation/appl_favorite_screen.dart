@@ -11,6 +11,7 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/job_list_item.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/appl_favorite/presentation/bloc/liked_job_bloc_bloc.dart';
+import 'package:mama_kris/features/appl/appl_favorite/presentation/widget/empty_favorite_job.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
@@ -62,7 +63,7 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
           child: CustomDefaultPadding(
-            top: 0, 
+            top: 0,
             bottom: 0,
             child: BlocBuilder<LikedJobBlocBloc, LikedJobBlocState>(
               builder: (context, state) {
@@ -96,43 +97,50 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                         ),
                       )
                     else if (state is LikedJobLoadedState)
-                      Expanded(
-                        child: ListView.separated(
-                          controller: _scrollController,
-                          // shrinkWrap: true,
-                          // physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            if (index < state.jobs.likedJob.length) {
-                              final job = state.jobs.likedJob[index];
-                              return JobListItem(
-                                jobTitle:
-                                    "${job.job.title}",
-                                salaryRange: job.job.salary.toString(),
-                                onTap: () async => await ApplicantJobDetail(
-                                  context,
-                                  job: job.job,
-                                  showStar: false,
+                      state.jobs.likedJob.isEmpty
+                          ? Expanded(
+                              child: EmptyFavoriteJob(
+                                title: "No Favorite Jobs Found",
+                                onRefresh: _handleRefresh,
+                              ),
+                            )
+                          : Expanded(
+                              child: ListView.separated(
+                                controller: _scrollController,
+                                // shrinkWrap: true,
+                                // physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  if (index < state.jobs.likedJob.length) {
+                                    final job = state.jobs.likedJob[index];
+                                    return JobListItem(
+                                      jobTitle: job.job.title,
+                                      salaryRange: job.job.salary.toString(),
+                                      onTap: () async =>
+                                          await ApplicantJobDetail(
+                                            context,
+                                            job: job.job,
+                                            showStar: false,
 
-                                  onLiked: () async {
-                                    context.read<JobBloc>().add(
-                                      LikeJobEvent(job.jobId),
+                                            onLiked: () async {
+                                              context.read<JobBloc>().add(
+                                                LikeJobEvent(job.jobId),
+                                              );
+                                              Navigator.maybePop(context);
+                                            },
+                                          ),
                                     );
-                                    Navigator.maybePop(context);
-                                  },
-                                ),
-                              );
-                            } else if (state.jobs.hasNextPage) {
-                              // Loader at bottom
-                              return const IPhoneLoader();
-                            }
-                            return null;
-                          },
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 8),
-                          itemCount: state.jobs.likedJob.length + 1,
-                        ),
+                                  } else if (state.jobs.hasNextPage) {
+                                    // Loader at bottom
+                                    return const IPhoneLoader();
+                                  }
+                                  return null;
+                                },
+                                separatorBuilder: (_, __) =>
+                                    const SizedBox(height: 8),
+                                itemCount: state.jobs.likedJob.length + 1,
+                              ),
 
-                        /*
+                              /*
                              SingleChildScrollView(
                               controller: _scrollController,
                               physics: const AlwaysScrollableScrollPhysics(),
@@ -165,7 +173,7 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                               ),
                             ),
                           */
-                      ),
+                            ),
                   ],
                 );
               },
@@ -208,5 +216,12 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
 
   void handleFetchJobs() {
     context.read<LikedJobBlocBloc>().add(const FetchLikedJobEvent());
+  }
+
+  Future<void> _handleRefresh() async {
+    handleFetchJobs();
+    await context.read<LikedJobBlocBloc>().stream.firstWhere(
+      (state) => state is LikedJobLoadedState || state is LikedJobError,
+    );
   }
 }

@@ -98,9 +98,10 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
                               const SizedBox(height: 20),
 
                               /// Специализация -- Speciliasaton
-                              _Specalisations(
-                                specializations: user.specializations,
-                              ),
+                              if (user.specializations != null)
+                                _Specalisations(
+                                  specializations: user.specializations,
+                                ),
                               const SizedBox(height: 20),
 
                               /// Опыт работы-- Experience
@@ -175,22 +176,58 @@ class _AcceptOrders extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              Text(
-                '$birthDate (26 лет)',
-                style: const TextStyle(
-                  color: AppPalette.greyDark,
+              if (birthDate != null)
+                Text(
+                  formatBirthDateWithAge(birthDate!),
+                  style: const TextStyle(
+                    color: AppPalette.greyDark,
 
-                  fontSize: 12,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w500,
-                  height: 1.30,
+                    fontSize: 12,
+                    fontFamily: 'Manrope',
+                    fontWeight: FontWeight.w500,
+                    height: 1.30,
+                  ),
                 ),
-              ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  String formatBirthDateWithAge(String birthDateStr) {
+    if (birthDateStr.isEmpty) return '';
+
+    try {
+      // Parse backend format: yyyy-MM-dd
+      final date = DateTime.parse(birthDateStr);
+      final now = DateTime.now();
+
+      int age = now.year - date.year;
+      if (now.month < date.month ||
+          (now.month == date.month && now.day < date.day)) {
+        age--;
+      }
+
+      // Russian plural form logic
+      String ageText;
+      if (age % 10 == 1 && age % 100 != 11) {
+        ageText = "$age год";
+      } else if ([2, 3, 4].contains(age % 10) &&
+          ![12, 13, 14].contains(age % 100)) {
+        ageText = "$age года";
+      } else {
+        ageText = "$age лет";
+      }
+
+      // Format date into dd.MM.yyyy
+      final formattedDate =
+          "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}";
+
+      return "$formattedDate ($ageText)";
+    } catch (_) {
+      return birthDateStr;
+    }
   }
 }
 

@@ -180,6 +180,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Salary Fields
+                         if(!showByAgreement)...[
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -241,6 +242,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                             ),
 
                             const SizedBox(height: 20),
+                         ],
                             const Text(
                               'Зарплата',
                               style: TextStyle(

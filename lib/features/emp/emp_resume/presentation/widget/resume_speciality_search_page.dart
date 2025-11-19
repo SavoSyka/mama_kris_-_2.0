@@ -1,27 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
+import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
+import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_state.dart';
 
 class ResumeSpecialitySearchPage extends StatefulWidget {
   final Function(String speciality) onSpecialitySelected;
+  final bool isApplicant;
 
   const ResumeSpecialitySearchPage({
-    Key? key,
+    super.key,
+    this.isApplicant = false,
     required this.onSpecialitySelected,
-  }) : super(key: key);
+  });
 
   @override
-  State<ResumeSpecialitySearchPage> createState() => _ResumeSpecialitySearchPageState();
+  State<ResumeSpecialitySearchPage> createState() =>
+      _ResumeSpecialitySearchPageState();
 }
 
-class _ResumeSpecialitySearchPageState extends State<ResumeSpecialitySearchPage> {
+class _ResumeSpecialitySearchPageState
+    extends State<ResumeSpecialitySearchPage> {
   final TextEditingController _searchController = TextEditingController();
   late SpecialitySearchBloc _specialitySearchBloc;
 
@@ -53,47 +62,49 @@ class _ResumeSpecialitySearchPageState extends State<ResumeSpecialitySearchPage>
   Widget build(BuildContext context) {
     return BlocBuilder<SpecialitySearchBloc, SpecialitySearchState>(
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => Navigator.pop(context),
-            ),
-            title: const CustomText(
-              text: 'Выберите специальность',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Manrope',
-                color: Colors.black,
-              ),
-            ),
-            centerTitle: true,
+        return CustomScaffold(
+          extendBodyBehindAppBar: true,
+          appBar: const CustomAppBar(
+            title: 'Выберите специальность',
+            showLeading: true,
+            alignTitleToEnd: true,
           ),
-          body: Column(
-            children: [
-              // Search Field
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-                child: CustomInputText(
-                  controller: _searchController,
-                  hintText: 'Например: Дизайнер, Программист...',
-                  labelText: 'Специальность',
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                  onChanged: (value) => _onSearchChanged(),
-                ),
-              ),
+          body: Container(
+            decoration: widget.isApplicant
+                ? const BoxDecoration(gradient: AppTheme.primaryGradient)
+                : const BoxDecoration(color: AppPalette.empBgColor),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
 
-              const Divider(height: 1),
+                  /// ---------- iOS-style Search Field ----------
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    child: CustomInputText(
+                      controller: _searchController,
+                      hintText: 'Например: Дизайнер, Программист...',
+                      labelText: '',
+                      autoFocus: true,
+                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                      onChanged: (_) => _onSearchChanged(),
+                    ),
+                  ),
 
-              // Results
-              Expanded(
-                child: _buildBody(state),
+                  /// Divider with subtle opacity
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Divider(
+                      height: 1,
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
+                  ),
+
+                  /// ---------- Results ----------
+                  Expanded(child: _buildBody(state)),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
@@ -103,7 +114,8 @@ class _ResumeSpecialitySearchPageState extends State<ResumeSpecialitySearchPage>
   Widget _buildBody(SpecialitySearchState state) {
     if (state is SpecialitySearchLoading) {
       return const Center(
-        child: CircularProgressIndicator(strokeWidth: 2),
+        child: IPhoneLoader(),
+        // CircularProgressIndicator(strokeWidth: 2),
       );
     }
 
@@ -114,25 +126,31 @@ class _ResumeSpecialitySearchPageState extends State<ResumeSpecialitySearchPage>
           children: [
             const Icon(Icons.error_outline, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
-            CustomText(text: state.message, style: const TextStyle(color: Colors.red)),
+            CustomText(
+              text: state.message,
+              style: const TextStyle(color: Colors.red),
+            ),
             const SizedBox(height: 16),
             CustomButtonApplicant(
               btnText: 'Повторить',
-              onTap: () => _specialitySearchBloc.searchWithDebounce(_searchController.text.trim()),
+              onTap: () => _specialitySearchBloc.searchWithDebounce(
+                _searchController.text.trim(),
+              ),
             ),
           ],
         ),
       );
     }
 
+    /// ---------- Initial State ----------
     if (_searchController.text.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomImageView(imagePath: MediaRes.search ?? '', width: 120),
-            const SizedBox(height: 24),
-            const CustomText(
+            SizedBox(height: 24),
+            CustomText(
               text: 'Начните поиск специальности',
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
@@ -141,12 +159,17 @@ class _ResumeSpecialitySearchPageState extends State<ResumeSpecialitySearchPage>
       );
     }
 
+    /// ---------- Empty Results ----------
     if (state is SpecialitySearchLoaded && state.specialities.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.sentiment_dissatisfied, size: 64, color: Colors.grey),
+            const Icon(
+              Icons.sentiment_dissatisfied,
+              size: 64,
+              color: Colors.grey,
+            ),
             const SizedBox(height: 16),
             CustomText(
               text: 'Ничего не найдено по запросу\n"${_searchController.text}"',
@@ -158,7 +181,10 @@ class _ResumeSpecialitySearchPageState extends State<ResumeSpecialitySearchPage>
       );
     }
 
-    final specialities = state is SpecialitySearchLoaded ? state.specialities : [];
+    /// ---------- Results List ----------
+    final specialities = state is SpecialitySearchLoaded
+        ? state.specialities
+        : [];
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -167,17 +193,21 @@ class _ResumeSpecialitySearchPageState extends State<ResumeSpecialitySearchPage>
         final speciality = specialities[index];
         return InkWell(
           onTap: () => _selectSpeciality(speciality.name),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Colors.grey.shade200),
+                bottom: BorderSide(color: Colors.grey.withOpacity(0.15)),
               ),
             ),
             child: Row(
               children: [
-                const Icon(Icons.work_outline, color: Colors.grey, size: 20),
+                Icon(
+                  Icons.work_outline,
+                  color: Colors.grey.withOpacity(0.7),
+                  size: 20,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: CustomText(
@@ -189,7 +219,7 @@ class _ResumeSpecialitySearchPageState extends State<ResumeSpecialitySearchPage>
                     ),
                   ),
                 ),
-                const Icon(Icons.chevron_right, color: Colors.grey),
+                Icon(Icons.chevron_right, color: Colors.grey.withOpacity(0.5)),
               ],
             ),
           ),

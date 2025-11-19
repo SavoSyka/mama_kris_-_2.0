@@ -6,9 +6,9 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     navigatorKey: globalNavigatorKey,
 
-    // initialLocation: RouteName.initialPage,// inital page for checking force update.
-    initialLocation: RouteName
-        .welcomePage, // displays where users selcet between applicant and employee
+    initialLocation: RouteName.initialPage,// inital page for checking force update.
+    // initialLocation: RouteName
+    //     .welcomePage, // displays where users selcet between applicant and employee
 
     routes: <RouteBase>[
       ...authRoutes,

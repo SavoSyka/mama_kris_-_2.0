@@ -2,7 +2,7 @@ class ApiConstants {
   ApiConstants._();
 
   // auth
-  static const forceUpdate = 'client-version/1';
+  static const forceUpdate = 'client-version/check';
 
   static const login = 'auth/login';
 
@@ -55,9 +55,6 @@ class ApiConstants {
   static String getSpeciality = 'jobs/autocomplete';
 
   static const favoriteProfiles = "favorite-profiles";
-  static  generatePaymentLink(String userId) => "payments.v3/generate-link/$userId";
-
-
-
-  
+  static generatePaymentLink(String userId) =>
+      "payments.v3/generate-link/$userId";
 }

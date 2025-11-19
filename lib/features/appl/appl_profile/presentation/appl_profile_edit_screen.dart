@@ -12,6 +12,7 @@ import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/show_ios_loader.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/auth/auth_service.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_basic_info.dart';
@@ -325,6 +326,8 @@ class _AccountsState extends State<_accounts> {
               showLogoutDialog(context, isApplicant: true, () {
                 print("Account logout");
                 context.pushNamed(RouteName.welcomePage);
+
+                AuthService().signOut();
               });
             },
           ),
