@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 
@@ -49,7 +50,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           : Text(title, style: const TextStyle(color: Colors.black)),
       leading: showLeading
           ? IconButton(
-              onPressed: onLeadingPressed ?? () => Navigator.of(context).pop(),
+              onPressed: onLeadingPressed ?? () => context.pop(),
               icon: Container(
                 padding: const EdgeInsets.all(6), // Touch target padding
                 decoration: AppTheme.cardDecoration.copyWith(

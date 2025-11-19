@@ -29,24 +29,37 @@ final List<RouteBase> employeRoutes = [
     path: RouteName.createJobPageTwo,
     name: RouteName.createJobPageTwo,
     builder: (BuildContext context, GoRouterState state) {
-      // Receive data passed via extra
-
-      // final salary = extra['salary'];
-      // final speciality = extra['speciality'];
-      // final description = extra['description'];
-      // final salaryWithAgreement = extra['salaryWithAgreement'];
-
       final extra = state.extra as Map<String, dynamic>? ?? {};
 
       final jobEntity = extra['job'] as EmpJobEntity?;
-      return CreateJobPageTwo(job: jobEntity);
+      final newContact = extra['newContact'] as ContactEntity?;
 
-      // return CreateJobPageTwo(
-      //   salary: salary,
-      //   speciality: speciality,
-      //   description: description,
-      //   salaryWithAgreement: salaryWithAgreement,
-      // );
+      // If we have a new contact, create a job entity with it
+      EmpJobEntity? finalJobEntity = jobEntity;
+      if (newContact != null) {
+        finalJobEntity = EmpJobEntity(
+          jobId: 0,
+          userId: 0,
+          contactsId: newContact.contactsID ?? 0,
+          title: '',
+          description: '',
+          salary: '',
+          status: 'draft',
+          dateTime: '',
+          contactJobs: ContactJobs(
+            contactsID: newContact.contactsID,
+            name: newContact.name,
+            telegram: newContact.telegram,
+            email: newContact.email,
+            phone: newContact.phone,
+            whatsapp: newContact.whatsapp,
+            vk: newContact.vk,
+            link: newContact.link,
+          ),
+        );
+      }
+
+      return CreateJobPageTwo(job: finalJobEntity);
     },
   ),
 
@@ -91,6 +104,7 @@ final List<RouteBase> employeRoutes = [
         contact: extra['contact'] != null
             ? extra['contact'] as ContactEntity
             : null,
+        fromJobCreation: extra['fromJobCreation'] as bool? ?? false,
       );
     },
   ),

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 
 Future<ContactEntity?> showSelectContactSheet(
@@ -87,6 +89,72 @@ Future<ContactEntity?> showSelectContactSheet(
                     ),
 
                     const SizedBox(height: 12),
+
+                    // --- Add New Contact Button ---
+                    GestureDetector(
+                      onTap: () async {
+                        final result = await context.pushNamed(
+                          RouteName.editProfileContactInfoEmployee,
+                          extra: {'fromJobCreation': true},
+                        );
+
+                        debugPrint("returned contact, $result");
+
+                        if (result != null &&
+                            result is Map &&
+                            result['newContact'] != null) {
+                          final ContactEntity contact = result['newContact'];
+
+                          // Return ONLY the ContactEntity
+                          Navigator.pop(context, contact);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: AppPalette.empPrimaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: AppPalette.empPrimaryColor.withOpacity(0.3),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: AppPalette.empPrimaryColor.withOpacity(
+                                  0.15,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                CupertinoIcons.add,
+                                size: 18,
+                                color: AppPalette.empPrimaryColor,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            const Expanded(
+                              child: Text(
+                                "Add New Contact",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppPalette.empPrimaryColor,
+                                ),
+                              ),
+                            ),
+                            const Icon(
+                              CupertinoIcons.chevron_right,
+                              color: AppPalette.empPrimaryColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
                     // --- Contacts List ---
                     Expanded(

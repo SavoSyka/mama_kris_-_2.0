@@ -17,14 +17,22 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc
 import 'package:mama_kris/features/appl/applicant_contact/domain/entity/applicant_contact.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
+import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/entities/contact_job.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/entity/employee_contact.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
 
 class EmpCreateContactScreen extends StatefulWidget {
   final ContactEntity? contact; // if null, create new
+  final bool
+  fromJobCreation; // if true, pop back with contact instead of navigating to home
 
-  const EmpCreateContactScreen({super.key, this.contact});
+  const EmpCreateContactScreen({
+    super.key,
+    this.contact,
+    this.fromJobCreation = false,
+  });
 
   @override
   State<EmpCreateContactScreen> createState() => _EmpCreateContactScreenState();
@@ -39,6 +47,8 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
   late TextEditingController _phoneController;
 
   final _formKey = GlobalKey<FormState>();
+
+  ContactEntity? _localContact;
 
   @override
   void initState() {
@@ -68,7 +78,7 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
 
   void _saveContact() {
     if (!_formKey.currentState!.validate()) return;
-    final localContact = EmployeeContact(
+    final cont = EmployeeContact(
       contactId: 0, // MOCKID i donn use it in my ocee
       name: _nameController.text.trim(),
       telegram: _telegramController.text.trim(),
@@ -84,12 +94,12 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
 
     if (widget.contact == null) {
       context.read<EmployeeContactBloc>().add(
-        CreateEmployeeContactEvent(contact: localContact),
+        CreateEmployeeContactEvent(contact: cont!),
       );
     } else {
       context.read<EmployeeContactBloc>().add(
         UpdateEmployeeContactEvent(
-          contact: localContact,
+          contact: cont!,
           id: widget.contact?.contactsID.toString() ?? '',
         ),
       );
@@ -107,7 +117,7 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
         listener: (context, state) {
           debugPrint("state after deleted $state");
           if (state is EmployeeContactCreated) {
-            final cont = ContactEntity(
+             _localContact = ContactEntity(
               name: state.contact.name,
               contactsID: state.contact.contactId,
               email: state.contact.email,
@@ -117,7 +127,7 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
               vk: state.contact.vk,
               whatsapp: state.contact.whatsapp,
             );
-            updateCreatedContact(cont);
+            updateCreatedContact(_localContact!);
           } else if (state is EmployeeContactUpdated) {
             final cont = ContactEntity(
               name: state.contact.name,
@@ -133,6 +143,11 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
           } else if (state is EmployeeContactDeleted) {
             debugPrint("Contact deleted in ui");
             updateDeletedContact();
+          } else if (state is EmployeeContactError) {
+            // Show error message
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
           // TODO: implement listener
         },
@@ -140,10 +155,20 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
           return BlocListener<EmpUserBloc, EmpUserState>(
             listener: (context, state) {
               if (state is EmpUserLoaded) {
-                context.goNamed(
-                  RouteName.homeEmploye,
-                  extra: {'pageIndex': 3},
-                );
+                if (widget.fromJobCreation) {
+                  // Navigate back to job creation page with the new contact
+                  // We need to go back to the job creation page and pass the contact
+
+
+                  context.pop({
+                    'newContact': _localContact,
+                  });
+                } else {
+                  context.goNamed(
+                    RouteName.homeEmploye,
+                    extra: {'pageIndex': 3},
+                  );
+                }
               }
               // TODO: implement listener
             },

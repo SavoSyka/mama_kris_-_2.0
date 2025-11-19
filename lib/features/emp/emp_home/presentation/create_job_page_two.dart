@@ -223,23 +223,9 @@ class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
 
     if (userState is EmpUserLoaded) {
       contacts = userState.user.contacts ?? [];
-    } else {
-      contacts = [
-        const ContactModel(
-          name: "Personal",
-          telegram: "@rob_telegram",
-          email: "robera@example.com",
-        ),
-        const ContactModel(
-          name: "Work",
-          whatsapp: "+251912345678",
-          email: "work@example.com",
-          vk: "@robera_vk",
-        ),
-      ];
-    }
+    } 
 
-    // Wait for the bottom sheet to return selected contact
+    // Wait for the bottom sheet to return selected contact (or newly created)
     final selectedContact = await showSelectContactSheet(
       context,
       contacts: contacts,
