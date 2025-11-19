@@ -5,22 +5,33 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart'; // ← Add this pac
 
 class AuthService {
   // ==================== GOOGLE SIGN-IN ====================
+
+final GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: ['openid', 'email', 'profile'],
+  serverClientId: 
+  "86099763542-a94uom1ijlqu6jp263dtc43dvgd540np.apps.googleusercontent.com"
+
+);
+
 Future<Map<String, dynamic>?> signInWithGoogle() async {
   try {
-    // Step 1: Google Sign-In
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if (googleUser == null) return null;
 
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
-    final String? idToken = googleAuth.idToken;       // ← Send this to backend
+    final String? idToken = googleAuth.idToken;      
     final String? accessToken = googleAuth.accessToken;
 
-    // Step 2: Firebase Sign-in
+    if (idToken == null) {
+      debugPrint("❌ Google Sign-In ERROR: idToken is null");
+      return null;
+    }
+
     final OAuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: accessToken,
       idToken: idToken,
+      accessToken: accessToken,
     );
 
     final UserCredential userCredential =
@@ -28,17 +39,17 @@ Future<Map<String, dynamic>?> signInWithGoogle() async {
 
     final user = userCredential.user;
 
-    // Step 3: Return everything you need
     return {
       "firebaseUser": user,
-      "googleIdToken": idToken,
+      "googleIdToken": idToken,       
       "googleAccessToken": accessToken,
       "email": googleUser.email,
       "name": googleUser.displayName,
       "photoUrl": googleUser.photoUrl,
     };
+
   } catch (e) {
-    debugPrint("Google Sign-In Error: $e");
+    debugPrint("⛔ Google Sign-In Error: $e");
     return null;
   }
 }

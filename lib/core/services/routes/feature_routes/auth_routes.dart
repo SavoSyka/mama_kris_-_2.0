@@ -142,7 +142,7 @@ final List<RouteBase> authRoutes = [
 
   GoRoute(
     path: RouteName.updateEmployeePwd,
-    name: RouteName.changeEmployeePwd,
+    name: RouteName.updateEmployeePwd,
     builder: (BuildContext context, GoRouterState state) {
       return const EmpUpdatePasswordScreen();
     },

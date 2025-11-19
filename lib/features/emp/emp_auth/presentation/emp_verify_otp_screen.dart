@@ -55,7 +55,8 @@ class _EmpVerifyOtpScreenState extends State<EmpVerifyOtpScreen> {
       extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(title: 'Верификация', showLeading: true),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
+      
         child: SafeArea(
           child: CustomDefaultPadding(
             top: 0,
