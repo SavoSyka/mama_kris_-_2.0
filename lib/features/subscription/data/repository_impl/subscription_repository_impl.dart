@@ -22,4 +22,14 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  ResultFuture<String?> initiatePayment(SubscriptionEntity tariff) async {
+    try {
+      final value = await remoteDataSource.initiatePayment(tariff);
+      return Right(value);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

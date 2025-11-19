@@ -3,4 +3,5 @@ import 'package:mama_kris/features/subscription/domain/entity/subscription_entit
 
 abstract class SubscriptionRepository {
   ResultFuture<List<SubscriptionEntity>> getTariffs();
+  ResultFuture<String?> initiatePayment(SubscriptionEntity tariff);
 }

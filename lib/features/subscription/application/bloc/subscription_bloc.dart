@@ -1,18 +1,21 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:mama_kris/features/emp/emp_resume/domain/usecases/fetch_resume_usecase.dart';
-import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
-import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
 import 'package:mama_kris/features/subscription/application/bloc/subscription_event.dart';
 import 'package:mama_kris/features/subscription/application/bloc/subscription_state.dart';
 import 'package:mama_kris/features/subscription/domain/usecase/get_tariffs_usecase.dart';
+import 'package:mama_kris/features/subscription/domain/usecase/initiate_payment_usecase.dart';
 
 class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
   final GetTariffsUsecase getTariffsUsecase;
+  final InitiatePaymentUsecase initiatePaymentUsecase;
 
-  SubscriptionBloc({required this.getTariffsUsecase}) : super(SubscriptionInitialState()) {
+  SubscriptionBloc({
+    required this.getTariffsUsecase,
+    required this.initiatePaymentUsecase,
+  }) : super(SubscriptionInitialState()) {
     on<FetchSubscriptionEvent>(_onGetTariffs);
+    on<InitiatePaymentEvent>(_onInitiatePayment);
   }
 
   //* ────────────────────── FETCH FIRST PAGE ──────────────────────
@@ -35,6 +38,32 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
       );
     } catch (e) {
       emit(SubscriptionErrorState(e.toString()));
+    }
+  }
+
+  //* ────────────────────── INITIATE PAYMENT ──────────────────────
+  Future<void> _onInitiatePayment(
+    InitiatePaymentEvent event,
+    Emitter<SubscriptionState> emit,
+  ) async {
+    emit(PaymentInitiatingState());
+    try {
+      final result = await initiatePaymentUsecase(event.tariff);
+
+      result.fold(
+        (failure) {
+          emit(PaymentErrorState(failure.message));
+        },
+        (paymentUrl) {
+          if (paymentUrl != null) {
+            emit(PaymentInitiatedState(paymentUrl: paymentUrl));
+          } else {
+            emit(PaymentErrorState('Failed to generate payment URL'));
+          }
+        },
+      );
+    } catch (e) {
+      emit(PaymentErrorState(e.toString()));
     }
   }
 

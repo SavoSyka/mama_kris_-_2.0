@@ -101,6 +101,9 @@ void main() async {
         BlocProvider(create: (context) => sl<ApplicantContactBloc>()),
         BlocProvider(create: (context) => sl<EmployeeContactBloc>()),
         BlocProvider(create: (context) => sl<SpecialitySearchBloc>()),
+        BlocProvider(create: (context) => sl<SubscriptionBloc>()),
+
+        
 
 
 

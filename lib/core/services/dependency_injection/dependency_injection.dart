@@ -358,7 +358,11 @@ Future<void> _initSubscriptions() async {
 
   // Use cases
   sl.registerLazySingleton(() => GetTariffsUsecase(sl()));
+  sl.registerLazySingleton(() => InitiatePaymentUsecase(sl()));
 
   // Bloc
-  sl.registerFactory(() => SubscriptionBloc(getTariffsUsecase: sl()));
+  sl.registerFactory(() => SubscriptionBloc(
+    getTariffsUsecase: sl(),
+    initiatePaymentUsecase: sl(),
+  ));
 }

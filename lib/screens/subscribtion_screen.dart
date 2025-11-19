@@ -28,13 +28,13 @@ class _SubscribtionScreenState extends State<SubscribtionScreen> {
     // Определяем тариф в зависимости от выбранной подписки
     String tariffType =
     selectedSubscription == SubscriptionType.oneTime ? "ONCE" : "YEAR";
-    final int jobId = widget.jobId;
+    // jobId is no longer used in the payment flow
 
     // Генерируем ссылку для оплаты
     final paymentLink = await funcs.generatePaymentLink(
       tariffType: tariffType,
       demoMode: false,
-      jobId: jobId,
+      jobId: 0, // Default value since jobId dependency is removed
     );
 
     if (paymentLink == null) {

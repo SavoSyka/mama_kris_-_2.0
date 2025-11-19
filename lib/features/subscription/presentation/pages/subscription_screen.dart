@@ -10,6 +10,8 @@ import 'package:mama_kris/features/subscription/application/bloc/subscription_ev
 import 'package:mama_kris/features/subscription/application/bloc/subscription_state.dart';
 import 'package:mama_kris/features/subscription/domain/entity/subscription_entity.dart';
 import 'package:mama_kris/features/subscription/presentation/pages/widget/subscription_card.dart';
+import 'package:mama_kris/screens/payment_webview_page.dart';
+import 'package:mama_kris/screens/main_screen.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
@@ -26,6 +28,18 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     handleFetchTariffs();
 
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Listen for PaymentInitiatedState changes
+    final state = context.watch<SubscriptionBloc>().state;
+    if (state is PaymentInitiatedState) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _navigateToPayment(state.paymentUrl);
+      });
+    }
   }
 
   SubscriptionEntity? _subscription;
@@ -111,6 +125,18 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         onTap: () => handleFetchTariffs(),
                       ),
                     )
+                  else if (state is PaymentInitiatingState)
+                    const Center(child: IPhoneLoader(height: 200))
+                  else if (state is PaymentErrorState)
+                    Center(
+                      child: CustomErrorRetry(
+                        errorMessage: state.message,
+                        onTap: () => _subscription != null ? _initiatePayment(_subscription!) : null,
+                      ),
+                    )
+                  else if (state is PaymentInitiatedState)
+                    // Handle payment URL - this would be handled by navigation
+                    Container()
                   else if (state is SubscriptionLoadedState)
                     // Generate list of cards dynamically
                     ...state.subscriptions.map(
@@ -134,6 +160,28 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         ),
                       ),
                     ),
+
+                  const SizedBox(height: 32),
+
+                  if (_subscription != null && state is! PaymentInitiatingState)
+                    ElevatedButton(
+                      onPressed: () => _initiatePayment(_subscription!),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF00A80E),
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Оформить подписку',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             );
@@ -147,5 +195,50 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   void handleFetchTariffs() {
     context.read<SubscriptionBloc>().add(const FetchSubscriptionEvent());
+  }
+
+  void _initiatePayment(SubscriptionEntity subscription) {
+    context.read<SubscriptionBloc>().add(InitiatePaymentEvent(tariff: subscription));
+  }
+
+  void _navigateToPayment(String paymentUrl) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PaymentWebViewPage(
+          url: paymentUrl,
+          callback: (WebViewRequest request) {
+            if (request == WebViewRequest.success) {
+              // Handle successful payment - navigate to main screen
+              Navigator.of(context).pushAndRemoveUntil(
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 300),
+                  pageBuilder: (_, animation, secondaryAnimation) =>
+                  const MainScreen(initialIndex: 1),
+                  transitionsBuilder: (_, animation, __, child) {
+                    final tween = Tween<Offset>(
+                      begin: const Offset(1.0, 0.0),
+                      end: Offset.zero,
+                    ).chain(CurveTween(curve: Curves.easeInOut));
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+                    (_) => false,
+              );
+            } else {
+              // Handle failed payment
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Платеж не выполнен, повторите попытку позже."),
+                ),
+              );
+            }
+          },
+        ),
+      ),
+    );
   }
 }

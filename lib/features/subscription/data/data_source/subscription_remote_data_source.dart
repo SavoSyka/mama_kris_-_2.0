@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mama_kris/constants/api_constants.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
@@ -6,9 +7,11 @@ import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_da
 import 'package:mama_kris/features/emp/emp_resume/data/models/resume_list_model.dart';
 import 'package:dio/dio.dart';
 import 'package:mama_kris/features/subscription/data/model/subscription_model.dart';
+import 'package:mama_kris/features/subscription/domain/entity/subscription_entity.dart';
 
 abstract class SubscriptionRemoteDataSource {
   Future<List<SubscriptionModel>> getTariffs();
+  Future<String?> initiatePayment(SubscriptionEntity tariff);
 }
 
 class SubscriptionRemoteDataSourceImpl implements SubscriptionRemoteDataSource {
@@ -44,6 +47,46 @@ class SubscriptionRemoteDataSourceImpl implements SubscriptionRemoteDataSource {
       );
     } catch (e) {
       debugPrint("erroro $e");
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<String?> initiatePayment(SubscriptionEntity tariff) async {
+    try {
+      final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
+      if (userID.isEmpty) return null;
+
+      final url = '$kBaseUrl/payments.v2/generate-link/$userID';
+      final body = {
+        "TariffType": tariff.type,
+        "demoMode": false,
+        // jobId is removed as per requirements
+      };
+
+      final response = await dio.post(
+        url,
+        data: body,
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.data.toString().trim();
+      } else {
+        throw ApiException(
+          message: response.data['message'] ?? 'Payment link generation failed',
+          statusCode: response.statusCode ?? 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      debugPrint("Payment initiation error: $e");
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }

@@ -32,3 +32,23 @@ class SubscriptionErrorState extends SubscriptionState {
   @override
   List<Object> get props => [message];
 }
+
+class PaymentInitiatingState extends SubscriptionState {}
+
+class PaymentInitiatedState extends SubscriptionState {
+  final String paymentUrl;
+
+  const PaymentInitiatedState({required this.paymentUrl});
+
+  @override
+  List<Object> get props => [paymentUrl];
+}
+
+class PaymentErrorState extends SubscriptionState {
+  final String message;
+
+  const PaymentErrorState(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
