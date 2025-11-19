@@ -32,7 +32,7 @@ class WelcomeCard extends StatelessWidget {
           const SizedBox(height: 12),
 
           CustomButtonSec(
-            btnText: 'Ищу удаленную работу',
+            btnText: 'Ищу сотрудника на удалёнку',
             onTap: () {
               debugPrint('button tapped');
               context.pushNamed(RouteName.loginEmploye);

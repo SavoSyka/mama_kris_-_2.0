@@ -33,7 +33,9 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
 
   // final emailController = TextEditingController(text: 'toli@yopmail.com');
 
-  final emailController = TextEditingController(text: 'roobbi@yopmail.com');
+  final emailController = TextEditingController(
+    text: 'one@yopmail.com',
+  ); // subscription with one year
   final passwordController = TextEditingController(text: '123321123');
   final _formKey = GlobalKey<FormState>();
 
@@ -218,7 +220,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
 
     if (user != null) {
       final idToken = user['googleIdToken'];
-      debugPrint("Id token $idToken");
+      debugPrint("Id tokhen $idToken");
       context.read<AuthBloc>().add(LoginWithGoogleEvent(idToken: idToken));
     }
 

@@ -57,19 +57,18 @@ class SubscriptionRemoteDataSourceImpl implements SubscriptionRemoteDataSource {
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
       if (userID.isEmpty) return null;
 
-      final url = '$kBaseUrl/payments.v2/generate-link/$userID';
       final body = {
-        "TariffType": tariff.type,
+        "tariffType": tariff.type,
         "demoMode": false,
         // jobId is removed as per requirements
       };
 
+      debugPrint("The same as month $body");
+
       final response = await dio.post(
-        url,
+        ApiConstants.generatePaymentLink(userID),
         data: body,
-        options: Options(
-          headers: {'Content-Type': 'application/json'},
-        ),
+        options: Options(headers: {'Content-Type': 'application/json'}),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -90,6 +89,4 @@ class SubscriptionRemoteDataSourceImpl implements SubscriptionRemoteDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
-
-
 }

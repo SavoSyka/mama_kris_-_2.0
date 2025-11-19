@@ -49,42 +49,6 @@ class _WelcomePageState extends State<WelcomePage> {
                 SizedBox(height: 60.h),
                 const WelcomeCard(),
 
-                // CustomText(
-                //   text: AppTextContents.welcomeDescription,
-                //   style: GoogleFonts.manrope(
-                //     fontSize: 22,
-                //     fontWeight: FontWeight.w600,
-                //   ),
-                // ),
-                // SizedBox(height: 20.h),
-
-                // Column(
-                //   children: options.map((option) {
-                //     return Padding(
-                //       padding: const EdgeInsets.only(bottom: 10.0),
-                //       child: CustomActionButton(
-                //         isSecondary: selectedOption != option,
-                //         onTap: () {
-                //           // Handle navigation based on option
-                //           if (option == WelcomeOption.findJob) {
-                //             context.pushNamed(
-                //               RouteName.authPage,
-                //               extra: {'isApplicant': true},
-                //             );
-                //           } else {
-                //             context.pushNamed(
-                //               RouteName.authPage,
-                //               extra: {'isApplicant': false},
-                //             );
-                //           }
-                //         },
-                //         btnText: option.displayText,
-                //       ),
-                //     );
-                //   }).toList(),
-                // ),
-
-                // Option buttons can be dynamically generated using enum
               ],
             ),
           ),

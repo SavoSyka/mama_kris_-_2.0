@@ -111,183 +111,189 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                     child: EmptyJobView(onRefresh: _handleRefresh),
                   );
 
-                return RefreshIndicator(
-                  onRefresh: _handleRefresh,
-                  color: AppPalette.primaryColor,
-                  backgroundColor: Colors.white,
-                  displacement: 40,
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.all(16),
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: _calculateItemCount(
-                      jobs.length,
-                      state.jobs.hasNextPage,
-                      isSlider,
-                    ),
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        // ---------- Top Section (header/search/filter) ----------
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // ---------- Search Field ----------
-                            GestureDetector(
-                              onTap: _openSearchPage,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.search,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      _searchQuery ?? 'Search jobs...',
-                                      style: TextStyle(
-                                        color: _searchQuery == null
-                                            ? Colors.grey
-                                            : Colors.black,
+                return SizedBox(
+                  child: RefreshIndicator(
+                    onRefresh: _handleRefresh,
+                    color: AppPalette.primaryColor,
+                    backgroundColor: Colors.white,
+                    displacement: 40,
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(16),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: _calculateItemCount(
+                        jobs.length,
+                        state.jobs.hasNextPage,
+                        isSlider,
+                      ),
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          // ---------- Top Section (header/search/filter) ----------
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // ---------- Search Field ----------
+                              GestureDetector(
+                                onTap: _openSearchPage,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.search,
+                                        color: Colors.grey,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-
-                            // ---------- Filter Buttons ----------
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () =>
-                                          setState(() => isSlider = true),
-                                      child: FilterActionButtons(
-                                        isSelected: isSlider,
-                                        text: 'Слайдер',
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        _searchQuery ?? 'Search jobs...',
+                                        style: TextStyle(
+                                          color: _searchQuery == null
+                                              ? Colors.grey
+                                              : Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    InkWell(
-                                      onTap: () =>
-                                          setState(() => isSlider = false),
-                                      child: FilterActionButtons(
-                                        isSelected: !isSlider,
-                                        text: 'Список',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                InkWell(
-                                  onTap: () async {
-                                    final filter = await ApplicantJobFilter(
-                                      context,
-                                    );
-                                    if (filter != null) _applyFilters(filter);
-                                  },
-                                  child: const CustomImageView(
-                                    imagePath: MediaRes.btnFilter,
-                                    width: 48,
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 28),
-                          ],
-                        );
-                      }
-
-                      // For indices > 0:
-                      final contentIndex = index - 1;
-
-                      // ---------- If Slider mode: show slider in a single slot ----------
-                      if (isSlider) {
-                        // We placed the slider as the first content slot (index==1)
-                        if (contentIndex == 0) {
-                          // Ensure currentVacancyIndex is within bounds
-                          if (jobs.isEmpty) {
-                            // fallback empty placeholder
-                            return const SizedBox.shrink();
-                          }
-                          final safeIndex = currentVacancyIndex.clamp(
-                            0,
-                            jobs.length - 1,
-                          );
-                          final job = jobs[safeIndex];
-
-                          return Column(
-                            children: [
-                              ApplicantJobSlider(
-                                vacancy: {
-                                  'title': job.title,
-                                  'description': job.description,
-                                  'salary': job.salary.toString(),
-                                },
-                                vacancyIndex: currentVacancyIndex,
-                                previousVacancyIndex: previousVacancyIndex,
-                                slideDirection: slideDirection,
-                                onInterestedPressed: () {
-                                  _handleVacancyReaction(isLiked: true);
-                                },
-                                onNotInterestedPressed: () {
-                                  _handleVacancyReaction(isLiked: false);
-                                },
                               ),
-                              const SizedBox(height: 16),
-                              const _AdCards(),
+                              const SizedBox(height: 14),
+
+                              // ---------- Filter Buttons ----------
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () =>
+                                            setState(() => isSlider = true),
+                                        child: FilterActionButtons(
+                                          isSelected: isSlider,
+                                          text: 'Слайдер',
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      InkWell(
+                                        onTap: () =>
+                                            setState(() => isSlider = false),
+                                        child: FilterActionButtons(
+                                          isSelected: !isSlider,
+                                          text: 'Список',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  InkWell(
+                                    onTap: () async {
+                                      final filter = await ApplicantJobFilter(
+                                        context,
+                                      );
+                                      if (filter != null) _applyFilters(filter);
+                                    },
+                                    child: const CustomImageView(
+                                      imagePath: MediaRes.btnFilter,
+                                      width: 48,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 14),
                             ],
                           );
                         }
 
-                        // If slider mode and there's nothing else to show, just shrink
+                        // For indices > 0:
+                        final contentIndex = index - 1;
+
+                        // ---------- If Slider mode: show slider in a single slot ----------
+                        if (isSlider) {
+                          // We placed the slider as the first content slot (index==1)
+                          if (contentIndex == 0) {
+                            // Ensure currentVacancyIndex is within bounds
+                            if (jobs.isEmpty) {
+                              // fallback empty placeholder
+                              return const SizedBox.shrink();
+                            }
+                            final safeIndex = currentVacancyIndex.clamp(
+                              0,
+                              jobs.length - 1,
+                            );
+                            final job = jobs[safeIndex];
+
+                            return Column(
+                              children: [
+                                ApplicantJobSlider(
+                                  vacancy: {
+                                    'title': job.title,
+                                    'description': job.description,
+                                    'salary': job.salary.toString(),
+                                  },
+                                  vacancyIndex: currentVacancyIndex,
+                                  previousVacancyIndex: previousVacancyIndex,
+                                  slideDirection: slideDirection,
+                                  onInterestedPressed: () {
+                                    _handleVacancyReaction(isLiked: true);
+                                  },
+                                  onNotInterestedPressed: () {
+                                    _handleVacancyReaction(isLiked: false);
+                                  },
+                                ),
+                                const SizedBox(height: 12),
+                                const _AdCards(),
+                              ],
+                            );
+                          }
+
+                          // If slider mode and there's nothing else to show, just shrink
+                          return const SizedBox.shrink();
+                        }
+
+                        // ---------- List mode ----------
+                        // In list mode, contentIndex maps directly to job index
+                        if (!isSlider) {
+                          // If contentIndex < jobs.length => show job item
+                          if (contentIndex < jobs.length) {
+                            final job = jobs[contentIndex];
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              child: JobListItem(
+                                jobTitle: job.title,
+                                salaryRange: job.salary.toString(),
+                                onTap: () async => await ApplicantJobDetail(
+                                  context,
+                                  job: job,
+                                  onLiked: () async {
+                                    context.read<JobBloc>().add(
+                                      LikeJobEvent(job.jobId),
+                                    );
+                                    Navigator.maybePop(context);
+                                  },
+                                ),
+                              ),
+                            );
+                          }
+
+                          // If we've reached the end and there's another page, show loader
+                          if (contentIndex == jobs.length &&
+                              state.jobs.hasNextPage) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16.0),
+                              child: IPhoneLoader(),
+                            );
+                          }
+                        }
+
                         return const SizedBox.shrink();
-                      }
-
-                      // ---------- List mode ----------
-                      // In list mode, contentIndex maps directly to job index
-                      if (!isSlider) {
-                        // If contentIndex < jobs.length => show job item
-                        if (contentIndex < jobs.length) {
-                          final job = jobs[contentIndex];
-                          return JobListItem(
-                            jobTitle: job.title,
-                            salaryRange: job.salary.toString(),
-                            onTap: () async => await ApplicantJobDetail(
-                              context,
-                              job: job,
-                              onLiked: () async {
-                                context.read<JobBloc>().add(
-                                  LikeJobEvent(job.jobId),
-                                );
-                                Navigator.maybePop(context);
-                              },
-                            ),
-                          );
-                        }
-
-                        // If we've reached the end and there's another page, show loader
-                        if (contentIndex == jobs.length &&
-                            state.jobs.hasNextPage) {
-                          return const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16.0),
-                            child: IPhoneLoader(),
-                          );
-                        }
-                      }
-
-                      return const SizedBox.shrink();
-                    },
+                      },
+                    ),
                   ),
                 );
               }

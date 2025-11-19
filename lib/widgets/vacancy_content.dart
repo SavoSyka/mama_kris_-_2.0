@@ -14,7 +14,7 @@ class VacancyContent extends StatelessWidget {
 
     return Center(
       child: SizedBox(
-        height: screenHeight * 0.38, // высота должна соответствовать родителю
+        height: screenHeight * 0.28, // высота должна соответствовать родителю
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -32,7 +32,7 @@ class ApplicantJobSlider extends StatelessWidget {
 
     return Container(
       width: 395 * scaleX,
-      height: screenHeight * 0.55,
+      height: screenHeight * 0.45,
       padding: const EdgeInsets.all(30),
       decoration: AppTheme.cardDecoration,
 
@@ -113,7 +113,7 @@ class ApplicantJobSlider extends StatelessWidget {
             ),
           ),
           // Фиксированная кнопка "Интересно" (справа)
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
