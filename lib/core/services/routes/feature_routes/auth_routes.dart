@@ -114,14 +114,37 @@ final List<RouteBase> authRoutes = [
       var email = '';
       var password = '';
 
+      var isFrom = "";
       final extra = state.extra;
 
       if (extra is DataMap) {
         name = extra['name'] as String;
         email = extra['email'] as String;
         password = extra['password'] as String;
+        isFrom = extra['source'] as String;
       }
-      return EmpVerifyOtpScreen(name: name, email: email, password: password);
+      return EmpVerifyOtpScreen(
+        name: name,
+        email: email,
+        password: password,
+        isFrom: isFrom,
+      );
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.forgotEmployee,
+    name: RouteName.forgotEmployee,
+    builder: (BuildContext context, GoRouterState state) {
+      return const EmpForgotPasswordScreen();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.updateEmployeePwd,
+    name: RouteName.changeEmployeePwd,
+    builder: (BuildContext context, GoRouterState state) {
+      return const EmpUpdatePasswordScreen();
     },
   ),
 ];

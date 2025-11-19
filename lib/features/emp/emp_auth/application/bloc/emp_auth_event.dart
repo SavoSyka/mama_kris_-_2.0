@@ -68,3 +68,21 @@ class EmpForgotPasswordEvent extends EmpAuthEvent {
   @override
   List<Object?> get props => [email];
 }
+
+class EmpLoginWithGoogleEvent extends EmpAuthEvent {
+  final String idToken;
+
+  const EmpLoginWithGoogleEvent({required this.idToken});
+
+  @override
+  List<Object?> get props => [idToken];
+}
+
+class EmpUpdatePasswordEvent extends EmpAuthEvent {
+  final String newPassword;
+
+  const EmpUpdatePasswordEvent({required this.newPassword});
+
+  @override
+  List<Object?> get props => [newPassword];
+}

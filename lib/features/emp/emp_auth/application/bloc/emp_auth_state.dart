@@ -37,3 +37,5 @@ class  EmpAuthFailure extends EmpAuthState {
   @override
   List<Object?> get props => [message];
 }
+
+class EmpAuthPasswordUpdated extends EmpAuthState {}

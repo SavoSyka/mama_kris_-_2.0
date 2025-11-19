@@ -172,6 +172,9 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                                         textColor: AppPalette.empPrimaryColor,
                                         onPressed: () {
                                           // TODO: Navigate to forgot password
+                                            context.pushNamed(
+                                            RouteName.forgotEmployee,
+                                          );
                                           debugPrint('forgot password');
                                         },
                                       ),

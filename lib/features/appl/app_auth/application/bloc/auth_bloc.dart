@@ -168,4 +168,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (success) => emit(AuthPasswordUpdated()),
     );
   }
+
+
 }

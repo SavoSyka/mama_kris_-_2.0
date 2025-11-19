@@ -5,19 +5,22 @@ import 'package:mama_kris/features/emp/emp_resume/domain/repositories/resume_rep
 
 class FetchResumeParams {
   final int page;
-  final bool isFavorite;
   final String? searchQuery;
 
-  FetchResumeParams({required this.page, required this.isFavorite, this.searchQuery});
+  FetchResumeParams({required this.page, this.searchQuery});
 }
 
-class FetchResumeUsecase extends UsecaseWithParams<ResumeList, FetchResumeParams> {
+class FetchResumeUsecase
+    extends UsecaseWithParams<ResumeList, FetchResumeParams> {
   final ResumeRepository repository;
 
   FetchResumeUsecase(this.repository);
 
   @override
   ResultFuture<ResumeList> call(FetchResumeParams params) async {
-    return await repository.fetchUsers(page: params.page, isFavorite:  params.isFavorite, searchQuery: params.searchQuery);
+    return await repository.fetchUsers(
+      page: params.page,
+      searchQuery: params.searchQuery,
+    );
   }
 }

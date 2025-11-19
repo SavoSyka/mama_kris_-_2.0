@@ -200,6 +200,9 @@ Future<void> _initEmpAuth() async {
   sl.registerLazySingleton(() => EmpVerifyOtpUsecase(sl()));
   sl.registerLazySingleton(() => EmpResendOtpUsecase(sl()));
   sl.registerLazySingleton(() => EmpForgotPasswordUsecase(sl()));
+  sl.registerLazySingleton(() => EmpLoginWithGoogleUsecase(sl()));
+  sl.registerLazySingleton(() => EmpUpdatePasswordUsecase(sl()));
+
 
   // Bloc (factory → new instance per request)
   sl.registerFactory(
@@ -211,6 +214,8 @@ Future<void> _initEmpAuth() async {
       verifyOtpUsecase: sl(),
       resendOtpUsecase: sl(),
       forgotPasswordUsecase: sl(),
+      loginWithGoogleUsecase: sl(),
+      updatePasswordUsecase: sl()
     ),
   );
 
@@ -326,10 +331,16 @@ Future<void> _initResumes() async {
   sl.registerLazySingleton(() => FetchResumeUsecase(sl()));
   sl.registerLazySingleton(() => LikeResumeUsecase(sl()));
   sl.registerLazySingleton(() => SearchSpecialityUsecase(sl()));
+  sl.registerLazySingleton(() => FetchFavoritedUsersUsecase(sl()));
 
   // Bloc
   sl.registerFactory(
-    () => ResumeBloc(fetchResumeUsecase: sl(), likeResumeUsecase: sl()),
+    () => ResumeBloc(
+      fetchResumeUsecase: sl(),
+      likeResumeUsecase: sl(),
+
+      fetchFavoritedUsersUsecase: sl(),
+    ),
   );
   sl.registerFactory(() => SpecialitySearchBloc(searchSpecialityUsecase: sl()));
 }

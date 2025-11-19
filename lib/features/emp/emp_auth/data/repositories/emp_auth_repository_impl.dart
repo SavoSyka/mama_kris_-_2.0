@@ -28,7 +28,11 @@ class EmpAuthRepositoryImpl implements EmpAuthRepository {
   }
 
   @override
-  ResultFuture<EmpUserEntity> signup(String name, String email, String password) async {
+  ResultFuture<EmpUserEntity> signup(
+    String name,
+    String email,
+    String password,
+  ) async {
     try {
       final result = await remoteDataSource.signup(name, email, password);
       return result.fold(
@@ -57,8 +61,7 @@ class EmpAuthRepositoryImpl implements EmpAuthRepository {
     }
   }
 
-
-    @override
+  @override
   ResultFuture<bool> checkEmail(String email) async {
     try {
       final result = await remoteDataSource.checkEmail(email);
@@ -96,6 +99,31 @@ class EmpAuthRepositoryImpl implements EmpAuthRepository {
         (failure) => Left(failure),
         (success) => Right(success),
       );
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<bool> loginWithGoogle({required String idToken}) async {
+    try {
+      final result = await remoteDataSource.loginWithGoogle(idToken: idToken);
+
+      return Right(result);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<bool> updatePassword(String newPassword) async {
+    try {
+      final result = await remoteDataSource.updatePassword(newPassword);
+      return const Right(true);
     } on ApiException catch (e) {
       return Left(ServerFailure(e.message));
     } catch (e) {

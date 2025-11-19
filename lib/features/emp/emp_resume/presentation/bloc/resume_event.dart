@@ -26,6 +26,19 @@ class LoadNextResumePageEvent extends ResumeEvent {
   List<Object> get props => [nextPage];
 }
 
+class FetchFavoritedResumesEvent extends ResumeEvent {
+  final String? searchQuery;
+  const FetchFavoritedResumesEvent({this.searchQuery});
+}
+
+class LoadNextFavoritedResumePageEvent extends ResumeEvent {
+  final int nextPage;
+
+  const LoadNextFavoritedResumePageEvent({required this.nextPage});
+  @override
+  List<Object> get props => [nextPage];
+}
+
 class UpdateFavoritingEvent extends ResumeEvent {
   final bool isFavorited;
   final String userId;

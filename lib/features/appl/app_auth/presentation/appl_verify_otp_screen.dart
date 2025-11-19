@@ -188,8 +188,8 @@ class _ApplVerifyOtpScreenState extends State<ApplVerifyOtpScreen> {
                                             : () {
                                                 // TODO: Get email from signup or shared preferences
                                                 context.read<AuthBloc>().add(
-                                                  const ResendOtpEvent(
-                                                    email: 'user@example.com',
+                                                   ResendOtpEvent(
+                                                    email: widget.email,
                                                   ),
                                                 );
                                               },

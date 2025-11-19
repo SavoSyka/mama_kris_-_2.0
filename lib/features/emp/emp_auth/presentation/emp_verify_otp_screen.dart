@@ -27,10 +27,12 @@ class EmpVerifyOtpScreen extends StatefulWidget {
     required this.name,
     required this.password,
     required this.email,
+    required this.isFrom,
   });
   final String name;
   final String password;
   final String email;
+  final String isFrom;
 
   @override
   State<EmpVerifyOtpScreen> createState() => _EmpVerifyOtpScreenState();
@@ -70,13 +72,18 @@ class _EmpVerifyOtpScreenState extends State<EmpVerifyOtpScreen> {
                   listener: (context, state) {
                     if (state is EmpAuthOtpVerified) {
                       // * if email validation passed we have to register user by giiving his PII
-                      context.read<EmpAuthBloc>().add(
+                     if(widget.isFrom =='signup') {
+                       context.read<EmpAuthBloc>().add(
                         EmpSignupEvent(
                           name: widget.name,
                           email: widget.email,
                           password: widget.password,
                         ),
                       );
+                     } else if(widget.isFrom=='forgot') {
+                        context.pushNamed(RouteName.updateEmployeePwd);
+
+                     }
                     } else if (state is EmpAuthSuccess) {
                       context.goNamed(RouteName.homeApplicant);
                     } else if (state is EmpAuthOtpResent) {

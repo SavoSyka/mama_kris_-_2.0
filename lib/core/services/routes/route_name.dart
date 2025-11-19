@@ -35,6 +35,9 @@ class RouteName {
   static String verifyOtpEmployee = '/$_employee/verify';
   static String forgotEmployee = '/$_employee/forgot';
 
+  static String updateEmployeePwd = '/$_employee/update-pwd';
+  static String changeEmployeePwd = '/$_employee/change-pwd';
+
   static String homeEmploye = '/$_employee/home';
   static String createJobPageOne = '/$_employee/create/1';
 
@@ -51,8 +54,6 @@ class RouteName {
       '/$_employee/edit-work-expereince';
   static String editProfileEducationInfoEmployee =
       '/$_employee/edit-education-info';
-
-
 
   static String welcomePage = "/getStart";
   static String forceUpdate = "/force-update";

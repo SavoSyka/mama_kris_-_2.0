@@ -6,8 +6,10 @@ import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_state.
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_check_email_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_forgot_password_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_usecase.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_with_google_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_resend_otp_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_signup_usecase.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_update_password_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_verify_otp_usecase.dart';
 
 class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
@@ -18,7 +20,8 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
   final EmpVerifyOtpUsecase verifyOtpUsecase;
   final EmpResendOtpUsecase resendOtpUsecase;
   final EmpForgotPasswordUsecase forgotPasswordUsecase;
-
+  final EmpLoginWithGoogleUsecase loginWithGoogleUsecase;
+  final EmpUpdatePasswordUsecase updatePasswordUsecase;
 
   EmpAuthBloc({
     required this.loginUsecase,
@@ -28,7 +31,9 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     required this.verifyOtpUsecase,
     required this.resendOtpUsecase,
     required this.forgotPasswordUsecase,
-  }) : super( EmpAuthInitial()) {
+    required this.loginWithGoogleUsecase,
+    required this.updatePasswordUsecase,
+  }) : super(EmpAuthInitial()) {
     on<EmpLoginEvent>(_onLoginEvent);
     on<EmpSignupEvent>(_onSignupEvent);
     on<EmpCheckEmailEvent>(_onCheckEmail);
@@ -36,17 +41,22 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     on<EmpVerifyOtpEvent>(_onVerifyOtpEvent);
     on<EmpResendOtpEvent>(_onResendOtpEvent);
     on<EmpForgotPasswordEvent>(_onForgotPasswordEvent);
+    on<EmpLoginWithGoogleEvent>(_onLoginWithGoogle);
+    on<EmpUpdatePasswordEvent>(_onUpdatePassword);
   }
 
-  Future<void> _onLoginEvent(EmpLoginEvent event, Emitter<EmpAuthState> emit) async {
-    emit( EmpAuthLoading());
+  Future<void> _onLoginEvent(
+    EmpLoginEvent event,
+    Emitter<EmpAuthState> emit,
+  ) async {
+    emit(EmpAuthLoading());
     final result = await loginUsecase(
       LoginParams(email: event.email, password: event.password),
     );
 
     result.fold(
-      (failure) => emit( EmpAuthFailure(failure.message)),
-      (user) => emit( EmpAuthSuccess(user)),
+      (failure) => emit(EmpAuthFailure(failure.message)),
+      (user) => emit(EmpAuthSuccess(user)),
     );
   }
 
@@ -54,7 +64,7 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     EmpSignupEvent event,
     Emitter<EmpAuthState> emit,
   ) async {
-    emit( EmpAuthLoading());
+    emit(EmpAuthLoading());
     final result = await signupUsecase(
       SignupParams(
         name: event.name,
@@ -63,26 +73,24 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
       ),
     );
 
-    result.fold((failure) => emit( EmpAuthFailure(failure.message)), (user) {
+    result.fold((failure) => emit(EmpAuthFailure(failure.message)), (user) {
       debugPrint("user data ${user.userId}");
-      emit( EmpAuthSuccess(user));
+      emit(EmpAuthSuccess(user));
     });
   }
 
-
-
-    Future<void> _onCheckEmail(
+  Future<void> _onCheckEmail(
     EmpCheckEmailEvent event,
     Emitter<EmpAuthState> emit,
   ) async {
-    emit( EmpAuthLoading());
+    emit(EmpAuthLoading());
     final result = await checkEmailUsecase(
-      CheckEmailParams(email: event.email,),
+      CheckEmailParams(email: event.email),
     );
 
     result.fold(
-      (failure) => emit( EmpAuthFailure(failure.message)),
-      (success) => emit( EmpAuthCheckEmailVerified()),
+      (failure) => emit(EmpAuthFailure(failure.message)),
+      (success) => emit(EmpAuthCheckEmailVerified()),
     );
   }
 
@@ -90,14 +98,14 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     EmpVerifyOtpEvent event,
     Emitter<EmpAuthState> emit,
   ) async {
-    emit( EmpAuthLoading());
+    emit(EmpAuthLoading());
     final result = await verifyOtpUsecase(
       VerifyOtpParams(email: event.email, otp: event.otp),
     );
 
     result.fold(
-      (failure) => emit( EmpAuthFailure(failure.message)),
-      (success) => emit( EmpAuthOtpVerified()),
+      (failure) => emit(EmpAuthFailure(failure.message)),
+      (success) => emit(EmpAuthOtpVerified()),
     );
   }
 
@@ -105,12 +113,12 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     EmpResendOtpEvent event,
     Emitter<EmpAuthState> emit,
   ) async {
-    emit( EmpAuthLoading());
+    emit(EmpAuthLoading());
     final result = await resendOtpUsecase(ResendOtpParams(email: event.email));
 
     result.fold(
-      (failure) => emit( EmpAuthFailure(failure.message)),
-      (success) => emit( EmpAuthOtpResent()),
+      (failure) => emit(EmpAuthFailure(failure.message)),
+      (success) => emit(EmpAuthOtpResent()),
     );
   }
 
@@ -118,14 +126,48 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     EmpForgotPasswordEvent event,
     Emitter<EmpAuthState> emit,
   ) async {
-    emit( EmpAuthLoading());
+    emit(EmpAuthLoading());
     final result = await forgotPasswordUsecase(
       ForgotPasswordParams(email: event.email),
     );
 
     result.fold(
-      (failure) => emit( EmpAuthFailure(failure.message)),
-      (success) => emit( EmpAuthPasswordReset()),
+      (failure) => emit(EmpAuthFailure(failure.message)),
+      (success) => emit(EmpAuthPasswordReset()),
+    );
+  }
+
+  Future<void> _onLoginWithGoogle(
+    EmpLoginWithGoogleEvent event,
+    Emitter<EmpAuthState> emit,
+  ) async {
+    emit(EmpAuthLoading());
+    final result = await loginWithGoogleUsecase(
+      EmpLoginWithGoogleParams(idToken: event.idToken),
+    );
+
+    result.fold(
+      (failure) => emit(EmpAuthFailure(failure.message)),
+      (success) {
+        debugPrint("Logged in successfully");
+      },
+
+      //  emit(AuthPasswordReset()),
+    );
+  }
+
+  Future<void> _onUpdatePassword(
+    EmpUpdatePasswordEvent event,
+    Emitter<EmpAuthState> emit,
+  ) async {
+    emit(EmpAuthLoading());
+    final result = await updatePasswordUsecase(
+      EmpUpdatePasswordParams(newPassword: event.newPassword),
+    );
+
+    result.fold(
+      (failure) => emit(EmpAuthFailure(failure.message)),
+      (success) => emit(EmpAuthPasswordUpdated()),
     );
   }
 }

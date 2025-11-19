@@ -21,8 +21,10 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_e
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_work_experience.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
+import 'package:mama_kris/features/emp/emp_auth/presentation/emp_forgot_password_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_login_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_signup_screen.dart';
+import 'package:mama_kris/features/emp/emp_auth/presentation/emp_update_password_screen.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_verify_otp_screen.dart';
 import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/contact_job.dart';

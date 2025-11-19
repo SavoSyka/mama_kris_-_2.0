@@ -11,21 +11,22 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
-import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
-import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_event.dart';
-import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_state.dart';
+import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
+import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
+import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 
-class EmpForgotPasswordScreen extends StatefulWidget {
-  const EmpForgotPasswordScreen({super.key});
+class EmpUpdatePasswordScreen extends StatefulWidget {
+  const EmpUpdatePasswordScreen({super.key});
 
   @override
-  State<EmpForgotPasswordScreen> createState() =>
-      _EmpForgotPasswordScreenState();
+  State<EmpUpdatePasswordScreen> createState() =>
+      _EmpUpdatePasswordScreenState();
 }
 
-class _EmpForgotPasswordScreenState extends State<EmpForgotPasswordScreen> {
+class _EmpUpdatePasswordScreenState extends State<EmpUpdatePasswordScreen> {
   // final emailController = TextEditingController(text: 'xanawam595@gusronk.com');
-  final emailController = TextEditingController(text: 'emproobbi@yopmail.com');
+  final password = TextEditingController(text: '123321123');
+  final confirmPassword = TextEditingController(text: '123321123');
 
   final _formKey = GlobalKey<FormState>();
 
@@ -46,30 +47,22 @@ class _EmpForgotPasswordScreenState extends State<EmpForgotPasswordScreen> {
                       MediaQuery.of(context).padding.top -
                       MediaQuery.of(context).padding.bottom,
                 ),
-                child: BlocListener<EmpAuthBloc, EmpAuthState>(
+                child: BlocListener<AuthBloc, AuthState>(
                   listener: (context, state) {
-                    if (state is EmpAuthPasswordReset) {
+                    if (state is AuthPasswordUpdated) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Инструкции отправлены на email'),
                         ),
                       );
-                      context.goNamed(
-                        RouteName.verifyOtpEmployee,
-                        extra: {
-                          "email": emailController.text,
-                          'source': 'forgot',
-                          'name': '',
-                          'password': "",
-                        },
-                      );
-                    } else if (state is EmpAuthFailure) {
+                      context.goNamed(RouteName.loginEmploye);
+                    } else if (state is AuthFailure) {
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(SnackBar(content: Text(state.message)));
                     }
                   },
-                  child: BlocBuilder<EmpAuthBloc, EmpAuthState>(
+                  child: BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       return Form(
                         key: _formKey,
@@ -97,22 +90,33 @@ class _EmpForgotPasswordScreenState extends State<EmpForgotPasswordScreen> {
                                   ),
                                   const SizedBox(height: 20),
                                   CustomInputText(
-                                    hintText: 'example@email.com',
-                                    labelText: "Email",
-                                    controller: emailController,
-                                    validator: FormValidations.validateEmail,
+                                    hintText: 'enter your new password',
+                                    labelText: "password",
+                                    controller: password,
+                                    validator: FormValidations.validatePassword,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomInputText(
+                                    hintText: 'enter your confirm password',
+                                    labelText: "Confirm Password",
+                                    controller: confirmPassword,
+                                    validator: (value) =>
+                                        FormValidations.validateConfirmPassword(
+                                          value,
+                                          password.text,
+                                        ),
                                   ),
                                   const SizedBox(height: 42),
                                   CustomButtonEmployee(
                                     btnText: 'Отправить',
-                                    isBtnActive: state is! EmpAuthLoading,
-                                    isLoading: state is EmpAuthLoading,
+                                    isBtnActive: state is! AuthLoading,
+                                    isLoading: state is AuthLoading,
 
                                     onTap: () {
                                       if (_formKey.currentState!.validate()) {
-                                        context.read<EmpAuthBloc>().add(
-                                          EmpForgotPasswordEvent(
-                                            email: emailController.text,
+                                        context.read<AuthBloc>().add(
+                                          UpdatePasswordEvent(
+                                            newPassword: password.text,
                                           ),
                                         );
                                       }
