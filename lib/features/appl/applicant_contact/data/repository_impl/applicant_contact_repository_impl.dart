@@ -111,8 +111,12 @@ class ApplicantContactRepositoryImpl implements ApplicantContactRepository {
   }
   
   @override
-  ResultFuture<bool> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  ResultFuture<bool> logout() async {
+    try {
+      final result = await _dataSource.logout();
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
   }
 }

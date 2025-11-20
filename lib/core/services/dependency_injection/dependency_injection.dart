@@ -307,7 +307,7 @@ Future<void> _initEmployeeContact() async {
       deleteUseCase: sl(),
       deleteUserAccountUsecase: sl(),
       basicInfoUsecase: sl(),
-      logoutEmployeeUsecase: sl()
+      logoutEmployeeUsecase: sl(),
     ),
   );
 }
@@ -336,6 +336,7 @@ Future<void> _initResumes() async {
   sl.registerLazySingleton(() => LikeResumeUsecase(sl()));
   sl.registerLazySingleton(() => SearchSpecialityUsecase(sl()));
   sl.registerLazySingleton(() => FetchFavoritedUsersUsecase(sl()));
+  sl.registerLazySingleton(() => GetPublicProfilesUsecase(sl()));
 
   // Bloc
   sl.registerFactory(
@@ -346,7 +347,10 @@ Future<void> _initResumes() async {
       fetchFavoritedUsersUsecase: sl(),
     ),
   );
-  sl.registerFactory(() => SpecialitySearchBloc(searchSpecialityUsecase: sl()));
+  sl.registerFactory(() => SpecialitySearchBloc(searchSpecialityUsecase: sl(),
+      getPublicProfilesUsecase: sl(),
+  
+  ));
 }
 
 Future<void> _initSubscriptions() async {

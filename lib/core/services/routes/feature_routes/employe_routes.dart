@@ -82,7 +82,12 @@ final List<RouteBase> employeRoutes = [
     path: RouteName.resumeDetail,
     name: RouteName.resumeDetail,
     builder: (BuildContext context, GoRouterState state) {
-      return const EmpResumeScreenDetail();
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+      return BlocProvider(
+        create: (context) => sl<ResumeBloc>(),
+        child: EmpResumeScreenDetail(userId: extra['userId'] as String),
+      );
     },
   ),
 

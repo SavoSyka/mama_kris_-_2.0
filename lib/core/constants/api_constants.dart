@@ -55,6 +55,11 @@ class ApiConstants {
   static String getSpeciality = 'jobs/autocomplete';
 
   static const favoriteProfiles = "favorite-profiles";
+  static  addUsersToFavorite(String userId) => "favorite-profiles/$userId";
+
   static generatePaymentLink(String userId) =>
       "payments.v3/generate-link/$userId";
+
+  static  getPublicProfile(String userId) => "users/public/$userId";
+
 }

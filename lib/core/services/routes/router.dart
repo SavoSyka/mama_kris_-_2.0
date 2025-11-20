@@ -37,6 +37,7 @@ import 'package:mama_kris/features/emp/emp_home_tab/emp_home_tab_screen.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact_screen.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_edit_basic_info.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_edit_screen.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/emp_resume_screen_detail.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
 import 'package:mama_kris/features/notifications/applications/notification_detail/bloc/notification_detail_cubit.dart';

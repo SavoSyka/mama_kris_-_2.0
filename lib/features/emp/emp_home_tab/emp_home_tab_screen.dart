@@ -85,7 +85,7 @@ class _ApplHomeTabScreenState extends State<EmpHomeTabScreen> {
                     ? AppPalette.secondaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.vacancies,
+              label: "Вакансии",
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
@@ -95,7 +95,7 @@ class _ApplHomeTabScreenState extends State<EmpHomeTabScreen> {
                     ? AppPalette.secondaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.resume,
+              label: "Резюме",
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
@@ -105,7 +105,7 @@ class _ApplHomeTabScreenState extends State<EmpHomeTabScreen> {
                     ? AppPalette.secondaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.favorite,
+              label: "Поддержка",
             ),
             BottomNavigationBarItem(
               icon: CustomImageView(
@@ -115,7 +115,7 @@ class _ApplHomeTabScreenState extends State<EmpHomeTabScreen> {
                     ? AppPalette.secondaryColor
                     : Colors.grey,
               ),
-              label: AppTextContents.profile,
+              label: "Профиль",
             ),
           ],
         ),

@@ -17,3 +17,11 @@ class SearchSpecialitiesEvent extends SpecialitySearchEvent {
 }
 
 class ClearSearchEvent extends SpecialitySearchEvent {}
+
+class GetUserPublicProfileEvent extends SpecialitySearchEvent {
+  final String userId;
+
+  const GetUserPublicProfileEvent({
+    required this.userId,
+  });
+}

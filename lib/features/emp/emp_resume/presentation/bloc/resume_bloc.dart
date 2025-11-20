@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/fetch_favorited_users_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/fetch_resume_usecase.dart';
+import 'package:mama_kris/features/emp/emp_resume/domain/usecases/get_public_profiles_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/like_resume_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
@@ -12,6 +13,7 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
   final LikeResumeUsecase likeResumeUsecase;
 
   final FetchFavoritedUsersUsecase fetchFavoritedUsersUsecase;
+
   ResumeBloc({
     required this.fetchResumeUsecase,
     required this.likeResumeUsecase,
@@ -198,4 +200,5 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
       emit(ResumeErrorState(e.toString()));
     }
   }
+
 }

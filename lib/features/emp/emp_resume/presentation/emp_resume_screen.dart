@@ -154,7 +154,9 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                                     role: users[index].role,
                                     age: users[index].age,
                                     onTap: () async {
-                                      context.pushNamed(RouteName.resumeDetail);
+                                      context.pushNamed(RouteName.resumeDetail, extra:  {
+                                        'userId': users[index].id.toString()
+                                      });
                                     },
                                   ),
                                   separatorBuilder: (context, index) =>
@@ -182,15 +184,27 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
 
   // * ────────────────────── Helper Methods ───────────────────────
   void _loadResumes() {
-    context.read<ResumeBloc>().add(FetchResumesEvent(isFavorite: isFavorite));
+    if (isFavorite) {
+      context.read<ResumeBloc>().add(FetchResumesEvent(isFavorite: isFavorite));
+    } else {
+      context.read<ResumeBloc>().add(const FetchFavoritedResumesEvent());
+    }
   }
 
   void _loadMoreResumes(int page) {
-    context.read<ResumeBloc>().add(FetchResumesEvent(isFavorite: isFavorite));
+    if (isFavorite) {
+      context.read<ResumeBloc>().add(LoadNextResumePageEvent(nextPage: page));
+    } else {
+      context.read<ResumeBloc>().add(
+        LoadNextFavoritedResumePageEvent(nextPage: page),
+      );
+    }
   }
 
   void filterBasedOnSpecilaity() {
-    context.read<ResumeBloc>().add(FetchResumesEvent(isFavorite: isFavorite, searchQuery: _searchQuery));
+    context.read<ResumeBloc>().add(
+      FetchResumesEvent(isFavorite: isFavorite, searchQuery: _searchQuery),
+    );
   }
 
   void _onFiltering() async {
@@ -213,7 +227,6 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
         ),
       ),
     );
-  
   }
 }
 
