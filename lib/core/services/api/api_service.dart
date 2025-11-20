@@ -3,10 +3,19 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/constants/app_constants.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/navigator_key/global_navigator_key.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/core/services/routes/router.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/logout_usecase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// Flag to prevent multiple logout operations
+bool _isLogoutInProgress = false;
 
 Future<void> apiService() async {
   final dio = Dio(
@@ -50,6 +59,47 @@ Future<void> apiService() async {
         return handler.next(options);
       },
       onError: (DioException e, handler) async {
+        // Check for subscription required 403 error
+        if (e.response?.statusCode == 403) {
+          try {
+            final responseData = e.response?.data;
+            if (responseData is Map<String, dynamic>) {
+              final expectedResponse = {
+                "message": "Subscription required to view more jobs",
+                "error": "Forbidden",
+                "statusCode": 403
+              };
+
+              // Check if response matches exactly
+              if (responseData['message'] == expectedResponse['message'] &&
+                  responseData['error'] == expectedResponse['error'] &&
+                  responseData['statusCode'] == expectedResponse['statusCode']) {
+                debugPrint("Subscription required error detected, navigating to subscription screen");
+
+                // Use AppRouter directly
+                try {
+                  AppRouter.router.go(RouteName.subscription);
+                  debugPrint("Navigation to subscription screen executed successfully via AppRouter");
+                } catch (e) {
+                  debugPrint("Navigation failed via AppRouter: $e");
+                  // Fallback to global navigator key with post frame callback
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (globalNavigatorKey.currentContext != null) {
+                      globalNavigatorKey.currentContext!.go(RouteName.subscription);
+                      debugPrint("Navigation to subscription screen executed successfully via fallback");
+                    } else {
+                      debugPrint("Navigation failed: context is still null after post frame callback");
+                    }
+                  });
+                }
+                return handler.next(e); // Still pass the error up but navigation is handled
+              }
+            }
+          } catch (parseError) {
+            debugPrint("Error parsing 403 response: $parseError");
+          }
+        }
+
         // Skip 401 handling for refresh requests
         if (e.response?.statusCode == 401 &&
             e.requestOptions.extra['isRefreshRequest'] != true) {
@@ -85,7 +135,9 @@ Future<void> apiService() async {
               return handler.next(e);
             }
           } else {
-            debugPrint("Token refresh failed, proceeding with error");
+            debugPrint("Token refresh failed, triggering logout");
+            // Trigger logout asynchronously without blocking the error response
+            _handleLogout();
           }
         }
         return handler.next(e);
@@ -94,6 +146,36 @@ Future<void> apiService() async {
   );
 
   sl.registerLazySingleton<Dio>(() => dio);
+}
+
+/// Handles logout process when authentication fails
+Future<void> _handleLogout() async {
+  // Prevent multiple logout operations
+  if (_isLogoutInProgress) {
+    debugPrint("Logout already in progress, skipping");
+    return;
+  }
+
+  _isLogoutInProgress = true;
+
+  try {
+    // Call logout usecase to clear data
+    final logoutUsecase = sl<LogoutUsecase>();
+    await logoutUsecase();
+
+    // Navigate to welcome page
+    globalNavigatorKey.currentContext?.go(RouteName.welcomePage);
+    debugPrint("User logged out and navigated to welcome page");
+  } catch (e) {
+    debugPrint("Error during logout process: $e");
+    // Fallback navigation even if logout fails
+    globalNavigatorKey.currentContext?.go(RouteName.welcomePage);
+  } finally {
+    // Reset flag after a delay to allow for navigation
+    Future.delayed(const Duration(seconds: 2), () {
+      _isLogoutInProgress = false;
+    });
+  }
 }
 
 Future<bool> refreshAccessToken() async {
@@ -126,6 +208,11 @@ Future<bool> refreshAccessToken() async {
       } else {
         debugPrint("New access token is null or empty");
       }
+    } else if (response.statusCode == 401) {
+      debugPrint("Refresh token is invalid (401), triggering logout");
+      // Trigger logout asynchronously without blocking
+      _handleLogout();
+      return false;
     } else {
       debugPrint(
         "Refresh token failed: ${response.statusCode} - ${response.data}",
@@ -133,6 +220,8 @@ Future<bool> refreshAccessToken() async {
     }
   } catch (e) {
     debugPrint("Error refreshing access token: $e");
+    // If refresh fails due to network or other errors, don't logout
+    // Only logout on explicit 401 from refresh endpoint
   }
 
   return false;
