@@ -54,198 +54,200 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
           bottom: false,
-          child: CustomDefaultPadding(
-            top: 16,
-            bottom: 0,
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight:
-                      MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).padding.top -
-                      MediaQuery.of(context).padding.bottom,
-                ),
-                child: BlocListener<AuthBloc, AuthState>(
-                  listener: (context, state) {
-                    if (state is AuthCheckEmailVerified) {
-                      context.pushNamed(
-                        RouteName.verifyOptApplicant,
-                        extra: {
-                          'source': 'signup',
-                          'email': emailController.text,
-                          'name': nameController.text,
-                          'password': passwordController.text,
-                        },
-                      );
-                    } else if (state is AuthFailure) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
-                    }
-                  },
-                  child: BlocBuilder<AuthBloc, AuthState>(
-                    builder: (context, state) {
-                      return Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(30),
-                              decoration: AppTheme.cardDecoration,
-                              child: Column(
-                                children: [
-                                  const CustomText(
-                                    text: "Регистрация",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
+          child: Column(
+            children: [
+              Expanded(
+                child: IntrinsicHeight(
+                  child: Center(
+                    child: CustomDefaultPadding(
+                      top: 0,
+                      bottom: 0,
+                      child: SingleChildScrollView(
+                        child: BlocListener<AuthBloc, AuthState>(
+                          listener: (context, state) {
+                            if (state is AuthCheckEmailVerified) {
+                              context.pushNamed(
+                                RouteName.verifyOptApplicant,
+                                extra: {
+                                  'source': 'signup',
+                                  'email': emailController.text,
+                                  'name': nameController.text,
+                                  'password': passwordController.text,
+                                },
+                              );
+                            } else if (state is AuthFailure) {
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(SnackBar(content: Text(state.message)));
+                            }
+                          },
+                          child: BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              return Form(
+                                key: _formKey,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(30),
+                                      decoration: AppTheme.cardDecoration,
+                                      child: Column(
+                                        children: [
+                                          const CustomText(
+                                            text: "Регистрация",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 40),
+                                          CustomInputText(
+                                            hintText: 'Иванов Иван',
+                                            labelText: "Полное имя",
+                                            controller: nameController,
+                                            validator: FormValidations.validateName,
+                                            keyboardType: TextInputType.name,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          CustomInputText(
+                                            hintText: 'example@email.com',
+                                            labelText: "Email",
+                                            controller: emailController,
+                                            validator: FormValidations.validateEmail,
+                                            keyboardType: TextInputType.emailAddress,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          CustomInputText(
+                                            hintText: 'Пароль',
+                                            labelText: "Пароль",
+                                            obscureText: true,
+                                            controller: passwordController,
+                                            validator: FormValidations.validatePassword,
+                                          ),
+                                          const SizedBox(height: 20),
+                                          CustomInputText(
+                                            hintText: 'Подтвердите пароль',
+                                            labelText: "Подтвердите пароль",
+                                            controller: confirmPasswordController,
+                                            obscureText: true,
+                                            validator: (value) =>
+                                                FormValidations.validateConfirmPassword(
+                                                  value,
+                                                  passwordController.text,
+                                                ),
+                                          ),
+                                          const SizedBox(height: 20),
+                        
+                                          // * Terms and conditions
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _acceptPrivacyPolicy =
+                                                        !_acceptPrivacyPolicy;
+                                                  });
+                                                },
+                                                child: Image.asset(
+                                                  _acceptPrivacyPolicy
+                                                      ? MediaRes.markedBox
+                                                      : MediaRes.unMarkedBox,
+                                                  width: 28,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    HandleLaunchUrl.launchUrls(
+                                                      context,
+                                                      url: AppConstants.privacyAgreement,
+                                                    );
+                                                  },
+                                                  child: const CustomText(
+                                                    text:
+                                                        "Я принимаю условия Политики конфиденциальности и даю согласие на обработку моих персональных данных в соответствии с законодательством",
+                                                    style: TextStyle(fontSize: 12),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _acceptTermsOfUse =
+                                                        !_acceptTermsOfUse;
+                                                  });
+                                                },
+                                                child: Image.asset(
+                                                  _acceptTermsOfUse
+                                                      ? MediaRes.markedBox
+                                                      : MediaRes.unMarkedBox,
+                                                  width: 28,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    HandleLaunchUrl.launchUrls(
+                                                      context,
+                                                      url: AppConstants.termsAgreement,
+                                                    );
+                                                  },
+                        
+                                                  child: const CustomText(
+                                                    text:
+                                                        "Я соглашаюсь с Условиями использования",
+                                                    style: TextStyle(fontSize: 12),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                        
+                        
+                                          const SizedBox(height: 20),
+                                          CustomButtonApplicant(
+                                            btnText: 'Зарегистрироваться',
+                                            isBtnActive:
+                                                _acceptTermsOfUse &&
+                                                _acceptPrivacyPolicy &&
+                                                state is! AuthLoading,
+                                            onTap: () {
+                                              if (_formKey.currentState!.validate()) {
+                                                context.read<AuthBloc>().add(
+                                                  CheckEmailEvent(
+                                                    email: emailController.text,
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 40),
-                                  CustomInputText(
-                                    hintText: 'Иванов Иван',
-                                    labelText: "Полное имя",
-                                    controller: nameController,
-                                    validator: FormValidations.validateName,
-                                    keyboardType: TextInputType.name,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  CustomInputText(
-                                    hintText: 'example@email.com',
-                                    labelText: "Email",
-                                    controller: emailController,
-                                    validator: FormValidations.validateEmail,
-                                    keyboardType: TextInputType.emailAddress,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  CustomInputText(
-                                    hintText: 'Пароль',
-                                    labelText: "Пароль",
-                                    obscureText: true,
-                                    controller: passwordController,
-                                    validator: FormValidations.validatePassword,
-                                  ),
-                                  const SizedBox(height: 20),
-                                  CustomInputText(
-                                    hintText: 'Подтвердите пароль',
-                                    labelText: "Подтвердите пароль",
-                                    controller: confirmPasswordController,
-                                    obscureText: true,
-                                    validator: (value) =>
-                                        FormValidations.validateConfirmPassword(
-                                          value,
-                                          passwordController.text,
-                                        ),
-                                  ),
-                                  const SizedBox(height: 20),
-
-                                  // * Terms and conditions
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _acceptPrivacyPolicy =
-                                                !_acceptPrivacyPolicy;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                          _acceptPrivacyPolicy
-                                              ? MediaRes.markedBox
-                                              : MediaRes.unMarkedBox,
-                                          width: 28,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            HandleLaunchUrl.launchUrls(
-                                              context,
-                                              url: AppConstants.privacyAgreement,
-                                            );
-                                          },
-                                          child: const CustomText(
-                                            text:
-                                                "Я принимаю условия Политики конфиденциальности и даю согласие на обработку моих персональных данных в соответствии с законодательством",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _acceptTermsOfUse =
-                                                !_acceptTermsOfUse;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                          _acceptTermsOfUse
-                                              ? MediaRes.markedBox
-                                              : MediaRes.unMarkedBox,
-                                          width: 28,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            HandleLaunchUrl.launchUrls(
-                                              context,
-                                              url: AppConstants.termsAgreement,
-                                            );
-                                          },
-
-                                          child: const CustomText(
-                                            text:
-                                                "Я соглашаюсь с Условиями использования",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-
-                                  const SizedBox(height: 20),
-                                  CustomButtonApplicant(
-                                    btnText: 'Зарегистрироваться',
-                                    isBtnActive:
-                                        _acceptTermsOfUse &&
-                                        _acceptPrivacyPolicy &&
-                                        state is! AuthLoading,
-                                    onTap: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        context.read<AuthBloc>().add(
-                                          CheckEmailEvent(
-                                            email: emailController.text,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),

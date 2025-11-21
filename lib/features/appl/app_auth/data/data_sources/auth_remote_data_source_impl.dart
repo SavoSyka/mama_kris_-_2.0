@@ -271,4 +271,44 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
+
+  @override
+  Future<bool> loginWithApple({
+    required String identityToken,
+    required Map<String, dynamic> userData,
+  }) async {
+    try {
+      // Platform-specific header
+      // final Map<String, dynamic> requestHeaders = {
+      //   'Content-Type': 'application/json',
+      //   'Accept': '*/*',
+      //   'provider': platformType,
+      // };
+
+      final postData = {"identityToken": identityToken, "userData": userData};
+
+      final response = await dio.post(
+        ApiConstants.loginWithApple,
+        data: postData,
+        // options: Options(headers: {...dio.options.headers, ...requestHeaders}),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("Response from API for Google login: ${response.data}");
+        return true;
+      } else {
+        throw const ApiException(
+          message: 'Login with Google failed',
+          statusCode: 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
 }

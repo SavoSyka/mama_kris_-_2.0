@@ -35,10 +35,10 @@ class SignupEvent extends AuthEvent {
 class CheckEmailEvent extends AuthEvent {
   final String email;
 
-  const CheckEmailEvent({required this.email,});
+  const CheckEmailEvent({required this.email});
 
   @override
-  List<Object?> get props => [email, ];
+  List<Object?> get props => [email];
 }
 
 class VerifyOtpEvent extends AuthEvent {
@@ -85,4 +85,17 @@ class UpdatePasswordEvent extends AuthEvent {
 
   @override
   List<Object?> get props => [newPassword];
+}
+
+class LoginWithAppleEvent extends AuthEvent {
+  final String identityToken;
+  final Map<String, dynamic> userData;
+
+  const LoginWithAppleEvent({
+    required this.identityToken,
+    required this.userData,
+  });
+
+  @override
+  List<Object?> get props => [identityToken, userData];
 }

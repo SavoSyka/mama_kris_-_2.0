@@ -63,7 +63,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     final token = prefs.getString(_tokenKey) ?? "";
 
     debugPrint("Token used for this service [[[ $token  ]]] ");
-    return "${token}sd";
+    return token;
   }
 
   @override

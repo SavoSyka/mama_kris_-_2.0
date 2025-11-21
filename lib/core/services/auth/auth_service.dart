@@ -24,6 +24,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/foundation.dart'; // для kDebugMode
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'dart:math';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+
 class AuthService {
   // ==================== GOOGLE SIGN-IN ====================
 
@@ -197,6 +204,162 @@ class AuthService {
     }
   }
 */
+
+  String _generateSecureNonce([int length = 32]) {
+    const String charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final Random random = Random.secure();
+    return List.generate(
+      length,
+      (_) => charset[random.nextInt(charset.length)],
+    ).join();
+  }
+
+  String _sha256ofString(String input) {
+    final List<int> bytes = utf8.encode(input);
+    final Digest digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
+  // final UserProfileService _userProfileService = UserProfileService();
+
+  Future<Map<String, dynamic>?> signInWithApple() async {
+    try {
+      final String rawNonce = _generateSecureNonce();
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: _sha256ofString(rawNonce),
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: "com.mama.kris",
+          redirectUri: Uri.parse(
+            "https://mamakris-0.firebaseapp.com/__/auth/handler",
+          ),
+        ),
+      );
+
+      if (appleCredential.identityToken == null) {
+        debugPrint("❌❌❌ errro hapend here in appleCredential.identityToken ");
+      }
+
+      final oauthCredential = firebase_auth.OAuthProvider('apple.com')
+          .credential(
+            idToken: appleCredential.identityToken!,
+            rawNonce: rawNonce,
+            accessToken: appleCredential.authorizationCode,
+          );
+
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        oauthCredential,
+      );
+
+      if (userCredential.additionalUserInfo?.isNewUser == true) {
+        final displayName =
+            appleCredential.givenName != null &&
+                appleCredential.familyName != null
+            ? '${appleCredential.givenName} ${appleCredential.familyName}'
+            : appleCredential.givenName ?? appleCredential.familyName;
+
+        if (displayName != null && userCredential.user != null) {
+          await userCredential.user!.updateDisplayName(displayName);
+          await userCredential.user!.reload();
+        }
+      }
+
+      // Ensure user profile exists in Firestore
+      if (userCredential.user != null) {
+        // await _userProfileService.ensureUserProfileExists(
+        //   userId: userCredential.user!.uid,
+        // );
+      }
+
+      // return Right(
+      //   userCredential.user == null
+      //       ? domain.User.empty
+      //       : UserModel.fromFirebase(userCredential.user!),
+      // );
+
+      return {'identityToken': appleCredential.identityToken};
+    } on SignInWithAppleAuthorizationException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case AuthorizationErrorCode.canceled:
+          errorMessage = 'El inicio de sesión con Apple fue cancelado.';
+          break;
+        case AuthorizationErrorCode.failed:
+          errorMessage =
+              'Error al iniciar sesión con Apple. Inténtalo de nuevo.';
+          break;
+        case AuthorizationErrorCode.invalidResponse:
+          errorMessage =
+              'Respuesta inválida de Apple. Por favor, inténtalo de nuevo.';
+          break;
+        case AuthorizationErrorCode.notHandled:
+          errorMessage =
+              'El inicio de sesión con Apple no está disponible. Contacta soporte.';
+          break;
+        case AuthorizationErrorCode.unknown:
+          errorMessage =
+              'Error desconocido al iniciar sesión con Apple. Inténtalo de nuevo.';
+          break;
+        default:
+          errorMessage = e.message ?? 'Error al iniciar sesión con Apple.';
+      }
+
+      return null;
+      // Left(AuthFailure(message: errorMessage));
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'account-exists-with-different-credential':
+          errorMessage =
+              'Ya existe una cuenta con este correo electrónico pero con un método de inicio de sesión diferente. Por favor, inicia sesión con tu método original (correo y contraseña) o contacta soporte para vincular las cuentas.';
+          break;
+        case 'invalid-credential':
+          errorMessage =
+              'Las credenciales de Apple no son válidas. Inténtalo de nuevo.';
+          break;
+        case 'operation-not-allowed':
+          errorMessage =
+              'El inicio de sesión con Apple no está habilitado. Contacta soporte.';
+          break;
+        case 'user-disabled':
+          errorMessage = 'Esta cuenta ha sido deshabilitada. Contacta soporte.';
+          break;
+        case 'user-not-found':
+          errorMessage =
+              'No se encontró ningún usuario con estas credenciales.';
+          break;
+        case 'too-many-requests':
+          errorMessage = 'Demasiados intentos fallidos. Inténtalo más tarde.';
+          break;
+        case 'network-request-failed':
+          errorMessage = 'Error de conexión. Verifica tu conexión a Internet.';
+          break;
+        default:
+          errorMessage = e.message ?? 'Error al iniciar sesión con Apple.';
+      }
+
+      return null;
+      //  Left(
+      //   AuthFailure(message: errorMessage, code: int.tryParse(e.code)),
+      // );
+    } catch (e) {
+      debugPrint("error $e");
+      return null;
+      // return Left(
+      //   AuthFailure(
+      //     message:
+      //         'Error inesperado al iniciar sesión con Apple: ${e.toString()}',
+      //   ),
+      // );
+    }
+  }
+
+  // * uncommen it when it is failed.
+  /*
   Future<Map<String, dynamic>?> signInWithApple() async {
     try {
       if (kDebugMode)
@@ -263,7 +426,7 @@ class AuthService {
       return null;
     }
   }
-
+*/
   /*
 xiqoo dhiyoo
   Future<Map<String, dynamic>?> signInWithApple() async {

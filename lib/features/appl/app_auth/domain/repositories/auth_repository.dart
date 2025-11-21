@@ -13,4 +13,8 @@ abstract class AuthRepository {
   ResultFuture<bool> updatePassword(String newPassword);
 
   ResultFuture<bool> loginWithGoogle({required String idToken});
+  ResultFuture<bool> loginWithApple({
+    required String identityToken,
+    required Map<String, dynamic> userData,
+  });
 }

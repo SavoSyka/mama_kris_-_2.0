@@ -20,11 +20,12 @@ class UserProfileEntity {
   final dynamic about;
   final List<ApplWorkExperienceEntity>? workExperience;
   final dynamic age;
+  final bool isFavorite;
 
   final List<ApplContactEntity>? contacts;
   final ApplContactEntity? defaultContact;
 
-  const UserProfileEntity({
+  const UserProfileEntity( {
     this.userID,
     this.email,
     this.name,
@@ -45,6 +46,7 @@ class UserProfileEntity {
     this.age,
     this.contacts,
     this.defaultContact,
+    this.isFavorite = false,
   });
 
   UserProfileEntity copyWith({

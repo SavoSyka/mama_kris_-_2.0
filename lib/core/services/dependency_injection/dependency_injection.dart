@@ -78,6 +78,7 @@ Future<void> _initAuth() async {
   sl.registerLazySingleton(() => ForgotPasswordUsecase(sl()));
   sl.registerLazySingleton(() => LoginWithGoogleUsecase(sl()));
   sl.registerLazySingleton(() => UpdatePasswordUsecase(sl()));
+  sl.registerLazySingleton(() => LoginWithAppleUsecase(sl()));
 
   // Bloc (factory → new instance per request)
   sl.registerFactory(
@@ -91,6 +92,7 @@ Future<void> _initAuth() async {
       forgotPasswordUsecase: sl(),
       loginWithGoogleUsecase: sl(),
       updatePasswordUsecase: sl(),
+      loginWithAppleUsecase: sl(),
     ),
   );
 }
@@ -347,10 +349,12 @@ Future<void> _initResumes() async {
       fetchFavoritedUsersUsecase: sl(),
     ),
   );
-  sl.registerFactory(() => SpecialitySearchBloc(searchSpecialityUsecase: sl(),
+  sl.registerFactory(
+    () => SpecialitySearchBloc(
+      searchSpecialityUsecase: sl(),
       getPublicProfilesUsecase: sl(),
-  
-  ));
+    ),
+  );
 }
 
 Future<void> _initSubscriptions() async {

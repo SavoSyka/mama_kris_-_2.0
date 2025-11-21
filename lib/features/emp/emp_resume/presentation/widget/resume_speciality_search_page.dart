@@ -86,6 +86,16 @@ class _ResumeSpecialitySearchPageState
                       hintText: 'Например: Дизайнер, Программист...',
                       labelText: '',
                       autoFocus: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
+
                       prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       onChanged: (_) => _onSearchChanged(),
                     ),

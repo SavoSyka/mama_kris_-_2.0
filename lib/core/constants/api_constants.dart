@@ -51,6 +51,8 @@ class ApiConstants {
 
   static deleteUserAcct(String userId) => "users/$userId";
   static String loginWIthGoogle = "auth/google/login";
+  static String loginWithApple = "auth/apple/login";
+
 
   static String getSpeciality = 'jobs/autocomplete';
 

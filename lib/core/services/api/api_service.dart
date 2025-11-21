@@ -132,6 +132,11 @@ Future<void> apiService() async {
               }
             } catch (retryError) {
               debugPrint("Error retrying request: $retryError");
+              // If the retried request also fails with 401, it means the refreshed token is invalid
+              if (retryError is DioException && retryError.response?.statusCode == 401) {
+                debugPrint("Retried request also failed with 401, token is invalid - triggering logout");
+                _handleLogout();
+              }
               return handler.next(e);
             }
           } else {
@@ -163,13 +168,17 @@ Future<void> _handleLogout() async {
     final logoutUsecase = sl<LogoutUsecase>();
     await logoutUsecase();
 
-    // Navigate to welcome page
-    globalNavigatorKey.currentContext?.go(RouteName.welcomePage);
+    // Navigate to welcome page using AppRouter
+    AppRouter.router.go(RouteName.welcomePage);
     debugPrint("User logged out and navigated to welcome page");
   } catch (e) {
     debugPrint("Error during logout process: $e");
-    // Fallback navigation even if logout fails
-    globalNavigatorKey.currentContext?.go(RouteName.welcomePage);
+    // Fallback navigation using AppRouter
+    try {
+      AppRouter.router.go(RouteName.welcomePage);
+    } catch (navError) {
+      debugPrint("Fallback navigation also failed: $navError");
+    }
   } finally {
     // Reset flag after a delay to allow for navigation
     Future.delayed(const Duration(seconds: 2), () {

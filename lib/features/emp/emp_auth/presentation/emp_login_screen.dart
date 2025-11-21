@@ -16,6 +16,7 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
+import 'package:mama_kris/core/utils/get_platform_type.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
@@ -145,6 +146,8 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 20),
+
+                                  if(platformType.startsWith('i'))...[
                                   CustomButtonSec(
                                     btnText: 'Войти',
                                     onTap: () {
@@ -163,6 +166,7 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 8),
+                                  ],
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,

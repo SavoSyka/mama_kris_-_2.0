@@ -35,20 +35,22 @@ class _WelcomePageState extends State<WelcomePage> {
           child: CustomDefaultPadding(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 32),
 
-                const Center(
-                  child: CustomImageView(
-                    imagePath: MediaRes.illustrationWelcome,
-                    width: 286,
-                    height: 306,
+                Container(
+                  child: Center(
+                    child: CustomImageView(
+                      imagePath: MediaRes.illustrationWelcome,
+                      width: MediaQuery.sizeOf(context).width * 0.6,
+                      height: MediaQuery.sizeOf(context).height * 0.3,
+                    ),
                   ),
                 ),
 
-                SizedBox(height: 60.h),
+                SizedBox(height: 36.h),
                 const WelcomeCard(),
-
               ],
             ),
           ),
