@@ -62,8 +62,8 @@ class HandleLaunchUrl {
 
   static Future<bool> launchTelegram(
     BuildContext context, {
-    required String username, // e.g., "durov" or "mybot"
-    String? message, // optional: start with message
+    required String username,
+    String? message,
   }) async {
     if (username.startsWith('@')) {
       username = username.substring(1);

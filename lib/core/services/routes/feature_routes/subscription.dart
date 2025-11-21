@@ -6,7 +6,7 @@ final List<RouteBase> subscriptions = [
     name: RouteName.subscription,
 
     builder: (BuildContext context, GoRouterState state) {
-      return const SubscriptionScreen();
+      return const SubscriptionScreenTab();
     },
   ),
 ];

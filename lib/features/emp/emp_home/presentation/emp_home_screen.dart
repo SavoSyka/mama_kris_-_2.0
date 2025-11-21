@@ -61,7 +61,8 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
       body: BlocBuilder<FetchEmpJobsCubit, FetchEmpJobsState>(
         builder: (context, state) {
           return Container(
-            decoration: const BoxDecoration(color: AppPalette.empBgColor),
+            decoration: 
+            const BoxDecoration(color: AppPalette.empBgColor),
             child: SafeArea(
               child: Column(
                 children: [

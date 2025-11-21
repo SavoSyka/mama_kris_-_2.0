@@ -3,11 +3,14 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:share_plus/share_plus.dart';
 
 class JobListItem extends StatefulWidget {
   final String jobTitle;
   final String salaryRange;
+  final String jobId;
+
   final VoidCallback onTap;
   final bool showAddToFavorite;
 
@@ -16,7 +19,7 @@ class JobListItem extends StatefulWidget {
     required this.jobTitle,
     required this.salaryRange,
     required this.onTap,
-    this.showAddToFavorite = true,
+    this.showAddToFavorite = true, required this.jobId,
   });
 
   @override
@@ -61,6 +64,14 @@ class _JobListItemState extends State<JobListItem> {
         PopupMenuItem(
           onTap: () {
             // Handle report
+
+            HandleLaunchUrl.launchTelegram(
+              context,
+              username: "@mamakrisSupport_bot",
+              message: 
+              "Здравствуйте, я хочу сообщить о проблеме по вакансии с ID: ${widget.jobId}, названием ${widget.jobTitle}"
+              
+            );
           },
           child: const Text(
             'Отправить жалобу',
@@ -129,6 +140,5 @@ class _JobListItemState extends State<JobListItem> {
         ),
       ),
     );
- 
   }
 }

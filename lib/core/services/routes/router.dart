@@ -44,7 +44,7 @@ import 'package:mama_kris/features/notifications/applications/notification_detai
 import 'package:mama_kris/features/notifications/applications/notification_list/bloc/notification_list_cubit.dart';
 import 'package:mama_kris/features/notifications/presentations/pages/notification_detail_page.dart';
 import 'package:mama_kris/features/notifications/presentations/pages/notification_list_page.dart';
-import 'package:mama_kris/features/subscription/presentation/pages/subscription_screen.dart';
+import 'package:mama_kris/features/subscription/presentation/pages/subscription_screen_tab.dart';
 import 'package:mama_kris/features/welcome_page/presentation/pages/force_update_screen.dart';
 import 'package:mama_kris/features/welcome_page/presentation/pages/splash_screen.dart';
 import 'package:mama_kris/features/welcome_page/presentation/pages/welcome_page.dart';

@@ -52,7 +52,8 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
       extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(title: ''),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+        decoration: 
+        const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
           child: Column(
             children: [
