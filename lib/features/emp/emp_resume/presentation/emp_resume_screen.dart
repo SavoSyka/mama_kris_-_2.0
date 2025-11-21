@@ -96,21 +96,6 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        if (!isFavorite) {
-                                          setState(() {
-                                            isFavorite = true;
-                                          });
-                                          _loadResumes();
-                                        }
-                                      },
-                                      child: _FilterCard(
-                                        isSelected: isFavorite,
-                                        text: 'Все',
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    InkWell(
-                                      onTap: () {
                                         if (isFavorite) {
                                           setState(() {
                                             isFavorite = false;
@@ -120,6 +105,21 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                                       },
                                       child: _FilterCard(
                                         isSelected: !isFavorite,
+                                        text: 'Все',
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    InkWell(
+                                      onTap: () {
+                                        if (!isFavorite) {
+                                          setState(() {
+                                            isFavorite = true;
+                                          });
+                                          _loadResumes();
+                                        }
+                                      },
+                                      child: _FilterCard(
+                                        isSelected: isFavorite,
                                         text: 'Избранные',
                                       ),
                                     ),
@@ -184,7 +184,7 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
 
   // * ────────────────────── Helper Methods ───────────────────────
   void _loadResumes() {
-    if (isFavorite) {
+    if (!isFavorite) {
       context.read<ResumeBloc>().add(FetchResumesEvent(isFavorite: isFavorite));
     } else {
       context.read<ResumeBloc>().add(const FetchFavoritedResumesEvent());
@@ -192,7 +192,7 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
   }
 
   void _loadMoreResumes(int page) {
-    if (isFavorite) {
+    if (!isFavorite) {
       context.read<ResumeBloc>().add(LoadNextResumePageEvent(nextPage: page));
     } else {
       context.read<ResumeBloc>().add(

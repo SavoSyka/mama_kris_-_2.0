@@ -188,7 +188,7 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
                                           state is EmployeeContactLoading;
                                       return Column(
                                         children: [
-                                          CustomButtonApplicant(
+                                          CustomButtonEmployee(
                                             btnText: isLoading
                                                 ? 'Сохранение...'
                                                 : 'Сохранить',
@@ -203,7 +203,7 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
                                             child: const Text(
                                               'Отмена',
                                               style: TextStyle(
-                                                color: AppPalette.primaryColor,
+                                                color: AppPalette.empPrimaryColor,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w600,
                                               ),

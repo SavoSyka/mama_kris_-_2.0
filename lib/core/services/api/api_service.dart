@@ -113,6 +113,11 @@ Future<void> apiService() async {
           }
         }
 
+        // Bypass 401 handling for auth-related paths
+        if (e.requestOptions.uri.path.contains('/auth')) {
+          return handler.next(e);
+        }
+
         // Skip 401 handling for refresh requests
         if (e.response?.statusCode == 401 &&
             e.requestOptions.extra['isRefreshRequest'] != true) {

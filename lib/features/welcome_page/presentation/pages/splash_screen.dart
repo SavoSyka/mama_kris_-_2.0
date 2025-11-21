@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mama_kris/core/common/widgets/custom_error_retry.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
@@ -99,7 +100,10 @@ class _SplashScreenState extends State<SplashScreen>
             },
             builder: (context, state) {
               if (state is ForceUpdateError) {
-                return Center(child: CustomText(text: state.message));
+                return CustomErrorRetry(onTap: _checkAppStatus,
+                errorMessage: state.message,
+                );
+                // Center(child: CustomText(text: state.message));
               }
               return CustomImageView(
                 imagePath: MediaRes.illustrationWelcome,
@@ -139,45 +143,55 @@ class _SplashScreenState extends State<SplashScreen>
       );
     }
   }
-Future<void> _checkLoginStatus() async {
-  try {
-    final token = await sl<AuthLocalDataSource>().getToken();
-    final userType = await sl<AuthLocalDataSource>().getUserType();
-    final userId = await sl<AuthLocalDataSource>().getUserId();
 
-    // Check if we have valid authentication data
-    if (token.isNotEmpty && userId != null) {
-      // Try to validate the token by fetching user data
-      final isValidSession = await _validateUserSession(token, userId, userType);
+  Future<void> _checkLoginStatus() async {
+    try {
+      final token = await sl<AuthLocalDataSource>().getToken();
+      final userType = await sl<AuthLocalDataSource>().getUserType();
+      final userId = await sl<AuthLocalDataSource>().getUserId();
 
-      if (isValidSession) {
-        // Load user profile into BLoC state before navigation
-        await _loadUserProfileIntoBloc(userType);
+      // Check if we have valid authentication data
+      if (token.isNotEmpty && userId != null) {
+        // Try to validate the token by fetching user data
+        final isValidSession = await _validateUserSession(
+          token,
+          userId,
+          userType,
+        );
 
-        // Navigate to appropriate home screen based on user type
-        if (userType) {
-          context.pushReplacementNamed(RouteName.homeApplicant);
+        if (isValidSession) {
+          // Load user profile into BLoC state before navigation
+          await _loadUserProfileIntoBloc(userType);
+
+          // Navigate to appropriate home screen based on user type
+          if (userType) {
+            context.pushReplacementNamed(RouteName.homeApplicant);
+          } else {
+            context.pushReplacementNamed(RouteName.homeEmploye);
+          }
         } else {
-          context.pushReplacementNamed(RouteName.homeEmploye);
+          // Token is invalid, clear stored data and go to welcome page
+          await sl<AuthLocalDataSource>().clearAll();
+          context.pushReplacementNamed(RouteName.welcomePage);
         }
       } else {
-        // Token is invalid, clear stored data and go to welcome page
-        await sl<AuthLocalDataSource>().clearAll();
+        // No stored authentication data, go to welcome page
         context.pushReplacementNamed(RouteName.welcomePage);
       }
-    } else {
-      // No stored authentication data, go to welcome page
+    } catch (e) {
+      // If there's any error during validation, clear data and go to welcome page
+      debugPrint('Error during login status check: $e');
+      await sl<AuthLocalDataSource>().clearAll();
       context.pushReplacementNamed(RouteName.welcomePage);
     }
-  } catch (e) {
-    // If there's any error during validation, clear data and go to welcome page
-    debugPrint('Error during login status check: $e');
-    await sl<AuthLocalDataSource>().clearAll();
-    context.pushReplacementNamed(RouteName.welcomePage);
   }
-}
+
   /// Validates user session by attempting to fetch user profile
-  Future<bool> _validateUserSession(String token, String userId, bool isApplicant) async {
+  Future<bool> _validateUserSession(
+    String token,
+    String userId,
+    bool isApplicant,
+  ) async {
     try {
       // You can implement a lightweight API call here to validate the token
       // For now, we'll just check if we have stored user data
@@ -191,7 +205,6 @@ Future<void> _checkLoginStatus() async {
       // If no stored user data, try to fetch it from API
       final success = await _fetchAndStoreUserData(token, userId, isApplicant);
       return success;
-
     } catch (e) {
       debugPrint('Session validation failed: $e');
       return false;
@@ -199,7 +212,11 @@ Future<void> _checkLoginStatus() async {
   }
 
   /// Fetches user data from API and stores it locally
-  Future<bool> _fetchAndStoreUserData(String token, String userId, bool isApplicant) async {
+  Future<bool> _fetchAndStoreUserData(
+    String token,
+    String userId,
+    bool isApplicant,
+  ) async {
     try {
       // Use the existing function from funcs.dart to fetch and cache user data
       await funcs.updateUserDataInCache(token, int.parse(userId));
@@ -210,8 +227,9 @@ Future<void> _checkLoginStatus() async {
       final storedEmail = await funcs.resolveEmail();
 
       // Check if we have at least basic user information
-      final hasValidData = (userData != null && userData.isNotEmpty) ||
-                          (storedName.isNotEmpty && storedEmail.isNotEmpty);
+      final hasValidData =
+          (userData != null && userData.isNotEmpty) ||
+          (storedName.isNotEmpty && storedEmail.isNotEmpty);
 
       if (hasValidData) {
         debugPrint('User data successfully cached for user: $userId');
@@ -220,7 +238,6 @@ Future<void> _checkLoginStatus() async {
         debugPrint('Failed to cache user data - no valid data received');
         return false;
       }
-
     } catch (e) {
       debugPrint('Failed to fetch user data: $e');
       return false;

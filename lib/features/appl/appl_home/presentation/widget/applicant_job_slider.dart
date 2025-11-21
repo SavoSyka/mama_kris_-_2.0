@@ -119,21 +119,19 @@ class ApplicantJobSlider extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: AppTheme.cardDecoration,
                   child: InkWell(
                     onTap: onInterestedPressed,
-                
+
                     child: const Text(
-                      'Interesting',// TODO Интересно
+                      'Интересно', // TODO Интересно
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Jost',
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
-                
+
                         color: AppPalette.primaryColor,
                       ),
                     ),
@@ -145,13 +143,11 @@ class ApplicantJobSlider extends StatelessWidget {
 
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: AppTheme.primaryColordecoration,
                   child: InkWell(
                     onTap: onNotInterestedPressed,
-                
+
                     child: Text(
                       'Неинтересно',
                       textAlign: TextAlign.center,
@@ -169,7 +165,6 @@ class ApplicantJobSlider extends StatelessWidget {
               ),
             ],
           ),
-       
         ],
       ),
     );
