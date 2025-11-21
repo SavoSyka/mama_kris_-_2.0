@@ -30,7 +30,7 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
 
   // final emailController = TextEditingController(text: 'mowerem676@dwakm.com');
 
-  final emailController = TextEditingController(text: 'xanawam595@gusronk.com');
+  final emailController = TextEditingController(text: 'one@yopmail.com');
 
   final nameController = TextEditingController(text: 'robby one');
 
@@ -76,9 +76,9 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                 },
                               );
                             } else if (state is AuthFailure) {
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(SnackBar(content: Text(state.message)));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(state.message)),
+                              );
                             }
                           },
                           child: BlocBuilder<AuthBloc, AuthState>(
@@ -106,7 +106,8 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                             hintText: 'Иванов Иван',
                                             labelText: "Полное имя",
                                             controller: nameController,
-                                            validator: FormValidations.validateName,
+                                            validator:
+                                                FormValidations.validateName,
                                             keyboardType: TextInputType.name,
                                           ),
                                           const SizedBox(height: 12),
@@ -114,8 +115,10 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                             hintText: 'example@email.com',
                                             labelText: "Email",
                                             controller: emailController,
-                                            validator: FormValidations.validateEmail,
-                                            keyboardType: TextInputType.emailAddress,
+                                            validator:
+                                                FormValidations.validateEmail,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
                                           ),
                                           const SizedBox(height: 12),
                                           CustomInputText(
@@ -123,13 +126,15 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                             labelText: "Пароль",
                                             obscureText: true,
                                             controller: passwordController,
-                                            validator: FormValidations.validatePassword,
+                                            validator: FormValidations
+                                                .validatePassword,
                                           ),
                                           const SizedBox(height: 20),
                                           CustomInputText(
                                             hintText: 'Подтвердите пароль',
                                             labelText: "Подтвердите пароль",
-                                            controller: confirmPasswordController,
+                                            controller:
+                                                confirmPasswordController,
                                             obscureText: true,
                                             validator: (value) =>
                                                 FormValidations.validateConfirmPassword(
@@ -138,7 +143,7 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                                 ),
                                           ),
                                           const SizedBox(height: 20),
-                        
+
                                           // * Terms and conditions
                                           Row(
                                             crossAxisAlignment:
@@ -146,10 +151,12 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                             children: [
                                               InkWell(
                                                 onTap: () {
-                                                  setState(() {
-                                                    _acceptPrivacyPolicy =
-                                                        !_acceptPrivacyPolicy;
-                                                  });
+                                                  if (state is! AuthLoading) {
+                                                    setState(() {
+                                                      _acceptPrivacyPolicy =
+                                                          !_acceptPrivacyPolicy;
+                                                    });
+                                                  }
                                                 },
                                                 child: Image.asset(
                                                   _acceptPrivacyPolicy
@@ -164,13 +171,16 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                                   onTap: () {
                                                     HandleLaunchUrl.launchUrls(
                                                       context,
-                                                      url: AppConstants.privacyAgreement,
+                                                      url: AppConstants
+                                                          .privacyAgreement,
                                                     );
                                                   },
                                                   child: const CustomText(
                                                     text:
                                                         "Я принимаю условия Политики конфиденциальности и даю согласие на обработку моих персональных данных в соответствии с законодательством",
-                                                    style: TextStyle(fontSize: 12),
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -183,10 +193,12 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                             children: [
                                               InkWell(
                                                 onTap: () {
-                                                  setState(() {
-                                                    _acceptTermsOfUse =
-                                                        !_acceptTermsOfUse;
-                                                  });
+                                                  if (state is! AuthLoading) {
+                                                    setState(() {
+                                                      _acceptTermsOfUse =
+                                                          !_acceptTermsOfUse;
+                                                    });
+                                                  }
                                                 },
                                                 child: Image.asset(
                                                   _acceptTermsOfUse
@@ -201,21 +213,23 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                                   onTap: () {
                                                     HandleLaunchUrl.launchUrls(
                                                       context,
-                                                      url: AppConstants.termsAgreement,
+                                                      url: AppConstants
+                                                          .termsAgreement,
                                                     );
                                                   },
-                        
+
                                                   child: const CustomText(
                                                     text:
                                                         "Я соглашаюсь с Условиями использования",
-                                                    style: TextStyle(fontSize: 12),
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ],
                                           ),
-                        
-                        
+
                                           const SizedBox(height: 20),
                                           CustomButtonApplicant(
                                             btnText: 'Зарегистрироваться',
@@ -223,8 +237,11 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                                 _acceptTermsOfUse &&
                                                 _acceptPrivacyPolicy &&
                                                 state is! AuthLoading,
+
+                                            isLoading: state is AuthLoading,
                                             onTap: () {
-                                              if (_formKey.currentState!.validate()) {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
                                                 context.read<AuthBloc>().add(
                                                   CheckEmailEvent(
                                                     email: emailController.text,

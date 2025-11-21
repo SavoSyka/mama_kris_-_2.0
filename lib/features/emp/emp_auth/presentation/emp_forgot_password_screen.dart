@@ -8,6 +8,7 @@ import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/common/widgets/expanded_scroll_wrapper.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
@@ -34,103 +35,103 @@ class _EmpForgotPasswordScreenState extends State<EmpForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Восстановление пароля'),
+      appBar: const CustomAppBar(title: 'Восстановление пароля', isEmployee: true),
       body: Container(
-             decoration: const BoxDecoration(color: AppPalette.empBgColor),
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
         child: SafeArea(
-          child: CustomDefaultPadding(
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight:
-                      MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).padding.top -
-                      MediaQuery.of(context).padding.bottom,
-                ),
-                child: BlocListener<EmpAuthBloc, EmpAuthState>(
-                  listener: (context, state) {
-                    if (state is EmpAuthPasswordReset) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Инструкции отправлены на email'),
-                        ),
-                      );
-                      context.goNamed(
-                        RouteName.verifyOtpEmployee,
-                        extra: {
-                          "email": emailController.text,
-                          'source': 'forgot',
-                          'name': '',
-                          'password': "",
-                        },
-                      );
-                    } else if (state is EmpAuthFailure) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
-                    }
-                  },
-                  child: BlocBuilder<EmpAuthBloc, EmpAuthState>(
-                    builder: (context, state) {
-                      return Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(30),
-                              decoration: AppTheme.cardDecoration,
-                              child: Column(
-                                children: [
-                                  const CustomText(
-                                    text: "Восстановление пароля",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const CustomText(
-                                    text:
-                                        "Введите ваш email для восстановления пароля",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 20),
-                                  CustomInputText(
-                                    hintText: 'example@email.com',
-                                    labelText: "Email",
-                                    controller: emailController,
-                                    validator: FormValidations.validateEmail,
-                                  ),
-                                  const SizedBox(height: 42),
-                                  CustomButtonEmployee(
-                                    btnText: 'Отправить',
-                                    isBtnActive: state is! EmpAuthLoading,
-                                    isLoading: state is EmpAuthLoading,
-
-                                    onTap: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        context.read<EmpAuthBloc>().add(
-                                          EmpForgotPasswordEvent(
-                                            email: emailController.text,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
+          child: Column(
+            children: [
+              ExpandedScrollWrapper(
+                child: CustomDefaultPadding(
+                  child: SingleChildScrollView(
+                    child: BlocListener<EmpAuthBloc, EmpAuthState>(
+                      listener: (context, state) {
+                        if (state is EmpAuthPasswordReset) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Инструкции отправлены на email'),
                             ),
-                          ],
-                        ),
-                      );
-                    },
+                          );
+                          context.goNamed(
+                            RouteName.verifyOtpEmployee,
+                            extra: {
+                              "email": emailController.text,
+                              'source': 'forgot',
+                              'name': '',
+                              'password': "",
+                            },
+                          );
+                        } else if (state is EmpAuthFailure) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(state.message)),
+                          );
+                        }
+                      },
+                      child: BlocBuilder<EmpAuthBloc, EmpAuthState>(
+                        builder: (context, state) {
+                          return Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(30),
+                                  decoration: AppTheme.cardDecoration,
+                                  child: Column(
+                                    children: [
+                                      const CustomText(
+                                        text: "Восстановление пароля",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const CustomText(
+                                        text:
+                                            "Введите ваш email для восстановления пароля",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 20),
+                                      CustomInputText(
+                                        hintText: 'example@email.com',
+                                        labelText: "Email",
+                                        controller: emailController,
+                                        validator:
+                                            FormValidations.validateEmail,
+                                      ),
+                                      const SizedBox(height: 42),
+                                      CustomButtonEmployee(
+                                        btnText: 'Отправить',
+                                        isBtnActive: state is! EmpAuthLoading,
+                                        isLoading: state is EmpAuthLoading,
+
+                                        onTap: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            context.read<EmpAuthBloc>().add(
+                                              EmpForgotPasswordEvent(
+                                                email: emailController.text,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),

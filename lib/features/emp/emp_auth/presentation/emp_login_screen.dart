@@ -11,6 +11,7 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/common/widgets/expanded_scroll_wrapper.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
@@ -46,164 +47,162 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: ''),
+      appBar: const CustomAppBar(title: '',isEmployee: true),
       body: Container(
         decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
         child: SafeArea(
-          child: CustomDefaultPadding(
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight:
-                      MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).padding.top -
-                      MediaQuery.of(context).padding.bottom,
-                ),
-                child: BlocListener<EmpAuthBloc, EmpAuthState>(
-                  listener: (context, state) {
-                    debugPrint('auth state $state');
-                    if (state is EmpAuthSuccess) {
-                      // TODO  i have to update employe profile.
-                      context.read<EmpUserBloc>().add(
-                        EmpGetUserProfileEvent(user: state.user.user),
-                      );
-
-                      context.goNamed(RouteName.homeEmploye);
-                    } else if (state is EmpAuthFailure) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
-                    }
-                  },
-                  child: BlocBuilder<EmpAuthBloc, EmpAuthState>(
-                    builder: (context, state) {
-                      return Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(30),
-                              decoration: AppTheme.cardDecoration,
-                              child: Column(
-                                children: [
-                                  const CustomText(
-                                    text: "Вход",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  CustomInputText(
-                                    hintText: 'example@email.com',
-                                    labelText: "Почта",
-                                    controller: emailController,
-                                    validator: FormValidations.validateEmail,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  CustomInputText(
-                                    hintText: 'Пароль',
-                                    labelText: "Пароль",
-                                    controller: passwordController,
-                                    obscureText: true,
-                                    validator: FormValidations.validatePassword,
-                                  ),
-                                  const SizedBox(height: 42),
-                                  CustomButtonEmployee(
-                                    btnText: 'Войти',
-                                    isLoading: state is EmpAuthLoading,
-                                    isBtnActive: state is! EmpAuthLoading,
-                                    onTap: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        context.read<EmpAuthBloc>().add(
-                                          EmpLoginEvent(
-                                            email: emailController.text,
-                                            password: passwordController.text,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  const SizedBox(height: 20),
-                                  CustomButtonSec(
-                                    btnText: 'Войти',
-                                    onTap: () {
-                                      // TODO: Implement Google sign in
-                                      debugPrint('signInWithGoogle');
-                                    },
-                                    child: const Row(
-                                      children: [
-                                        CustomImageView(
-                                          imagePath: MediaRes.googleIcon,
-                                          width: 24,
-                                        ),
-                                        SizedBox(width: 15),
-                                        CustomText(text: 'Войти через Google'),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-
-                                  if(platformType.startsWith('i'))...[
-                                  CustomButtonSec(
-                                    btnText: 'Войти',
-                                    onTap: () {
-                                      // TODO: Implement Apple sign in
-                                      debugPrint('sign in with apple account');
-                                    },
-                                    child: const Row(
-                                      children: [
-                                        CustomImageView(
-                                          imagePath: MediaRes.appleIcon,
-                                          width: 24,
-                                        ),
-                                        SizedBox(width: 15),
-                                        CustomText(text: 'Войти через Apple'),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  ],
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+          child: Column(
+            children: [
+              ExpandedScrollWrapper(
+                child: CustomDefaultPadding(
+                  child: SingleChildScrollView(
+                    child: BlocListener<EmpAuthBloc, EmpAuthState>(
+                      listener: (context, state) {
+                        debugPrint('auth state $state');
+                        if (state is EmpAuthSuccess) {
+                          // TODO  i have to update employe profile.
+                          context.read<EmpUserBloc>().add(
+                            EmpGetUserProfileEvent(user: state.user.user),
+                          );
+                    
+                          context.goNamed(RouteName.homeEmploye);
+                        } else if (state is EmpAuthFailure) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(state.message)));
+                        }
+                      },
+                      child: BlocBuilder<EmpAuthBloc, EmpAuthState>(
+                        builder: (context, state) {
+                          return Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(30),
+                                  decoration: AppTheme.cardDecoration,
+                                  child: Column(
                                     children: [
-                                      CustomTextButton(
-                                        text: "Забыли пароль?",
-                                        textColor: AppPalette.empPrimaryColor,
-                                        onPressed: () {
-                                          // TODO: Navigate to forgot password
-                                            context.pushNamed(
-                                            RouteName.forgotEmployee,
-                                          );
-                                          debugPrint('forgot password');
+                                      const CustomText(
+                                        text: "Вход",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      CustomInputText(
+                                        hintText: 'example@email.com',
+                                        labelText: "Почта",
+                                        controller: emailController,
+                                        validator: FormValidations.validateEmail,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      CustomInputText(
+                                        hintText: 'Пароль',
+                                        labelText: "Пароль",
+                                        controller: passwordController,
+                                        obscureText: true,
+                                        validator: FormValidations.validatePassword,
+                                      ),
+                                      const SizedBox(height: 42),
+                                      CustomButtonEmployee(
+                                        btnText: 'Войти',
+                                        isLoading: state is EmpAuthLoading,
+                                        isBtnActive: state is! EmpAuthLoading,
+                                        onTap: () {
+                                          if (_formKey.currentState!.validate()) {
+                                            context.read<EmpAuthBloc>().add(
+                                              EmpLoginEvent(
+                                                email: emailController.text,
+                                                password: passwordController.text,
+                                              ),
+                                            );
+                                          }
                                         },
                                       ),
-                                      CustomTextButton(
-                                        text: "Зарегистрироваться",
-                                        textColor: AppPalette.empPrimaryColor,
-                                        onPressed: () {
-                                          context.pushNamed(
-                                            RouteName.signupEmploye,
-                                          );
+                                      const SizedBox(height: 20),
+                                      CustomButtonSec(
+                                        btnText: 'Войти',
+                                        onTap: () {
+                                          // TODO: Implement Google sign in
+                                          debugPrint('signInWithGoogle');
                                         },
+                                        child: const Row(
+                                          children: [
+                                            CustomImageView(
+                                              imagePath: MediaRes.googleIcon,
+                                              width: 24,
+                                            ),
+                                            SizedBox(width: 15),
+                                            CustomText(text: 'Войти через Google'),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                    
+                                      if(platformType.startsWith('i'))...[
+                                      CustomButtonSec(
+                                        btnText: 'Войти',
+                                        onTap: () {
+                                          // TODO: Implement Apple sign in
+                                          debugPrint('sign in with apple account');
+                                        },
+                                        child: const Row(
+                                          children: [
+                                            CustomImageView(
+                                              imagePath: MediaRes.appleIcon,
+                                              width: 24,
+                                            ),
+                                            SizedBox(width: 15),
+                                            CustomText(text: 'Войти через Apple'),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      ],
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          CustomTextButton(
+                                            text: "Забыли пароль?",
+                                            textColor: AppPalette.empPrimaryColor,
+                                            onPressed: () {
+                                              // TODO: Navigate to forgot password
+                                                context.pushNamed(
+                                                RouteName.forgotEmployee,
+                                              );
+                                              debugPrint('forgot password');
+                                            },
+                                          ),
+                                          CustomTextButton(
+                                            text: "Зарегистрироваться",
+                                            textColor: AppPalette.empPrimaryColor,
+                                            onPressed: () {
+                                              context.pushNamed(
+                                                RouteName.signupEmploye,
+                                              );
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    },
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),

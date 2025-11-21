@@ -51,30 +51,43 @@ class CustomInputText extends StatefulWidget {
 class _CustomInputTextState extends State<CustomInputText> {
   bool _showPassword = false;
   late final FocusNode _focusNode;
-  late final bool _isApplicant;
+  bool _isApplicant = true;
 
   // ──────────────────────────────────────────────
   // LIGHT MODE COLORS (2025 Premium Style)
-  // ──────────────────────────────────────────────
-  static const Color primaryColor = Color(
-    0xFF0066FF,
-  ); // Bright blue (like Telegram/YouTube)
-  static const Color backgroundIdle = Color(0xFFF7F7F7); // Very light gray
-  static const Color backgroundFocus = Color(
-    0xFFE8F0FE,
-  ); // Soft blue tint when focused
-  static const Color borderFocus = Color(0xFF0066FF); // Strong blue border
-  static const Color textHint = Color(0xFF9E9E9E);
-  static const Color labelIdle = Color(0xFF757575);
-  static const Color labelActive = Color(0xFF0066FF);
-  static const Color iconIdle = Color(0xFF9E9E9E);
-  static const Color iconActive = Color(0xFF0066FF);
+  Color get primaryColor =>
+      _isApplicant ? const Color(0xff12902A) : const Color(0xFF0074BC);
+
+  Color get backgroundIdle => const Color(0xFFF7F7F7);
+
+  Color get backgroundFocus => primaryColor.withOpacity(0.10);
+
+  Color get borderFocus => primaryColor;
+
+  Color get textHint => const Color(0xFF9E9E9E);
+
+  Color get labelIdle => const Color(0xFF757575);
+
+  Color get labelActive => primaryColor;
+
+  Color get iconIdle => const Color(0xFF9E9E9E);
+
+  Color get iconActive => primaryColor;
 
   @override
   void initState() {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(() => setState(() {}));
+    getUserType();
+  }
+
+  Future<void> getUserType() async {
+    final type = await sl<AuthLocalDataSource>().getUserType();
+
+    setState(() {
+      _isApplicant = type;
+    });
   }
 
   @override
@@ -84,14 +97,6 @@ class _CustomInputTextState extends State<CustomInputText> {
   }
 
   void _togglePassword() => setState(() => _showPassword = !_showPassword);
-
-  Future<void> getUserType() async {
-    final type = await sl<AuthLocalDataSource>().getUserType();
-
-    setState(() {
-      _isApplicant = type;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +155,7 @@ class _CustomInputTextState extends State<CustomInputText> {
               filled: true,
               fillColor: Colors.transparent,
               hintText: widget.hintText,
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 fontSize: 15.5,
                 color: textHint,
                 fontWeight: FontWeight.w400,
@@ -184,7 +189,7 @@ class _CustomInputTextState extends State<CustomInputText> {
 
               contentPadding:
                   widget.contentPadding ??
-                  const EdgeInsets.symmetric(vertical: 17, horizontal: 16),
+                  const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
 
               // Clean borders (we already handle visual with container)
               border: _inputBorder(),

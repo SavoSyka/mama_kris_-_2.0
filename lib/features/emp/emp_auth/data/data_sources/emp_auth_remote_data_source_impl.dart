@@ -85,16 +85,24 @@ class EmpAuthRemoteDataSourceImpl implements EmpAuthRemoteDataSource {
       final response = await dio.post(ApiConstants.register, data: postData);
 
       if (response.statusCode == 201) {
-        final data = response.data as DataMap;
+        final data = response.data as Map<String, dynamic>;
+        debugPrint('Login response: $data');
 
-        final accessToken = data['accessToken'] as String? ?? '';
-        final refreshToken = data['refreshToken'] as String? ?? '';
+        final user = EmpUserModel.fromJson(data);
 
+        final accessToken = user.accessToken;
+        final refreshToken = user.refreshToken;
+        final userId = user.userId.toString();
+
+        await local.saveUserType(false);
         await local.saveToken(accessToken);
         await local.saveRefreshToken(refreshToken);
+        await local.saveUserId(userId);
 
-        final userModel = EmpUserModel.fromJson(response.data['user']);
-        return Right(userModel);
+        // Save full user data for persistent login
+        await local.saveUser(data['user']);
+
+        return Right(user);
       } else {
         throw ApiException(
           message: response.data['message'] ?? 'Signup failed',

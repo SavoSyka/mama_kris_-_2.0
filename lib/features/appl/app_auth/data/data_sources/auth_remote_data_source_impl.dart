@@ -47,9 +47,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         throw ApiException(
           message: response.data['message'] ?? 'Login failed',
-          statusCode: response.statusCode ?? 500,
+          statusCode: response.statusCode ?? 400,
         );
       }
+    } on ApiException {
+      rethrow;
     } on DioException catch (e) {
       throw ApiException(
         message: e.response?.data['message'] ?? 'Network error',
@@ -79,16 +81,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 201) {
-        final data = response.data as DataMap;
+        final data = response.data as Map<String, dynamic>;
+        debugPrint('Login response: $data');
 
-        final accessToken = data['accessToken'] as String? ?? '';
-        final refreshToken = data['refreshToken'] as String? ?? '';
+        final user = UserModel.fromJson(data);
 
+        final accessToken = user.accessToken;
+        final refreshToken = user.refreshToken;
+        final userId = user.userId.toString();
+
+        await local.saveUserType(true);
         await local.saveToken(accessToken);
         await local.saveRefreshToken(refreshToken);
+        await local.saveUserId(userId);
 
-        final userModel = UserModel.fromJson(response.data['user']);
-        return Right(userModel);
+        // Save full user data for persistent login
+        await local.saveUser(data['user']);
+
+        return Right(user);
       } else {
         throw ApiException(
           message: response.data['message'] ?? 'Signup failed',

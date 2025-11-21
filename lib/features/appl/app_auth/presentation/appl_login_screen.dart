@@ -72,7 +72,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                               if (state.user.subscription.active) {
                                 context.goNamed(RouteName.homeApplicant);
                               } else {
-                                context.goNamed(RouteName.subscription);
+                                context.goNamed(RouteName.homeApplicant);
                               }
                             } else if (state is AuthFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -159,7 +159,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                           ),
 
                                           const SizedBox(height: 20),
-                                          // if (platformType.startsWith('i')) ...[
+                                          if (platformType.startsWith('i')) ...[
                                             CustomButtonSec(
                                               btnText: 'Войти',
                                               onTap: () {
@@ -184,7 +184,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                               ),
                                             ),
                                             const SizedBox(height: 8),
-                                          // ],
+                                          ],
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,

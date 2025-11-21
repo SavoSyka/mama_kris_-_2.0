@@ -67,32 +67,45 @@ Future<void> apiService() async {
               final expectedResponse = {
                 "message": "Subscription required to view more jobs",
                 "error": "Forbidden",
-                "statusCode": 403
+                "statusCode": 403,
               };
 
               // Check if response matches exactly
               if (responseData['message'] == expectedResponse['message'] &&
                   responseData['error'] == expectedResponse['error'] &&
-                  responseData['statusCode'] == expectedResponse['statusCode']) {
-                debugPrint("Subscription required error detected, navigating to subscription screen");
+                  responseData['statusCode'] ==
+                      expectedResponse['statusCode']) {
+                debugPrint(
+                  "Subscription required error detected, navigating to subscription screen",
+                );
 
                 // Use AppRouter directly
                 try {
                   AppRouter.router.go(RouteName.subscription);
-                  debugPrint("Navigation to subscription screen executed successfully via AppRouter");
+                  debugPrint(
+                    "Navigation to subscription screen executed successfully via AppRouter",
+                  );
                 } catch (e) {
                   debugPrint("Navigation failed via AppRouter: $e");
                   // Fallback to global navigator key with post frame callback
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (globalNavigatorKey.currentContext != null) {
-                      globalNavigatorKey.currentContext!.go(RouteName.subscription);
-                      debugPrint("Navigation to subscription screen executed successfully via fallback");
+                      globalNavigatorKey.currentContext!.go(
+                        RouteName.subscription,
+                      );
+                      debugPrint(
+                        "Navigation to subscription screen executed successfully via fallback",
+                      );
                     } else {
-                      debugPrint("Navigation failed: context is still null after post frame callback");
+                      debugPrint(
+                        "Navigation failed: context is still null after post frame callback",
+                      );
                     }
                   });
                 }
-                return handler.next(e); // Still pass the error up but navigation is handled
+                return handler.next(
+                  e,
+                ); // Still pass the error up but navigation is handled
               }
             }
           } catch (parseError) {
@@ -133,16 +146,23 @@ Future<void> apiService() async {
             } catch (retryError) {
               debugPrint("Error retrying request: $retryError");
               // If the retried request also fails with 401, it means the refreshed token is invalid
-              if (retryError is DioException && retryError.response?.statusCode == 401) {
-                debugPrint("Retried request also failed with 401, token is invalid - triggering logout");
-                _handleLogout();
+              if (retryError is DioException &&
+                  retryError.response?.statusCode == 401) {
+                debugPrint(
+                  "Retried request also failed with 401, token is invalid - triggering logout",
+                );
+                if (!e.requestOptions.path.contains('/auth')) {
+                  _handleLogout();
+                }
               }
               return handler.next(e);
             }
           } else {
             debugPrint("Token refresh failed, triggering logout");
             // Trigger logout asynchronously without blocking the error response
-            _handleLogout();
+            if (!e.requestOptions.path.contains('/auth')) {
+              _handleLogout();
+            }
           }
         }
         return handler.next(e);

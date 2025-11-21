@@ -8,6 +8,7 @@ import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/common/widgets/expanded_scroll_wrapper.dart';
 import 'package:mama_kris/core/constants/app_constants.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
@@ -33,7 +34,10 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
   bool _acceptPrivacyPolicy = false;
   bool _acceptTermsOfUse = false;
 
-  final emailController = TextEditingController(text: 'emproobbii@yopmail.com');
+  final emailController = TextEditingController(
+    text: 'one@yopmail.com',
+
+  );
   final nameController = TextEditingController(text: 'robby one');
 
   final passwordController = TextEditingController(text: '123321123');
@@ -45,220 +49,225 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // 
+    //
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: const CustomAppBar(title: ""),
+      appBar: const CustomAppBar(title: "", isEmployee: true,),
       extendBodyBehindAppBar: true,
       body: Container(
         decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
         child: SafeArea(
           bottom: false,
-          child: CustomDefaultPadding(
-            top: 16,
-            bottom: 0,
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight:
-                      MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).padding.top -
-                      MediaQuery.of(context).padding.bottom,
-                ),
-                child: BlocListener<EmpAuthBloc, EmpAuthState>(
-                  listener: (context, state) {
-                    if (state is EmpAuthCheckEmailVerified) {
-                      context.pushNamed(
-                        RouteName.verifyOtpEmployee,
-                        extra: {
-                          'email': emailController.text,
-                          'name': nameController.text,
-                          'password': passwordController.text,
-                        },
-                      );
-                    } else if (state is EmpAuthFailure) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
-                    }
-                  },
-                  child: BlocBuilder<EmpAuthBloc, EmpAuthState>(
-                    builder: (context, state) {
-                      return Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(30),
-                              decoration: AppTheme.cardDecoration,
-                              child: Column(
-                                children: [
-                                  const CustomText(
-                                    text: "Регистрация",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 40),
-                                  CustomInputText(
-                                    hintText: 'Иванов Иван',
-                                    labelText: "Полное имя",
-                                    controller: nameController,
-                                    validator: FormValidations.validateName,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  CustomInputText(
-                                    hintText: 'example@email.com',
-                                    labelText: "Email",
-                                    controller: emailController,
-                                    validator: FormValidations.validateEmail,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  CustomInputText(
-                                    hintText: 'Пароль',
-                                    labelText: "Пароль",
-                                    obscureText: true,
-                                    controller: passwordController,
-                                    validator: FormValidations.validatePassword,
-                                  ),
-                                  const SizedBox(height: 20),
-                                  CustomInputText(
-                                    hintText: 'Подтвердите пароль',
-                                    labelText: "Подтвердите пароль",
-                                    controller: confirmPasswordController,
-                                    obscureText: true,
-                                    validator: (value) =>
-                                        FormValidations.validateConfirmPassword(
-                                          value,
-                                          passwordController.text,
-                                        ),
-                                  ),
+          child: Column(
+            children: [
+              ExpandedScrollWrapper(
+                child: CustomDefaultPadding(
+                  bottom: 0,
+                  top: 0,
+                  child: SingleChildScrollView(
+                    child: BlocListener<EmpAuthBloc, EmpAuthState>(
+                      listener: (context, state) {
+                        if (state is EmpAuthCheckEmailVerified) {
+                          context.pushNamed(
+                            RouteName.verifyOtpEmployee,
+                            extra: {
+                              'email': emailController.text,
+                              'name': nameController.text,
+                              'password': passwordController.text,
+                              'source': 'signup',
 
-                                  const SizedBox(height: 20),
-                                  // * Terms and conditions
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                            },
+                          );
+                        } else if (state is EmpAuthFailure) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(state.message)),
+                          );
+                        }
+                      },
+                      child: BlocBuilder<EmpAuthBloc, EmpAuthState>(
+                        builder: (context, state) {
+                          return Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(30),
+                                  decoration: AppTheme.cardDecoration,
+                                  child: Column(
                                     children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _acceptPrivacyPolicy =
-                                                !_acceptPrivacyPolicy;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                          _acceptPrivacyPolicy
-                                              ? MediaRes.markedBox
-                                              : MediaRes.unMarkedBox,
-                                          width: 28,
+                                      const CustomText(
+                                        text: "Регистрация",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            HandleLaunchUrl.launchUrls(
-                                              context,
-                                              url:
-                                                  AppConstants.privacyAgreement,
-                                            );
-                                          },
-                                          child: const CustomText(
-                                            text:
-                                                "Я принимаю условия Политики конфиденциальности и даю согласие на обработку моих персональных данных в соответствии с законодательством",
-                                            style: TextStyle(fontSize: 12),
+                                      const SizedBox(height: 40),
+                                      CustomInputText(
+                                        hintText: 'Иванов Иван',
+                                        labelText: "Полное имя",
+                                        controller: nameController,
+                                        validator: FormValidations.validateName,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      CustomInputText(
+                                        hintText: 'example@email.com',
+                                        labelText: "Email",
+                                        controller: emailController,
+                                        validator:
+                                            FormValidations.validateEmail,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      CustomInputText(
+                                        hintText: 'Пароль',
+                                        labelText: "Пароль",
+                                        obscureText: true,
+                                        controller: passwordController,
+                                        validator:
+                                            FormValidations.validatePassword,
+                                      ),
+                                      const SizedBox(height: 20),
+                                      CustomInputText(
+                                        hintText: 'Подтвердите пароль',
+                                        labelText: "Подтвердите пароль",
+                                        controller: confirmPasswordController,
+                                        obscureText: true,
+                                        validator: (value) =>
+                                            FormValidations.validateConfirmPassword(
+                                              value,
+                                              passwordController.text,
+                                            ),
+                                      ),
+
+                                      const SizedBox(height: 20),
+                                      // * Terms and conditions
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                _acceptPrivacyPolicy =
+                                                    !_acceptPrivacyPolicy;
+                                              });
+                                            },
+                                            child: Image.asset(
+                                              _acceptPrivacyPolicy
+                                                  ? MediaRes.empMarkedBox
+                                                  : MediaRes.empUnmarkedBox,
+                                              width: 28,
+                                            ),
                                           ),
-                                        ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                HandleLaunchUrl.launchUrls(
+                                                  context,
+                                                  url: AppConstants
+                                                      .privacyAgreement,
+                                                );
+                                              },
+                                              child: const CustomText(
+                                                text:
+                                                    "Я принимаю условия Политики конфиденциальности и даю согласие на обработку моих персональных данных в соответствии с законодательством",
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                _acceptTermsOfUse =
+                                                    !_acceptTermsOfUse;
+                                              });
+                                            },
+                                            child: Image.asset(
+                                              _acceptTermsOfUse
+                                                  ? MediaRes.empMarkedBox
+                                                  : MediaRes.empUnmarkedBox,
+                                              width: 28,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                HandleLaunchUrl.launchUrls(
+                                                  context,
+                                                  url: AppConstants
+                                                      .termsAgreement,
+                                                );
+                                              },
+
+                                              child: const CustomText(
+                                                text:
+                                                    "Я соглашаюсь с Условиями использования",
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 20),
+                                      CustomButtonEmployee(
+                                        btnText: 'Зарегистрироваться',
+                                        isLoading: state is EmpAuthLoading,
+                                        isBtnActive:
+                                            _acceptTermsOfUse &&
+                                            _acceptPrivacyPolicy &&
+                                            state is! EmpAuthLoading,
+                                        onTap: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            context.read<EmpAuthBloc>().add(
+                                              EmpCheckEmailEvent(
+                                                email: emailController.text,
+                                              ),
+                                            );
+
+                                            // context.read<AuthBloc>().add(
+                                            //   SignupEvent(
+                                            //     name: nameController.text,
+                                            //     email: emailController.text,
+                                            //     password: passwordController.text,
+                                            //   ),
+                                            // );
+                                          }
+                                        },
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 12),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _acceptTermsOfUse =
-                                                !_acceptTermsOfUse;
-                                          });
-                                        },
-                                        child: Image.asset(
-                                          _acceptTermsOfUse
-                                              ? MediaRes.markedBox
-                                              : MediaRes.unMarkedBox,
-                                          width: 28,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            HandleLaunchUrl.launchUrls(
-                                              context,
-                                              url: AppConstants.termsAgreement,
-                                            );
-                                          },
-
-                                          child: const CustomText(
-                                            text:
-                                                "Я соглашаюсь с Условиями использования",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  const SizedBox(height: 20),
-                                  CustomButtonEmployee(
-                                    btnText: 'Зарегистрироваться',
-                                    isLoading: state is EmpAuthLoading,
-                                    isBtnActive:
-                                        _acceptTermsOfUse &&
-                                        _acceptPrivacyPolicy &&
-                                        state is! EmpAuthLoading,
-                                    onTap: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        context.read<EmpAuthBloc>().add(
-                                          EmpCheckEmailEvent(
-                                            email: emailController.text,
-                                          ),
-                                        );
-
-                                        // context.read<AuthBloc>().add(
-                                        //   SignupEvent(
-                                        //     name: nameController.text,
-                                        //     email: emailController.text,
-                                        //     password: passwordController.text,
-                                        //   ),
-                                        // );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    },
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
     );
   }
-
 }
