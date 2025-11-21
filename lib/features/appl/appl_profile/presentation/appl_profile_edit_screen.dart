@@ -311,7 +311,7 @@ class _AccountsState extends State<_accounts> {
           // const SizedBox(height: 16),
           _updateButtons(
             text:
-                "Manage Subscription", //"Управление подпиской", // manage subscription
+                "Управление подпиской", //"Управление подпиской", // manage subscription
             onTap: () {
               context.pushNamed(RouteName.subscription);
             },

@@ -363,7 +363,7 @@ class _AccountsState extends State<_accounts> {
 
           _updateButtons(
             text:
-                "Manage Subscription", //"Управление подпиской", // manage subscription
+                "MУправление подпиской", //"Управление подпиской", // manage subscription
             onTap: () {
               context.pushNamed(RouteName.subscription);
             },

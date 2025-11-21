@@ -132,7 +132,8 @@ Future<String?> ApplicantJobDetail(
                               onTap: () {
                                 HandleLaunchUrl.launchTelegram(
                                   context,
-                                  username: job.contactJobs!.telegram!,
+                                  message: 'Hello, I am interested in the job: ${job.title}',
+                                  username: job.contactJobs!.telegram,
                                 );
                               },
                             ),

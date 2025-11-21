@@ -60,20 +60,40 @@ class HandleLaunchUrl {
 
   // * ────────────── Launch Telegram user, bot, or chat ───────────────────────
 
-  static Future<bool> launchTelegram(
-    BuildContext context, {
-    required String username,
-    String? message,
-  }) async {
-    if (username.startsWith('@')) {
-      username = username.substring(1);
-    }
-    String url = 'https://t.me/$username';
-    if (message != null && message.isNotEmpty) {
-      url += '?start=${Uri.encodeComponent(message)}';
-    }
-    return await launchUrlGeneric(context, url: url);
-  }
+
+static Future<bool> launchTelegram(
+   BuildContext context,
+
+  {
+  required String message,
+   String? username,  // "@mybot" or "mybot" or "durov"
+}) async {
+  String clean = username ?? "";
+  if (clean.startsWith('@')) clean = clean.substring(1);
+
+  final encoded = Uri.encodeComponent(message);
+
+  final String url = 'https://t.me/$clean?text=$encoded';
+
+  return await launchUrlGeneric(context, url: url);
+}
+
+  // static Future<bool> launchTelegram(
+  //   BuildContext context, {
+  //   required String message,
+  //   String? username,
+  // }) async {
+  //   String url = 'https://t.me/';
+  //   if (username != null) {
+  //     if (username.startsWith('@')) {
+  //       username = username.substring(1);
+  //     }
+  //     url += username;
+  //   }
+  //   final encodedMessage = Uri.encodeComponent(message);
+  //   url += '?text=$encodedMessage';
+  //   return await launchUrlGeneric(context, url: url);
+  // }
 
   // * ──────────────  Launch WhatsApp chat ───────────────────────
 

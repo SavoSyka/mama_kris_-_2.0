@@ -19,7 +19,8 @@ class JobListItem extends StatefulWidget {
     required this.jobTitle,
     required this.salaryRange,
     required this.onTap,
-    this.showAddToFavorite = true, required this.jobId,
+    this.showAddToFavorite = true,
+    required this.jobId,
   });
 
   @override
@@ -68,9 +69,8 @@ class _JobListItemState extends State<JobListItem> {
             HandleLaunchUrl.launchTelegram(
               context,
               username: "@mamakrisSupport_bot",
-              message: 
-              "Здравствуйте, я хочу сообщить о проблеме по вакансии с ID: ${widget.jobId}, названием ${widget.jobTitle}"
-              
+              message:
+                  "Здравствуйте, я хочу сообщить о проблеме по вакансии с ID: ${widget.jobId}, названием ${widget.jobTitle}",
             );
           },
           child: const Text(

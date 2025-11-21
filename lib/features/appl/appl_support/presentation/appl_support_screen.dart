@@ -25,7 +25,7 @@ class _ApplSupportScreenState extends State<ApplSupportScreen> {
 
   final List<Map<String, dynamic>> supports = [
     {
-      'title': 'Как начать работать на удаленке?',
+      'title': 'Как начать работатьна удаленке?',
       'salary': 'Ссылка',
       'isTelegram': false,
     },
@@ -50,7 +50,7 @@ class _ApplSupportScreenState extends State<ApplSupportScreen> {
       'title': 'Сообщество мам в Telegram',
       'salary': 'Ссылка',
       'isTelegram': true,
-      'channel': 'https://t.me/mamakris',
+      'channel': 'https://t.me/it_mamakris',
     },
 
     {
