@@ -69,7 +69,8 @@ import 'package:mama_kris/features/emp/employe_contact/domain/usecase/update_emp
 import 'package:mama_kris/features/emp/employe_contact/domain/usecase/update_employee_contact.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
 import 'package:mama_kris/features/notifications/domain/models/notification_model.dart';
-import 'package:mama_kris/features/subscription/application/bloc/subscription_bloc.dart';
+import 'package:mama_kris/features/subscription/application/bloc/TarriffsBloc.dart';
+import 'package:mama_kris/features/subscription/application/bloc/subscription_payment_bloc.dart';
 import 'package:mama_kris/features/subscription/data/data_source/subscription_remote_data_source.dart';
 import 'package:mama_kris/features/subscription/data/repository_impl/subscription_repository_impl.dart';
 import 'package:mama_kris/features/subscription/domain/repository/subscription_repository.dart';

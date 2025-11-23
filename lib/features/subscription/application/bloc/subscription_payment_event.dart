@@ -1,19 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:mama_kris/features/subscription/domain/entity/subscription_entity.dart';
 
-abstract class SubscriptionEvent extends Equatable {
-  const SubscriptionEvent();
+abstract class SubscriptionPaymentEvent extends Equatable {
+  const SubscriptionPaymentEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class FetchSubscriptionEvent extends SubscriptionEvent {
-
-  const FetchSubscriptionEvent();
-}
-
-class InitiatePaymentEvent extends SubscriptionEvent {
+class InitiatePaymentEvent extends SubscriptionPaymentEvent {
   final SubscriptionEntity tariff;
 
   const InitiatePaymentEvent({required this.tariff});

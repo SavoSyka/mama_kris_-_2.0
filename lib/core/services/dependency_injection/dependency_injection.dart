@@ -374,12 +374,10 @@ Future<void> _initSubscriptions() async {
 
   // Bloc
   sl.registerFactory(
-    () =>
-        SubscriptionBloc(getTariffsUsecase: sl(), initiatePaymentUsecase: sl()),
+    () => SubscriptionPaymentBloc(initiatePaymentUsecase: sl()),
   );
 
-    sl.registerFactory(
-    () =>
-        SubscriptionStatusCubit(),
-  );
+  sl.registerFactory(() => TarriffsBloc(getTariffsUsecase: sl()));
+
+  sl.registerFactory(() => SubscriptionStatusCubit());
 }

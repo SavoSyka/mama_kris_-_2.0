@@ -21,7 +21,8 @@ import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_blo
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_bloc.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
-import 'package:mama_kris/features/subscription/application/bloc/subscription_bloc.dart';
+import 'package:mama_kris/features/subscription/application/bloc/TarriffsBloc.dart';
+import 'package:mama_kris/features/subscription/application/bloc/subscription_payment_bloc.dart';
 import 'package:mama_kris/features/subscription/presentation/cubit/subscription_status_cubit.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/firebase_options.dart';
@@ -96,13 +97,13 @@ void main() async {
         BlocProvider(create: (_) => sl<LikedJobBlocBloc>()),
         BlocProvider(create: (_) => sl<UserBloc>()),
         BlocProvider(create: (_) => sl<ForceUpdateBloc>()),
-        BlocProvider(create: (_) => sl<SubscriptionBloc>()),
+        BlocProvider(create: (_) => sl<SubscriptionPaymentBloc>()),
         BlocProvider(create: (context) => sl<EmpUserBloc>()),
         BlocProvider(create: (context) => sl<CreateJobCubit>()),
         BlocProvider(create: (context) => sl<ApplicantContactBloc>()),
         BlocProvider(create: (context) => sl<EmployeeContactBloc>()),
         BlocProvider(create: (context) => sl<SpecialitySearchBloc>()),
-        BlocProvider(create: (context) => sl<SubscriptionBloc>()),
+        BlocProvider(create: (context) => sl<TarriffsBloc>()),
 
         BlocProvider(create: (context) => sl<SubscriptionStatusCubit>()),
       ],
