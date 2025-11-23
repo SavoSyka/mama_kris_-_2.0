@@ -69,7 +69,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         decoration: _isApplicant
             ? const BoxDecoration(gradient: AppTheme.primaryGradient)
             : const BoxDecoration(color: AppPalette.empBgColor),
-    
+
         child: CustomDefaultPadding(
           child: BlocBuilder<SubscriptionBloc, SubscriptionState>(
             builder: (context, state) {
@@ -93,9 +93,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                 ),
                               ),
                             ),
-    
+
                             const SizedBox(height: 32),
-    
+
                             const SizedBox(
                               width: 333,
                               child: Text(
@@ -110,7 +110,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-    
+
                             const SizedBox(
                               width: 333,
                               child: Text(
@@ -125,7 +125,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-    
+
                             const SizedBox(
                               width: 333,
                               child: Text(
@@ -139,9 +139,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                 ),
                               ),
                             ),
-    
+
                             const SizedBox(height: 32),
-    
+
                             if (state is SubscriptionLoadingState)
                               const Center(child: IPhoneLoader(height: 200))
                             else if (state is SubscriptionErrorState)
@@ -172,9 +172,94 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                   padding: const EdgeInsets.only(bottom: 16),
                                   child: InkWell(
                                     onTap: () {
-                                      setState(() {
-                                        _subscription = subscription;
-                                      });
+                                      showModalBottomSheet(
+                                        context: context,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(32),
+                                          ),
+                                        ),
+                                        builder: (BuildContext context) {
+                                          return Container(
+                                            padding: const EdgeInsets.all(20),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  subscription.name,
+                                                  style: const TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                const SizedBox(height: 16),
+                                                SubscriptionCard(
+                                                  isSelected: true,
+                                                  period: subscription.type,
+                                                  discount: subscription.name,
+                                                  price: subscription.price,
+                                                  // paidContent:   subscription.paidContent
+                                                ),
+                                                const SizedBox(height: 16),
+                                                Text(
+                                                  'Полный доступ ко всем премиум-функциям за ${subscription.price} в ${subscription.type}.',
+
+                                                  // subscription.paidContent.replaceAll('\n', " "),
+                                                  // 'Access to all premium features for ${subscription.price} per ${subscription.type}.',
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: Color(0xFF596574),
+                                                  ),
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                                const SizedBox(height: 32),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _subscription =
+                                                          subscription;
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                    _initiatePayment(
+                                                      subscription,
+                                                    );
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        _isApplicant
+                                                        ? AppPalette
+                                                              .primaryColor
+                                                        : AppPalette
+                                                              .empPrimaryColor,
+
+                                                    minimumSize: const Size(
+                                                      double.infinity,
+                                                      50,
+                                                    ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  child: const Text(
+                                                    'Subscribe and Pay',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
                                     },
                                     child: SubscriptionCard(
                                       isSelected:
@@ -188,9 +273,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                   ),
                                 ),
                               ),
-    
+
                             const SizedBox(height: 32),
-    
+
                             if (_subscription != null &&
                                 state is! PaymentInitiatingState)
                               ElevatedButton(
@@ -244,7 +329,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   void _navigateToPayment(String paymentUrl) {
     debugPrint("✅✅✅✅✅✅ SUbscription started here");
 
-
     context.pushNamed(
       RouteName.paymentWebView,
       extra: {
@@ -269,26 +353,5 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         },
       },
     );
-
-    // context.read<SubscriptionStatusCubit>().startPolling();
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (_) => PaymentWebViewPage(
-    //       url: paymentUrl,
-    //       callback: (WebViewRequest request) {
-    //         if (request == WebViewRequest.success) {
-    //         } else {
-    //           // Handle failed payment
-    //           ScaffoldMessenger.of(context).showSnackBar(
-    //             const SnackBar(
-    //               content: Text("Платеж не выполнен, повторите попытку позже."),
-    //             ),
-    //           );
-    //         }
-    //       },
-    //     ),
-    //   ),
-    // );
   }
 }

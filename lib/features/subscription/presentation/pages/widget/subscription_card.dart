@@ -8,10 +8,13 @@ class SubscriptionCard extends StatelessWidget {
     required this.discount,
     required this.price,
     this.isSelected = false,
+    this.paidContent,
   });
   final String period;
   final String discount;
   final String price;
+  final String? paidContent;
+
   final bool isSelected;
 
   @override
@@ -30,7 +33,9 @@ class SubscriptionCard extends StatelessWidget {
         ],
 
         borderRadius: BorderRadius.circular(20),
-        border: isSelected ? Border.all(color: AppPalette.primaryColor) : null,
+        border: isSelected
+            ? Border.all(color: AppPalette.primaryColor, width: 2)
+            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -113,6 +118,16 @@ class SubscriptionCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (paidContent != null)
+                  Text(
+                    paidContent!.replaceAll('\n', " "),
+                    // 'Access to all premium features for ${subscription.price} per ${subscription.type}.',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF596574),
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
               ],
             ),
           ),
