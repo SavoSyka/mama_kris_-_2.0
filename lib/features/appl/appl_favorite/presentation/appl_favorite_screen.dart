@@ -109,8 +109,7 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                                 onRefresh: _handleRefresh,
                                 child: ListView.separated(
                                   controller: _scrollController,
-                                  // shrinkWrap: true,
-                                  // physics: const NeverScrollableScrollPhysics(),
+                                  physics: const AlwaysScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     if (index < state.jobs.likedJob.length) {
                                       final job = state.jobs.likedJob[index];

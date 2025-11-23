@@ -9,6 +9,7 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_phone_picker.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/common/widgets/custom_static_input.dart';
 import 'package:mama_kris/core/common/widgets/show_ios_loader.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
@@ -91,10 +92,18 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
   }
 }
 
-class _basicInformation extends StatelessWidget {
+class _basicInformation extends StatefulWidget {
   _basicInformation();
+
+  @override
+  State<_basicInformation> createState() => _basicInformationState();
+}
+
+class _basicInformationState extends State<_basicInformation> {
   String? name;
+
   String? email;
+
   String? dob;
 
   @override
@@ -126,36 +135,34 @@ class _basicInformation extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          CustomInputText(
-            hintText: 'Гордова',
-            labelText: "Фамилия",
-            controller: TextEditingController(text: name),
-            readOnly: true,
-          ),
-
+          CustomStaticInput(label: 'Фамилия', value: name ?? ""),
           const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: '',
-            labelText: "Дата рождения",
-            controller: TextEditingController(text: dob),
-            readOnly: true,
+          if (dob != null) ...[
+            CustomStaticInput(label: "Дата рождения", value: dob ?? ""),
+            const SizedBox(height: 8),
+          ],
+          CustomStaticInput(
+            label: 'Почта',
+            value: email ?? "",
+            hasGreyBg: true,
           ),
-          const SizedBox(height: 8),
-
-          CustomInputText(
-            hintText: 'MamaKris@gmail.com',
-            labelText: "Почта",
-            controller: TextEditingController(text: email),
-            readOnly: true,
-          ),
-
           const SizedBox(height: 24),
 
           ElevatedButton.icon(
             onPressed: () async {
-              context.pushNamed(RouteName.editProfileBasicInfoApplicant);
+              final result = await context.pushNamed(
+                RouteName.editProfileBasicInfoApplicant,
+              );
+
+              debugPrint("🔐🔐 result: $result");
+
+              if (result == true) {
+                setState(() {
+                  // refresh UI or anything you want
+                });
+              }
             },
+
             icon: const Icon(CupertinoIcons.pen, color: Colors.white, size: 18),
             label: const Text(
               "Добавить опыт работы",

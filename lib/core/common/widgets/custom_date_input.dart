@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
 import 'package:mama_kris/core/common/widgets/custom_bottom_sheet_header.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
@@ -18,11 +19,13 @@ class CustomDateInput extends StatefulWidget {
     this.isRequired = false,
     required this.label,
     this.validator,
+    this.isApplicant = false,
   });
 
   final TextEditingController controller;
   final bool isRequired;
   final String label;
+  final bool isApplicant;
   final FormFieldValidator<String>? validator;
 
   @override
@@ -117,7 +120,36 @@ class _CustomDateInputState extends State<CustomDateInput> {
 
                   Padding(
                     padding: EdgeInsets.fromLTRB(16.w, 8, 16.w, 16.w),
-                    child: CustomButtonEmployee(
+                    child: 
+                  widget.isApplicant ?
+
+                    CustomButtonApplicant(
+                      onTap: () {
+                        final backend = DateFormat(
+                          'yyyy-MM-dd',
+                        ).format(selectedDate);
+
+                        setState(() {
+                          widget.controller.text = backend;
+                        });
+
+                        widget
+                            .controller
+                            .selection = TextSelection.fromPosition(
+                          TextPosition(offset: widget.controller.text.length),
+                        );
+
+                        debugPrint(
+                          "Saved to controller: ${widget.controller.text}",
+                        );
+
+                        Navigator.pop(context);
+                      },
+                      isLoading: false,
+                      btnText: 'Set',
+                    ):
+                  
+                    CustomButtonEmployee(
                       onTap: () {
                         final backend = DateFormat(
                           'yyyy-MM-dd',
@@ -142,6 +174,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
                       isLoading: false,
                       btnText: 'Set',
                     ),
+                  
                   ),
                 ],
               ),

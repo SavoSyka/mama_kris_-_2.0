@@ -11,9 +11,14 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/appl_create_co
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact_screen.dart';
 
-class ApplContactWidget extends StatelessWidget {
+class ApplContactWidget extends StatefulWidget {
   const ApplContactWidget({super.key});
 
+  @override
+  State<ApplContactWidget> createState() => _ApplContactWidgetState();
+}
+
+class _ApplContactWidgetState extends State<ApplContactWidget> {
   @override
   Widget build(BuildContext context) {
     final userState = context.read<UserBloc>().state;
@@ -42,7 +47,20 @@ class ApplContactWidget extends StatelessWidget {
           const SizedBox(height: 12),
 
           if (contacts.isEmpty)
-            _buildEmptyState(context)
+            _buildEmptyState(
+              context,
+              onPressed: () async {
+                final result = await context.pushNamed(
+                  RouteName.editProfileContactInfoApplicant,
+                );
+
+                debugPrint("🔐🔐 result: $result");
+
+                if (result == true) {
+                  setState(() {});
+                }
+              },
+            )
           else ...[
             ListView.separated(
               shrinkWrap: true,
@@ -51,19 +69,52 @@ class ApplContactWidget extends StatelessWidget {
               separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final contact = contacts[index];
-                return _buildContactCard(context, contact);
+                return _buildContactCard(
+                  context,
+                  contact,
+                  onPressed: () async {
+                    HapticFeedback.lightImpact();
+
+                    final result = await context.pushNamed(
+                      RouteName.editProfileContactInfoApplicant,
+                      extra: {"contact": contact},
+                    );
+
+                    if (result == true) {
+                      setState(() {});
+                    }
+                  },
+                );
               },
             ),
 
             const SizedBox(height: 12),
-            _buildEmptyState(context, showText: false),
+            _buildEmptyState(
+              context,
+              showText: false,
+              onPressed: () async {
+                final result = await context.pushNamed(
+                  RouteName.editProfileContactInfoApplicant,
+                );
+
+                debugPrint("🔐🔐 result: $result");
+
+                if (result == true) {
+                  setState(() {});
+                }
+              },
+            ),
           ],
         ],
       ),
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, {bool showText = true}) {
+  Widget _buildEmptyState(
+    BuildContext context, {
+    bool showText = true,
+    required void Function()? onPressed,
+  }) {
     return Column(
       children: [
         if (showText) ...[
@@ -80,9 +131,12 @@ class ApplContactWidget extends StatelessWidget {
           const SizedBox(height: 16),
         ],
         ElevatedButton.icon(
-          onPressed: () async {
-            context.pushNamed(RouteName.editProfileContactInfoApplicant);
-          },
+          onPressed: onPressed,
+
+          //  () async {
+
+          //   context.pushNamed(RouteName.editProfileContactInfoApplicant);
+          // },
           icon: const Icon(CupertinoIcons.add, color: Colors.white, size: 18),
           label: const Text(
             "Добавить контакт",
@@ -100,16 +154,14 @@ class ApplContactWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildContactCard(BuildContext context, ApplContactEntity contact) {
+  Widget _buildContactCard(
+    BuildContext context,
+    ApplContactEntity contact, {
+    required void Function()? onPressed,
+  }) {
     return GestureDetector(
-      onTap: () async {
-        HapticFeedback.lightImpact();
+      onTap: onPressed,
 
-        context.pushNamed(
-          RouteName.editProfileContactInfoApplicant,
-          extra: {"contact": contact},
-        );
-      },
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

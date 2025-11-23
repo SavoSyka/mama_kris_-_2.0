@@ -138,10 +138,7 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
           return BlocListener<UserBloc, UserState>(
             listener: (context, state) {
               if (state is UserLoaded) {
-                context.goNamed(
-                  RouteName.homeApplicant,
-                  extra: {'pageIndex': 3},
-                );
+                context.pop(true);
               }
               // TODO: implement listener
             },
@@ -162,9 +159,8 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
                       labelText: "Telegram",
                       hintText: "@username",
                       controller: _telegramController,
-                      validator: (value) => FormValidations.contactTelegram(
-                        value,
-                      ),
+                      validator: (value) =>
+                          FormValidations.contactTelegram(value),
                     ),
                     const SizedBox(height: 16),
                     CustomInputText(
@@ -172,9 +168,8 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
                       hintText: "+123456789",
                       controller: _whatsappController,
                       keyboardType: TextInputType.phone,
-                      validator: (value) => FormValidations.contactWhatsApp(
-                        value,
-                      ),
+                      validator: (value) =>
+                          FormValidations.contactWhatsApp(value),
                     ),
                     const SizedBox(height: 16),
                     CustomInputText(
@@ -182,17 +177,14 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
                       hintText: "example@email.com",
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      validator: (value) =>
-                          FormValidations.contactEmail(value),
+                      validator: (value) => FormValidations.contactEmail(value),
                     ),
                     const SizedBox(height: 16),
                     CustomInputText(
                       labelText: "VK",
                       hintText: "vk.com/username",
                       controller: _vkController,
-                      validator: (value) => FormValidations.contactVk(
-                        value,
-                      ),
+                      validator: (value) => FormValidations.contactVk(value),
                     ),
                     const SizedBox(height: 16),
                     CustomInputText(

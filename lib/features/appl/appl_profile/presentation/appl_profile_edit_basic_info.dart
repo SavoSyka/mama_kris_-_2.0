@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_employee.dart';
@@ -33,26 +34,12 @@ class ApplProfileEditBasicInfoState extends State<ApplProfileEditBasicInfo> {
   void initState() {
     super.initState();
     final userState = context.read<UserBloc>().state;
-   if (userState is UserLoaded) {
-    _nameController.text = userState.user.name ?? '';
+    if (userState is UserLoaded) {
+      _nameController.text = userState.user.name ?? '';
 
-    final rawDob = userState.user.birthDate;
-
-    if (rawDob != null && rawDob.isNotEmpty) {
-      try {
-        // Parse backend format (YYYY-MM-DD)
-        final parsed = DateTime.parse(rawDob);
-
-        // Convert to Russian readable format
-        final formatted = DateFormat.yMMMMd('ru_RU').format(parsed);
-
-        _dobController.text = formatted;
-      } catch (e) {
-        // fallback
-        _dobController.text = rawDob;
-      }
+      final rawDob = userState.user.birthDate;
+      _dobController.text = rawDob ?? '';
     }
-  }
   }
 
   @override
@@ -78,13 +65,12 @@ class ApplProfileEditBasicInfoState extends State<ApplProfileEditBasicInfo> {
 
   void _save() {
     if (_formKey.currentState?.validate() ?? false) {
-
-          context.read<ApplicantContactBloc>().add(
-        UpdatingBasicInfoEvent(name: _nameController.text, dob: _dobController.text),
+      context.read<ApplicantContactBloc>().add(
+        UpdatingBasicInfoEvent(
+          name: _nameController.text,
+          dob: _dobController.text,
+        ),
       );
-
-
-   
     }
   }
 
@@ -103,7 +89,8 @@ class ApplProfileEditBasicInfoState extends State<ApplProfileEditBasicInfo> {
       ),
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(color: AppPalette.empBgColor),
+        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+
         child: SafeArea(
           bottom: false,
           child: Column(
@@ -145,14 +132,38 @@ class ApplProfileEditBasicInfoState extends State<ApplProfileEditBasicInfo> {
                                   CustomDateInput(
                                     controller: _dobController,
                                     label: 'Дата рождения',
+                                    isApplicant: true,
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 32),
-                            BlocBuilder<ApplicantContactBloc, ApplicantContactState>(
+                            BlocListener<UserBloc, UserState>(
+                              listener: (context, state) {
+                                if (state is UserLoaded) {
+                                  context.pop(true);
+                                }
+                                // TODO: implement listener
+                              },
+                              child: const SizedBox(height: 32),
+                            ),
+
+                            BlocConsumer<
+                              ApplicantContactBloc,
+                              ApplicantContactState
+                            >(
+                              listener: (context, state) {
+                                if (state is UserBasicInfoUpdated) {
+                                  context.read<UserBloc>().add(
+                                    UpdateBasicInfo(
+                                      dob: _dobController.text,
+                                      name: _nameController.text,
+                                    ),
+                                  );
+                                }
+                              },
                               builder: (context, state) {
-                                final isLoading = state is ApplicantContactLoading;
+                                final isLoading =
+                                    state is ApplicantContactLoading;
                                 return Column(
                                   children: [
                                     CustomButtonApplicant(
