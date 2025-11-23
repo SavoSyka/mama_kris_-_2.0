@@ -187,7 +187,7 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
                   "  ✅✅✅✅✅✅ ✅✅✅✅✅✅REAL SUCCESS DETECTED (A1004 or ym=success)",
                 );
 
-                // context.read<SubscriptionStatusCubit>().startPolling();
+                context.read<SubscriptionStatusCubit>().startPolling();
 
                 // Close WebView + go to checking page
                 if (mounted) {
@@ -195,8 +195,8 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
                     "  ✅✅✅✅✅✅ ✅✅✅✅✅✅REAL SUCCESS DETECTED (A1004 or ym=success)",
                   );
 
-                  Navigator.of(context).pop(); // close WebView
-                  context.pushNamed(RouteName.paymentCheckingPage);
+                  // Navigator.of(context).pop(); // close WebView
+                  // context.pushNamed(RouteName.paymentCheckingPage);
                 }
               }
               return;
@@ -271,7 +271,16 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
           ),
         ],
       ),
-      body: SafeArea(child: WebViewWidget(controller: _controller)),
+      body: SafeArea(
+        child: BlocListener<SubscriptionStatusCubit, SubscriptionStatusState>(
+          listener: (context, state) {
+            if (state is SubscriptionStatusSuccess && state.hasSubscription) {
+              context.goNamed(RouteName.homeApplicant);
+            }
+          },
+          child: WebViewWidget(controller: _controller),
+        ),
+      ),
     );
   }
 }

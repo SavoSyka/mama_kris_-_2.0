@@ -102,14 +102,13 @@ class ResumeRemoteDataSourceImpl implements ResumeRemoteDataSource {
     required bool isFavorited,
   }) async {
     try {
-      if (isFavorited) {
+      debugPrint("Is favorited:::🟢🟢🟢 $isFavorited");
+      if (!isFavorited) {
         final response = await dio.post(
           ApiConstants.addUsersToFavorite(userId),
         );
 
         if (response.statusCode.toString().startsWith('2')) {
-          final userList = ResumeListModel.fromJson(response.data);
-
           return true;
         } else {
           throw ApiException(
@@ -123,8 +122,6 @@ class ResumeRemoteDataSourceImpl implements ResumeRemoteDataSource {
         );
 
         if (response.statusCode.toString().startsWith('2')) {
-          final userList = ResumeListModel.fromJson(response.data);
-
           return true;
         } else {
           throw ApiException(

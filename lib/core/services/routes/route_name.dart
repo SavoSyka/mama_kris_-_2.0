@@ -32,6 +32,8 @@ class RouteName {
   static String editProfileEducationInfoApplicant =
       '/$_applicant/edit-education-info';
 
+  static String supportDetail = '/$_applicant/support-detail';
+
   // * EMPLOYE ROUTES
   static const String _employee = '/auth/emp';
   static String loginEmploye = '/$_employee/login';

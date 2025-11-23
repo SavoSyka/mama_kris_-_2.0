@@ -41,88 +41,113 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
 
   // * ────────────── UI ───────────────────────
   @override
+  @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(
-        title: '',
-        alignTitleToEnd: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                isLiked = !isLiked;
-              });
-            },
-            icon: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: AppTheme.cardDecoration.copyWith(
-                borderRadius: BorderRadius.circular(8),
-                border: isLiked
-                    ? Border.all(color: Theme.of(context).primaryColor)
-                    : null,
-              ),
-              child: const CustomImageView(
-                imagePath: MediaRes.star,
-                width: 20,
-                height: 20,
+    return BlocConsumer<SpecialitySearchBloc, SpecialitySearchState>(
+      listener: (context, state) {
+        if (state is LoadedPublicPofileState) {
+          setState(() {
+            isLiked = state.user.isFavorite;
+          });
+        }
+      },
+      builder: (context, state) {
+        if (state is SpecialitySearchLoading) {
+          return CustomScaffold(
+            extendBodyBehindAppBar: true,
+            appBar: const CustomAppBar(title: '', alignTitleToEnd: true),
+            body: Container(
+              decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
+              child: const CustomDefaultPadding(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(children: [Expanded(child: IPhoneLoader())]),
+                    ),
+                  ],
+                ),
               ),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            tooltip: 'Настройки',
-            splashRadius: 24,
-          ),
-          IconButton(
-            onPressed: () {
-              _showJobOptionsMenu(context);
-            },
-            icon: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: AppTheme.cardDecoration.copyWith(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const CustomImageView(
-                imagePath: MediaRes.verticalDots,
-                width: 20,
-                height: 20,
+          );
+        }
+
+        if (state is SpecialitySearchError) {
+          return CustomScaffold(
+            extendBodyBehindAppBar: true,
+            appBar: const CustomAppBar(title: '', alignTitleToEnd: true),
+            body: Container(
+              decoration: const BoxDecoration(color: AppPalette.empBgColor),
+
+              child: CustomDefaultPadding(
+                child: CustomErrorRetry(onTap: _fetchUser),
               ),
             ),
-            key: _menuKey,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            tooltip: 'Настройки',
-            splashRadius: 24,
-          ),
-        ],
-      ),
+          );
+        }
 
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(color: AppPalette.empBgColor),
+        if (state is LoadedPublicPofileState) {
+          final user = state.user;
 
-        child: SafeArea(
-          child: BlocConsumer<SpecialitySearchBloc, SpecialitySearchState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              if (state is SpecialitySearchLoading) {
-                return const CustomDefaultPadding(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Row(children: [Expanded(child: IPhoneLoader())]),
-                      ),
-                    ],
+          return CustomScaffold(
+            extendBodyBehindAppBar: true,
+
+            // ✔️ AppBar is built ONLY when user exists
+            appBar: CustomAppBar(
+              title: '',
+              alignTitleToEnd: true,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    _onLikeOrDislikeUser(
+                      isFavorited: user.isFavorite,
+                      userId: user.userID.toString(),
+                    );
+                    setState(() {
+                      isLiked = !isLiked;
+                    });
+                  },
+                  icon: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: AppTheme.cardDecoration.copyWith(
+                      borderRadius: BorderRadius.circular(8),
+                      border: isLiked
+                          ? Border.all(color: AppPalette.empPrimaryColor)
+                          : null,
+                    ),
+                    child: const CustomImageView(
+                      imagePath: MediaRes.star,
+                      width: 20,
+                      height: 20,
+                    ),
                   ),
-                );
-              }
+                ),
 
-              if (state is SpecialitySearchError) {
-                return CustomErrorRetry(onTap: _fetchUser);
-              }
+                IconButton(
+                  onPressed: () {
+                    _showJobOptionsMenu(context);
+                  },
+                  icon: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: AppTheme.cardDecoration.copyWith(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const CustomImageView(
+                      imagePath: MediaRes.verticalDots,
+                      width: 20,
+                      height: 20,
+                    ),
+                  ),
+                  key: _menuKey,
+                ),
+              ],
+            ),
 
-              if (state is LoadedPublicPofileState) {
-                final user = state.user;
-
-                return Column(
+            body: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(color: AppPalette.empBgColor),
+              child: SafeArea(
+                child: Column(
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
@@ -134,16 +159,13 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
                                 birthDate: user.birthDate,
                               ),
                               const SizedBox(height: 20),
-                      
                               _Contacts(email: user.email, phone: user.phone),
                               const SizedBox(height: 20),
-                      
                               if (user.specializations != null)
                                 _Specalisations(
                                   specializations: user.specializations,
                                 ),
                               const SizedBox(height: 20),
-                      
                               _Experiences(experience: user.workExperience),
                             ],
                           ),
@@ -151,14 +173,14 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
                       ),
                     ),
                   ],
-                );
-              }
+                ),
+              ),
+            ),
+          );
+        }
 
-              return const SizedBox.shrink();
-            },
-          ),
-        ),
-      ),
+        return const SizedBox.shrink();
+      },
     );
   }
 
@@ -205,6 +227,16 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
   Future<void> _fetchUser() async {
     context.read<SpecialitySearchBloc>().add(
       GetUserPublicProfileEvent(userId: widget.userId),
+    );
+  }
+
+  Future<void> _onLikeOrDislikeUser({
+    required bool isFavorited,
+    required String userId,
+  }) async {
+    debugPrint("On like or dislike");
+    context.read<ResumeBloc>().add(
+      UpdateFavoritingEvent(isFavorited: isFavorited, userId: userId),
     );
   }
 }
@@ -407,31 +439,33 @@ class _Specalisations extends StatelessWidget {
       decoration: AppTheme.cardDecoration,
       child: Row(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Специализация',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w600,
-                  height: 1.30,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Специализация',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontFamily: 'Manrope',
+                    fontWeight: FontWeight.w600,
+                    height: 1.30,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-              // Dynamic items with wrap
-              Wrap(
-                spacing: 8,
-                runSpacing: 12,
-                children: specializations!
-                    .map((item) => _specialisationItem(item))
-                    .toList(),
-              ),
-            ],
+                // Dynamic items with wrap
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 12,
+                  children: specializations!
+                      .map((item) => _specialisationItem(item))
+                      .toList(),
+                ),
+              ],
+            ),
           ),
         ],
       ),

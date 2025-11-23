@@ -175,30 +175,15 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
   ) async {
     final currentState = state;
 
-    if (currentState is! ResumeLoadedState) return;
-
     try {
       final result = await likeResumeUsecase(
         LikedResumeParams(userId: event.userId, isFavorited: event.isFavorited),
       );
 
-      result.fold((failure) => emit(ResumeErrorState(failure.message)), (_) {
-        // NEW LIST AFTER REMOVING UNLIKED USER
-        final updatedList = currentState.users.resume
-            .where((resume) => resume.id != event.userId)
-            .toList();
-
-        emit(
-          ResumeLoadedState(
-            users: currentState.users.copyWith(resume: updatedList),
-            isLoadingMore: false,
-          ),
-        );
-      });
+      result.fold((failure) => emit(ResumeErrorState(failure.message)), (_) {});
     } catch (e, stack) {
       debugPrint('Favorite update error: $e\n$stack');
       emit(ResumeErrorState(e.toString()));
     }
   }
-
 }

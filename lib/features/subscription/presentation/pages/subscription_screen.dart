@@ -267,7 +267,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                                       ),
                                                     ),
                                                     child: const Text(
-                                                      'Subscribe and Pay',
+                                                      "Подписаться и оплатить",
+                                                     // 'Subscribe & Pay',
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,

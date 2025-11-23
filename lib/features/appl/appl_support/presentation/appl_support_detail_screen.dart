@@ -4,9 +4,11 @@ import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/typedef.dart';
 
 class ApplSupportDetailScreen extends StatefulWidget {
-  const ApplSupportDetailScreen({super.key});
+  const ApplSupportDetailScreen({super.key, required this.support});
+  final DataMap support;
 
   @override
   _ApplSupportDetailScreenState createState() =>
@@ -59,7 +61,7 @@ class _ApplSupportDetailScreenState extends State<ApplSupportDetailScreen> {
                         children: [
                           const CustomText(
                             text: "Как пользоваться приложением?",
-                      
+
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -68,7 +70,7 @@ class _ApplSupportDetailScreenState extends State<ApplSupportDetailScreen> {
                               height: 1.30,
                             ),
                           ),
-                          const SizedBox(height: 24,),
+                          const SizedBox(height: 24),
                           CustomText(text: description),
                         ],
                       ),

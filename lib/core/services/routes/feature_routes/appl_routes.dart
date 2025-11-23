@@ -43,7 +43,6 @@ final List<RouteBase> jobRoutes = [
     },
   ),
 
-
   GoRoute(
     path: RouteName.editProfileApplicant,
     name: RouteName.editProfileApplicant,
@@ -96,6 +95,16 @@ final List<RouteBase> jobRoutes = [
     name: RouteName.editProfileEducationInfoApplicant,
     builder: (BuildContext context, GoRouterState state) {
       return const ApplProfileEditWorkExperience();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.supportDetail,
+    name: RouteName.supportDetail,
+    builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+      return ApplSupportDetailScreen(support: extra['support'] as DataMap);
     },
   ),
 
