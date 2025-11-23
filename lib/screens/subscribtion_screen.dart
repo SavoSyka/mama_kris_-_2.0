@@ -45,66 +45,68 @@ class _SubscribtionScreenState extends State<SubscribtionScreen> {
     }
 
     // Переход на экран с WebView для отображения ссылки внутри приложения
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => PaymentWebViewPage(
-          url: paymentLink,
-          callback: (WebViewRequest request) {
-            if (request == WebViewRequest.success) {
-              // Обработка успешного платежа
-              // print("Платеж успешно выполнен");
-              Navigator.of(context).pushAndRemoveUntil(
-                PageRouteBuilder(
-                  transitionDuration: const Duration(milliseconds: 300),
-                  pageBuilder: (_, animation, secondaryAnimation) =>
-                  const MainScreen(initialIndex: 1),
-                  transitionsBuilder: (_, animation, __, child) {
-                    final tween = Tween<Offset>(
-                      begin: const Offset(1.0, 0.0),
-                      end: Offset.zero,
-                    ).chain(CurveTween(curve: Curves.easeInOut));
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-                ),
-                    (_) => false,
-              );
-            } else {
-              // Обработка неудачного платежа
-              Navigator.of(context).pushAndRemoveUntil(
-                PageRouteBuilder(
-                  transitionDuration: const Duration(milliseconds: 300),
-                  pageBuilder: (_, animation, secondaryAnimation) =>
-                  const MainScreen(initialIndex: 1),
-                  transitionsBuilder: (_, animation, __, child) {
-                    final tween = Tween<Offset>(
-                      begin: const Offset(1.0, 0.0),
-                      end: Offset.zero,
-                    ).chain(CurveTween(curve: Curves.easeInOut));
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-                ),
-                    (_) => false,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    "Платеж не выполнен, повторите попытку позже.",
-                  ),
-                ),
-              );
-              // print("Платеж не выполнен");
-            }
-          },
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (_) => PaymentWebViewPage(
+    //       url: paymentLink,
+         
+    //       // callback: (WebViewRequest request) {
+    //       //   if (request == WebViewRequest.success) {
+    //       //     // Обработка успешного платежа
+    //       //     // print("Платеж успешно выполнен");
+    //       //     Navigator.of(context).pushAndRemoveUntil(
+    //       //       PageRouteBuilder(
+    //       //         transitionDuration: const Duration(milliseconds: 300),
+    //       //         pageBuilder: (_, animation, secondaryAnimation) =>
+    //       //         const MainScreen(initialIndex: 1),
+    //       //         transitionsBuilder: (_, animation, __, child) {
+    //       //           final tween = Tween<Offset>(
+    //       //             begin: const Offset(1.0, 0.0),
+    //       //             end: Offset.zero,
+    //       //           ).chain(CurveTween(curve: Curves.easeInOut));
+    //       //           return SlideTransition(
+    //       //             position: animation.drive(tween),
+    //       //             child: child,
+    //       //           );
+    //       //         },
+    //       //       ),
+    //       //           (_) => false,
+    //       //     );
+    //       //   } else {
+    //       //     // Обработка неудачного платежа
+    //       //     Navigator.of(context).pushAndRemoveUntil(
+    //       //       PageRouteBuilder(
+    //       //         transitionDuration: const Duration(milliseconds: 300),
+    //       //         pageBuilder: (_, animation, secondaryAnimation) =>
+    //       //         const MainScreen(initialIndex: 1),
+    //       //         transitionsBuilder: (_, animation, __, child) {
+    //       //           final tween = Tween<Offset>(
+    //       //             begin: const Offset(1.0, 0.0),
+    //       //             end: Offset.zero,
+    //       //           ).chain(CurveTween(curve: Curves.easeInOut));
+    //       //           return SlideTransition(
+    //       //             position: animation.drive(tween),
+    //       //             child: child,
+    //       //           );
+    //       //         },
+    //       //       ),
+    //       //           (_) => false,
+    //       //     );
+    //       //     ScaffoldMessenger.of(context).showSnackBar(
+    //       //       const SnackBar(
+    //       //         content: Text(
+    //       //           "Платеж не выполнен, повторите попытку позже.",
+    //       //         ),
+    //       //       ),
+    //       //     );
+    //       //     // print("Платеж не выполнен");
+    //       //   }
+    //       // },
+     
+    //     ),
+    //   ),
+    // );
   }
 
   @override

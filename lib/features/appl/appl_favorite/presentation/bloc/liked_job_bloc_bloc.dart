@@ -14,6 +14,7 @@ class LikedJobBlocBloc extends Bloc<LikedJobBlocEvent, LikedJobBlocState> {
     : super(LikedJobBlocInitial()) {
     on<FetchLikedJobEvent>(_onFetchJobs);
     on<LikedLoadNextJobsPageEvent>(_onLoadNextJobsPage);
+    on<RemovingLikedJobs>(onDislikeJob);
 
     on<LikedJobBlocEvent>((event, emit) {
       // TODO: implement event handler
@@ -60,7 +61,9 @@ class LikedJobBlocBloc extends Bloc<LikedJobBlocEvent, LikedJobBlocState> {
     emit(currentState.copyWith(isLoadingMore: true));
 
     try {
-      debugPrint("\n😭😁 we are fetching new jobs. ${currentState.jobs.likedJob.length}\n");
+      debugPrint(
+        "\n😭😁 we are fetching new jobs. ${currentState.jobs.likedJob.length}\n",
+      );
       final result = await fetchLikedJobs(event.nextPage);
       result.fold((failure) => emit(LikedJobError(failure.message)), (
         newJobList,
@@ -85,6 +88,38 @@ class LikedJobBlocBloc extends Bloc<LikedJobBlocEvent, LikedJobBlocState> {
     } catch (e, stack) {
       debugPrint('Load next page error: $e\n$stack');
       emit(LikedJobError(e.toString()));
+    }
+  }
+
+  Future<void> onDislikeJob(
+    RemovingLikedJobs event,
+    Emitter<LikedJobBlocState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is LikedJobLoadedState) {
+      try {
+        final cpage = currentState.jobs.currentPage;
+        final tPage = currentState.jobs.totalPage;
+        final hasNext = currentState.jobs.hasNextPage;
+
+        final updatedJobs = currentState.jobs.likedJob
+            .where((job) => job.jobId != event.jobId)
+            .toList();
+
+        emit(
+          LikedJobLoadedState(
+            jobs: LikedListJob(
+              likedJob: updatedJobs,
+              currentPage: cpage,
+              totalPage: tPage,
+              hasNextPage: hasNext,
+            ),
+            isLoadingMore: false,
+          ),
+        );
+      } catch (e) {
+        emit(LikedJobError(e.toString()));
+      }
     }
   }
 }

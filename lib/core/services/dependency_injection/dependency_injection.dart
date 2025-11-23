@@ -377,4 +377,9 @@ Future<void> _initSubscriptions() async {
     () =>
         SubscriptionBloc(getTariffsUsecase: sl(), initiatePaymentUsecase: sl()),
   );
+
+    sl.registerFactory(
+    () =>
+        SubscriptionStatusCubit(),
+  );
 }

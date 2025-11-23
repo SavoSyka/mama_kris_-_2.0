@@ -3,6 +3,10 @@ class RouteName {
 
   static String initialPage = "/initial-page";
 
+
+
+  
+
   // static String authPage = '/auth-page';
   /// * APPLICANT ROUTES
   static const String _applicant = '/auth/appl';
@@ -59,6 +63,9 @@ class RouteName {
   static String forceUpdate = "/force-update";
 
   static String subscription = "/subscription";
+  static String paymentWebView = "/payment-web-view";
+
+  static String paymentCheckingPage = "/payment-checking-page";
 
   static String welcomeApplicant = "/welcome-applicant";
   static String welcomeEmploye = "/welcome-employe";

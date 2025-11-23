@@ -268,7 +268,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                               child: JobListItem(
                                 jobTitle: job.title,
                                 salaryRange: job.salary.toString(),
-                                      jobId: job.jobId.toString(),
+                                      jobId: job.jobId,
 
                                 onTap: () async => await ApplicantJobDetail(
                                   context,

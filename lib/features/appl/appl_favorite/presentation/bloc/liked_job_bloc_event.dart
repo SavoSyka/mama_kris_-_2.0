@@ -7,13 +7,12 @@ sealed class LikedJobBlocEvent extends Equatable {
   List<Object> get props => [];
 }
 
- class FetchLikedJobEvent extends LikedJobBlocEvent {
+class FetchLikedJobEvent extends LikedJobBlocEvent {
   const FetchLikedJobEvent();
 
   @override
   List<Object> get props => [];
 }
-
 
 class LikedLoadNextJobsPageEvent extends LikedJobBlocEvent {
   final int nextPage;
@@ -21,4 +20,12 @@ class LikedLoadNextJobsPageEvent extends LikedJobBlocEvent {
 
   @override
   List<Object> get props => [nextPage];
+}
+
+class RemovingLikedJobs extends LikedJobBlocEvent {
+  const RemovingLikedJobs({required this.jobId});
+  final int jobId;
+
+  @override
+  List<Object> get props => [jobId];
 }

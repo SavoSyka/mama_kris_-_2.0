@@ -75,6 +75,7 @@ import 'package:mama_kris/features/subscription/data/repository_impl/subscriptio
 import 'package:mama_kris/features/subscription/domain/repository/subscription_repository.dart';
 import 'package:mama_kris/features/subscription/domain/usecase/get_tariffs_usecase.dart';
 import 'package:mama_kris/features/subscription/domain/usecase/initiate_payment_usecase.dart';
+import 'package:mama_kris/features/subscription/presentation/cubit/subscription_status_cubit.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/features/welcome_page/data/data_source/force_update_remote_data_source.dart';
 import 'package:mama_kris/features/welcome_page/data/repository_impl/force_updated_repository_impl.dart';

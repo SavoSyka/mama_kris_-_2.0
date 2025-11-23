@@ -89,7 +89,7 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                                 child: CustomErrorRetry(
                                   hasDefaultMargin: true,
                                   errorMessage: state.message,
-                                  onTap: () {},
+                                  onTap: _handleRefresh,
                                 ),
                               ),
                             ],
@@ -105,76 +105,48 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                               ),
                             )
                           : Expanded(
-                              child: ListView.separated(
-                                controller: _scrollController,
-                                // shrinkWrap: true,
-                                // physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  if (index < state.jobs.likedJob.length) {
-                                    final job = state.jobs.likedJob[index];
-                                    return JobListItem(
-                                      jobTitle: job.job.title,
-                                      jobId: job.job.jobId.toString(),
-                                      salaryRange: job.job.salary.toString(),
-                                      showAddToFavorite: false,
-                                      onTap: () async =>
-                                          await ApplicantJobDetail(
-                                            context,
-                                            job: job.job,
-                                            showStar: false,
+                              child: RefreshIndicator(
+                                onRefresh: _handleRefresh,
+                                child: ListView.separated(
+                                  controller: _scrollController,
+                                  // shrinkWrap: true,
+                                  // physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    if (index < state.jobs.likedJob.length) {
+                                      final job = state.jobs.likedJob[index];
+                                      return JobListItem(
+                                        jobTitle: job.job.title,
+                                        jobId: job.job.jobId,
+                                        salaryRange: job.job.salary.toString(),
+                                        showAddToFavorite: false,
+                                        onTap: () async =>
+                                            await ApplicantJobDetail(
+                                              context,
+                                              job: job.job,
+                                              showStar: false,
 
-                                            onLiked: () async {
-                                              context.read<JobBloc>().add(
-                                                LikeJobEvent(job.jobId),
-                                              );
-                                              Navigator.maybePop(context);
-                                            },
-                                          ),
-                                    );
-                                  } else if (state.jobs.hasNextPage) {
-                                    // Loader at bottom
-                                    return const IPhoneLoader();
-                                  }
-                                  return null;
-                                },
-                                separatorBuilder: (_, __) =>
-                                    const SizedBox(height: 8),
-                                itemCount: state.jobs.likedJob.length + 1,
-                              ),
+                                              onLiked: () async {
+                                                context.read<JobBloc>().add(
+                                                  LikeJobEvent(job.jobId),
+                                                );
+                                                Navigator.maybePop(context);
+                                              },
+                                            ),
 
-                              /*
-                             SingleChildScrollView(
-                              controller: _scrollController,
-                              physics: const AlwaysScrollableScrollPhysics(),
-            
-                              child: 
-                              CustomDefaultPadding(
-                                child: 
-                                
-                                Column(
-                                  children: [
-            
-                                    // ListView.separated(
-                                    //   shrinkWrap: true,
-                                    //   physics: const NeverScrollableScrollPhysics(),
-                                    //   itemBuilder: (context, index) => JobListItem(
-                                    //     jobTitle: jobs[index]['title'] ?? 'No Title',
-                                    //     salaryRange: jobs[index]['salary'] ?? 'No Salary',
-                                    //     onTap: () async {
-                                    //       // TODO job should be paassed from the list
-                                    //       // await ApplicantJobDetail(context, showStar: false);
-                                    //     },
-                                    //     showAddToFavorite: false,
-                                    //   ),
-                                    //   separatorBuilder: (context, index) =>
-                                    //       const SizedBox(height: 8),
-                                    //   itemCount: jobs.length,
-                                    // ),
-                                  ],
+                                        onDislike: () =>
+                                            onDislikeJob(job.jobId),
+                                      );
+                                    } else if (state.jobs.hasNextPage) {
+                                      // Loader at bottom
+                                      return const IPhoneLoader();
+                                    }
+                                    return null;
+                                  },
+                                  separatorBuilder: (_, __) =>
+                                      const SizedBox(height: 8),
+                                  itemCount: state.jobs.likedJob.length + 1,
                                 ),
                               ),
-                            ),
-                          */
                             ),
                   ],
                 );
@@ -216,7 +188,7 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
     context.read<LikedJobBlocBloc>().add(LikedLoadNextJobsPageEvent(page));
   }
 
-  void handleFetchJobs() {
+  Future<void> handleFetchJobs() async {
     context.read<LikedJobBlocBloc>().add(const FetchLikedJobEvent());
   }
 
@@ -225,5 +197,10 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
     await context.read<LikedJobBlocBloc>().stream.firstWhere(
       (state) => state is LikedJobLoadedState || state is LikedJobError,
     );
+  }
+
+  Future<void> onDislikeJob(int jobId) async {
+    context.read<LikedJobBlocBloc>().add(RemovingLikedJobs(jobId: jobId));
+    context.read<JobBloc>().add(DislikeJobEvent(jobId));
   }
 }

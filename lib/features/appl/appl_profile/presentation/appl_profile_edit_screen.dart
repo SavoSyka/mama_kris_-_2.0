@@ -154,12 +154,7 @@ class _basicInformation extends StatelessWidget {
 
           ElevatedButton.icon(
             onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const ApplProfileEditBasicInfo(),
-                ),
-              );
+              context.pushNamed(RouteName.editProfileBasicInfoApplicant);
             },
             icon: const Icon(CupertinoIcons.pen, color: Colors.white, size: 18),
             label: const Text(
@@ -175,11 +170,6 @@ class _basicInformation extends StatelessWidget {
             ),
           ),
 
-          // CustomInputText(
-          //   hintText: '+79997773322',
-          //   labelText: "Номер телефона",
-          //   controller: TextEditingController(),
-          // ),
           const SizedBox(height: 24),
         ],
       ),
@@ -331,7 +321,6 @@ class _AccountsState extends State<_accounts> {
                 );
                 AuthService().signOut();
                 context.pushNamed(RouteName.welcomePage);
-
               });
             },
           ),

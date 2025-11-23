@@ -28,8 +28,8 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
     backgroundColor: Colors.transparent,
     barrierColor: Colors.black.withOpacity(0.5),
     builder: (context) => DraggableScrollableSheet(
-      initialChildSize: 0.6,
-      minChildSize: 0.4,
+      initialChildSize: 0.7,
+      minChildSize: 0.5,
       maxChildSize: 0.95,
       expand: false,
       builder: (context, scrollController) {

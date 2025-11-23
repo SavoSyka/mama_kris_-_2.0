@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_error_retry.dart';
@@ -7,12 +8,14 @@ import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 import 'package:mama_kris/features/subscription/application/bloc/subscription_bloc.dart';
 import 'package:mama_kris/features/subscription/application/bloc/subscription_event.dart';
 import 'package:mama_kris/features/subscription/application/bloc/subscription_state.dart';
 import 'package:mama_kris/features/subscription/domain/entity/subscription_entity.dart';
+import 'package:mama_kris/features/subscription/presentation/cubit/subscription_status_cubit.dart';
 import 'package:mama_kris/features/subscription/presentation/pages/widget/subscription_card.dart';
 import 'package:mama_kris/screens/payment_webview_page.dart';
 import 'package:mama_kris/screens/main_screen.dart';
@@ -66,7 +69,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         decoration: _isApplicant
             ? const BoxDecoration(gradient: AppTheme.primaryGradient)
             : const BoxDecoration(color: AppPalette.empBgColor),
-
+    
         child: CustomDefaultPadding(
           child: BlocBuilder<SubscriptionBloc, SubscriptionState>(
             builder: (context, state) {
@@ -90,9 +93,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                 ),
                               ),
                             ),
-                    
+    
                             const SizedBox(height: 32),
-                    
+    
                             const SizedBox(
                               width: 333,
                               child: Text(
@@ -107,7 +110,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                    
+    
                             const SizedBox(
                               width: 333,
                               child: Text(
@@ -122,7 +125,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                    
+    
                             const SizedBox(
                               width: 333,
                               child: Text(
@@ -136,9 +139,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                 ),
                               ),
                             ),
-                    
+    
                             const SizedBox(height: 32),
-                    
+    
                             if (state is SubscriptionLoadingState)
                               const Center(child: IPhoneLoader(height: 200))
                             else if (state is SubscriptionErrorState)
@@ -185,13 +188,14 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                   ),
                                 ),
                               ),
-                    
+    
                             const SizedBox(height: 32),
-                    
+    
                             if (_subscription != null &&
                                 state is! PaymentInitiatingState)
                               ElevatedButton(
-                                onPressed: () => _initiatePayment(_subscription!),
+                                onPressed: () =>
+                                    _initiatePayment(_subscription!),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF00A80E),
                                   padding: const EdgeInsets.symmetric(
@@ -238,43 +242,53 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   void _navigateToPayment(String paymentUrl) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => PaymentWebViewPage(
-          url: paymentUrl,
-          callback: (WebViewRequest request) {
-            if (request == WebViewRequest.success) {
-              // Handle successful payment - navigate to main screen
-              Navigator.of(context).pushAndRemoveUntil(
-                PageRouteBuilder(
-                  transitionDuration: const Duration(milliseconds: 300),
-                  pageBuilder: (_, animation, secondaryAnimation) =>
-                      const MainScreen(initialIndex: 1),
-                  transitionsBuilder: (_, animation, __, child) {
-                    final tween = Tween<Offset>(
-                      begin: const Offset(1.0, 0.0),
-                      end: Offset.zero,
-                    ).chain(CurveTween(curve: Curves.easeInOut));
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-                ),
-                (_) => false,
-              );
-            } else {
-              // Handle failed payment
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Платеж не выполнен, повторите попытку позже."),
-                ),
-              );
-            }
-          },
-        ),
-      ),
+    debugPrint("✅✅✅✅✅✅ SUbscription started here");
+
+
+    context.pushNamed(
+      RouteName.paymentWebView,
+      extra: {
+        'url': paymentUrl,
+
+        // Optional: extra actions you want to run on success/fail
+        'onSuccess': () {
+          debugPrint("PaymentWebView reported SUCCESS – extra action");
+
+          // Do NOT navigate here! Let the Cubit + BlocListener do it
+          // → This prevents wrong routes and duplicate screens
+        },
+
+        'onFail': () {
+          debugPrint("PaymentWebView reported FAIL");
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Платёж не выполнен или был отменён"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        },
+      },
     );
+
+    // context.read<SubscriptionStatusCubit>().startPolling();
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (_) => PaymentWebViewPage(
+    //       url: paymentUrl,
+    //       callback: (WebViewRequest request) {
+    //         if (request == WebViewRequest.success) {
+    //         } else {
+    //           // Handle failed payment
+    //           ScaffoldMessenger.of(context).showSnackBar(
+    //             const SnackBar(
+    //               content: Text("Платеж не выполнен, повторите попытку позже."),
+    //             ),
+    //           );
+    //         }
+    //       },
+    //     ),
+    //   ),
+    // );
   }
 }

@@ -22,6 +22,7 @@ import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_bloc.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
 import 'package:mama_kris/features/subscription/application/bloc/subscription_bloc.dart';
+import 'package:mama_kris/features/subscription/presentation/cubit/subscription_status_cubit.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,10 +104,7 @@ void main() async {
         BlocProvider(create: (context) => sl<SpecialitySearchBloc>()),
         BlocProvider(create: (context) => sl<SubscriptionBloc>()),
 
-        
-
-
-
+        BlocProvider(create: (context) => sl<SubscriptionStatusCubit>()),
       ],
       child: const MyApp(),
     ),

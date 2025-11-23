@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/handle_launch_url.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:share_plus/share_plus.dart';
 
 class JobListItem extends StatefulWidget {
   final String jobTitle;
   final String salaryRange;
-  final String jobId;
+  final int jobId;
 
   final VoidCallback onTap;
+  final VoidCallback? onDislike;
+
   final bool showAddToFavorite;
 
   const JobListItem({
@@ -21,6 +26,7 @@ class JobListItem extends StatefulWidget {
     required this.onTap,
     this.showAddToFavorite = true,
     required this.jobId,
+    this.onDislike,
   });
 
   @override
@@ -45,13 +51,21 @@ class _JobListItemState extends State<JobListItem> {
         offset.dy + size.height,
       ),
       items: [
-        if (widget.showAddToFavorite)
-          PopupMenuItem(
-            onTap: () {
-              // Handle add to favorites
-            },
-            child: const Text('Добавить в избранное'),
+        PopupMenuItem(
+          onTap: () {
+            if (widget.showAddToFavorite) {
+              context.read<JobBloc>().add(LikeJobEvent(widget.jobId));
+            } else {
+              widget.onDislike?.call();
+            }
+            // Handle add to favorites
+          },
+          child: Text(
+            widget.showAddToFavorite
+                ? 'Добавить в избранное'
+                : "удалить из избранного",
           ),
+        ),
         PopupMenuItem(
           onTap: () {
             // Handle share
