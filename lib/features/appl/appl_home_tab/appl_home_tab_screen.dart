@@ -45,11 +45,11 @@ class _ApplHomeTabScreenState extends State<ApplHomeTabScreen> {
 
   @override
   void didUpdateWidget(ApplHomeTabScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-      _selectedIndex = widget.pageIndex.clamp(0, _pages.length - 1);
-      debugPrint("Updated selectedIndex to ${widget.pageIndex}");
-    });
+    // super.didUpdateWidget(oldWidget);
+    // setState(() {
+    //   _selectedIndex = widget.pageIndex.clamp(0, _pages.length - 1);
+    //   debugPrint("Updated selectedIndex to ${widget.pageIndex}");
+    // });
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
+import 'package:mama_kris/core/common/widgets/custom_empty_container.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
@@ -59,117 +60,139 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
             child: Column(
               children: [
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: CustomDefaultPadding(
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: _onFiltering,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.search, color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    _searchQuery ?? 'Search jobs...',
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                  child: RefreshIndicator(
+                    onRefresh: _handleRefresh,
 
-                          const SizedBox(height: 14),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: CustomDefaultPadding(
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: _onFiltering,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
                                   children: [
-                                    InkWell(
-                                      onTap: () {
-                                        if (isFavorite) {
-                                          setState(() {
-                                            isFavorite = false;
-                                          });
-                                          _loadResumes();
-                                        }
-                                      },
-                                      child: _FilterCard(
-                                        isSelected: !isFavorite,
-                                        text: 'Все',
-                                      ),
+                                    const Icon(
+                                      Icons.search,
+                                      color: Colors.grey,
                                     ),
-                                    const SizedBox(width: 12),
-                                    InkWell(
-                                      onTap: () {
-                                        if (!isFavorite) {
-                                          setState(() {
-                                            isFavorite = true;
-                                          });
-                                          _loadResumes();
-                                        }
-                                      },
-                                      child: _FilterCard(
-                                        isSelected: isFavorite,
-                                        text: 'Избранные',
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      _searchQuery ?? 'Search jobs...',
+                                      style: const TextStyle(
+                                        color: Colors.black,
                                       ),
                                     ),
                                   ],
                                 ),
-                                InkWell(
-                                  onTap: _onFiltering,
-                                  child: const CustomImageView(
-                                    imagePath: MediaRes.btnFilter,
-                                    width: 48,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 28),
-                          BlocBuilder<ResumeBloc, ResumeState>(
-                            builder: (context, state) {
-                              if (state is ResumeLoadingState) {
-                                return const IPhoneLoader();
-                              } else if (state is ResumeErrorState) {
-                                return Center(
-                                  child: Text('Error: ${state.message}'),
-                                );
-                              } else if (state is ResumeLoadedState) {
-                                final users = state.users.resume;
-                                return ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) => ResumeItem(
-                                    name: users[index].name,
-                                    role: users[index].role,
-                                    age: users[index].age,
-                                    onTap: () async {
-                                      context.pushNamed(RouteName.resumeDetail, extra:  {
-                                        'userId': users[index].id.toString()
-                                      });
-                                    },
+
+                            const SizedBox(height: 14),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          if (isFavorite) {
+                                            setState(() {
+                                              isFavorite = false;
+                                            });
+                                            _loadResumes();
+                                          }
+                                        },
+                                        child: _FilterCard(
+                                          isSelected: !isFavorite,
+                                          text: 'Все',
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      InkWell(
+                                        onTap: () {
+                                          if (!isFavorite) {
+                                            setState(() {
+                                              isFavorite = true;
+                                            });
+                                            _loadResumes();
+                                          }
+                                        },
+                                        child: _FilterCard(
+                                          isSelected: isFavorite,
+                                          text: 'Избранные',
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(height: 8),
-                                  itemCount: users.length,
-                                );
-                              } else {
-                                return const Center(child: Text('No data'));
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                        ],
+                                  InkWell(
+                                    onTap: _onFiltering,
+                                    child: const CustomImageView(
+                                      imagePath: MediaRes.btnFilter,
+                                      width: 48,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 28),
+                            BlocBuilder<ResumeBloc, ResumeState>(
+                              builder: (context, state) {
+                                if (state is ResumeLoadingState) {
+                                  return const IPhoneLoader();
+                                } else if (state is ResumeErrorState) {
+                                  return Center(
+                                    child: Text('Error: ${state.message}'),
+                                  );
+                                } else if (state is ResumeLoadedState) {
+                                  final users = state.users.resume;
+
+                                  if (users.isEmpty) {
+                                    return const CustomEmptyContainer();
+                                  } else {
+                                    return ListView.separated(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) =>
+                                          ResumeItem(
+                                            name: users[index].name,
+                                            role: users[index].role,
+                                            age: users[index].age,
+                                            onTap: () async {
+                                              context.pushNamed(
+                                                RouteName.resumeDetail,
+                                                extra: {
+                                                  'userId': users[index].id
+                                                      .toString(),
+                                                },
+                                              );
+                                            },
+                                          ),
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(height: 8),
+                                      itemCount: users.length,
+                                    );
+                                  }
+                                } else {
+                                  return const Center(child: Text('No data'));
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -226,6 +249,13 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
           },
         ),
       ),
+    );
+  }
+
+  Future<void> _handleRefresh() async {
+    _loadResumes();
+    await context.read<ResumeBloc>().stream.firstWhere(
+      (state) => state is ResumeLoadedState || state is ResumeErrorState,
     );
   }
 }

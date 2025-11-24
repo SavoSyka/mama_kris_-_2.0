@@ -5,6 +5,8 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/handle_launch_url.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/entities/contact_job.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:share_plus/share_plus.dart';
@@ -19,6 +21,8 @@ class JobListItem extends StatefulWidget {
 
   final bool showAddToFavorite;
 
+  final ContactJobs? contactJobs;
+
   const JobListItem({
     super.key,
     required this.jobTitle,
@@ -27,6 +31,7 @@ class JobListItem extends StatefulWidget {
     this.showAddToFavorite = true,
     required this.jobId,
     this.onDislike,
+  required  this.contactJobs,
   });
 
   @override
@@ -68,11 +73,45 @@ class _JobListItemState extends State<JobListItem> {
         ),
         PopupMenuItem(
           onTap: () {
-            // Handle share
-            Share.share(
-              'Check out this job: ${widget.jobTitle} - ${widget.salaryRange}',
-              subject: 'Job Opportunity',
-            );
+            // Handle add to favorites
+            final buffer = StringBuffer();
+
+            buffer.writeln("Check out this job:");
+            buffer.writeln("${widget.jobTitle} - ${widget.salaryRange}\n");
+
+            buffer.writeln("Contacts:");
+
+            if (widget.contactJobs?.telegram != null &&
+                widget.contactJobs!.telegram!.isNotEmpty) {
+              buffer.writeln("• Telegram: @${widget.contactJobs!.telegram}");
+            }
+
+            if (widget.contactJobs?.whatsapp != null &&
+                widget.contactJobs!.whatsapp!.isNotEmpty) {
+              buffer.writeln("• WhatsApp: ${widget.contactJobs!.whatsapp}");
+            }
+
+            if (widget.contactJobs?.phone != null &&
+                widget.contactJobs!.phone!.isNotEmpty) {
+              buffer.writeln("• Phone: ${widget.contactJobs!.phone}");
+            }
+
+            if (widget.contactJobs?.vk != null &&
+                widget.contactJobs!.vk!.isNotEmpty) {
+              buffer.writeln("• VK: ${widget.contactJobs!.vk}");
+            }
+
+            if (widget.contactJobs?.email != null &&
+                widget.contactJobs!.email!.isNotEmpty) {
+              buffer.writeln("• Email: ${widget.contactJobs!.email}");
+            }
+
+            if (widget.contactJobs?.link != null &&
+                widget.contactJobs!.link!.isNotEmpty) {
+              buffer.writeln("• Link: ${widget.contactJobs!.link}");
+            }
+
+            Share.share(buffer.toString(), subject: 'Job Opportunity');
           },
           child: const Text('Поделиться'),
         ),

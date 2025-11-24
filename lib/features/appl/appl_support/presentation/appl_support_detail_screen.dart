@@ -6,39 +6,9 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 
-class ApplSupportDetailScreen extends StatefulWidget {
+class ApplSupportDetailScreen extends StatelessWidget {
   const ApplSupportDetailScreen({super.key, required this.support});
   final DataMap support;
-
-  @override
-  _ApplSupportDetailScreenState createState() =>
-      _ApplSupportDetailScreenState();
-}
-
-class _ApplSupportDetailScreenState extends State<ApplSupportDetailScreen> {
-  String description = '''
-Добро пожаловать на платформу для поиска удалённых вакансий! Я, Кристина, автор идеи и руководитель проекта. С более чем 12-летним опытом работы онлайн, я создала эту платформу, чтобы упростить процесс поиска и размещения вакансий.
-
-Роли в приложении:
-• Исполнитель (ищет работу)
-• Работодатель (размещает вакансии)
-
-Как начать:
-1. Нажмите кнопку «Исполнитель» и ответьте на вопросы для доступа к проверенным вакансиям.
-2. Или нажмите кнопку «Работодатель», чтобы получить доступ к размещению вакансий
-3. После лайка вакансии вы получите контакт работодателя, а вакансия переместится в раздел «Мои заказы» на 10 дней.
-
-Внизу приложения находится панель с разделами:
-• Главная: просмотр предложений о работе
-• Мои заказы: вакансии с контактами работодателей
-• Чат: техподдержка, реклама, полезные статьи, дополнительные услуги
-• Профиль: редактирование анкеты, смена роли, управление подпиской
-
-Рекомендуем откликаться на 30-50 вакансий в день для быстрого поиска работы. У нас на платформе собраны лучшие вакансии и задания для онлайн-заработка. Никогда еще поиск онлайн-работы не был таким простым и удобным!
-
-Успехов в поиске!  
-С уважением, команда "MamaKris".
-''';
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +41,7 @@ class _ApplSupportDetailScreenState extends State<ApplSupportDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          CustomText(text: description),
+                          CustomText(text: support['article'] ?? '' ),
                         ],
                       ),
                     ),

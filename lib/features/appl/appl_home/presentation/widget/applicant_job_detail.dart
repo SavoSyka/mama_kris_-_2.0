@@ -7,6 +7,7 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
+import 'package:share_plus/share_plus.dart';
 
 Future<String?> ApplicantJobDetail(
   BuildContext context, {
@@ -104,7 +105,7 @@ Future<String?> ApplicantJobDetail(
 
                               InkWell(
                                 onTap: () {
-                                  _showJobOptionsMenu(context, menuKey);
+                                  _showJobOptionsMenu(context, menuKey, job: job);
                                 },
                                 child: CustomImageView(
                                   key: menuKey,
@@ -132,7 +133,8 @@ Future<String?> ApplicantJobDetail(
                               onTap: () {
                                 HandleLaunchUrl.launchTelegram(
                                   context,
-                                  message: 'Hello, I am interested in the job: ${job.title}',
+                                  message:
+                                      'Hello, I am interested in the job: ${job.title}',
                                   username: job.contactJobs!.telegram,
                                 );
                               },
@@ -195,7 +197,11 @@ Widget _contactCard({required String label, required String icon}) {
   );
 }
 
-void _showJobOptionsMenu(BuildContext context, GlobalKey menuKey) {
+void _showJobOptionsMenu(
+  BuildContext context,
+  GlobalKey menuKey, {
+  required JobEntity job,
+}) {
   final RenderBox renderBox =
       menuKey.currentContext!.findRenderObject() as RenderBox;
   final Offset offset = renderBox.localToGlobal(Offset.zero);
@@ -213,12 +219,55 @@ void _showJobOptionsMenu(BuildContext context, GlobalKey menuKey) {
       PopupMenuItem(
         onTap: () {
           // Handle add to favorites
+          final buffer = StringBuffer();
+
+          buffer.writeln("Check out this job:");
+          buffer.writeln("${job.title} - ${job.salary}\n");
+
+          buffer.writeln("Contacts:");
+
+          if (job.contactJobs?.telegram != null &&
+              job.contactJobs!.telegram!.isNotEmpty) {
+            buffer.writeln("• Telegram: @${job.contactJobs!.telegram}");
+          }
+
+          if (job.contactJobs?.whatsapp != null &&
+              job.contactJobs!.whatsapp!.isNotEmpty) {
+            buffer.writeln("• WhatsApp: ${job.contactJobs!.whatsapp}");
+          }
+
+          if (job.contactJobs?.phone != null &&
+              job.contactJobs!.phone!.isNotEmpty) {
+            buffer.writeln("• Phone: ${job.contactJobs!.phone}");
+          }
+
+          if (job.contactJobs?.vk != null && job.contactJobs!.vk!.isNotEmpty) {
+            buffer.writeln("• VK: ${job.contactJobs!.vk}");
+          }
+
+          if (job.contactJobs?.email != null &&
+              job.contactJobs!.email!.isNotEmpty) {
+            buffer.writeln("• Email: ${job.contactJobs!.email}");
+          }
+
+          if (job.contactJobs?.link != null &&
+              job.contactJobs!.link!.isNotEmpty) {
+            buffer.writeln("• Link: ${job.contactJobs!.link}");
+          }
+
+          Share.share(buffer.toString(), subject: 'Job Opportunity');
         },
-        child: const Text('Добавить в избранное'),
+        child: const Text('Поделиться'),
       ),
 
       PopupMenuItem(
         onTap: () {
+          HandleLaunchUrl.launchTelegram(
+            context,
+            username: "@mamakrisSupport_bot",
+            message:
+                "Здравствуйте, я хочу сообщить о проблеме по вакансии с ID: ${job.jobId}, названием ${job.title}",
+          );
           // Handle report
         },
         child: const Text(

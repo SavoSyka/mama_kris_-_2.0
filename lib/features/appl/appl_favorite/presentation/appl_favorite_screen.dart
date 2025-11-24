@@ -118,6 +118,8 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                                         jobId: job.job.jobId,
                                         salaryRange: job.job.salary.toString(),
                                         showAddToFavorite: false,
+                                      contactJobs: job.job.contactJobs,
+
                                         onTap: () async =>
                                             await ApplicantJobDetail(
                                               context,

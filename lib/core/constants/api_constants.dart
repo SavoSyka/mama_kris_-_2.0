@@ -11,6 +11,8 @@ class ApiConstants {
   static const updatePassword = 'auth/change-password';
 
   static const validateCode = 'auth/verify-code';
+  static const resendOtp = 'auth/check-email';
+
   static const register = 'auth/register';
   static const changePassword = 'auth/change-password';
 

@@ -176,11 +176,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   ResultFuture<bool> resendOtp(String email) async {
     try {
       final response = await dio.post(
-        ApiConstants.validateCode, // Assuming resend uses same endpoint
+        ApiConstants.resendOtp, // Assuming resend uses same endpoint
         data: {'email': email},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode.toString().startsWith('2')) {
         return const Right(true);
       } else {
         throw const ApiException(message: 'Resend OTP failed', statusCode: 500);
