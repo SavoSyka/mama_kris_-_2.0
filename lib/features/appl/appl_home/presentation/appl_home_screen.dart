@@ -247,7 +247,8 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     _handleVacancyReaction(isLiked: false);
                                   },
                                 ),
-                                const SizedBox(height: 12),
+
+                                const SizedBox(height: 16),
                                 const _AdCards(),
                               ],
                             );
@@ -258,35 +259,40 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                         }
 
                         // ---------- List mode ----------
-                        // In list mode, contentIndex maps directly to job index
                         if (!isSlider) {
-                          // If contentIndex < jobs.length => show job item
-                          if (contentIndex < jobs.length) {
-                            final job = jobs[contentIndex];
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              child: JobListItem(
-                                jobTitle: job.title,
-                                salaryRange: job.salary.toString(),
-                                      jobId: job.jobId,
-                                      contactJobs: job.contactJobs,
-
-                                onTap: () async => await ApplicantJobDetail(
-                                  context,
-                                  job: job,
-                                  onLiked: () async {
-                                    context.read<JobBloc>().add(
-                                      LikeJobEvent(job.jobId),
-                                    );
-                                    Navigator.maybePop(context);
-                                  },
+                          int ads = jobs.length ~/ 3;
+                          int totalContent = jobs.length + ads;
+                          if (contentIndex < totalContent) {
+                            if ((contentIndex + 1) % 4 == 0) {
+                              // Ad card
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: const _AdCards(),
+                              );
+                            } else {
+                              int jobIndex = contentIndex - (contentIndex ~/ 4);
+                              final job = jobs[jobIndex];
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: JobListItem(
+                                  jobTitle: job.title,
+                                  salaryRange: job.salary.toString(),
+                                  jobId: job.jobId,
+                                  contactJobs: job.contactJobs,
+                                  onTap: () async => await ApplicantJobDetail(
+                                    context,
+                                    job: job,
+                                    onLiked: () async {
+                                      context.read<JobBloc>().add(
+                                        LikeJobEvent(job.jobId),
+                                      );
+                                      Navigator.maybePop(context);
+                                    },
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-
-                          // If we've reached the end and there's another page, show loader
-                          if (contentIndex == jobs.length &&
+                              );
+                            }
+                          } else if (contentIndex == totalContent &&
                               state.jobs.hasNextPage) {
                             return const Padding(
                               padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -417,8 +423,6 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     context.read<JobBloc>().add(SearchJobsEvent(query));
   }
 
-  
-
   void _openSearchPage() async {
     Navigator.push(
       context,
@@ -440,11 +444,8 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
         ),
       ),
     );
-  
   }
 
-  
-  
   // Future<void> _openSearchPage() async {
   //   final query = await Navigator.of(
   //     context,
@@ -465,8 +466,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
       // header + 1 slot for slider
       return 1 + 1;
     } else {
-      // header + jobs + optional bottom loader
-      return 1 + jobsLength + (hasNextPage ? 1 : 0);
+      // header + jobs + ads + optional bottom loader
+      int ads = jobsLength ~/ 3;
+      return 1 + jobsLength + ads + (hasNextPage ? 1 : 0);
     }
   }
 
