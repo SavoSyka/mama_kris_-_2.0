@@ -124,4 +124,12 @@ final List<RouteBase> employeRoutes = [
       );
     },
   ),
+
+  GoRoute(
+    path: RouteName.empSupportDetail,
+    name: RouteName.empSupportDetail,
+    builder: (BuildContext context, GoRouterState state) {
+      return const EmpSupportDetailScreen();
+    },
+  ),
 ];

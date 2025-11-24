@@ -6,6 +6,7 @@ import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_state.
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_check_email_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_forgot_password_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_usecase.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_with_apple_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_with_google_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_resend_otp_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_signup_usecase.dart';
@@ -22,6 +23,7 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
   final EmpForgotPasswordUsecase forgotPasswordUsecase;
   final EmpLoginWithGoogleUsecase loginWithGoogleUsecase;
   final EmpUpdatePasswordUsecase updatePasswordUsecase;
+  final EmpLoginWithAppleUsecase loginWithAppleUsecase;
 
   EmpAuthBloc({
     required this.loginUsecase,
@@ -33,6 +35,7 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     required this.forgotPasswordUsecase,
     required this.loginWithGoogleUsecase,
     required this.updatePasswordUsecase,
+    required this.loginWithAppleUsecase,
   }) : super(EmpAuthInitial()) {
     on<EmpLoginEvent>(_onLoginEvent);
     on<EmpSignupEvent>(_onSignupEvent);
@@ -43,6 +46,7 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     on<EmpForgotPasswordEvent>(_onForgotPasswordEvent);
     on<EmpLoginWithGoogleEvent>(_onLoginWithGoogle);
     on<EmpUpdatePasswordEvent>(_onUpdatePassword);
+    on<EmpLoginWithAppleEvent>(_onLoginWithApple);
   }
 
   Future<void> _onLoginEvent(
@@ -168,6 +172,24 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     result.fold(
       (failure) => emit(EmpAuthFailure(failure.message)),
       (success) => emit(EmpAuthPasswordUpdated()),
+    );
+  }
+
+  Future<void> _onLoginWithApple(
+    EmpLoginWithAppleEvent event,
+    Emitter<EmpAuthState> emit,
+  ) async {
+    emit(EmpAuthLoading());
+    final result = await loginWithAppleUsecase(
+      EmpLoginWithAppleParams(
+        identityToken: event.identityToken,
+        userData: event.userData,
+      ),
+    );
+
+    result.fold(
+      (failure) => emit(EmpAuthFailure(failure.message)),
+      (user) => emit(EmpAuthSuccess(user)),
     );
   }
 }

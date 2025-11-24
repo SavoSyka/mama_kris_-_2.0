@@ -45,7 +45,6 @@ class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
           bottom: false,
           child: Column(
             children: [
-              const SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
                   child: SafeArea(
@@ -183,6 +182,7 @@ class ContactsWidget extends StatelessWidget {
         HapticFeedback.lightImpact();
         final updatedContact = context.pushNamed(
           RouteName.editProfileContactInfoEmployee,
+          extra: {'contact': contact},
         );
 
         // TODO: trigger Bloc update for updated contact

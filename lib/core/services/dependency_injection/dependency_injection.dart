@@ -10,6 +10,7 @@ Future<void> dependencyInjection() async {
   await _initAuth();
   await _initNotifications();
   await _initJobs();
+  await _initAds();
   await initAppAuthInjection();
   await _initEmpAuth();
   await _initEmpJobs();
@@ -164,6 +165,24 @@ Future<void> _initJobs() async {
   sl.registerFactory(() => LikedJobBlocBloc(fetchLikedJobs: sl()));
 }
 
+Future<void> _initAds() async {
+  // Data sources
+  sl.registerLazySingleton<AdsRemoteDataSource>(
+    () => AdsRemoteDataSourceImpl(sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<AdsRepository>(
+    () => AdsRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => FetchAdsUseCase(sl()));
+
+  // Cubit
+  sl.registerFactory(() => AdsCubit(fetchAdsUseCase: sl()));
+}
+
 Future<void> initAppAuthInjection() async {
   // -------- DATA SOURCES --------
   sl.registerLazySingleton<UserRemoteDataSource>(
@@ -204,6 +223,7 @@ Future<void> _initEmpAuth() async {
   sl.registerLazySingleton(() => EmpForgotPasswordUsecase(sl()));
   sl.registerLazySingleton(() => EmpLoginWithGoogleUsecase(sl()));
   sl.registerLazySingleton(() => EmpUpdatePasswordUsecase(sl()));
+  sl.registerLazySingleton(() => EmpLoginWithAppleUsecase(sl()));
 
   // Bloc (factory → new instance per request)
   sl.registerFactory(
@@ -217,6 +237,7 @@ Future<void> _initEmpAuth() async {
       forgotPasswordUsecase: sl(),
       loginWithGoogleUsecase: sl(),
       updatePasswordUsecase: sl(),
+      loginWithAppleUsecase: sl(),
     ),
   );
 

@@ -16,4 +16,9 @@ abstract class EmpAuthRepository {
   ResultFuture<bool> updatePassword(String newPassword);
 
   ResultFuture<bool> loginWithGoogle({required String idToken});
+
+    ResultFuture<EmpUserEntity> loginWithApple({
+    required String identityToken,
+    required Map<String, dynamic> userData,
+  });
 }

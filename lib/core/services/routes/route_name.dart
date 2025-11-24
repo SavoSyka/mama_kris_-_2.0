@@ -33,6 +33,7 @@ class RouteName {
       '/$_applicant/edit-education-info';
 
   static String supportDetail = '/$_applicant/support-detail';
+  static String empSupportDetail = '/$_employee/support-detail';
 
   // * EMPLOYE ROUTES
   static const String _employee = '/auth/emp';

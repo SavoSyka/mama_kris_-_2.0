@@ -36,14 +36,14 @@ class _EmpSupportScreenState extends State<EmpSupportScreen> {
       'title': 'Сообщество мам в Telegram',
       'salary': 'Ссылка',
       'isTelegram': true,
-      'channel': 'https://t.me/mamakris',
+      'channel': 'https://t.me/it_mamakris',
     },
 
     {
       'title': 'Техподдержка',
       'salary': 'Ссылка',
       'isTelegram': true,
-      'channel': 'https://t.me/mamakris',
+      'channel': 'https://t.me/mamakrisSupport_bot',
     },
   ];
 
@@ -83,10 +83,7 @@ class _EmpSupportScreenState extends State<EmpSupportScreen> {
                                     url: support['channel'],
                                   );
                                 } else {
-                                  context.pushNamed(
-                                    RouteName.supportDetail,
-                                    extra: {'support': support},
-                                  );
+                                  // context.pushNamed(RouteName.empSupportDetail);
                                 }
                               },
                               child: Container(

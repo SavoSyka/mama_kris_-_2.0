@@ -10,7 +10,7 @@ abstract class AuthRemoteDataSource {
   ResultFuture<bool> resendOtp(String email);
   ResultFuture<bool> forgotPassword(String email);
   Future<bool> loginWithGoogle({required String idToken});
-  Future<bool> loginWithApple({
+  Future<UserModel> loginWithApple({
     required String identityToken,
    required Map<String, dynamic> userData,
   });

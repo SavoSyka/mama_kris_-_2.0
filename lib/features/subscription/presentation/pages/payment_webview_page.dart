@@ -131,7 +131,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
+import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 import 'package:mama_kris/features/subscription/presentation/cubit/subscription_status_cubit.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -162,6 +164,7 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
   void initState() {
     super.initState();
 
+    _loadUserTypeAndSetupTabs();
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
@@ -245,6 +248,16 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
       ..loadRequest(Uri.parse(widget.url));
   }
 
+  bool _isApplicant = false;
+
+  Future<void> _loadUserTypeAndSetupTabs() async {
+    final bool isAppl = await sl<AuthLocalDataSource>().getUserType();
+
+    setState(() {
+      _isApplicant = isAppl;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -275,7 +288,11 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
         child: BlocListener<SubscriptionStatusCubit, SubscriptionStatusState>(
           listener: (context, state) {
             if (state is SubscriptionStatusSuccess && state.hasSubscription) {
-              context.goNamed(RouteName.homeApplicant);
+              if (_isApplicant) {
+                context.goNamed(RouteName.homeApplicant);
+              } else {
+                context.goNamed(RouteName.homeEmploye);
+              }
             }
           },
           child: WebViewWidget(controller: _controller),

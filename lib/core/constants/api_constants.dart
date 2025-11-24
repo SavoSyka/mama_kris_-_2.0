@@ -66,4 +66,7 @@ class ApiConstants {
 
   static  getPublicProfile(String userId) => "users/public/$userId";
 
+  // ads
+  static const getAds = 'advertisements/next';
+
 }

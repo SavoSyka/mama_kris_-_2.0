@@ -43,6 +43,7 @@ import 'package:mama_kris/features/emp/emp_auth/domain/repositories/emp_auth_rep
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_check_email_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_forgot_password_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_usecase.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_with_apple_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_with_google_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_resend_otp_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_signup_usecase.dart';
@@ -100,6 +101,11 @@ import 'package:mama_kris/features/appl/appl_home/domain/usecases/dislike_job_us
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_state.dart';
+import 'package:mama_kris/features/appl/appl_home/data/data_sources/ads_remote_data_source.dart';
+import 'package:mama_kris/features/appl/appl_home/data/repositories/ads_repository_impl.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/repositories/ads_repository.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/usecases/fetch_ads_usecase.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_cubit.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source.dart' as emp_user_remote;
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source_impl.dart' as emp_user_remote_impl;
 import 'package:mama_kris/features/emp/emp_resume/data/repositories/resume_repository_impl.dart' as emp_user_repo_impl;

@@ -134,7 +134,7 @@ Future<String?> ApplicantJobDetail(
                                 HandleLaunchUrl.launchTelegram(
                                   context,
                                   message:
-                                      'Hello, I am interested in the job: ${job.title}',
+                                      'Здравствуйте, меня интересует вакансия: ${job.title}',
                                   username: job.contactJobs!.telegram,
                                 );
                               },

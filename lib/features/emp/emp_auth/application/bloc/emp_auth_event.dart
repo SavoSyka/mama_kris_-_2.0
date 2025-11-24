@@ -35,10 +35,10 @@ class EmpSignupEvent extends EmpAuthEvent {
 class EmpCheckEmailEvent extends EmpAuthEvent {
   final String email;
 
-  const EmpCheckEmailEvent({required this.email,});
+  const EmpCheckEmailEvent({required this.email});
 
   @override
-  List<Object?> get props => [email, ];
+  List<Object?> get props => [email];
 }
 
 class EmpVerifyOtpEvent extends EmpAuthEvent {
@@ -85,4 +85,17 @@ class EmpUpdatePasswordEvent extends EmpAuthEvent {
 
   @override
   List<Object?> get props => [newPassword];
+}
+
+class EmpLoginWithAppleEvent extends EmpAuthEvent {
+  final String identityToken;
+  final Map<String, dynamic> userData;
+
+  const EmpLoginWithAppleEvent({
+    required this.identityToken,
+    required this.userData,
+  });
+
+  @override
+  List<Object?> get props => [identityToken, userData];
 }

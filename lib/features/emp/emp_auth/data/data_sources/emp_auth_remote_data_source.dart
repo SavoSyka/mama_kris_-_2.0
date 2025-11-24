@@ -12,4 +12,9 @@ abstract class EmpAuthRemoteDataSource {
   ResultFuture<bool> forgotPassword(String email);
   Future<bool> loginWithGoogle({required String idToken});
   Future<bool> updatePassword(String newPassword);
+
+  Future<EmpUserModel> loginWithApple({
+    required String identityToken,
+    required Map<String, dynamic> userData,
+  });
 }

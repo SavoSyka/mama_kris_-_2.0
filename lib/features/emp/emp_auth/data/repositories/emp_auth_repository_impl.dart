@@ -130,4 +130,23 @@ class EmpAuthRepositoryImpl implements EmpAuthRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+    @override
+  ResultFuture<EmpUserEntity> loginWithApple({
+    required String identityToken,
+    required Map<String, dynamic> userData,
+  }) async {
+    try {
+      final result = await remoteDataSource.loginWithApple(
+        identityToken: identityToken,
+        userData: userData,
+      );
+
+      return Right(result);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

@@ -15,8 +15,11 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/build_base64image.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_cubit.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_state.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_state.dart';
@@ -60,6 +63,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   void initState() {
     super.initState();
     handleFetchJobs();
+    context.read<AdsCubit>().fetchAds();
     _scrollController.addListener(_scrollListener);
   }
 
@@ -417,6 +421,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     await context.read<JobBloc>().stream.firstWhere(
       (state) => state is JobLoaded || state is JobError,
     );
+    context.read<AdsCubit>().fetchAds();
   }
 
   void _onSearchChanged(String query) {
@@ -510,32 +515,57 @@ class _AdCards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+      // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
       decoration: AppTheme.cardDecoration,
-      child: const Column(
-        children: [
-          CustomText(
-            text: 'Место для рекламы',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF12902A),
-              fontSize: 20,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 10),
-          CustomText(
-            text: 'Нажмите, чтобы оставить заявку',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF596574),
-              fontSize: 16,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+      child: BlocBuilder<AdsCubit, AdsState>(
+        builder: (context, state) {
+          if (state is AdsLoading)
+            return SizedBox(
+              width: 24,
+              height: 24,
+              child: const CircularProgressIndicator());
+          else if (state is AdsLoaded) {
+            return Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: buildBase64Image(state.ad.imageData),
+                      ),
+                    ),
+                  ],
+                ),
+                // CustomImageView(imagePath: state.ad.imageData),
+                // const CustomText(
+                //   text: 'Место для рекламы',
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //     color: Color(0xFF12902A),
+                //     fontSize: 20,
+                //     fontFamily: 'Manrope',
+                //     fontWeight: FontWeight.w600,
+                //   ),
+                // ),
+                // const SizedBox(height: 10),
+                // const CustomText(
+                //   text: 'Нажмите, чтобы оставить заявку',
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //     color: Color(0xFF596574),
+                //     fontSize: 16,
+                //     fontFamily: 'Manrope',
+                //     fontWeight: FontWeight.w500,
+                //   ),
+                // ),
+              ],
+            );
+          } else if (state is AdsError)
+            CustomErrorRetry(onTap: () {});
+
+          return const Text("che");
+        },
       ),
     );
   }

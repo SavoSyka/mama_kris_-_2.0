@@ -33,7 +33,7 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
     _fetchJobs();
   }
 
-  void _fetchJobs() {
+  Future<void> _fetchJobs() async {
     final status = _mapFilterToStatus(selectedFilter);
     context.read<FetchEmpJobsCubit>().fetchJobs(status);
   }
@@ -41,11 +41,11 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
   String _mapFilterToStatus(FilterType filter) {
     switch (filter) {
       case FilterType.active:
-        return 'active';
+        return 'approved';
       case FilterType.drafts:
-        return 'drafted';
+        return 'archived';
       case FilterType.archive:
-        return 'pending';
+        return 'checking, rejected';
     }
   }
 
@@ -61,117 +61,125 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
       body: BlocBuilder<FetchEmpJobsCubit, FetchEmpJobsState>(
         builder: (context, state) {
           return Container(
-            decoration: 
-            const BoxDecoration(color: AppPalette.empBgColor),
+            decoration: const BoxDecoration(color: AppPalette.empBgColor),
             child: SafeArea(
               child: Column(
                 children: [
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: CustomDefaultPadding(
-                        child: Column(
-                          children: [
-                            Container(
-                              // color: Colors.red,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  // Updated section with enum values for Активные, Черновики, Архив
-                                  Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedFilter = FilterType.active;
-                                          });
-                                          _fetchJobs();
-                                        },
-                                        child: _FilterCard(
-                                          isSelected:
-                                              selectedFilter ==
-                                              FilterType.active,
-                                          text: 'Активные',
+                    child: RefreshIndicator(
+                      onRefresh: _fetchJobs,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: CustomDefaultPadding(
+                          child: Column(
+                            children: [
+                              Container(
+                                // color: Colors.red,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Updated section with enum values for Активные, Черновики, Архив
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedFilter =
+                                                  FilterType.active;
+                                            });
+                                            _fetchJobs();
+                                          },
+                                          child: _FilterCard(
+                                            isSelected:
+                                                selectedFilter ==
+                                                FilterType.active,
+                                            text: 'Активные',
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedFilter = FilterType.drafts;
-                                          });
-                                          _fetchJobs();
-                                        },
-                                        child: _FilterCard(
-                                          isSelected:
-                                              selectedFilter ==
-                                              FilterType.drafts,
-                                          text: 'Черновики',
+                                        const SizedBox(width: 12),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedFilter =
+                                                  FilterType.drafts;
+                                            });
+                                            _fetchJobs();
+                                          },
+                                          child: _FilterCard(
+                                            isSelected:
+                                                selectedFilter ==
+                                                FilterType.drafts,
+                                            text: 'Черновики',
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedFilter = FilterType.archive;
-                                          });
-                                          _fetchJobs();
-                                        },
-                                        child: _FilterCard(
-                                          isSelected:
-                                              selectedFilter ==
-                                              FilterType.archive,
-                                          text: 'Архив',
+                                        const SizedBox(width: 12),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedFilter =
+                                                  FilterType.archive;
+                                            });
+                                            _fetchJobs();
+                                          },
+                                          child: _FilterCard(
+                                            isSelected:
+                                                selectedFilter ==
+                                                FilterType.archive,
+                                            text: 'Архив',
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            const SizedBox(height: 28),
-
-                            if (state is FetchEmpJobsLoaded &&
-                                state.jobList.jobs.isEmpty)
-                              const _CreateJobCard()
-                            else
-                              ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  final job = state is FetchEmpJobsLoaded
-                                      ? state.jobList.jobs[index]
-                                      : null;
-                                  if (job == null) return Container();
-                                  return _JobCard(
-                                    job: job,
-                                    filterType: selectedFilter,
-                                    onEdit: () {
-                                      debugPrint("jonnnn ${job.contactJobs}");
-                                      context.pushNamed(
-                                        RouteName.createJobPageOne,
-                                        extra: {'job': job},
-                                      );
-                                    },
-                                  );
-                                },
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 8),
-                                itemCount: state is FetchEmpJobsLoaded
-                                    ? state.jobList.jobs.length
-                                    : 0,
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
 
-                            if (state is FetchEmpJobsLoading)
-                              const Center(child: CircularProgressIndicator()),
+                              const SizedBox(height: 28),
 
-                            if (state is FetchEmpJobsError)
-                              Center(child: Text('Error: ${state.message}')),
+                              if (state is FetchEmpJobsLoaded &&
+                                  state.jobList.jobs.isEmpty)
+                                const _CreateJobCard()
+                              else
+                                ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    final job = state is FetchEmpJobsLoaded
+                                        ? state.jobList.jobs[index]
+                                        : null;
+                                    if (job == null) return Container();
+                                    return _JobCard(
+                                      job: job,
+                                      filterType: selectedFilter,
+                                      onEdit: () {
+                                        debugPrint("jonnnn ${job.contactJobs}");
+                                        context.pushNamed(
+                                          RouteName.createJobPageOne,
+                                          extra: {'job': job},
+                                        );
+                                      },
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(height: 8),
+                                  itemCount: state is FetchEmpJobsLoaded
+                                      ? state.jobList.jobs.length
+                                      : 0,
+                                ),
 
-                            const SizedBox(height: 16),
-                            const _AdCards(),
-                          ],
+                              if (state is FetchEmpJobsLoading)
+                                const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+
+                              if (state is FetchEmpJobsError)
+                                Center(child: Text('Error: ${state.message}')),
+
+                              const SizedBox(height: 16),
+                              const _AdCards(),
+                            ],
+                          ),
                         ),
                       ),
                     ),

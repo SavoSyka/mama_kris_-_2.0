@@ -130,7 +130,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  ResultFuture<bool> loginWithApple({
+  ResultFuture<UserEntity> loginWithApple({
     required String identityToken,
     required Map<String, dynamic> userData,
   }) async {

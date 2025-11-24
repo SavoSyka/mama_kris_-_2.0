@@ -10,12 +10,11 @@ class EmpSupportDetailScreen extends StatefulWidget {
   const EmpSupportDetailScreen({super.key});
 
   @override
-  _EmpSupportDetailScreenState createState() =>
-      _EmpSupportDetailScreenState();
+  _EmpSupportDetailScreenState createState() => _EmpSupportDetailScreenState();
 }
 
 class _EmpSupportDetailScreenState extends State<EmpSupportDetailScreen> {
-  String description = '''
+  final String description = """
 Добро пожаловать на платформу для поиска удалённых вакансий! Я, Кристина, автор идеи и руководитель проекта. С более чем 12-летним опытом работы онлайн, я создала эту платформу, чтобы упростить процесс поиска и размещения вакансий.
 
 Роли в приложении:
@@ -35,9 +34,9 @@ class _EmpSupportDetailScreenState extends State<EmpSupportDetailScreen> {
 
 Рекомендуем откликаться на 30-50 вакансий в день для быстрого поиска работы. У нас на платформе собраны лучшие вакансии и задания для онлайн-заработка. Никогда еще поиск онлайн-работы не был таким простым и удобным!
 
-Успехов в поиске!  
+Успехов в поиске!
 С уважением, команда "MamaKris".
-''';
+""";
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ class _EmpSupportDetailScreenState extends State<EmpSupportDetailScreen> {
       extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(title: 'Статья'),
       body: Container(
-               decoration: const BoxDecoration(color: AppPalette.empBgColor),
+        decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
         child: SafeArea(
           child: Column(
@@ -61,7 +60,7 @@ class _EmpSupportDetailScreenState extends State<EmpSupportDetailScreen> {
                         children: [
                           const CustomText(
                             text: "Как пользоваться приложением?",
-                      
+
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -70,7 +69,7 @@ class _EmpSupportDetailScreenState extends State<EmpSupportDetailScreen> {
                               height: 1.30,
                             ),
                           ),
-                          const SizedBox(height: 24,),
+                          const SizedBox(height: 24),
                           CustomText(text: description),
                         ],
                       ),

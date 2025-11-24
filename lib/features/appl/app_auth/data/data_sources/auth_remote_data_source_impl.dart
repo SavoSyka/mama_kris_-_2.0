@@ -283,7 +283,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<bool> loginWithApple({
+  Future<UserModel> loginWithApple({
     required String identityToken,
     required Map<String, dynamic> userData,
   }) async {
@@ -304,8 +304,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        debugPrint("Response from API for Google login: ${response.data}");
-        return true;
+        final data = response.data as Map<String, dynamic>;
+        debugPrint('Login response: $data');
+
+        final user = UserModel.fromJson(data);
+
+        final accessToken = user.accessToken;
+        final refreshToken = user.refreshToken;
+        final userId = user.userId.toString();
+
+        await local.saveUserType(true);
+        await local.saveToken(accessToken);
+        await local.saveRefreshToken(refreshToken);
+        await local.saveUserId(userId);
+
+        // Save full user data for persistent login
+        await local.saveUser(data['user']);
+
+        return user;
       } else {
         throw const ApiException(
           message: 'Login with Google failed',
@@ -321,4 +337,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
+
+
 }

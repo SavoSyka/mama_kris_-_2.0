@@ -12,6 +12,7 @@ import 'package:mama_kris/core/services/routes/router.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
 import 'package:mama_kris/features/appl/appl_favorite/presentation/bloc/liked_job_bloc_bloc.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_cubit.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
@@ -104,6 +105,8 @@ void main() async {
         BlocProvider(create: (context) => sl<EmployeeContactBloc>()),
         BlocProvider(create: (context) => sl<SpecialitySearchBloc>()),
         BlocProvider(create: (context) => sl<TarriffsBloc>()),
+
+        BlocProvider.value(value: sl<AdsCubit>()),
 
         BlocProvider(create: (context) => sl<SubscriptionStatusCubit>()),
       ],

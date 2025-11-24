@@ -46,7 +46,6 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
           bottom: false,
           child: Column(
             children: [
-              const SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
                   child: SafeArea(

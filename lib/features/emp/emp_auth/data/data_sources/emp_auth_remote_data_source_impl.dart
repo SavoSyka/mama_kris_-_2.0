@@ -287,4 +287,55 @@ class EmpAuthRemoteDataSourceImpl implements EmpAuthRemoteDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
+
+  @override
+  Future<EmpUserModel> loginWithApple({
+    required String identityToken,
+    required Map<String, dynamic> userData,
+  }) async {
+    try {
+      final local = sl<AuthLocalDataSource>();
+
+      final postData = {"identityToken": identityToken, "userData": userData};
+
+      final response = await dio.post(
+        ApiConstants.loginWithApple,
+        data: postData,
+        // options: Options(headers: {...dio.options.headers, ...requestHeaders}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data as Map<String, dynamic>;
+        debugPrint('Login response: $data');
+
+        final user = EmpUserModel.fromJson(data);
+
+        final accessToken = user.accessToken;
+        final refreshToken = user.refreshToken;
+        final userId = user.userId.toString();
+
+        await local.saveUserType(false);
+        await local.saveToken(accessToken);
+        await local.saveRefreshToken(refreshToken);
+        await local.saveUserId(userId);
+
+        // Save full user data for persistent login
+        await local.saveUser(data['user']);
+
+        return user;
+      } else {
+        throw const ApiException(
+          message: 'Login with Google failed',
+          statusCode: 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
 }
