@@ -14,10 +14,12 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/expanded_scroll_wrapper.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/auth/auth_service.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/core/utils/get_platform_type.dart';
+import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
@@ -158,6 +160,7 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                                             debugPrint(
                                               'sign in with apple account',
                                             );
+                                            signInWithApple();
                                           },
                                           child: const Row(
                                             children: [
@@ -219,5 +222,28 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> signInWithApple() async {
+    await AuthService().signOut();
+    final user = await AuthService().signInWithApple();
+
+    if (user != null) {
+      final identityToken = user['identityToken'];
+      final userData = user['userData'] as DataMap;
+
+      debugPrint("Id tokhen $identityToken");
+
+      context.read<EmpAuthBloc>().add(
+        EmpLoginWithAppleEvent(
+          identityToken: identityToken,
+          userData: userData,
+        ),
+      );
+    }
+
+    debugPrint("user data $user");
+
+    debugPrint('');
   }
 }

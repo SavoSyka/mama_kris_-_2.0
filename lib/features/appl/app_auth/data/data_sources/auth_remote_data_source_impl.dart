@@ -303,7 +303,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         // options: Options(headers: {...dio.options.headers, ...requestHeaders}),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode.toString().startsWith('2')) {
         final data = response.data as Map<String, dynamic>;
         debugPrint('Login response: $data');
 

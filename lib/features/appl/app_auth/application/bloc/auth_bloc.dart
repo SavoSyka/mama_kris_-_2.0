@@ -188,6 +188,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) => emit(AuthFailure(failure.message)),
       (success) {
         debugPrint("Logged in successfully");
+        emit(AuthSuccess(success));
       },
 
       //  emit(AuthPasswordReset()),
