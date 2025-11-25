@@ -34,13 +34,21 @@ final List<RouteBase> subscriptions = [
     },
   ),
 
-
   GoRoute(
     path: RouteName.paymentCheckingPage,
     name: RouteName.paymentCheckingPage,
 
     builder: (BuildContext context, GoRouterState state) {
       return const PaymentCheckingPage();
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.viewPaymentScreenDetail,
+    name: RouteName.viewPaymentScreenDetail,
+
+    builder: (BuildContext context, GoRouterState state) {
+      return const ViewPaymentScreenDetail();
     },
   ),
 ];

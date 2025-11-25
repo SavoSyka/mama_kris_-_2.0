@@ -49,6 +49,7 @@ import 'package:mama_kris/features/notifications/presentations/pages/notificatio
 import 'package:mama_kris/features/subscription/presentation/pages/payment_checking_page.dart';
 import 'package:mama_kris/features/subscription/presentation/pages/payment_webview_page.dart';
 import 'package:mama_kris/features/subscription/presentation/pages/subscription_screen_tab.dart';
+import 'package:mama_kris/features/subscription/presentation/pages/view_payment_screen_detail.dart';
 import 'package:mama_kris/features/welcome_page/presentation/pages/force_update_screen.dart';
 import 'package:mama_kris/features/welcome_page/presentation/pages/splash_screen.dart';
 import 'package:mama_kris/features/welcome_page/presentation/pages/welcome_page.dart';

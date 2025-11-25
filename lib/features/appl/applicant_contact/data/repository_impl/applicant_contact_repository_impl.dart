@@ -119,4 +119,17 @@ class ApplicantContactRepositoryImpl implements ApplicantContactRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+  
+
+
+
+    @override
+  ResultFuture<bool> addSpeciality(String speciality)async {
+    try {
+      final result = await _dataSource.addSpeciality(speciality);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

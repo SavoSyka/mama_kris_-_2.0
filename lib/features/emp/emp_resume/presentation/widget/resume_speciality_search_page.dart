@@ -38,6 +38,10 @@ class _ResumeSpecialitySearchPageState
   void initState() {
     super.initState();
     _specialitySearchBloc = context.read<SpecialitySearchBloc>();
+
+    // context.read<SpecialitySearchBloc>().add(
+    //   const SearchSpecialitiesEvent(query: ''),
+    // );
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -76,8 +80,6 @@ class _ResumeSpecialitySearchPageState
             child: SafeArea(
               child: Column(
                 children: [
-                  const SizedBox(height: 12),
-
                   /// ---------- iOS-style Search Field ----------
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -153,21 +155,21 @@ class _ResumeSpecialitySearchPageState
     }
 
     /// ---------- Initial State ----------
-    if (_searchController.text.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomImageView(imagePath: MediaRes.search ?? '', width: 120),
-            SizedBox(height: 24),
-            CustomText(
-              text: 'Начните поиск специальности',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        ),
-      );
-    }
+    // if (_searchController.text.isEmpty) {
+    //   return const Center(
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         CustomImageView(imagePath: MediaRes.search ?? '', width: 120),
+    //         SizedBox(height: 24),
+    //         CustomText(
+    //           text: 'Начните поиск специальности',
+    //           style: TextStyle(fontSize: 16, color: Colors.grey),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
 
     /// ---------- Empty Results ----------
     if (state is SpecialitySearchLoaded && state.specialities.isEmpty) {

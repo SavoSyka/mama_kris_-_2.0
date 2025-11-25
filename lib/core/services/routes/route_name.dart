@@ -67,6 +67,8 @@ class RouteName {
 
   static String subscription = "/subscription";
   static String paymentWebView = "/payment-web-view";
+  static String viewPaymentScreenDetail = "/payment-view-detail";
+
 
   static String paymentCheckingPage = "/payment-checking-page";
 

@@ -230,4 +230,33 @@ class ApplicantContactDataSourceImpl implements ApplicantContactDataSource {
 
     return true;
   }
+
+
+
+  @override
+  Future<bool> addSpeciality(String speciality) async {
+    try {
+      debugPrint("contact to create $speciality");
+      final postData = {'speciality': 'specaility'};
+
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
+      final response = await dio.post(
+        ApiConstants.createContact(userId),
+        data: postData,
+      );
+
+      if (response.statusCode.toString().startsWith('2')) {
+        return true;
+      } else {
+        throw ApiException(
+          message: response.statusMessage,
+          statusCode: response.statusCode ?? 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
 }

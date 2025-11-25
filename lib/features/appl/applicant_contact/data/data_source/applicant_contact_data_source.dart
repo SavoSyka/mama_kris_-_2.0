@@ -29,4 +29,5 @@ abstract class ApplicantContactDataSource {
   Future<bool> updateBasicInfo({required String name, required String dob});
 
   Future<bool> logout();
+  Future<bool> addSpeciality(String speciality);
 }

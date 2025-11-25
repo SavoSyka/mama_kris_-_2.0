@@ -309,7 +309,7 @@ class _AccountsState extends State<_accounts> {
             text:
                 "Управление подпиской", //"Управление подпиской", // manage subscription
             onTap: () {
-              context.pushNamed(RouteName.subscription);
+              context.pushNamed(RouteName.viewPaymentScreenDetail);
             },
           ),
           const SizedBox(height: 16),

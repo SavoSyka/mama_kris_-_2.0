@@ -26,10 +26,15 @@ class SpecialitySearchBloc
     SearchSpecialitiesEvent event,
     Emitter<SpecialitySearchState> emit,
   ) async {
-    if (event.query.isEmpty) {
-      emit(const SpecialitySearchLoaded(specialities: []));
-      return;
-    }
+    // if (event.query.isEmpty) {
+    //   emit(const SpecialitySearchLoaded(specialities: []));
+    //   return;
+    // }
+
+    // if (state is SpecialitySearchLoading) {
+    //   return;
+    //   // emit(const SpecialitySearchLoaded(specialities: []));
+    // }
 
     emit(SpecialitySearchLoading());
 

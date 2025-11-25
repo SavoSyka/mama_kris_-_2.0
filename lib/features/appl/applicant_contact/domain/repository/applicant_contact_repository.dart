@@ -36,6 +36,8 @@ abstract class ApplicantContactRepository {
 
   ResultFuture<bool> updateBasicInfo({required String name, required String dob});
 
+  ResultFuture<bool> addSpeciality(String speciality);
+
   ResultFuture<bool> logout();
 
 }

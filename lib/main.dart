@@ -103,10 +103,10 @@ void main() async {
         BlocProvider(create: (context) => sl<CreateJobCubit>()),
         BlocProvider(create: (context) => sl<ApplicantContactBloc>()),
         BlocProvider(create: (context) => sl<EmployeeContactBloc>()),
-        BlocProvider(create: (context) => sl<SpecialitySearchBloc>()),
         BlocProvider(create: (context) => sl<TarriffsBloc>()),
 
         BlocProvider.value(value: sl<AdsCubit>()),
+        BlocProvider.value(value: sl<SpecialitySearchBloc>()),
 
         BlocProvider(create: (context) => sl<SubscriptionStatusCubit>()),
       ],
