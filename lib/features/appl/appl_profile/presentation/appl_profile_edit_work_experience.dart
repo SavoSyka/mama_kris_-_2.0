@@ -139,7 +139,7 @@ class ApplProfileEditWorkExperienceState
       appBar: const CustomAppBar(title: 'Редактирование опыта работы'),
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(color: AppPalette.empBgColor),
+        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
           bottom: false,
           child: Column(
@@ -385,6 +385,7 @@ class _WorkExperienceFormState extends State<_WorkExperienceForm> {
             controller: data.startDateController,
             label: 'Дата начала',
             validator: FormValidations.validateWorkStartDate,
+            isApplicant: true,
           ),
           const SizedBox(height: 12),
 
@@ -397,6 +398,7 @@ class _WorkExperienceFormState extends State<_WorkExperienceForm> {
                 data.startDateController.text,
                 data.isPresent,
               ),
+              isApplicant: true,
             ),
           const SizedBox(height: 12),
 

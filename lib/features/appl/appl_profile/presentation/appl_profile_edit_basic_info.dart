@@ -84,7 +84,7 @@ class ApplProfileEditBasicInfoState extends State<ApplProfileEditBasicInfo> {
       extendBodyBehindAppBar: true,
 
       appBar: const CustomAppBar(
-        title: 'Robby Редактирование основной информации',
+        title: 'Редактирование основной информации',
         alignTitleToEnd: true,
       ),
       body: Container(

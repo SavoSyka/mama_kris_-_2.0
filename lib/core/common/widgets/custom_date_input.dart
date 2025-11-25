@@ -51,7 +51,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
 
   Future<void> showBirthDateDialog() async {
     final now = DateTime.now();
-    final maxYear = now.year - 18;
+    final maxYear = now.year;
 
     DateTime selectedDate;
 
@@ -59,6 +59,10 @@ class _CustomDateInputState extends State<CustomDateInput> {
     if (widget.controller.text.isNotEmpty) {
       try {
         selectedDate = DateFormat('yyyy-MM-dd').parse(widget.controller.text);
+        // Ensure selectedDate is not in the future
+        if (selectedDate.isAfter(now)) {
+          selectedDate = now;
+        }
       } catch (_) {
         selectedDate = DateTime(maxYear);
       }
@@ -109,7 +113,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
                           initialDateTime: selectedDate,
                           minimumYear: 1900,
                           maximumYear: maxYear,
-                          maximumDate: DateTime(maxYear, 12, 31),
+                          maximumDate: now,
                           onDateTimeChanged: (date) {
                             selectedDate = date;
                           },

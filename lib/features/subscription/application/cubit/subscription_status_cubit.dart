@@ -56,7 +56,7 @@ class SubscriptionStatusCubit extends Cubit<SubscriptionStatusState> {
         );
 
         emit(
-          SubscriptionStatusSuccess(
+          GetSubscriptionStatusState(
             hasSubscription: hasSubscription,
             expiresAt: expiresAt,
             type: type,

@@ -11,6 +11,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
@@ -97,8 +98,11 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      extendBodyBehindAppBar: true,
       appBar: CustomAppBar(
-        title: widget.contact == null ? 'Create Contact' : 'Edit Contact',
+        title: widget.contact == null
+            ? 'Создать контакт'
+            : 'Редактирование контакта',
         isEmployee: true,
       ),
       body: BlocConsumer<ApplicantContactBloc, ApplicantContactState>(
@@ -142,92 +146,109 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
               }
               // TODO: implement listener
             },
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    CustomInputText(
-                      labelText: "Name",
-                      hintText: "Enter contact name",
-                      controller: _nameController,
-                      validator: FormValidations.validateName,
-                    ),
-                    const SizedBox(height: 16),
-                    CustomInputText(
-                      labelText: "Telegram",
-                      hintText: "@username",
-                      controller: _telegramController,
-                      validator: (value) =>
-                          FormValidations.contactTelegram(value),
-                    ),
-                    const SizedBox(height: 16),
-                    CustomInputText(
-                      labelText: "WhatsApp",
-                      hintText: "+123456789",
-                      controller: _whatsappController,
-                      keyboardType: TextInputType.phone,
-                      validator: (value) =>
-                          FormValidations.contactWhatsApp(value),
-                    ),
-                    const SizedBox(height: 16),
-                    CustomInputText(
-                      labelText: "Email",
-                      hintText: "example@email.com",
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) => FormValidations.contactEmail(value),
-                    ),
-                    const SizedBox(height: 16),
-                    CustomInputText(
-                      labelText: "VK",
-                      hintText: "vk.com/username",
-                      controller: _vkController,
-                      validator: (value) => FormValidations.contactVk(value),
-                    ),
-                    const SizedBox(height: 16),
-                    CustomInputText(
-                      labelText: "Phone",
-                      hintText: "+1234567890",
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      validator: (value) =>
-                          FormValidations.validatePhone(value),
-                    ),
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: AppTheme.primaryGradient,
+              ),
 
-                    const SizedBox(height: 32),
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Form(
+                    key: _formKey,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: AppTheme.cardDecoration,
+                      child: Column(
+                        children: [
+                          CustomInputText(
+                            labelText: "Имя",
+                            hintText: "Введите имя контакта",
+                            controller: _nameController,
+                            validator: FormValidations.validateName,
+                          ),
+                          const SizedBox(height: 16),
+                          CustomInputText(
+                            labelText: "Telegram",
+                            hintText: "@username",
+                            controller: _telegramController,
+                            validator: (value) =>
+                                FormValidations.contactTelegram(value),
+                          ),
+                          const SizedBox(height: 16),
+                          CustomInputText(
+                            labelText: "WhatsApp",
+                            hintText: "+123456789",
+                            controller: _whatsappController,
+                            keyboardType: TextInputType.phone,
+                            validator: (value) =>
+                                FormValidations.contactWhatsApp(value),
+                          ),
+                          const SizedBox(height: 16),
+                          CustomInputText(
+                            labelText: "Email",
+                            hintText: "example@email.com",
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) =>
+                                FormValidations.contactEmail(value),
+                          ),
+                          const SizedBox(height: 16),
+                          CustomInputText(
+                            labelText: "VK",
+                            hintText: "vk.com/username",
+                            controller: _vkController,
+                            validator: (value) =>
+                                FormValidations.contactVk(value),
+                          ),
+                          const SizedBox(height: 16),
+                          CustomInputText(
+                            labelText: "Телефон",
+                            hintText: "+1234567890",
+                            controller: _phoneController,
+                            keyboardType: TextInputType.phone,
+                            validator: (value) =>
+                                FormValidations.validatePhone(value),
+                          ),
 
-                    CustomButtonApplicant(
-                      btnText: "Save Contact",
-                      onTap: _saveContact,
-                      isLoading: state is ApplicantContactLoading,
-                      isBtnActive: state is! ApplicantContactLoading,
-                    ),
+                          const SizedBox(height: 32),
 
-                    if (widget.contact != null) ...[
-                      const SizedBox(height: 16),
-                      _updateButtons(
-                        text: "Управление подпиской",
-                        error: true,
-                        onTap: () {
-                          debugPrint(
-                            "Contact Deleted ${widget.contact!.contactsID!}",
-                          );
+                          CustomButtonApplicant(
+                            btnText: "Сохранить контакт",
 
-                          context.read<ApplicantContactBloc>().add(
-                            DeleteApplicantContactEvent(
-                              id: widget.contact?.contactsID.toString() ?? '',
+                            onTap: _saveContact,
+                            isLoading: state is ApplicantContactLoading,
+                            isBtnActive: state is! ApplicantContactLoading,
+                          ),
+
+                          if (widget.contact != null) ...[
+                            const SizedBox(height: 16),
+                            _updateButtons(
+                              text: "Управление подпиской",
+                              error: true,
+                              onTap: () {
+                                debugPrint(
+                                  "Contact Deleted ${widget.contact!.contactsID!}",
+                                );
+
+                                context.read<ApplicantContactBloc>().add(
+                                  DeleteApplicantContactEvent(
+                                    id:
+                                        widget.contact?.contactsID.toString() ??
+                                        '',
+                                  ),
+                                );
+
+                                // context.pushNamed(RouteName.welcomePage);
+                              },
                             ),
-                          );
+                          ],
 
-                          // context.pushNamed(RouteName.welcomePage);
-                        },
+                          const SizedBox(height: 32),
+                        ],
                       ),
-                    ],
-
-                    const SizedBox(height: 32),
-                  ],
+                    ),
+                  ),
                 ),
               ),
             ),

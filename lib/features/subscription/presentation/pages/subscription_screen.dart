@@ -67,6 +67,19 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   SubscriptionEntity? _subscription;
 
+  final applicantDesc = '''
+Вся удаленная работа в вашем телефоне
+
+Наш ИИ-парсер 24/7 мониторит 500 000+ чатов Telegram и ВКонтакте, отсеивает 98% мусора и мошенников. Вы получаете только реальные вакансии с хорошей оплатой
+ 
+ Вы получаете:
+  • 10 000+ вакансий всегда в доступе
+  • Новые предложения добавляются ежедневно
+  • Только проверенные работодатели
+  • Поддержка 24/7
+  • Неограниченное количество откликов
+''';
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -76,6 +89,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             : const BoxDecoration(color: AppPalette.empBgColor),
 
         child: CustomDefaultPadding(
+          top: MediaQuery.of(context).padding.top + 40,
+          left: 0,
+          right: 0,
+          bottom: 0,
           child: BlocBuilder<TarriffsBloc, Tariffsstate>(
             builder: (context, state) {
               return BlocListener<
@@ -91,18 +108,21 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     Navigator.pop(context);
                   }
                 },
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: SafeArea(
-                          child: Column(
-                            children: [
-                              const SizedBox(
-                                width: 333,
-                                child: Text(
-                                  'Подписка',
-                                  style: TextStyle(
+                child: Container(
+                  decoration: AppTheme.cardDecoration,
+                  padding: const EdgeInsets.all(30),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: SafeArea(
+                            child: Column(
+                              children: [
+                                Text(
+                                  _isApplicant
+                                      ? 'Доступ к базе из 10 000+ проверенных вакансий'
+                                      : '',
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 20,
                                     fontFamily: 'Manrope',
@@ -110,15 +130,12 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                     height: 1.30,
                                   ),
                                 ),
-                              ),
 
-                              const SizedBox(height: 32),
+                                const SizedBox(height: 32),
 
-                              const SizedBox(
-                                width: 333,
-                                child: Text(
-                                  'Тысячи кандидатов уже ждут именно вашу удаленную вакансию!',
-                                  style: TextStyle(
+                                Text(
+                                  applicantDesc,
+                                  style: const TextStyle(
                                     color: Color(0xFF596574),
                                     fontSize: 16,
                                     fontFamily: 'Manrope',
@@ -126,181 +143,161 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                     height: 1.30,
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 16),
 
-                              const SizedBox(
-                                width: 333,
-                                child: Text(
-                                  'MamaKris объединяет десятки тысяч активных соискательниц удалённой работы. Разместите своё предложение — и кандидаты начнут писать вам напрямую в мессенджер уже сегодня.',
-                                  style: TextStyle(
-                                    color: Color(0xFF596574),
-                                    fontSize: 16,
-                                    fontFamily: 'Manrope',
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.30,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
+                                const SizedBox(height: 32),
 
-                              const SizedBox(
-                                width: 333,
-                                child: Text(
-                                  'Оформи подписку и получай отклики в день публикации, а также доступ к десяткам тысяч исполнительниц. ',
-                                  style: TextStyle(
-                                    color: Color(0xFF596574),
-                                    fontSize: 16,
-                                    fontFamily: 'Manrope',
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.30,
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(height: 32),
-
-                              if (state is TariffsLoadingState)
-                                const Center(child: IPhoneLoader(height: 200))
-                              else if (state is TariffsErrorState)
-                                Center(
-                                  child: CustomErrorRetry(
-                                    errorMessage: state.message,
-                                    onTap: () => handleFetchTariffs(),
-                                  ),
-                                )
-                              // else if (state is PaymentInitiatingState)
-                              //   const Center(child: IPhoneLoader(height: 200))
-                              // else if (state is PaymentErrorState)
-                              //   Center(
-                              //     child: CustomErrorRetry(
-                              //       errorMessage: state.message,
-                              //       onTap: () => _subscription != null
-                              //           ? _initiatePayment(_subscription!)
-                              //           : null,
-                              //     ),
-                              //   )
-                              // else if (state is PaymentInitiatedState)
-                              //   // Handle payment URL - this would be handled by navigation
-                              //   Container()
-                              else if (state is TariffsLoadedState)
-                                // Generate list of cards dynamically
-                                ...state.subscriptions.map(
-                                  (subscription) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 16),
-                                    child: InkWell(
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(32),
+                                if (state is TariffsLoadingState)
+                                  const Center(child: IPhoneLoader(height: 200))
+                                else if (state is TariffsErrorState)
+                                  Center(
+                                    child: CustomErrorRetry(
+                                      errorMessage: state.message,
+                                      onTap: () => handleFetchTariffs(),
+                                    ),
+                                  )
+                                // else if (state is PaymentInitiatingState)
+                                //   const Center(child: IPhoneLoader(height: 200))
+                                // else if (state is PaymentErrorState)
+                                //   Center(
+                                //     child: CustomErrorRetry(
+                                //       errorMessage: state.message,
+                                //       onTap: () => _subscription != null
+                                //           ? _initiatePayment(_subscription!)
+                                //           : null,
+                                //     ),
+                                //   )
+                                // else if (state is PaymentInitiatedState)
+                                //   // Handle payment URL - this would be handled by navigation
+                                //   Container()
+                                else if (state is TariffsLoadedState)
+                                  // Generate list of cards dynamically
+                                  ...state.subscriptions.map(
+                                    (subscription) => Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 16,
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                    top: Radius.circular(32),
+                                                  ),
                                             ),
-                                          ),
-                                          builder: (BuildContext context) {
-                                            return Container(
-                                              padding: const EdgeInsets.all(20),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(
-                                                    subscription.name,
-                                                    style: const TextStyle(
-                                                      fontSize: 24,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  const SizedBox(height: 16),
-                                                  SubscriptionCard(
-                                                    isSelected: true,
-                                                    period: subscription.type,
-                                                    discount: subscription.name,
-                                                    price: subscription.price,
-                                                    // paidContent:   subscription.paidContent
-                                                  ),
-                                                  const SizedBox(height: 16),
-                                                  Text(
-                                                    'Полный доступ ко всем премиум-функциям за ${subscription.price} в ${subscription.type}.',
-
-                                                    // subscription.paidContent.replaceAll('\n', " "),
-                                                    // 'Access to all premium features for ${subscription.price} per ${subscription.type}.',
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Color(0xFF596574),
-                                                    ),
-                                                    textAlign: TextAlign.left,
-                                                  ),
-                                                  const SizedBox(height: 32),
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        _subscription =
-                                                            subscription;
-                                                      });
-                                                      Navigator.of(
-                                                        context,
-                                                      ).pop();
-                                                      _initiatePayment(
-                                                        subscription,
-                                                      );
-                                                    },
-                                                    style: ElevatedButton.styleFrom(
-                                                      backgroundColor:
-                                                          _isApplicant
-                                                          ? AppPalette
-                                                                .primaryColor
-                                                          : AppPalette
-                                                                .empPrimaryColor,
-
-                                                      minimumSize: const Size(
-                                                        double.infinity,
-                                                        50,
-                                                      ),
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              12,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                    child: const Text(
-                                                      "Подписаться и оплатить",
-                                                     // 'Subscribe & Pay',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                padding: const EdgeInsets.all(
+                                                  20,
+                                                ),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      subscription.name,
+                                                      style: const TextStyle(
+                                                        fontSize: 24,
                                                         fontWeight:
-                                                            FontWeight.w600,
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                    const SizedBox(height: 16),
+                                                    SubscriptionCard(
+                                                      isSelected: true,
+                                                      period: subscription.type,
+                                                      discount:
+                                                          subscription.name,
+                                                      price: subscription.price,
+                                                      // paidContent:   subscription.paidContent
+                                                    ),
+                                                    const SizedBox(height: 16),
+                                                    Text(
+                                                      'Полный доступ ко всем премиум-функциям за ${subscription.price} в ${subscription.type}.',
+
+                                                      // subscription.paidContent.replaceAll('\n', " "),
+                                                      // 'Access to all premium features for ${subscription.price} per ${subscription.type}.',
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Color(
+                                                          0xFF596574,
+                                                        ),
+                                                      ),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                    const SizedBox(height: 32),
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _subscription =
+                                                              subscription;
+                                                        });
+                                                        Navigator.of(
+                                                          context,
+                                                        ).pop();
+                                                        _initiatePayment(
+                                                          subscription,
+                                                        );
+                                                      },
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            _isApplicant
+                                                            ? AppPalette
+                                                                  .primaryColor
+                                                            : AppPalette
+                                                                  .empPrimaryColor,
+
+                                                        minimumSize: const Size(
+                                                          double.infinity,
+                                                          50,
+                                                        ),
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                      child: const Text(
+                                                        "Подписаться и оплатить",
+                                                        // 'Subscribe & Pay',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: SubscriptionCard(
-                                        isSelected: false,
-                                           
-                                        period: subscription.type,
-                                        discount: subscription.name,
-                                        price: subscription.price,
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: SubscriptionCard(
+                                          isSelected: false,
+
+                                          period: subscription.type,
+                                          discount: subscription.name,
+                                          price: subscription.price,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
 
-                              const SizedBox(height: 16),
-                            ],
+                                const SizedBox(height: 16),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
