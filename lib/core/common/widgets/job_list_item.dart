@@ -31,7 +31,7 @@ class JobListItem extends StatefulWidget {
     this.showAddToFavorite = true,
     required this.jobId,
     this.onDislike,
-  required  this.contactJobs,
+    required this.contactJobs,
   });
 
   @override
@@ -76,7 +76,8 @@ class _JobListItemState extends State<JobListItem> {
             // Handle add to favorites
             final buffer = StringBuffer();
 
-            buffer.writeln("Check out this job:");
+            buffer.writeln("Посмотрите эту вакансию:");
+
             buffer.writeln("${widget.jobTitle} - ${widget.salaryRange}\n");
 
             buffer.writeln("Contacts:");

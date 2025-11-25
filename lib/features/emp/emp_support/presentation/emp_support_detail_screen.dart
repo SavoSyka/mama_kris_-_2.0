@@ -59,7 +59,7 @@ class _EmpSupportDetailScreenState extends State<EmpSupportDetailScreen> {
                       child: Column(
                         children: [
                           const CustomText(
-                            text: "Как пользоваться приложением?",
+                            text: "Как пользоваться приложением?",
 
                             style: TextStyle(
                               color: Colors.black,

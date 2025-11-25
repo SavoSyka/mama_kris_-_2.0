@@ -45,6 +45,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     softWrap: true,
                   ),
                 ),
+                
+                SizedBox(width: 16,),
               ],
             )
           : Text(title, style: const TextStyle(color: Colors.black)),

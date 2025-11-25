@@ -29,10 +29,10 @@ class ApplSupportDetailScreen extends StatelessWidget {
                       decoration: AppTheme.cardDecoration,
                       child: Column(
                         children: [
-                          const CustomText(
-                            text: "Как пользоваться приложением?",
+                          CustomText(
+                            text: support['title'],
 
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 16,
                               fontFamily: 'Manrope',
@@ -41,7 +41,7 @@ class ApplSupportDetailScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          CustomText(text: support['article'] ?? '' ),
+                          CustomText(text: support['article'] ?? ''),
                         ],
                       ),
                     ),
