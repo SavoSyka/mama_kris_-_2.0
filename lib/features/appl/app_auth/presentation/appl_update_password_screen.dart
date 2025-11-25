@@ -25,8 +25,8 @@ class ApplUpdatePasswordScreen extends StatefulWidget {
 
 class _ApplUpdatePasswordScreenState extends State<ApplUpdatePasswordScreen> {
   // final emailController = TextEditingController(text: 'xanawam595@gusronk.com');
-  final password = TextEditingController(text: '123321123');
-  final confirmPassword = TextEditingController(text: '123321123');
+  final password = TextEditingController();
+  final confirmPassword = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 

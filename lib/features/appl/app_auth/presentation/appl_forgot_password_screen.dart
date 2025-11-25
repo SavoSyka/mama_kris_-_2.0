@@ -24,7 +24,7 @@ class ApplForgotPasswordScreen extends StatefulWidget {
 
 class _ApplForgotPasswordScreenState extends State<ApplForgotPasswordScreen> {
   // final emailController = TextEditingController(text: 'xanawam595@gusronk.com');
-  final emailController = TextEditingController(text: 'emproobbi@yopmail.com');
+  final emailController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 

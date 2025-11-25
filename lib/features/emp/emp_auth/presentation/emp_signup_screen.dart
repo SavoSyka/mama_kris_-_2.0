@@ -35,13 +35,13 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
   bool _acceptTermsOfUse = false;
 
   final emailController = TextEditingController(
-    text: 'one@yopmail.com',
+   
 
   );
-  final nameController = TextEditingController(text: 'robby one');
+  final nameController = TextEditingController();
 
-  final passwordController = TextEditingController(text: '123321123');
-  final confirmPasswordController = TextEditingController(text: '123321123');
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 

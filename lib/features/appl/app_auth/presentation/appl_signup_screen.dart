@@ -30,12 +30,12 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
 
   // final emailController = TextEditingController(text: 'mowerem676@dwakm.com');
 
-  final emailController = TextEditingController(text: 'one@yopmail.com');
+  final emailController = TextEditingController();
 
-  final nameController = TextEditingController(text: 'robby one');
+  final nameController = TextEditingController();
 
-  final passwordController = TextEditingController(text: '123321123');
-  final confirmPasswordController = TextEditingController(text: '123321123');
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 

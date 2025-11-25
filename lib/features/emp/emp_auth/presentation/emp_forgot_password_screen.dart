@@ -27,7 +27,7 @@ class EmpForgotPasswordScreen extends StatefulWidget {
 
 class _EmpForgotPasswordScreenState extends State<EmpForgotPasswordScreen> {
   // final emailController = TextEditingController(text: 'xanawam595@gusronk.com');
-  final emailController = TextEditingController(text: 'emproobbi@yopmail.com');
+  final emailController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
