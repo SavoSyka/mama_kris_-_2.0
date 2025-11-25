@@ -134,7 +134,7 @@ import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
-import 'package:mama_kris/features/subscription/presentation/cubit/subscription_status_cubit.dart';
+import 'package:mama_kris/features/subscription/application/cubit/subscription_status_cubit.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

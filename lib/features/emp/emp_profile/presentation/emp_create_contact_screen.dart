@@ -175,7 +175,9 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
               padding: const EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
-                child: Column(
+                child:
+               
+                 Column(
                   children: [
                     CustomInputText(
                       labelText: "Name",
@@ -258,6 +260,7 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
                     const SizedBox(height: 32),
                   ],
                 ),
+           
               ),
             ),
           );

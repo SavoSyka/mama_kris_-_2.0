@@ -18,6 +18,18 @@ class SubscriptionStatusSuccess extends SubscriptionStatusState {
   });
 }
 
+class GetSubscriptionStatusState extends SubscriptionStatusState {
+  final bool hasSubscription;
+  final DateTime? expiresAt;
+  final String? type;
+
+  GetSubscriptionStatusState({
+    required this.hasSubscription,
+    this.expiresAt,
+    this.type,
+  });
+}
+
 class SubscriptionStatusError extends SubscriptionStatusState {
   final String message;
 

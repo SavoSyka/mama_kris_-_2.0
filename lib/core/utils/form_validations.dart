@@ -194,53 +194,53 @@ class FormValidations {
     return null;
   }
 
+  static String? validateDateOfBirth(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Дата рождения обязательна.';
+    }
 
-static String? validateDateOfBirth(String? value) {
-  if (value == null || value.trim().isEmpty) {
-    return 'Дата рождения обязательна.';
+    final formats = [
+      DateFormat('yyyy-MM-dd'), // backend format
+      DateFormat('dd.MM.yyyy'), // your old raw format
+      DateFormat('dd/MM/yyyy'), // alternative
+    ];
+
+    DateTime? date;
+
+    // Try all formats until one succeeds
+    for (final f in formats) {
+      try {
+        date = f.parseStrict(value);
+        break;
+      } catch (_) {}
+    }
+
+    // If still null: invalid
+    if (date == null) {
+      return 'Введите корректную дату.';
+    }
+
+    final now = DateTime.now();
+
+    if (date.isAfter(now)) {
+      return 'Дата рождения не может быть в будущем.';
+    }
+
+    // Age calculation
+    final age =
+        now.year -
+        date.year -
+        (now.month < date.month ||
+                (now.month == date.month && now.day < date.day)
+            ? 1
+            : 0);
+
+    if (age < 18) {
+      return 'Возраст должен быть не менее 18 лет.';
+    }
+
+    return null;
   }
-
-  final formats = [
-    DateFormat('yyyy-MM-dd'),   // backend format
-    DateFormat('dd.MM.yyyy'),   // your old raw format
-    DateFormat('dd/MM/yyyy'),   // alternative
-  ];
-
-  DateTime? date;
-
-  // Try all formats until one succeeds
-  for (final f in formats) {
-    try {
-      date = f.parseStrict(value);
-      break;
-    } catch (_) {}
-  }
-
-  // If still null: invalid
-  if (date == null) {
-    return 'Введите корректную дату.';
-  }
-
-  final now = DateTime.now();
-
-  if (date.isAfter(now)) {
-    return 'Дата рождения не может быть в будущем.';
-  }
-
-  // Age calculation
-  final age = now.year -
-      date.year -
-      (now.month < date.month ||
-              (now.month == date.month && now.day < date.day)
-          ? 1
-          : 0);
-
-  if (age < 18) {
-    return 'Возраст должен быть не менее 18 лет.';
-  }
-
-  return null;
-}
 
   static String? validateBio(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -324,7 +324,7 @@ static String? validateDateOfBirth(String? value) {
 
     final regex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
-    if (!regex.hasMatch(value)) return 'Enter a valid email';
+    if (!regex.hasMatch(value)) return 'Введите корректный email';
 
     return null; // valid
   }
@@ -338,7 +338,7 @@ static String? validateDateOfBirth(String? value) {
     }
     final regex = RegExp(r'^\+?\d{7,15}$');
 
-    if (!regex.hasMatch(value)) return 'Enter a valid WhatsApp number';
+    if (!regex.hasMatch(value)) return 'Введите корректный номер WhatsApp';
 
     return null; // valid
   }
@@ -352,7 +352,7 @@ static String? validateDateOfBirth(String? value) {
     }
     final regex = RegExp(r'^@?[a-zA-Z0-9_]{5,32}$');
 
-    if (!regex.hasMatch(value)) return 'Enter a valid Telegram username';
+    if (!regex.hasMatch(value)) return 'Введите корректный Telegram username';
 
     return null; // valid
   }
@@ -366,7 +366,7 @@ static String? validateDateOfBirth(String? value) {
     }
     final regex = RegExp(r'^(https?:\/\/)?(www\.)?vk\.com\/[A-Za-z0-9_.]+$');
 
-    if (!regex.hasMatch(value)) return 'Enter a valid VK profile link';
+    if (!regex.hasMatch(value)) return 'Введите корректную ссылку VK';
 
     return null; // valid
   }

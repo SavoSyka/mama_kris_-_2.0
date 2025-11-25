@@ -36,6 +36,48 @@ class SubscriptionStatusCubit extends Cubit<SubscriptionStatusState> {
     _pollingTimer = null;
   }
 
+  Future<void> getSubscriptionStatus() async {
+    try {
+      final dio = sl<Dio>();
+
+      final userId = await sl<AuthLocalDataSource>().getUserId();
+      final response = await dio.get("$_endpoint/$userId");
+
+      if (response.statusCode == 200) {
+        final data = response.data as Map<String, dynamic>;
+        final hasSubscription = data['hasSubscription'] as bool? ?? false;
+        final expiresAt = data['expiresAt'] != null
+            ? DateTime.tryParse(data['expiresAt'])
+            : null;
+        final type = data['type'] as String?;
+
+        debugPrint(
+          'Subscription status: hasSubscription=$hasSubscription, expiresAt=$expiresAt, type=$type',
+        );
+
+        emit(
+          SubscriptionStatusSuccess(
+            hasSubscription: hasSubscription,
+            expiresAt: expiresAt,
+            type: type,
+          ),
+        );
+      } else {
+        SubscriptionStatusError(response.statusMessage ?? '');
+      }
+    } on DioException catch (e) {
+      SubscriptionStatusError(e.message ?? '');
+
+      _handleDioError(e);
+    } catch (e) {
+      SubscriptionStatusError(
+        "Pleas try again later. Our engineers are working on it.",
+      );
+
+      _handleError('Unexpected error: $e');
+    }
+  }
+
   Future<void> _checkSubscriptionStatus() async {
     try {
       final dio = sl<Dio>();

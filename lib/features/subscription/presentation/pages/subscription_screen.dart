@@ -20,7 +20,7 @@ import 'package:mama_kris/features/subscription/application/bloc/subscription_pa
 import 'package:mama_kris/features/subscription/application/bloc/subscription_payment_event.dart';
 import 'package:mama_kris/features/subscription/application/bloc/subscription_paymnet_state.dart';
 import 'package:mama_kris/features/subscription/domain/entity/subscription_entity.dart';
-import 'package:mama_kris/features/subscription/presentation/cubit/subscription_status_cubit.dart';
+import 'package:mama_kris/features/subscription/application/cubit/subscription_status_cubit.dart';
 import 'package:mama_kris/features/subscription/presentation/pages/widget/subscription_card.dart';
 import 'package:mama_kris/screens/payment_webview_page.dart';
 import 'package:mama_kris/screens/main_screen.dart';

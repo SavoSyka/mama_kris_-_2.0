@@ -191,24 +191,24 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
                   },
           ),
 
-          const SizedBox(height: 24),
+          // const SizedBox(height: 24),
 
-          CustomButtonSec(
-            btnText: '',
-            onTap: () {
-              context.pushNamed(RouteName.homeEmploye);
-            },
-            child: const Text(
-              'Оставить в черновике',
-              style: TextStyle(
-                color: Color(0xFF0073BB),
-                fontSize: 16,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
-                height: 1.30,
-              ),
-            ),
-          ),
+          // CustomButtonSec(
+          //   btnText: '',
+          //   onTap: () {
+          //     context.pushNamed(RouteName.homeEmploye);
+          //   },
+          //   child: const Text(
+          //     'Оставить в черновике',
+          //     style: TextStyle(
+          //       color: Color(0xFF0073BB),
+          //       fontSize: 16,
+          //       fontFamily: 'Manrope',
+          //       fontWeight: FontWeight.w600,
+          //       height: 1.30,
+          //     ),
+          //   ),
+          // ),
 
           const SizedBox(height: 16),
           const SizedBox(

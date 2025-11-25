@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/custom_error_retry.dart';
 import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
-import 'package:mama_kris/features/subscription/presentation/cubit/subscription_status_cubit.dart';
+import 'package:mama_kris/features/subscription/application/cubit/subscription_status_cubit.dart';
 
 class PaymentCheckingPage extends StatefulWidget {
   const PaymentCheckingPage({super.key});
