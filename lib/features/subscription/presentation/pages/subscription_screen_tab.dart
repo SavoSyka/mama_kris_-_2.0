@@ -96,43 +96,35 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
         ]);
 
         items = [
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: CustomImageView(
               imagePath: MediaRes.homeIcon,
               width: 28,
-              color: _selectedIndex == 0
-                  ? AppPalette.secondaryColor
-                  : Colors.grey,
+              color: AppPalette.secondaryColor,
             ),
             label: "Вакансии",
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: CustomImageView(
               imagePath: MediaRes.resumeIcon,
               width: 28,
-              color: _selectedIndex == 1
-                  ? AppPalette.secondaryColor
-                  : Colors.grey,
+              color: AppPalette.secondaryColor,
             ),
             label: "Резюме",
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: CustomImageView(
               imagePath: MediaRes.support,
               width: 28,
-              color: _selectedIndex == 2
-                  ? AppPalette.secondaryColor
-                  : Colors.grey,
+              color: AppPalette.secondaryColor,
             ),
             label: "Поддержка",
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: CustomImageView(
               imagePath: MediaRes.profileIcon,
               width: 28,
-              color: _selectedIndex == 3
-                  ? AppPalette.secondaryColor
-                  : Colors.grey,
+              color: AppPalette.secondaryColor,
             ),
             label: "Профиль",
           ),

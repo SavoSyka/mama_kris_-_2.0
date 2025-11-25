@@ -57,6 +57,7 @@ class _EmpSupportDetailScreenState extends State<EmpSupportDetailScreen> {
                       padding: const EdgeInsets.all(20),
                       decoration: AppTheme.cardDecoration,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const CustomText(
                             text: "Как пользоваться приложением?",

@@ -33,6 +33,7 @@ class SubscriptionScreen extends StatefulWidget {
 }
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
+  SubscriptionEntity? _selectedSubscription;
   // * ────────────── Overriding methods ───────────────────────
 
   bool _isApplicant = false;
@@ -80,6 +81,15 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   • Неограниченное количество откликов
 ''';
 
+  final empDesc = '''
+Тысячи кандидатов уже ждут именно вашу удаленную вакансию!
+
+
+MamaKris объединяет десятки тысяч активных соискательниц удалённой работы. Разместите своё предложение — и кандидаты начнут писать вам напрямую в мессенджер уже сегодня.
+
+Оформи подписку и получай отклики в день публикации, а также доступ к десяткам тысяч исполнительниц. 
+''';
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -88,53 +98,56 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             ? const BoxDecoration(gradient: AppTheme.primaryGradient)
             : const BoxDecoration(color: AppPalette.empBgColor),
 
-        child: CustomDefaultPadding(
-          top: MediaQuery.of(context).padding.top + 40,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: BlocBuilder<TarriffsBloc, Tariffsstate>(
-            builder: (context, state) {
-              return BlocListener<
-                SubscriptionPaymentBloc,
-                SubscriptionPaymentState
-              >(
-                listener: (context, state) {
-                  if (state is PaymentLoadinState) {
-                    showIOSLoader(context);
-                  } else if (state is PaymentErrorState) {
-                    showToast(context, message: state.message);
-                  } else if (state is PaymentInitiatedState) {
-                    Navigator.pop(context);
-                  }
-                },
-                child: Container(
-                  decoration: AppTheme.cardDecoration,
-                  padding: const EdgeInsets.all(30),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: SafeArea(
+        child: SafeArea(
+          child: CustomDefaultPadding(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 40,
+            child: BlocBuilder<TarriffsBloc, Tariffsstate>(
+              builder: (context, state) {
+                return BlocListener<
+                  SubscriptionPaymentBloc,
+                  SubscriptionPaymentState
+                >(
+                  listener: (context, state) {
+                    if (state is PaymentLoadinState) {
+                      showIOSLoader(context);
+                    } else if (state is PaymentErrorState) {
+                      showToast(context, message: state.message);
+                    } else if (state is PaymentInitiatedState) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Container(
+                    decoration: AppTheme.cardDecoration,
+                    padding: const EdgeInsets.all(30),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                Text(
-                                  _isApplicant
-                                      ? 'Доступ к базе из 10 000+ проверенных вакансий'
-                                      : '',
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontFamily: 'Manrope',
-                                    fontWeight: FontWeight.w600,
-                                    height: 1.30,
+                                const SizedBox(height: 24),
+                                Container(
+                                  child: Text(
+                                    _isApplicant
+                                        ? 'Доступ к базе из 10 000+ проверенных вакансий'
+                                        : 'Подписка',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontFamily: 'Manrope',
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.30,
+                                    ),
                                   ),
                                 ),
 
                                 const SizedBox(height: 32),
 
                                 Text(
-                                  applicantDesc,
+                                  _isApplicant ? applicantDesc : empDesc,
                                   style: const TextStyle(
                                     color: Color(0xFF596574),
                                     fontSize: 16,
@@ -144,7 +157,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                   ),
                                 ),
 
-                                const SizedBox(height: 32),
+                                const SizedBox(height: 16),
 
                                 if (state is TariffsLoadingState)
                                   const Center(child: IPhoneLoader(height: 200))
@@ -178,6 +191,12 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                       ),
                                       child: InkWell(
                                         onTap: () {
+                                          setState(() {
+                                            _selectedSubscription =
+                                                subscription;
+                                          });
+
+                                          /*
                                           showModalBottomSheet(
                                             context: context,
                                             shape: const RoundedRectangleBorder(
@@ -218,7 +237,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                                     const SizedBox(height: 16),
                                                     Text(
                                                       'Полный доступ ко всем премиум-функциям за ${subscription.price} в ${subscription.type}.',
-
+                                            
                                                       // subscription.paidContent.replaceAll('\n', " "),
                                                       // 'Access to all premium features for ${subscription.price} per ${subscription.type}.',
                                                       style: const TextStyle(
@@ -250,7 +269,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                                                   .primaryColor
                                                             : AppPalette
                                                                   .empPrimaryColor,
-
+                                            
                                                         minimumSize: const Size(
                                                           double.infinity,
                                                           50,
@@ -278,29 +297,84 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                               );
                                             },
                                           );
+                                      */
                                         },
                                         child: SubscriptionCard(
-                                          isSelected: false,
+                                          isSelected:
+                                              _selectedSubscription ==
+                                              subscription,
 
                                           period: subscription.type,
-                                          discount: subscription.name,
+                                          // discount: subscription.name,
                                           price: subscription.price,
+                                          isApplicant: _isApplicant,
                                         ),
                                       ),
                                     ),
                                   ),
 
                                 const SizedBox(height: 16),
+
+                                GestureDetector(
+                                  onTap: _selectedSubscription != null
+                                      ? () {
+                                          _initiatePayment(
+                                            _selectedSubscription!,
+                                          );
+                                        }
+                                      : null,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: _selectedSubscription != null
+                                                ? _isApplicant
+                                                      ? AppPalette.primaryColor
+                                                      : AppPalette
+                                                            .empPrimaryColor
+                                                : Colors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+
+                                            border:
+                                                _selectedSubscription != null
+                                                ? null
+                                                : Border.all(
+                                                    color: AppPalette.grey,
+                                                  ),
+                                          ),
+                                          child: Text(
+                                            "Оплатить",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  _selectedSubscription != null
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(height: 16),
                               ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ),

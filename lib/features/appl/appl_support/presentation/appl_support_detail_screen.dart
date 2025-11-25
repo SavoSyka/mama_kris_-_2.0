@@ -28,6 +28,8 @@ class ApplSupportDetailScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(20),
                       decoration: AppTheme.cardDecoration,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
                         children: [
                           CustomText(
                             text: support['title'],

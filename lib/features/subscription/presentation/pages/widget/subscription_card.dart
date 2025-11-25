@@ -5,17 +5,19 @@ class SubscriptionCard extends StatelessWidget {
   const SubscriptionCard({
     super.key,
     required this.period,
-    required this.discount,
+    // required this.discount,
     required this.price,
     this.isSelected = false,
     this.paidContent,
+    required this.isApplicant
   });
   final String period;
-  final String discount;
+  // final String discount;
   final String price;
   final String? paidContent;
 
   final bool isSelected;
+  final bool isApplicant;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,13 @@ class SubscriptionCard extends StatelessWidget {
 
         borderRadius: BorderRadius.circular(20),
         border: isSelected
-            ? Border.all(color: AppPalette.primaryColor, width: 2)
+            ? Border.all(color: 
+            
+            isApplicant ?
+            AppPalette.primaryColor:
+            AppPalette.empPrimaryColor
+            
+            , width: 2)
             : null,
       ),
       child: Row(
@@ -68,15 +76,15 @@ class SubscriptionCard extends StatelessWidget {
                           height: 1.30,
                         ),
                       ),
-                      const Text(
-                        'Хит!',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w600,
-                          height: 1.30,
-                        ),
-                      ),
+                      // const Text(
+                      //   'Хит!',
+                      //   style: TextStyle(
+                      //     fontSize: 12,
+                      //     fontFamily: 'Manrope',
+                      //     fontWeight: FontWeight.w600,
+                      //     height: 1.30,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -106,15 +114,15 @@ class SubscriptionCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text(
-                        'Выгода $discount%',
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w500,
-                          height: 1.30,
-                        ),
-                      ),
+                      // Text(
+                      //   'Выгода $discount%',
+                      //   style: const TextStyle(
+                      //     fontSize: 10,
+                      //     fontFamily: 'Manrope',
+                      //     fontWeight: FontWeight.w500,
+                      //     height: 1.30,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
