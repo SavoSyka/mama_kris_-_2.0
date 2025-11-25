@@ -39,3 +39,12 @@ class LoadedPublicPofileState extends SpecialitySearchState {
   @override
   List<Object> get props => [user];
 }
+
+class SearchHistoryLoaded extends SpecialitySearchState {
+  final List<String> searchHistory;
+
+  const SearchHistoryLoaded({required this.searchHistory});
+
+  @override
+  List<Object> get props => [searchHistory];
+}

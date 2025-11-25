@@ -39,9 +39,9 @@ class _ResumeSpecialitySearchPageState
     super.initState();
     _specialitySearchBloc = context.read<SpecialitySearchBloc>();
 
-    // context.read<SpecialitySearchBloc>().add(
-    //   const SearchSpecialitiesEvent(query: ''),
-    // );
+    // Load search history on first open
+    _specialitySearchBloc.add(LoadSearchHistoryEvent());
+
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -154,22 +154,26 @@ class _ResumeSpecialitySearchPageState
       );
     }
 
-    /// ---------- Initial State ----------
-    // if (_searchController.text.isEmpty) {
-    //   return const Center(
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         CustomImageView(imagePath: MediaRes.search ?? '', width: 120),
-    //         SizedBox(height: 24),
-    //         CustomText(
-    //           text: 'Начните поиск специальности',
-    //           style: TextStyle(fontSize: 16, color: Colors.grey),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
+    /// ---------- Initial State with Search History ----------
+    if (_searchController.text.isEmpty && state is SearchHistoryLoaded) {
+      if (state.searchHistory.isEmpty) {
+        return const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.search, size: 64, color: Colors.grey),
+              SizedBox(height: 16),
+              CustomText(
+                text: 'Начните поиск специальности',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ],
+          ),
+        );
+      } else {
+        return _buildSearchHistory(state.searchHistory);
+      }
+    }
 
     /// ---------- Empty Results ----------
     if (state is SpecialitySearchLoaded && state.specialities.isEmpty) {
@@ -237,6 +241,70 @@ class _ResumeSpecialitySearchPageState
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSearchHistory(List<String> history) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: CustomText(
+            text: 'Недавние поиски',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            itemCount: history.length,
+            itemBuilder: (context, index) {
+              final query = history[index];
+              return InkWell(
+                onTap: () {
+                  _searchController.text = query;
+                  _selectSpeciality(query);
+                },
+                borderRadius: BorderRadius.circular(14),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey.withOpacity(0.15)),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.history,
+                        color: Colors.grey.withOpacity(0.7),
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: CustomText(
+                          text: query,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Manrope',
+                          ),
+                        ),
+                      ),
+                      Icon(Icons.chevron_right, color: Colors.grey.withOpacity(0.5)),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

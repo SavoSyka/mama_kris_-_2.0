@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mama_kris/features/emp/emp_resume/data/data_sources/search_history_local_data_source.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/get_public_profiles_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/search_speciality_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_event.dart';
@@ -9,6 +10,7 @@ import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_s
 class SpecialitySearchBloc
     extends Bloc<SpecialitySearchEvent, SpecialitySearchState> {
   final SearchSpecialityUsecase searchSpecialityUsecase;
+  final SearchHistoryLocalDataSource searchHistoryDataSource;
   Timer? _debounce;
 
   final GetPublicProfilesUsecase getPublicProfilesUsecase;
@@ -16,10 +18,12 @@ class SpecialitySearchBloc
   SpecialitySearchBloc({
     required this.searchSpecialityUsecase,
     required this.getPublicProfilesUsecase,
+    required this.searchHistoryDataSource,
   }) : super(SpecialitySearchInitial()) {
     on<SearchSpecialitiesEvent>(_onSearchSpecialities);
     on<ClearSearchEvent>(_onClearSearch);
     on<GetUserPublicProfileEvent>(_onGetUserProfile);
+    on<LoadSearchHistoryEvent>(_onLoadSearchHistory);
   }
 
   Future<void> _onSearchSpecialities(
@@ -45,8 +49,13 @@ class SpecialitySearchBloc
 
       result.fold(
         (failure) => emit(SpecialitySearchError(message: failure.message)),
-        (specialities) =>
-            emit(SpecialitySearchLoaded(specialities: specialities)),
+        (specialities) {
+          emit(SpecialitySearchLoaded(specialities: specialities));
+          // Save search query asynchronously without blocking
+          if (event.query.isNotEmpty) {
+            searchHistoryDataSource.saveSearchQuery(event.query);
+          }
+        },
       );
     } catch (e) {
       emit(SpecialitySearchError(message: e.toString()));
@@ -92,4 +101,18 @@ class SpecialitySearchBloc
       emit(SpecialitySearchError(message: e.toString()));
     }
   }
+
+  Future<void> _onLoadSearchHistory(
+    LoadSearchHistoryEvent event,
+    Emitter<SpecialitySearchState> emit,
+  ) async {
+    try {
+      final history = await searchHistoryDataSource.getSearchHistory();
+      emit(SearchHistoryLoaded(searchHistory: history));
+    } catch (e) {
+      debugPrint('Error loading search history: $e');
+      emit(const SearchHistoryLoaded(searchHistory: []));
+    }
+  }
+
 }

@@ -25,3 +25,5 @@ class GetUserPublicProfileEvent extends SpecialitySearchEvent {
     required this.userId,
   });
 }
+
+class LoadSearchHistoryEvent extends SpecialitySearchEvent {}

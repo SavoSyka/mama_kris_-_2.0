@@ -345,6 +345,9 @@ Future<void> _initResumes() async {
   sl.registerLazySingleton<SpecialityRemoteDataSource>(
     () => SpecialityRemoteDataSourceImpl(sl()),
   );
+  sl.registerLazySingleton<SearchHistoryLocalDataSource>(
+    () => SearchHistoryLocalDataSourceImpl(),
+  );
 
   // Repository
   sl.registerLazySingleton<ResumeRepository>(
@@ -374,6 +377,7 @@ Future<void> _initResumes() async {
     () => SpecialitySearchBloc(
       searchSpecialityUsecase: sl(),
       getPublicProfilesUsecase: sl(),
+      searchHistoryDataSource: sl(),
     ),
   );
 }

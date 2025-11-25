@@ -52,6 +52,7 @@ import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_verify_otp_u
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source_impl.dart';
+import 'package:mama_kris/features/emp/emp_resume/data/data_sources/search_history_local_data_source.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/repositories/resume_repository_impl.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/repositories/resume_repository.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/fetch_favorited_users_usecase.dart';
