@@ -43,7 +43,7 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
       case FilterType.active:
         return 'approved';
       case FilterType.drafts:
-        return 'archived';
+        return 'Status';
       case FilterType.archive:
         return 'checking, rejected';
     }

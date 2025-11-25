@@ -22,8 +22,8 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_contact_widget.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_work_experience_widget.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
-import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_delete_icon_dialog.dart';
-import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_logout_dialog.dart';
+import 'package:mama_kris/core/common/widgets/show_delete_icon_dialog.dart';
+import 'package:mama_kris/core/common/widgets/show_logout_dialog.dart';
 
 class ApplProfileEditScreen extends StatefulWidget {
   const ApplProfileEditScreen({super.key});

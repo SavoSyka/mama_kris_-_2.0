@@ -13,14 +13,14 @@ void showDeleteAccountDialog(
     builder: (BuildContext context) {
       return CupertinoAlertDialog(
         title: const Text(
-          'Delete Account',
+          'Удалить аккаунт',
+
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         content: const Padding(
           padding: EdgeInsets.only(top: 8.0),
           child: Text(
-            'Are you sure you want to delete your account? '
-            'This action cannot be undone.',
+            "Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить.",
             style: TextStyle(fontSize: 16),
           ),
         ),
@@ -30,7 +30,7 @@ void showDeleteAccountDialog(
               Navigator.of(context).pop(); // Cancel
             },
             child: Text(
-              'Cancel',
+              'Отмена',
 
               style: TextStyle(
                 color: isApplicant
@@ -45,7 +45,7 @@ void showDeleteAccountDialog(
               onDelete(); // Perform delete action
             },
             isDestructiveAction: true,
-            child: const Text('Delete'),
+            child: const Text('Удалить'),
           ),
         ],
       );

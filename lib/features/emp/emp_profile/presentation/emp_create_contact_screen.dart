@@ -94,12 +94,12 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
 
     if (widget.contact == null) {
       context.read<EmployeeContactBloc>().add(
-        CreateEmployeeContactEvent(contact: cont!),
+        CreateEmployeeContactEvent(contact: cont),
       );
     } else {
       context.read<EmployeeContactBloc>().add(
         UpdateEmployeeContactEvent(
-          contact: cont!,
+          contact: cont,
           id: widget.contact?.contactsID.toString() ?? '',
         ),
       );
@@ -110,14 +110,16 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       appBar: CustomAppBar(
-        title: widget.contact == null ? 'Create Contact' : 'Edit Contact',
+        title: widget.contact == null
+            ? 'Создать контакт'
+            : 'Редактирование контакта',
         isEmployee: true,
       ),
       body: BlocConsumer<EmployeeContactBloc, EmployeeContactState>(
         listener: (context, state) {
           debugPrint("state after deleted $state");
           if (state is EmployeeContactCreated) {
-             _localContact = ContactEntity(
+            _localContact = ContactEntity(
               name: state.contact.name,
               contactsID: state.contact.contactId,
               email: state.contact.email,
@@ -159,10 +161,7 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
                   // Navigate back to job creation page with the new contact
                   // We need to go back to the job creation page and pass the contact
 
-
-                  context.pop({
-                    'newContact': _localContact,
-                  });
+                  context.pop({'newContact': _localContact});
                 } else {
                   context.goNamed(
                     RouteName.homeEmploye,
@@ -229,7 +228,7 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
                     const SizedBox(height: 32),
 
                     CustomButtonEmployee(
-                      btnText: "Save Contact",
+                      btnText: "Сохранить контакт",
                       onTap: _saveContact,
                       isLoading: state is EmployeeContactLoading,
                       isBtnActive: state is! EmployeeContactLoading,

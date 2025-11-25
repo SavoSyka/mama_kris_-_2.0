@@ -19,8 +19,8 @@ import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_create_contact_screen.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/widget/emp_view_basic_information.dart';
-import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_delete_icon_dialog.dart';
-import 'package:mama_kris/features/emp/emp_profile/presentation/widget/show_logout_dialog.dart';
+import 'package:mama_kris/core/common/widgets/show_delete_icon_dialog.dart';
+import 'package:mama_kris/core/common/widgets/show_logout_dialog.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
 
 class EmpProfileEditScreen extends StatefulWidget {

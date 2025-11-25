@@ -135,28 +135,28 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                               }
                                             },
                                           ),
-                                          const SizedBox(height: 20),
-                                          CustomButtonSec(
-                                            btnText: 'Войти',
-                                            onTap: () {
-                                              // TODO: Implement Google sign in
-                                              debugPrint('signInWithGoogle');
-                                              signInWithGoogle();
-                                            },
-                                            child: const Row(
-                                              children: [
-                                                CustomImageView(
-                                                  imagePath:
-                                                      MediaRes.googleIcon,
-                                                  width: 24,
-                                                ),
-                                                SizedBox(width: 15),
-                                                CustomText(
-                                                  text: 'Войти через Google',
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                          // const SizedBox(height: 20),
+                                          // CustomButtonSec(
+                                          //   btnText: 'Войти',
+                                          //   onTap: () {
+                                          //     // TODO: Implement Google sign in
+                                          //     debugPrint('signInWithGoogle');
+                                          //     signInWithGoogle();
+                                          //   },
+                                          //   child: const Row(
+                                          //     children: [
+                                          //       CustomImageView(
+                                          //         imagePath:
+                                          //             MediaRes.googleIcon,
+                                          //         width: 24,
+                                          //       ),
+                                          //       SizedBox(width: 15),
+                                          //       CustomText(
+                                          //         text: 'Войти через Google',
+                                          //       ),
+                                          //     ],
+                                          //   ),
+                                          // ),
 
                                           const SizedBox(height: 20),
                                           if (platformType.startsWith('i')) ...[

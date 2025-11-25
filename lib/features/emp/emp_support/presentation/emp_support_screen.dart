@@ -83,7 +83,7 @@ class _EmpSupportScreenState extends State<EmpSupportScreen> {
                                     url: support['channel'],
                                   );
                                 } else {
-                                  // context.pushNamed(RouteName.empSupportDetail);
+                                  context.pushNamed(RouteName.empSupportDetail);
                                 }
                               },
                               child: Container(

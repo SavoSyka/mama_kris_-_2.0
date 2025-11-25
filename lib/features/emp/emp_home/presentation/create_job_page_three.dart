@@ -172,7 +172,7 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
           const SizedBox(height: 24),
 
           CustomButtonEmployee(
-            btnText: state is CreateJobLoading ? 'Создание...' : 'Далее',
+            btnText: "Опубликовать",
             onTap: state is CreateJobLoading
                 ? null
                 : () {
@@ -199,7 +199,7 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
               context.pushNamed(RouteName.homeEmploye);
             },
             child: const Text(
-              'Рассказать',
+              'Оставить в черновике',
               style: TextStyle(
                 color: Color(0xFF0073BB),
                 fontSize: 16,
