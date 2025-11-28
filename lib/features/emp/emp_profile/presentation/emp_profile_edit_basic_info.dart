@@ -17,6 +17,7 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class EmpProfileEditBasicInfo extends StatefulWidget {
   const EmpProfileEditBasicInfo({super.key});

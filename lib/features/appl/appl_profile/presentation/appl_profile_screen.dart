@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_with.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_error_retry.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/common/widgets/custom_specialisation.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
@@ -38,30 +40,28 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(
+      appBar: CustomAppBarWithActions(
         title: 'Мой профиль',
         showLeading: false,
         alignTitleToEnd: false,
         actions: [
-          IconButton(
-            onPressed: () {
+          GestureDetector(
+            onTap: () {
               context.pushNamed(RouteName.editProfileApplicant);
             },
-            icon: Container(
-              padding: const EdgeInsets.all(6),
+            child: Container(
+              padding: const EdgeInsets.all(8),
               decoration: AppTheme.cardDecoration.copyWith(
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const CustomImageView(
-                imagePath: MediaRes.settingGearIcon,
-                width: 24,
-                height: 24,
+                imagePath: MediaRes.gearIcon,
+                width: 28,
+                height: 28,
               ),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            tooltip: 'Настройки',
-            splashRadius: 24,
           ),
+          const SizedBox(width: 16),
         ],
       ),
 
@@ -99,7 +99,7 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
 
                               /// Специализация -- Speciliasaton
                               if (user.specializations != null)
-                                _Specalisations(
+                                CustomSpecialisation(
                                   specializations: user.specializations,
                                 ),
                               const SizedBox(height: 20),

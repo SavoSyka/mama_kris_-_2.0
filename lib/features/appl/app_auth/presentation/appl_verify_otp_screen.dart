@@ -18,6 +18,7 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dar
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:pinput/pinput.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class ApplVerifyOtpScreen extends StatefulWidget {
   const ApplVerifyOtpScreen({

@@ -105,7 +105,11 @@ Future<String?> ApplicantJobDetail(
 
                               InkWell(
                                 onTap: () {
-                                  _showJobOptionsMenu(context, menuKey, job: job);
+                                  _showJobOptionsMenu(
+                                    context,
+                                    menuKey,
+                                    job: job,
+                                  );
                                 },
                                 child: CustomImageView(
                                   key: menuKey,
@@ -221,10 +225,10 @@ void _showJobOptionsMenu(
           // Handle add to favorites
           final buffer = StringBuffer();
 
-          buffer.writeln("Check out this job:");
+          buffer.writeln("Посмотрите эту вакансию::");
           buffer.writeln("${job.title} - ${job.salary}\n");
 
-          buffer.writeln("Contacts:");
+          buffer.writeln("Контакт:");
 
           if (job.contactJobs?.telegram != null &&
               job.contactJobs!.telegram!.isNotEmpty) {
@@ -266,7 +270,7 @@ void _showJobOptionsMenu(
             context,
             username: "@mamakrisSupport_bot",
             message:
-                "Здравствуйте, я хочу сообщить о проблеме по вакансии с ID: ${job.jobId}, названием ${job.title}",
+                "Здравствуйте, я хочу сообщить о проблеме по вакансии с ID: ${job.jobId}, название ${job.title}",
           );
           // Handle report
         },

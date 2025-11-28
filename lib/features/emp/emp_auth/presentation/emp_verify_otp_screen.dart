@@ -21,6 +21,7 @@ import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.d
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_event.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_state.dart';
 import 'package:pinput/pinput.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class EmpVerifyOtpScreen extends StatefulWidget {
   const EmpVerifyOtpScreen({
@@ -191,12 +192,14 @@ class _EmpVerifyOtpScreenState extends State<EmpVerifyOtpScreen> {
                                                   ? null
                                                   : () {
                                                       // TODO: Get email from signup or shared preferences
-                                                      context.read<EmpAuthBloc>().add(
-                                                        const EmpResendOtpEvent(
-                                                          email:
-                                                              'user@example.com',
-                                                        ),
-                                                      );
+                                                      context
+                                                          .read<EmpAuthBloc>()
+                                                          .add(
+                                                            EmpResendOtpEvent(
+                                                              email:
+                                                                  widget.email,
+                                                            ),
+                                                          );
                                                     },
                                               child: const CustomText(
                                                 text: "Отправить OTP повторно",
@@ -220,7 +223,7 @@ class _EmpVerifyOtpScreenState extends State<EmpVerifyOtpScreen> {
                                             // TODO: Get email from signup or shared preferences
                                             context.read<EmpAuthBloc>().add(
                                               EmpVerifyOtpEvent(
-                                                email: 'user@example.com',
+                                                email: widget.email,
                                                 otp: otpController.text,
                                               ),
                                             );

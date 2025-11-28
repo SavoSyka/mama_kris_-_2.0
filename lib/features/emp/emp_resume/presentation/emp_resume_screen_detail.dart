@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_with.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_error_retry.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/common/widgets/custom_specialisation.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
@@ -75,7 +78,11 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
         if (state is SpecialitySearchError) {
           return CustomScaffold(
             extendBodyBehindAppBar: true,
-            appBar: const CustomAppBar(title: '', alignTitleToEnd: true),
+            appBar: const CustomAppBarWithActions(
+              title: '',
+              alignTitleToEnd: true,
+              actions: [],
+            ),
             body: Container(
               decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
@@ -93,7 +100,7 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
             extendBodyBehindAppBar: true,
 
             // ✔️ AppBar is built ONLY when user exists
-            appBar: CustomAppBar(
+            appBar: CustomAppBarWithActions(
               title: '',
               alignTitleToEnd: true,
               actions: [
@@ -162,7 +169,7 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
                               _Contacts(email: user.email, phone: user.phone),
                               const SizedBox(height: 20),
                               if (user.specializations != null)
-                                _Specalisations(
+                                CustomSpecialisation(
                                   specializations: user.specializations,
                                 ),
                               const SizedBox(height: 20),
@@ -234,7 +241,7 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
     required bool isFavorited,
     required String userId,
   }) async {
-    debugPrint("On like or dislike");
+    debugPrint("On like or dislike isFavorited status $isFavorited");
     context.read<ResumeBloc>().add(
       UpdateFavoritingEvent(isFavorited: isFavorited, userId: userId),
     );
@@ -417,80 +424,6 @@ class _Contacts extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _Specalisations extends StatelessWidget {
-  const _Specalisations({this.specializations});
-
-  final List<String>? specializations;
-
-  @override
-  Widget build(BuildContext context) {
-    // If empty or null → return nothing
-    if (specializations == null || specializations!.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration,
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Специализация',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontFamily: 'Manrope',
-                    fontWeight: FontWeight.w600,
-                    height: 1.30,
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Dynamic items with wrap
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 12,
-                  children: specializations!
-                      .map((item) => _specialisationItem(item))
-                      .toList(),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _specialisationItem(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 1, color: Color(0x7F2E7866)),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Color(0xFF2E7866),
-          fontSize: 12,
-          fontFamily: 'Manrope',
-          fontWeight: FontWeight.w600,
-          height: 1.30,
-        ),
       ),
     );
   }

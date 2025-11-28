@@ -15,6 +15,7 @@ import 'package:mama_kris/features/appl/appl_favorite/presentation/widget/empty_
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class ApplFavoriteScreen extends StatefulWidget {
   const ApplFavoriteScreen({super.key});

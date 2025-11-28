@@ -14,6 +14,7 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class CreateJobPageOne extends StatefulWidget {
   const CreateJobPageOne({super.key, this.job});

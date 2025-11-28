@@ -29,6 +29,7 @@ import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class ApplProfileEditWorkExperience extends StatefulWidget {
   const ApplProfileEditWorkExperience({super.key, this.experience});

@@ -68,7 +68,7 @@ class _JobListItemState extends State<JobListItem> {
           child: Text(
             widget.showAddToFavorite
                 ? 'Добавить в избранное'
-                : "удалить из избранного",
+                : 'Удалить из избранного',
           ),
         ),
         PopupMenuItem(
@@ -124,7 +124,7 @@ class _JobListItemState extends State<JobListItem> {
               context,
               username: "@mamakrisSupport_bot",
               message:
-                  "Здравствуйте, я хочу сообщить о проблеме по вакансии с ID: ${widget.jobId}, названием ${widget.jobTitle}",
+                  "Здравствуйте, я хочу сообщить о проблеме по вакансии с ID: ${widget.jobId}, название ${widget.jobTitle}",
             );
           },
           child: const Text(

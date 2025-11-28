@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class ApplSupportDetailScreen extends StatelessWidget {
   const ApplSupportDetailScreen({super.key, required this.support});
@@ -18,14 +21,17 @@ class ApplSupportDetailScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
+          bottom: false,
           child: Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
                   child: CustomDefaultPadding(
-                    bottom: 16,
+                    bottom: 0,
                     child: Container(
                       padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.only(bottom: 50),
+
                       decoration: AppTheme.cardDecoration,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,6 +50,23 @@ class ApplSupportDetailScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 24),
                           CustomText(text: support['article'] ?? ''),
+
+                          if (support['hasButton'] != null &&
+                              support['hasButton']) ...[
+                            const SizedBox(height: 24),
+
+                            CustomButtonSec(
+                              btnText: support['buttonText'],
+                              onTap: () {
+                                HandleLaunchUrl.launchUrlGeneric(
+                                  context,
+                                  url: support['buttonLink'],
+                                );
+                              },
+                            ),
+                          ],
+
+                          const SizedBox(height: 30),
                         ],
                       ),
                     ),

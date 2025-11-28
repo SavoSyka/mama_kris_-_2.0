@@ -124,7 +124,7 @@ class ApplicantContactRepositoryImpl implements ApplicantContactRepository {
 
 
     @override
-  ResultFuture<bool> addSpeciality(String speciality)async {
+  ResultFuture<bool> addSpeciality(List<String> speciality)async {
     try {
       final result = await _dataSource.addSpeciality(speciality);
       return Right(result);

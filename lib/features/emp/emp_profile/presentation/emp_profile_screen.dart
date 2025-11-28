@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_with.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
@@ -26,30 +27,28 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(
+      appBar: CustomAppBarWithActions(
         title: 'Мой профиль',
         showLeading: false,
         alignTitleToEnd: false,
         actions: [
-          IconButton(
-            onPressed: () {
+          GestureDetector(
+            onTap: () {
               context.pushNamed(RouteName.editProfileEmployee);
             },
-            icon: Container(
-              padding: const EdgeInsets.all(6),
+            child: Container(
+              padding: const EdgeInsets.all(8),
               decoration: AppTheme.cardDecoration.copyWith(
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const CustomImageView(
-                imagePath: MediaRes.settingGearIcon,
-                width: 24,
-                height: 24,
+                imagePath: MediaRes.gearIcon,
+                width: 28,
+                height: 28,
               ),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            tooltip: 'Настройки',
-            splashRadius: 24,
           ),
+          SizedBox(width: 16,)
         ],
       ),
 

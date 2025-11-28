@@ -18,6 +18,7 @@ import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/widget/resume_speciality_search_page.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class EmpResumeScreen extends StatefulWidget {
   const EmpResumeScreen({super.key});
@@ -60,143 +61,175 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
             child: Column(
               children: [
                 Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: _handleRefresh,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        child: GestureDetector(
+                          onTap: _onFiltering,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.search, color: Colors.grey),
+                                const SizedBox(width: 10),
+                                Text(
+                                  _searchQuery ?? 'Search jobs...',
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
 
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      child: CustomDefaultPadding(
-                        child: Column(
+                      const SizedBox(height: 14),
+
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    if (isFavorite) {
+                                      setState(() => isFavorite = false);
+                                      _loadResumes();
+                                    }
+                                  },
+                                  child: _FilterCard(
+                                    isSelected: !isFavorite,
+                                    text: 'Все',
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                InkWell(
+                                  onTap: () {
+                                    if (!isFavorite) {
+                                      setState(() => isFavorite = true);
+                                      _loadResumes();
+                                    }
+                                  },
+                                  child: _FilterCard(
+                                    isSelected: isFavorite,
+                                    text: 'Избранные',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            InkWell(
                               onTap: _onFiltering,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.search,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      _searchQuery ?? 'Search jobs...',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              child: const CustomImageView(
+                                imagePath: MediaRes.btnFilter,
+                                width: 48,
                               ),
                             ),
-
-                            const SizedBox(height: 14),
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          if (isFavorite) {
-                                            setState(() {
-                                              isFavorite = false;
-                                            });
-                                            _loadResumes();
-                                          }
-                                        },
-                                        child: _FilterCard(
-                                          isSelected: !isFavorite,
-                                          text: 'Все',
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      InkWell(
-                                        onTap: () {
-                                          if (!isFavorite) {
-                                            setState(() {
-                                              isFavorite = true;
-                                            });
-                                            _loadResumes();
-                                          }
-                                        },
-                                        child: _FilterCard(
-                                          isSelected: isFavorite,
-                                          text: 'Избранные',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  InkWell(
-                                    onTap: _onFiltering,
-                                    child: const CustomImageView(
-                                      imagePath: MediaRes.btnFilter,
-                                      width: 48,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 28),
-                            BlocBuilder<ResumeBloc, ResumeState>(
-                              builder: (context, state) {
-                                if (state is ResumeLoadingState) {
-                                  return const IPhoneLoader();
-                                } else if (state is ResumeErrorState) {
-                                  return Center(
-                                    child: Text('Error: ${state.message}'),
-                                  );
-                                } else if (state is ResumeLoadedState) {
-                                  final users = state.users.resume;
-
-                                  if (users.isEmpty) {
-                                    return const CustomEmptyContainer();
-                                  } else {
-                                    return ListView.separated(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) =>
-                                          ResumeItem(
-                                            name: users[index].name,
-                                            role: users[index].role,
-                                            age: users[index].age,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                RouteName.resumeDetail,
-                                                extra: {
-                                                  'userId': users[index].id
-                                                      .toString(),
-                                                },
-                                              );
-                                            },
-                                          ),
-                                      separatorBuilder: (context, index) =>
-                                          const SizedBox(height: 8),
-                                      itemCount: users.length,
-                                    );
-                                  }
-                                } else {
-                                  return const Center(child: Text('No data'));
-                                }
-                              },
-                            ),
-                            const SizedBox(height: 16),
                           ],
                         ),
                       ),
+
+                      const SizedBox(height: 28),
+
+                      BlocBuilder<ResumeBloc, ResumeState>(
+                        builder: (context, state) {
+                          if (state is ResumeLoadingState) {
+                            return const IPhoneLoader();
+                          }
+
+                          if (state is ResumeErrorState) {
+                            return Center(
+                              child: Text('Error: ${state.message}'),
+                            );
+                          }
+
+                          if (state is ResumeLoadedState) {
+                            final users = state.users.resume;
+
+                            if (users.isEmpty) {
+                              return const Expanded(
+                                child: Row(
+                                  children: [
+                                    Expanded(child: CustomEmptyContainer()),
+                                  ],
+                                ),
+                              );
+                            }
+
+                            return Expanded(
+                              child: RefreshIndicator(
+                                onRefresh: _handleRefresh,
+                                child: ListView.separated(
+                                  // shrinkWrap: true,
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    final user = users[index];
+                                    return ResumeItem(
+                                      name: user.name,
+                                      specializations: user.specializations,
+                                      age: user.age,
+                                      userId: user.id,
+                                      isFavorite: isFavorite,
+                                      onTap: () {
+                                        context.pushNamed(
+                                          RouteName.resumeDetail,
+                                          extra: {'userId': user.id.toString()},
+                                        );
+                                      },
+                                    );
+                                  },
+                                  separatorBuilder: (_, __) =>
+                                      const SizedBox(height: 8),
+                                  itemCount: users.length,
+                                ),
+                              ),
+                            );
+                          }
+
+                          return const Center(child: Text('No data'));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                /*
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: _handleRefresh,
+                    child: ListView(
+                      padding: const EdgeInsets.only(top: 0),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        CustomDefaultPadding(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                             
+
+                              // Filters
+                            
+
+
+                              // Resume List
+                         
+                              const SizedBox(height: 16),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+              */
               ],
             ),
           ),

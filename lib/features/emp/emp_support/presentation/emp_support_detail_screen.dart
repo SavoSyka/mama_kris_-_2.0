@@ -5,6 +5,7 @@ import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class EmpSupportDetailScreen extends StatefulWidget {
   const EmpSupportDetailScreen({super.key});
@@ -60,7 +61,7 @@ class _EmpSupportDetailScreenState extends State<EmpSupportDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const CustomText(
-                            text: "Как пользоваться приложением?",
+                            text: "Как пользоватьсяприложением?",
 
                             style: TextStyle(
                               color: Colors.black,

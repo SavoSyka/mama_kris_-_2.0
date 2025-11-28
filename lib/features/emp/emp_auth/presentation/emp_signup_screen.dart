@@ -22,6 +22,7 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dar
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_event.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_state.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class EmpSignupScreen extends StatefulWidget {
   const EmpSignupScreen({super.key});
@@ -123,6 +124,8 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
                                         controller: emailController,
                                         validator:
                                             FormValidations.validateEmail,
+                                                   keyboardType:
+                                                TextInputType.emailAddress,
                                       ),
                                       const SizedBox(height: 12),
                                       CustomInputText(

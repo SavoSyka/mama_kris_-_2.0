@@ -16,10 +16,7 @@ class FetchResumesEvent extends ResumeEvent {
 class LoadNextResumePageEvent extends ResumeEvent {
   final int nextPage;
 
-
-  const LoadNextResumePageEvent({
-    required this.nextPage,
-  });
+  const LoadNextResumePageEvent({required this.nextPage});
   @override
   List<Object> get props => [nextPage];
 }
@@ -46,5 +43,3 @@ class UpdateFavoritingEvent extends ResumeEvent {
     required this.userId,
   });
 }
-
-

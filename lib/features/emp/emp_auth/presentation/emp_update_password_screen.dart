@@ -16,6 +16,7 @@ import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class EmpUpdatePasswordScreen extends StatefulWidget {
   const EmpUpdatePasswordScreen({super.key});
@@ -36,7 +37,10 @@ class _EmpUpdatePasswordScreenState extends State<EmpUpdatePasswordScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Восстановление пароля', isEmployee: true),
+      appBar: const CustomAppBar(
+        title: 'Восстановление пароля',
+        isEmployee: true,
+      ),
       body: Container(
         decoration: const BoxDecoration(color: AppPalette.empBgColor),
 
@@ -56,9 +60,9 @@ class _EmpUpdatePasswordScreenState extends State<EmpUpdatePasswordScreen> {
                           );
                           context.goNamed(RouteName.loginEmploye);
                         } else if (state is AuthFailure) {
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text(state.message)));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(state.message)),
+                          );
                         }
                       },
                       child: BlocBuilder<AuthBloc, AuthState>(
@@ -92,7 +96,9 @@ class _EmpUpdatePasswordScreenState extends State<EmpUpdatePasswordScreen> {
                                         hintText: 'enter your new password',
                                         labelText: "password",
                                         controller: password,
-                                        validator: FormValidations.validatePassword,
+                                        validator:
+                                            FormValidations.validatePassword,
+                                        obscureText: true,
                                       ),
                                       const SizedBox(height: 20),
                                       CustomInputText(
@@ -104,15 +110,17 @@ class _EmpUpdatePasswordScreenState extends State<EmpUpdatePasswordScreen> {
                                               value,
                                               password.text,
                                             ),
+                                        obscureText: true,
                                       ),
                                       const SizedBox(height: 42),
                                       CustomButtonEmployee(
                                         btnText: 'Отправить',
                                         isBtnActive: state is! AuthLoading,
                                         isLoading: state is AuthLoading,
-                    
+
                                         onTap: () {
-                                          if (_formKey.currentState!.validate()) {
+                                          if (_formKey.currentState!
+                                              .validate()) {
                                             context.read<AuthBloc>().add(
                                               UpdatePasswordEvent(
                                                 newPassword: password.text,

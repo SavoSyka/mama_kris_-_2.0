@@ -10,7 +10,6 @@ class CustomEmptyContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
       child: SafeArea(
         child: RefreshIndicator(
           onRefresh: onRefresh ?? () async {},

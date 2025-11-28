@@ -16,6 +16,7 @@ import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class ApplSignupScreen extends StatefulWidget {
   const ApplSignupScreen({super.key});

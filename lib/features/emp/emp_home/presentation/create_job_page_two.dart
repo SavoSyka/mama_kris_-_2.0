@@ -19,6 +19,7 @@ import 'package:mama_kris/features/appl/appl_home/domain/entities/contact_job.da
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/emp_user_contact.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class CreateJobPageTwo extends StatefulWidget {
   const CreateJobPageTwo({

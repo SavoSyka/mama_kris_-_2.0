@@ -70,7 +70,7 @@ class EmpViewBasicInformation extends StatelessWidget {
             },
             icon: const Icon(CupertinoIcons.pen, color: Colors.white, size: 18),
             label: const Text(
-              "Добавить контакт",
+              "Редактировать",
               style: TextStyle(fontSize: 15, color: Colors.white),
             ),
             style: ElevatedButton.styleFrom(

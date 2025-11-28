@@ -1,26 +1,34 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/handle_launch_url.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ResumeItem extends StatefulWidget {
   final String name;
-  final String role;
-  final String age;
+  final List<String>? specializations;
 
+  final String age;
+  final int userId;
+  final bool isFavorite;
   final VoidCallback onTap;
-  final bool showAddToFavorite;
 
   const ResumeItem({
     super.key,
     required this.name,
-    required this.role,
+    required this.specializations,
     required this.onTap,
     required this.age,
+    required this.isFavorite,
 
-    this.showAddToFavorite = true,
+    required this.userId,
   });
 
   @override
@@ -45,31 +53,43 @@ class _JobListItemState extends State<ResumeItem> {
         offset.dy + size.height,
       ),
       items: [
-        if (widget.showAddToFavorite)
-          PopupMenuItem(
-            onTap: () {
-              // Handle add to favorites
-            },
-            child: const Text('В избранное'),
+        PopupMenuItem(
+          onTap: () {
+            // * Handle add to favorites
+
+            debugPrint(
+              "On like or dislike isFavorited status ${widget.isFavorite}",
+            );
+            context.read<ResumeBloc>().add(
+              UpdateFavoritingEvent(
+                isFavorited: widget.isFavorite,
+                userId: widget.userId.toString(),
+              ),
+            );
+          },
+          child: Text(
+            widget.isFavorite
+                ? 'Удалить из избранного'
+                : 'Добавить в избранное',
           ),
+        ),
         PopupMenuItem(
           onTap: () {
             // Handle share
-            Share.share(
-              'Check out this job: ${widget.name} - ${widget.role}',
-              subject: 'Job Opportunity',
+            HandleLaunchUrl.launchTelegram(
+              context,
+              username: "@mamakrisSupport_bot",
+              message:
+                  "Я хотел бы сообщить о резюме как мошенническом.\n\nID резюме: ${widget.userId}\nИмя: ${widget.name}\nПричина:",
             );
           },
-          child: const Text('Отправить жалобу'),
+          child: const Text('Отправить жалобу'), // * Submit a complaint
         ),
         PopupMenuItem(
           onTap: () {
             // Handle report
           },
-          child: const Text(
-            'Скрыть',
-            style: TextStyle(color: Colors.red),
-          ),
+          child: const Text('Скрыть', style: TextStyle(color: Colors.red)),
         ),
       ],
     );
@@ -81,6 +101,7 @@ class _JobListItemState extends State<ResumeItem> {
       onTap: widget.onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: AppTheme.cardDecoration,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,33 +121,61 @@ class _JobListItemState extends State<ResumeItem> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          widget.age,
-                          style: const TextStyle(
-                            color: Color(0xFF596574),
-                            fontSize: 12,
-                            fontFamily: 'Manrope',
-                            fontWeight: FontWeight.w500,
-                            height: 1.30,
+
+                  if (widget.specializations != null &&
+                      widget.specializations!.isNotEmpty) ...[
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: widget.specializations!
+                          .take(3)
+                          .map(
+                            (spec) => Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color(0xFFCBD5E1),
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: CustomText(
+                                text: spec,
+                                style: const TextStyle(
+                                  color: Color(0xFF596574),
+                                  fontSize: 12,
+                                  fontFamily: 'Manrope',
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.30,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ],
+
+                  const SizedBox(height: 8),
+                  if (widget.age.isNotEmpty)
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            "${widget.age} год",
+                            style: const TextStyle(
+                              color: Color(0xFF596574),
+                              fontSize: 12,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w500,
+                              height: 1.30,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 12,),
-                          Text(
-                        widget.age,
-                        style: const TextStyle(
-                          color: Color(0xFF596574),
-                          fontSize: 12,
-                          fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w500,
-                          height: 1.30,
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -144,6 +193,5 @@ class _JobListItemState extends State<ResumeItem> {
         ),
       ),
     );
- 
   }
 }

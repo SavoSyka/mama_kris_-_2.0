@@ -22,6 +22,7 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class ApplLoginScreen extends StatefulWidget {
   const ApplLoginScreen({super.key});
@@ -35,8 +36,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
 
   // final emailController = TextEditingController(text: 'toli@yopmail.com');
 
-  final emailController = TextEditingController(
-  ); // subscription with one year
+  final emailController = TextEditingController(); // subscription with one year
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -51,8 +51,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
       extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(title: ''),
       body: Container(
-        decoration: 
-        const BoxDecoration(gradient: AppTheme.primaryGradient),
+        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
           child: Column(
             children: [
@@ -107,6 +106,8 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                             controller: emailController,
                                             validator:
                                                 FormValidations.validateEmail,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
                                           ),
                                           const SizedBox(height: 12),
                                           CustomInputText(
@@ -135,6 +136,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                               }
                                             },
                                           ),
+
                                           // const SizedBox(height: 20),
                                           // CustomButtonSec(
                                           //   btnText: 'Войти',
@@ -157,7 +159,6 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                           //     ],
                                           //   ),
                                           // ),
-
                                           const SizedBox(height: 20),
                                           if (platformType.startsWith('i')) ...[
                                             CustomButtonSec(
@@ -268,5 +269,4 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
 
     debugPrint('');
   }
-
 }

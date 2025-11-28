@@ -69,3 +69,8 @@ class AccountDeleteLoadingState extends ApplicantContactState {
 class UserLoggedOutState extends ApplicantContactState {
   const UserLoggedOutState();
 }
+
+
+class SpecialityUpdatedState extends ApplicantContactState {
+  const SpecialityUpdatedState();
+}

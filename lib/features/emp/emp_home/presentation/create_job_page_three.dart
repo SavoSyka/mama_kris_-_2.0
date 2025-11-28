@@ -19,6 +19,7 @@ import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cu
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_state.dart';
 import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/widget/job_phase_create.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class CreateJobPageThree extends StatefulWidget {
   const CreateJobPageThree({super.key, this.job});

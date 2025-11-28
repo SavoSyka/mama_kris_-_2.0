@@ -31,6 +31,7 @@ import 'package:mama_kris/features/appl/appl_profile/data/repository_impl/user_r
 import 'package:mama_kris/features/appl/appl_profile/domain/repository/user_repository.dart';
 import 'package:mama_kris/features/appl/appl_profile/domain/usecase/get_user_data.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/create_speciality_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_user_account_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/logout_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_basic_info_usecase.dart';

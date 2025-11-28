@@ -22,6 +22,7 @@ import 'package:mama_kris/features/emp/emp_profile/presentation/widget/emp_view_
 import 'package:mama_kris/core/common/widgets/show_delete_icon_dialog.dart';
 import 'package:mama_kris/core/common/widgets/show_logout_dialog.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class EmpProfileEditScreen extends StatefulWidget {
   const EmpProfileEditScreen({super.key});
@@ -35,7 +36,7 @@ class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Редактированиепрофиля'),
+      appBar: const CustomAppBar(title: 'Редактирование профиля'),
 
       body: Container(
         width: double.infinity,
@@ -64,8 +65,11 @@ class _EmpProfileEditScreenState extends State<EmpProfileEditScreen> {
                           const _accounts(),
                           const SizedBox(height: 20),
 
-                          const CustomButtonEmployee(
+                          CustomButtonEmployee(
                             btnText: 'Сохранить изменения',
+                            onTap: () {
+                              context.pop();
+                            },
                           ),
                           const SizedBox(height: 32),
 
@@ -300,6 +304,7 @@ Widget _buildSmartRow({
   required String value,
   required Color platformColor,
 }) {
+  if (value.isEmpty) return const SizedBox.shrink();
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4),
     child: Row(
@@ -363,7 +368,7 @@ class _AccountsState extends State<_accounts> {
 
           _updateButtons(
             text:
-                "MУправление подпиской", //"Управление подпиской", // manage subscription
+                "Управление подпиской", //"Управление подпиской", // manage subscription
             onTap: () {
               context.pushNamed(RouteName.viewPaymentScreenDetail);
             },
@@ -371,12 +376,12 @@ class _AccountsState extends State<_accounts> {
 
           const SizedBox(height: 16),
           _updateButtons(
-            text: "Выйти из аккаунта",
+            text: "Удалить аккаунт",
             error: true,
             errorIcon: MediaRes.logoutIcon,
             onTap: () {
               showLogoutDialog(context, () {
-                print("Account deleted");
+                print("Account logout");
 
                 context.read<EmployeeContactBloc>().add(
                   const EmpLogoutAccountEvent(),
@@ -404,7 +409,7 @@ class _AccountsState extends State<_accounts> {
             },
             builder: (context, state) {
               return _updateButtons(
-                text: "Управление подпиской",
+                text: "Удалить контакт",
                 error: true,
 
                 onTap: () {

@@ -30,6 +30,7 @@ import 'package:mama_kris/features/appl/appl_home/presentation/widget/empty_job_
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/filter_action_buttons.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/home_search_page.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/widget/resume_speciality_search_page.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class ApplHomeScreen extends StatefulWidget {
   const ApplHomeScreen({super.key});

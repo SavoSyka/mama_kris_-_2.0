@@ -14,6 +14,7 @@ import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_cubit.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_state.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 enum FilterType { active, drafts, archive }
 
@@ -177,7 +178,10 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
                                 Center(child: Text('Error: ${state.message}')),
 
                               const SizedBox(height: 16),
-                              const _AdCards(),
+
+                              if (state is FetchEmpJobsLoaded &&
+                                  state.jobList.jobs.isNotEmpty)
+                                const _AdCards(),
                             ],
                           ),
                         ),

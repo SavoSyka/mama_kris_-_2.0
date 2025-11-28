@@ -9,6 +9,7 @@ import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_phone_picker.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/common/widgets/custom_specialisation.dart';
 import 'package:mama_kris/core/common/widgets/custom_static_input.dart';
 import 'package:mama_kris/core/common/widgets/show_ios_loader.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
@@ -16,14 +17,18 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/auth/auth_service.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/typedef.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_basic_info.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_work_experience.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/widget/add_specialisation_modal.dart.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_contact_widget.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/appl_work_experience_widget.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/core/common/widgets/show_delete_icon_dialog.dart';
 import 'package:mama_kris/core/common/widgets/show_logout_dialog.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class ApplProfileEditScreen extends StatefulWidget {
   const ApplProfileEditScreen({super.key});
@@ -34,10 +39,19 @@ class ApplProfileEditScreen extends StatefulWidget {
 
 class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserProfile();
+  }
+
+  UserProfileEntity? _userState;
+
+  @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Редактированиепрофиля'),
+      appBar: const CustomAppBar(title: 'Редактирование профиля'),
 
       body: Container(
         width: double.infinity,
@@ -54,7 +68,7 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                       child: Column(
                         children: [
                           // Основная информация -- basic information
-                          _basicInformation(),
+                          const _basicInformation(),
                           const SizedBox(height: 20),
 
                           // Контакты -- Contacts
@@ -65,6 +79,30 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                           const SizedBox(height: 20),
 
                           /// Специализация -- Speciliasaton
+                          CustomSpecialisation(
+                            specializations: _userState?.specializations ?? [],
+                            onTap: () async {
+                              final result = await AddSpecialisationModal(
+                                context,
+                                speciality: _userState?.specializations ?? [],
+                              );
+
+                              if (result != null &&
+                                  result is Map<String, dynamic>) {
+                                final value =  result!['spec'];
+                                final specList = List<String>.from(
+                                  _userState?.specializations ?? [],
+                                );
+                                specList.add(value);
+
+                                context.read<UserBloc>().add(
+                                  UpdateSpecialityInfo(speciality: specList),
+                                );
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 20),
+
                           const _accounts(),
                           const SizedBox(height: 20),
 
@@ -89,10 +127,21 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
       ),
     );
   }
+
+  // * ────────────── LOADING FIRST PAGE ───────────────────────
+  void getUserProfile() {
+    final userState = context.read<UserBloc>().state;
+
+    if (userState is UserLoaded) {
+      setState(() {
+        _userState = userState.user;
+      });
+    }
+  }
 }
 
 class _basicInformation extends StatefulWidget {
-  _basicInformation();
+  const _basicInformation();
 
   @override
   State<_basicInformation> createState() => _basicInformationState();
@@ -164,7 +213,7 @@ class _basicInformationState extends State<_basicInformation> {
 
             icon: const Icon(CupertinoIcons.pen, color: Colors.white, size: 18),
             label: const Text(
-              "Добавить опыт работы",
+              "Редактировать",
               style: TextStyle(fontSize: 15, color: Colors.white),
             ),
             style: ElevatedButton.styleFrom(
@@ -343,7 +392,7 @@ class _AccountsState extends State<_accounts> {
             },
             builder: (context, state) {
               return _updateButtons(
-                text: "Управление подпиской",
+                text: "Удалить аккаунт",
                 error: true,
 
                 onTap: () {

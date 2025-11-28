@@ -22,6 +22,7 @@ import 'package:mama_kris/features/appl/appl_home/domain/entities/contact_job.da
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/entity/employee_contact.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class EmpCreateContactScreen extends StatefulWidget {
   final ContactEntity? contact; // if null, create new
@@ -175,13 +176,11 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
               padding: const EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
-                child:
-               
-                 Column(
+                child: Column(
                   children: [
                     CustomInputText(
-                      labelText: "Name",
-                      hintText: "Enter contact name",
+                      labelText: "Имя",
+                      hintText: "Введите имя контакта",
                       controller: _nameController,
                       validator: FormValidations.validateName,
                     ),
@@ -219,7 +218,7 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
                     ),
                     const SizedBox(height: 16),
                     CustomInputText(
-                      labelText: "Phone",
+                      labelText: "Телефон",
                       hintText: "+1234567890",
                       controller: _phoneController,
                       keyboardType: TextInputType.phone,
@@ -239,7 +238,7 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
                     if (widget.contact != null) ...[
                       const SizedBox(height: 16),
                       _updateButtons(
-                        text: "Управление подпиской",
+                        text: "Удалить контакт",
                         error: true,
                         onTap: () {
                           debugPrint(
@@ -251,8 +250,6 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
                               id: widget.contact?.contactsID.toString() ?? '',
                             ),
                           );
-
-                          // context.pushNamed(RouteName.welcomePage);
                         },
                       ),
                     ],
@@ -260,7 +257,6 @@ class _EmpCreateContactScreenState extends State<EmpCreateContactScreen> {
                     const SizedBox(height: 32),
                   ],
                 ),
-           
               ),
             ),
           );

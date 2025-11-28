@@ -21,7 +21,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateWorkExperienceEvent>(_onUpdateWork);
 
     on<UpdateBasicInfo>(_onUpdateBasicInfo);
-
+    on<UpdateSpecialityInfo>(_onUpdateSpeciality);
   }
 
   Future<void> _onGetUserProfile(
@@ -105,27 +105,44 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   // * ───────────── update contacts after edit basic info ─────────────────────────
-Future<void> _onUpdateBasicInfo(
-  UpdateBasicInfo event,
-  Emitter<UserState> emit,
-) async {
-  final currentState = state;
+  Future<void> _onUpdateBasicInfo(
+    UpdateBasicInfo event,
+    Emitter<UserState> emit,
+  ) async {
+    final currentState = state;
 
-  if (currentState is UserLoaded) {
-    
-    // Update user model
-    final updatedUser = currentState.user.copyWith(
-      name: event.name,
-      birthDate: event.dob,
-    );
+    if (currentState is UserLoaded) {
+      // Update user model
+      final updatedUser = currentState.user.copyWith(
+        name: event.name,
+        birthDate: event.dob,
+      );
 
-    debugPrint("🔐 Basic Info Updated");
+      debugPrint("🔐 Basic Info Updated");
 
-    // Emit new state with updated user
-    emit(UserLoaded(updatedUser));
+      // Emit new state with updated user
+      emit(UserLoaded(updatedUser));
 
-    debugPrint("🔐 Emitted updated user: $updatedUser");
+      debugPrint("🔐 Emitted updated user: $updatedUser");
+    }
   }
-}
+  // * ───────────── Update Specility Info ─────────────────────────
 
+  Future<void> _onUpdateSpeciality(
+    UpdateSpecialityInfo event,
+    Emitter<UserState> emit,
+  ) async {
+    final currentState = state;
+
+    if (currentState is UserLoaded) {
+      // Update user model
+      final updatedUser = currentState.user.copyWith(
+        specializations: event.speciality,
+      );
+
+      emit(UserLoaded(updatedUser));
+
+      debugPrint("🔐 Emitted updated user: $updatedUser");
+    }
+  }
 }

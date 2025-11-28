@@ -13,6 +13,7 @@ import 'package:mama_kris/core/utils/form_validations.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
+import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
 class ApplForgotPasswordScreen extends StatefulWidget {
   const ApplForgotPasswordScreen({super.key});
@@ -101,6 +102,8 @@ class _ApplForgotPasswordScreenState extends State<ApplForgotPasswordScreen> {
                                             controller: emailController,
                                             validator:
                                                 FormValidations.validateEmail,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
                                           ),
                                           const SizedBox(height: 42),
                                           CustomButtonApplicant(

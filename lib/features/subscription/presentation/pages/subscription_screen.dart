@@ -120,8 +120,17 @@ MamaKris объединяет десятки тысяч активных сои�
                     }
                   },
                   child: Container(
-                    decoration: AppTheme.cardDecoration,
-                    padding: const EdgeInsets.all(30),
+                    decoration: BoxDecoration(
+                      color: AppPalette.white,
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xff2e786633),
+                          offset: Offset(0, 1),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
                     child: Column(
                       children: [
                         Expanded(
@@ -130,6 +139,9 @@ MamaKris объединяет десятки тысяч активных сои�
                               children: [
                                 const SizedBox(height: 24),
                                 Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 30,
+                                  ),
                                   child: Text(
                                     _isApplicant
                                         ? 'Доступ к базе из 10 000+ проверенных вакансий'
@@ -146,14 +158,20 @@ MamaKris объединяет десятки тысяч активных сои�
 
                                 const SizedBox(height: 32),
 
-                                Text(
-                                  _isApplicant ? applicantDesc : empDesc,
-                                  style: const TextStyle(
-                                    color: Color(0xFF596574),
-                                    fontSize: 16,
-                                    fontFamily: 'Manrope',
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.30,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 30,
+                                  ),
+
+                                  child: Text(
+                                    _isApplicant ? applicantDesc : empDesc,
+                                    style: const TextStyle(
+                                      color: Color(0xFF596574),
+                                      fontSize: 16,
+                                      fontFamily: 'Manrope',
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.30,
+                                    ),
                                   ),
                                 ),
 
@@ -168,22 +186,7 @@ MamaKris объединяет десятки тысяч активных сои�
                                       onTap: () => handleFetchTariffs(),
                                     ),
                                   )
-                                // else if (state is PaymentInitiatingState)
-                                //   const Center(child: IPhoneLoader(height: 200))
-                                // else if (state is PaymentErrorState)
-                                //   Center(
-                                //     child: CustomErrorRetry(
-                                //       errorMessage: state.message,
-                                //       onTap: () => _subscription != null
-                                //           ? _initiatePayment(_subscription!)
-                                //           : null,
-                                //     ),
-                                //   )
-                                // else if (state is PaymentInitiatedState)
-                                //   // Handle payment URL - this would be handled by navigation
-                                //   Container()
                                 else if (state is TariffsLoadedState)
-                                  // Generate list of cards dynamically
                                   ...state.subscriptions.map(
                                     (subscription) => Padding(
                                       padding: const EdgeInsets.only(
@@ -195,109 +198,6 @@ MamaKris объединяет десятки тысяч активных сои�
                                             _selectedSubscription =
                                                 subscription;
                                           });
-
-                                          /*
-                                          showModalBottomSheet(
-                                            context: context,
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.vertical(
-                                                    top: Radius.circular(32),
-                                                  ),
-                                            ),
-                                            builder: (BuildContext context) {
-                                              return Container(
-                                                padding: const EdgeInsets.all(
-                                                  20,
-                                                ),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Text(
-                                                      subscription.name,
-                                                      style: const TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    const SizedBox(height: 16),
-                                                    SubscriptionCard(
-                                                      isSelected: true,
-                                                      period: subscription.type,
-                                                      discount:
-                                                          subscription.name,
-                                                      price: subscription.price,
-                                                      // paidContent:   subscription.paidContent
-                                                    ),
-                                                    const SizedBox(height: 16),
-                                                    Text(
-                                                      'Полный доступ ко всем премиум-функциям за ${subscription.price} в ${subscription.type}.',
-                                            
-                                                      // subscription.paidContent.replaceAll('\n', " "),
-                                                      // 'Access to all premium features for ${subscription.price} per ${subscription.type}.',
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Color(
-                                                          0xFF596574,
-                                                        ),
-                                                      ),
-                                                      textAlign: TextAlign.left,
-                                                    ),
-                                                    const SizedBox(height: 32),
-                                                    ElevatedButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _subscription =
-                                                              subscription;
-                                                        });
-                                                        Navigator.of(
-                                                          context,
-                                                        ).pop();
-                                                        _initiatePayment(
-                                                          subscription,
-                                                        );
-                                                      },
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor:
-                                                            _isApplicant
-                                                            ? AppPalette
-                                                                  .primaryColor
-                                                            : AppPalette
-                                                                  .empPrimaryColor,
-                                            
-                                                        minimumSize: const Size(
-                                                          double.infinity,
-                                                          50,
-                                                        ),
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      child: const Text(
-                                                        "Подписаться и оплатить",
-                                                        // 'Subscribe & Pay',
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          );
-                                      */
                                         },
                                         child: SubscriptionCard(
                                           isSelected:
@@ -328,6 +228,10 @@ MamaKris объединяет десятки тысяч активных сои�
                                       Expanded(
                                         child: Container(
                                           padding: const EdgeInsets.all(16),
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 30,
+                                          ),
+
                                           decoration: BoxDecoration(
                                             color: _selectedSubscription != null
                                                 ? _isApplicant

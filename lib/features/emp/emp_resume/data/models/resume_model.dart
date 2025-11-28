@@ -4,16 +4,19 @@ class ResumeModel extends ResumeEntity {
   const ResumeModel({
     required super.id,
     required super.name,
-    required super.role,
+    required super.specializations,
     required super.age,
   });
 
   factory ResumeModel.fromJson(Map<String, dynamic> json) {
+    final specialization = json['specializations'] as List<dynamic>?;
+    final specializationNames =
+        specialization?.map((e) => e as String).toList() ?? [];
     return ResumeModel(
-      id: json['userID'] as int, // Safe: API returns int
-      name: json['name'] as String? ?? 'Unknown', // Fallback if null
-      role: 'role', // TODO: Replace with actual field when available
-      age: json['age']?.toString() ?? '' , // Convert int/null to String?
+      id: json['userID'] as int,
+      name: json['name'] as String? ?? 'Unknown',
+      specializations: specializationNames,
+      age: json['age']?.toString() ?? '',
     );
   }
 }

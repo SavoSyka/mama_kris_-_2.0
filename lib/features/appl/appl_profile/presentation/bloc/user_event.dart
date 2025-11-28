@@ -40,3 +40,12 @@ class UpdateBasicInfo extends UserEvent {
 
   UpdateBasicInfo({required this.name, required this.dob});
 }
+
+class UpdateSpecialityInfo extends UserEvent {
+  final List<String> speciality;
+
+
+  UpdateSpecialityInfo({required this.speciality});
+}
+
+

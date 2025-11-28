@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/entity/applicant_contact.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/create_applicant_contact.dart';
+import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/create_speciality_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_applicant_contact.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_user_account_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/get_all_applicant_contacts.dart';
@@ -27,6 +28,8 @@ class ApplicantContactBloc
   final DeleteUserAccountUsecase _deleteUserAccountUsecase;
   final UpdateBasicInfoUsecase _basicInfoUsecase;
   final LogoutUsecase logoutUsecase;
+  final CreateSpecialityUsecase createSpecialityUsecase;
+
   ApplicantContactBloc({
     required CreateApplicantContactUseCase createUseCase,
     required UpdateApplicantContactUseCase updateUseCase,
@@ -36,6 +39,7 @@ class ApplicantContactBloc
     required DeleteUserAccountUsecase deleteUserAccountUsecase,
     required UpdateBasicInfoUsecase basicInfoUsecase,
     required this.logoutUsecase,
+    required this.createSpecialityUsecase,
   }) : _createUseCase = createUseCase,
        _updateUseCase = updateUseCase,
        _deleteUseCase = deleteUseCase,
@@ -51,7 +55,10 @@ class ApplicantContactBloc
     on<UpdateApplicantExperience>(_onUpdateWorkExperience);
     on<DeleteUserAccountEvent>(_onDeleteAccount);
     on<UpdatingBasicInfoEvent>(_onUpdateBasicInfo);
+
     on<LogoutAccountEvent>(_onLogoutAccount);
+    on<CreateSpecialityEvent>(_updateSpeciality);
+
   }
 
   Future<void> _onLoadContacts(
@@ -183,6 +190,31 @@ class ApplicantContactBloc
         debugPrint("updating name operation succed}");
 
         emit(const UserBasicInfoUpdated());
+      },
+    );
+  }
+
+  Future<void> _updateSpeciality(
+    CreateSpecialityEvent event,
+    Emitter<ApplicantContactState> emit,
+  ) async {
+    debugPrint("error");
+    emit(const ApplicantContactLoading());
+
+    Future.delayed(const Duration(microseconds: 200));
+    final result = await createSpecialityUsecase(event.speciality);
+
+    debugPrint("Updating user SPeciality");
+
+    result.fold(
+      (failure) {
+        debugPrint("Erro happen in updating name and dob  ${failure.message}");
+        emit(ApplicantContactError(failure.message));
+      },
+      (success) {
+        debugPrint("updating name operation succed}");
+
+        emit(const SpecialityUpdatedState());
       },
     );
   }

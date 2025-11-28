@@ -231,17 +231,16 @@ class ApplicantContactDataSourceImpl implements ApplicantContactDataSource {
     return true;
   }
 
-
-
   @override
-  Future<bool> addSpeciality(String speciality) async {
+  Future<bool> addSpeciality(List<String> speciality) async {
     try {
       debugPrint("contact to create $speciality");
-      final postData = {'speciality': 'specaility'};
+      final uniqueSpeciality = speciality.toSet().toList();
+      final postData = {'specializations': uniqueSpeciality};
 
       final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
-      final response = await dio.post(
-        ApiConstants.createContact(userId),
+      final response = await dio.put(
+        ApiConstants.updateUser(userId),
         data: postData,
       );
 

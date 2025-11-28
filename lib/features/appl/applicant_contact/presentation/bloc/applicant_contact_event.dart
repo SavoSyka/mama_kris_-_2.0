@@ -52,3 +52,9 @@ class UpdatingBasicInfoEvent extends ApplicantContactEvent {
 class LogoutAccountEvent extends ApplicantContactEvent {
   const LogoutAccountEvent();
 }
+
+class CreateSpecialityEvent extends ApplicantContactEvent {
+  final List<String> speciality;
+
+  const CreateSpecialityEvent({required this.speciality});
+}
