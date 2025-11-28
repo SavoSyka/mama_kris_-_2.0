@@ -366,6 +366,10 @@ Future<void> _initResumes() async {
   sl.registerLazySingleton(() => FetchFavoritedUsersUsecase(sl()));
   sl.registerLazySingleton(() => GetPublicProfilesUsecase(sl()));
 
+  sl.registerLazySingleton(() => GetHiddenUsersUsecase(sl()));
+  sl.registerLazySingleton(() => AddToHideUsecase(sl()));
+  sl.registerLazySingleton(() => RemoveFromHideUsecase(sl()));
+
   // Bloc
   sl.registerFactory(
     () => ResumeBloc(
@@ -380,6 +384,14 @@ Future<void> _initResumes() async {
       searchSpecialityUsecase: sl(),
       getPublicProfilesUsecase: sl(),
       searchHistoryDataSource: sl(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => HideResumeBloc(
+      getHiddenUsersUsecase: sl(),
+      addToHideUsecase: sl(),
+      removeFromHideUsecase: sl(),
     ),
   );
 }

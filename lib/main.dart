@@ -19,6 +19,7 @@ import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/appl
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/hide_resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_bloc.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
@@ -109,6 +110,7 @@ void main() async {
         BlocProvider.value(value: sl<SpecialitySearchBloc>()),
 
         BlocProvider(create: (context) => sl<SubscriptionStatusCubit>()),
+        BlocProvider(create: (context) => sl<HideResumeBloc>()),
       ],
       child: const MyApp(),
     ),

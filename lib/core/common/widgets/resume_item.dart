@@ -69,8 +69,8 @@ class _JobListItemState extends State<ResumeItem> {
           },
           child: Text(
             widget.isFavorite
-                ? 'Удалить из избранного'
-                : 'Добавить в избранное',
+                ? 'Remove Удалить из избранного'
+                : 'add Добавить в избранное',
           ),
         ),
         PopupMenuItem(

@@ -87,17 +87,18 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                                 speciality: _userState?.specializations ?? [],
                               );
 
-                              if (result != null &&
-                                  result is Map<String, dynamic>) {
-                                final value =  result!['spec'];
+                              if (result != null) {
                                 final specList = List<String>.from(
                                   _userState?.specializations ?? [],
                                 );
-                                specList.add(value);
+                                specList.add(result);
+                                setState(() {
+                                  final setData = specList.toSet().toList();
 
-                                context.read<UserBloc>().add(
-                                  UpdateSpecialityInfo(speciality: specList),
-                                );
+                                  context.read<UserBloc>().add(
+                                    UpdateSpecialityInfo(speciality: setData),
+                                  );
+                                });
                               }
                             },
                           ),

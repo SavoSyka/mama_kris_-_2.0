@@ -166,4 +166,80 @@ class ResumeRemoteDataSourceImpl implements ResumeRemoteDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
+
+  @override
+  @override
+  Future<bool> addToHide({required String userId}) async {
+    try {
+      final response = await dio.post(ApiConstants.addToHide(userId));
+
+      if (response.statusCode.toString().startsWith('2')) {
+        return true;
+      } else {
+        throw ApiException(
+          message: response.data['message'] ?? 'Failed to hide user',
+          statusCode: response.statusCode ?? 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      debugPrint("erroro $e");
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<bool> removeFromHide({required String userId}) async {
+    try {
+      final response = await dio.delete(ApiConstants.removeFromHide(userId));
+
+      if (response.statusCode.toString().startsWith('2')) {
+        return true;
+      } else {
+        throw ApiException(
+          message:
+              response.data['message'] ??
+              'Failed to remove user from hidden list',
+          statusCode: response.statusCode ?? 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      debugPrint("erroro $e");
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<ResumeListModel> getHiddenUsers() async {
+    try {
+      final response = await dio.get(ApiConstants.getHiddenUsers);
+
+      if (response.statusCode.toString().startsWith('2')) {
+        final list = ResumeListModel.fromJson(response.data);
+        return list;
+      } else {
+        throw ApiException(
+          message: response.data['message'] ?? 'Failed to fetch hidden users',
+          statusCode: response.statusCode ?? 500,
+        );
+      }
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      debugPrint("erroro $e");
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
 }

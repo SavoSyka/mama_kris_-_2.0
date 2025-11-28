@@ -26,86 +26,86 @@ Future<String?> AddSpecialisationModal(
     builder: (BuildContext context) {
       return BlocListener<ApplicantContactBloc, ApplicantContactState>(
         listener: (context, state) {
-          if (state is ApplicantContactLoading) {
-            // showIOSLoader(context);
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) =>
-                  const Center(child: CupertinoActivityIndicator(radius: 20)),
-            );
-          }
+          if (state is ApplicantContactLoading) {}
 
           if (state is SpecialityUpdatedState) {
-            Navigator.pop(context);
-            context.pop({'spec': spec.text});
+            Navigator.pop(context, spec.text);
           }
 
           if (state is ApplicantContactError) {
-            Navigator.pop(context); // close loading
-
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
-        child: AnimatedPadding(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(36)),
+        child: BlocBuilder<ApplicantContactBloc, ApplicantContactState>(
+          builder: (context, state) {
+            return AnimatedPadding(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const CustomText(
-                        text: "Выберите специальность",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(36),
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: SingleChildScrollView(
+                      child: StatefulBuilder(
+                        builder: (context, useState) {
+                          return Column(
+                            children: [
+                              const CustomText(
+                                text: "Выберите специальность",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
 
-                      CustomInputText(
-                        hintText: 'Специальность',
-                        labelText: "Специальность",
-                        controller: spec,
-                      ),
+                              CustomInputText(
+                                hintText: 'Специальность',
+                                labelText: "Специальность",
+                                controller: spec,
+                              ),
 
-                      const SizedBox(height: 24),
+                              const SizedBox(height: 24),
 
-                      CustomButtonApplicant(
-                        btnText: "Добавить",
-                        onTap: () {
-                          final value = spec.text.trim();
-                          if (value.isEmpty) return;
+                              CustomButtonApplicant(
+                                isLoading: state is ApplicantContactLoading,
+                                btnText: "Добавить",
+                                onTap: () {
+                                  final value = spec.text.trim();
+                                  if (value.isEmpty) return;
 
-                          speciality.add(value);
+                                  speciality.add(value);
 
-                          context.read<ApplicantContactBloc>().add(
-                            CreateSpecialityEvent(
-                              speciality: List.from(speciality),
-                            ),
+                                  context.read<ApplicantContactBloc>().add(
+                                    CreateSpecialityEvent(
+                                      speciality: List.from(speciality),
+                                    ),
+                                  );
+                                },
+                              ),
+
+                              const SizedBox(height: 24),
+                            ],
                           );
                         },
                       ),
-
-                      const SizedBox(height: 24),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       );
     },

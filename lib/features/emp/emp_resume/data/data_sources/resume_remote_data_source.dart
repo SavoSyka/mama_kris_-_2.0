@@ -14,8 +14,11 @@ abstract class ResumeRemoteDataSource {
     required bool isFavorited,
   });
 
+  Future<UserProfileModel> getPublicProfiles({required String userId});
 
-    Future<UserProfileModel> getPublicProfiles({
-    required String userId,
-  });
+  Future<ResumeListModel> getHiddenUsers();
+
+  Future<bool> addToHide({required String userId});
+
+  Future<bool> removeFromHide({required String userId});
 }

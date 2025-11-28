@@ -70,4 +70,35 @@ class ResumeRepositoryImpl implements ResumeRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  @override
+  ResultFuture<bool> addToHide({required String userId}) async {
+    try {
+      final result = await remoteDataSource.addToHide(userId: userId);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<ResumeList> getHiddenUsers() async {
+    try {
+      final result = await remoteDataSource.getHiddenUsers();
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<bool> removeFromHide({required String userId}) async {
+    try {
+      final result = await remoteDataSource.removeFromHide(userId: userId);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

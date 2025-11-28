@@ -188,10 +188,8 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
       );
 
       result.fold((failure) => emit(ResumeErrorState(failure.message)), (_) {
-
-        
         final updatedResume = currentState.users.resume
-            .where((r) => r.id != event.userId)
+            .where((r) => r.id.toString() != event.userId)
             .toList();
 
         emit(

@@ -155,10 +155,15 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                             final users = state.users.resume;
 
                             if (users.isEmpty) {
-                              return const Expanded(
+                              return Expanded(
                                 child: Row(
                                   children: [
-                                    Expanded(child: CustomEmptyContainer()),
+                                    Expanded(
+                                      child: CustomEmptyContainer(
+                                        title: "Избранных резюме не найдено",
+                                        onRefresh: _handleRefresh,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               );
