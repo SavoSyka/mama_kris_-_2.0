@@ -6,6 +6,8 @@ class ResumeModel extends ResumeEntity {
     required super.name,
     required super.specializations,
     required super.age,
+    required super.isFavorite,
+    required super.isHidden,
   });
 
   factory ResumeModel.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,8 @@ class ResumeModel extends ResumeEntity {
       name: json['name'] as String? ?? 'Unknown',
       specializations: specializationNames,
       age: json['age']?.toString() ?? '',
+      isFavorite: json['isFavorite'],
+      isHidden: json['isHidden'],
     );
   }
 }

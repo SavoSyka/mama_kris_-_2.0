@@ -51,6 +51,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
 
       if (response.statusCode.toString().startsWith('2')) {
         final jobList = JobListModel.fromJson(response.data);
+        await sl<AuthLocalDataSource>().saveSubscription(true);
 
         return jobList;
       } else {

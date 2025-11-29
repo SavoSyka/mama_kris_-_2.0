@@ -183,7 +183,8 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                                       specializations: user.specializations,
                                       age: user.age,
                                       userId: user.id,
-                                      isFavorite: isFavorite,
+                                      isFavorite: user.isFavorite,
+                                      isHidden: user.isHidden,
                                       onTap: () {
                                         context.pushNamed(
                                           RouteName.resumeDetail,

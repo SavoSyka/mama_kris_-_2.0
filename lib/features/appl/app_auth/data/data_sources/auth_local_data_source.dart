@@ -36,6 +36,8 @@ abstract class AuthLocalDataSource {
 
   /// Clear all authentication-related data
   Future<void> clearAll();
+  Future<bool> getSubscription();
+  Future<void> saveSubscription(bool status);
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -50,8 +52,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   static const _userKey = 'user_data';
 
   static const _refreshKey = 'refresh_token';
-  static const _applicantkey =
-      '_applicationKey'; // check whether employe or applicant logged to the system
+  static const _applicantkey = '_applicationKey';
+  static const _subscriptionKey = '_subscriptionKey';
 
   @override
   Future<void> saveToken(String token) async {
@@ -126,5 +128,17 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> saveUserType(bool isApplicant) async {
     await prefs.setBool(_applicantkey, isApplicant);
+  }
+
+  @override
+  Future<bool> getSubscription() async {
+    final isActive = prefs.getBool(_subscriptionKey) ?? false;
+
+    return isActive;
+  }
+
+  @override
+  Future<void> saveSubscription(bool status) async {
+    await prefs.setBool(_subscriptionKey, status);
   }
 }

@@ -177,6 +177,66 @@ Future<String?> ApplicantJobDetail(
                                 );
                               },
                             ),
+
+                          if (job.contactJobs?.link != null) ...[
+                            const SizedBox(height: 12),
+
+                            CustomButtonSec(
+                              btnText: '',
+
+                              child: _contactCard(
+                                icon: MediaRes.vkIcon,
+                                label: 'Перейти в VK',
+                              ),
+
+                              onTap: () {
+                                HandleLaunchUrl.launchUrls(
+                                  context,
+                                  url: job.contactJobs!.link ?? '',
+                                );
+                              },
+                            ),
+                          ],
+
+                          if (job.contactJobs?.email != null) ...[
+                            const SizedBox(height: 12),
+
+                            CustomButtonSec(
+                              btnText: '',
+
+                              child: _contactCard(
+                                icon: MediaRes.vkIcon,
+                                label: 'Перейти в VK',
+                              ),
+
+                              onTap: () {
+                                HandleLaunchUrl.launchEmail(
+                                  context,
+                                  email: job.contactJobs!.email ?? '',
+                                );
+                              },
+                            ),
+                          ],
+
+                          if (job.contactJobs?.phone != null) ...[
+                            const SizedBox(height: 12),
+
+                            CustomButtonSec(
+                              btnText: '',
+
+                              child: _contactCard(
+                                icon: MediaRes.vkIcon,
+                                label: 'Перейти в VK',
+                              ),
+
+                              onTap: () {
+                                HandleLaunchUrl.launchPhoneCall(
+                                  context,
+                                  phone: job.contactJobs!.phone ?? '',
+                                );
+                              },
+                            ),
+                          ],
                           const SizedBox(height: 24),
                         ],
                       ),

@@ -4,15 +4,30 @@ import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
+import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 
-class ApplSupportDetailScreen extends StatelessWidget {
+class ApplSupportDetailScreen extends StatefulWidget {
   const ApplSupportDetailScreen({super.key, required this.support});
   final DataMap support;
 
+  @override
+  State<ApplSupportDetailScreen> createState() =>
+      _ApplSupportDetailScreenState();
+}
+
+class _ApplSupportDetailScreenState extends State<ApplSupportDetailScreen> {
+  @override
+  initState() {
+    getSubscription();
+    super.initState();
+  }
+
+  bool isActive = false;
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -38,7 +53,7 @@ class ApplSupportDetailScreen extends StatelessWidget {
 
                         children: [
                           CustomText(
-                            text: support['title'],
+                            text: widget.support['title'],
 
                             style: const TextStyle(
                               color: Colors.black,
@@ -49,18 +64,19 @@ class ApplSupportDetailScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          CustomText(text: support['article'] ?? ''),
+                          CustomText(text: widget.support['article'] ?? ''),
 
-                          if (support['hasButton'] != null &&
-                              support['hasButton']) ...[
+                          if (isActive &&
+                              widget.support['hasButton'] != null &&
+                              widget.support['hasButton']) ...[
                             const SizedBox(height: 24),
 
                             CustomButtonSec(
-                              btnText: support['buttonText'],
+                              btnText: widget.support['buttonText'],
                               onTap: () {
                                 HandleLaunchUrl.launchUrlGeneric(
                                   context,
-                                  url: support['buttonLink'],
+                                  url: widget.support['buttonLink'],
                                 );
                               },
                             ),
@@ -78,6 +94,14 @@ class ApplSupportDetailScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> getSubscription() async {
+    final isAct = await sl<AuthLocalDataSource>().getSubscription();
+
+    setState(() {
+      isActive = isAct;
+    });
   }
 }
 

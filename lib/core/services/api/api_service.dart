@@ -70,6 +70,8 @@ Future<void> apiService() async {
                 "statusCode": 403,
               };
 
+               await sl<AuthLocalDataSource>().saveSubscription(false);
+
               // Check if response matches exactly
               if (responseData['message'] == expectedResponse['message'] &&
                   responseData['error'] == expectedResponse['error'] &&

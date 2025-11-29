@@ -46,82 +46,72 @@ class SubscriptionCard extends StatelessWidget {
               )
             : null,
       ),
-      child: Row(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 42,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12,
         children: [
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 16,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  spacing: 8,
-                  children: [
-                    Text(
-                      translatePeriod(),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontFamily: 'Manrope',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    if (period.toLowerCase() == 'year')
-                      const Text(
-                        'Самый популярный вариант',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w600,
-                          height: 1.30,
-                          color: AppPalette.primaryColor,
-                        ),
-                      ),
-                  ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 8,
+            children: [
+              Text(
+                translatePeriod(),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontFamily: 'Manrope',
+                  fontWeight: FontWeight.w600,
                 ),
-
-                Text(
-                  calculatePricePerMonth(),
-                  style: const TextStyle(
-                    color: Color(0xFF737373),
+              ),
+              if (period.toLowerCase() == 'year')
+                const Text(
+                  'Самый популярный вариант',
+                  style: TextStyle(
                     fontSize: 12,
+                    fontFamily: 'Manrope',
+                    fontWeight: FontWeight.w600,
+                    height: 1.30,
+                    color: AppPalette.primaryColor,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '$price руб.',
-                      style: const TextStyle(
-                        color: Color(0xFF596574),
-                        fontSize: 16,
-                        fontFamily: 'Manrope',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-
-                    if (period.toLowerCase() == 'year')
-                      const Text(
-                        'Экономия 16 300',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w500,
-                          height: 1.30,
-                          color: AppPalette.primaryColor,
-                        ),
-                      ),
-                  ],
-                ),
-              ],
+            ],
+          ),
+            
+          Text(
+            calculatePricePerMonth(),
+            style: const TextStyle(
+              color: Color(0xFF737373),
+              fontSize: 12,
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '$price руб.',
+                style: const TextStyle(
+                  color: Color(0xFF596574),
+                  fontSize: 16,
+                  fontFamily: 'Manrope',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            
+              if (period.toLowerCase() == 'year')
+                const Text(
+                  'Экономия 16 300',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontFamily: 'Manrope',
+                    fontWeight: FontWeight.w500,
+                    height: 1.30,
+                    color: AppPalette.primaryColor,
+                  ),
+                ),
+            ],
           ),
         ],
       ),

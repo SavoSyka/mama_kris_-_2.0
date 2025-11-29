@@ -7,6 +7,7 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/handle_launch_url.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/hide_resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,6 +19,8 @@ class ResumeItem extends StatefulWidget {
   final String age;
   final int userId;
   final bool isFavorite;
+  final bool isHidden;
+
   final VoidCallback onTap;
 
   const ResumeItem({
@@ -27,6 +30,7 @@ class ResumeItem extends StatefulWidget {
     required this.onTap,
     required this.age,
     required this.isFavorite,
+    required this.isHidden,
 
     required this.userId,
   });
@@ -87,9 +91,20 @@ class _JobListItemState extends State<ResumeItem> {
         ),
         PopupMenuItem(
           onTap: () {
-            // Handle report
+            if (widget.isHidden) {
+              context.read<HideResumeBloc>().add(
+                RemoveFromHiddenEvent(userId: widget.userId.toString()),
+              );
+            } else {
+              context.read<HideResumeBloc>().add(
+                AddToHiddenEvent(userId: widget.userId.toString()),
+              );
+            }
           },
-          child: const Text('Скрыть', style: TextStyle(color: Colors.red)),
+          child: Text(
+            widget.isHidden ? "Показать" : 'Скрыть',
+            style: const TextStyle(color: Colors.red),
+          ),
         ),
       ],
     );
