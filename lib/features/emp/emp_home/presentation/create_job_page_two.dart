@@ -162,14 +162,6 @@ class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
 
             const SizedBox(height: 32),
 
-            CustomInputText(
-              hintText: 'Текст',
-              labelText: "Ссылка",
-              controller: _link,
-              validator: FormValidations.validateContactLink,
-            ),
-            const SizedBox(height: 16),
-
             CustomButtonEmployee(
               btnText: 'Далее',
               onTap: () {
@@ -185,8 +177,7 @@ class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
 
                   final jobEntity = widget.job!.copyWith(
                     contactJobs: selectedContact,
-                    links: _link.text
-                    
+                    links: _link.text,
                   );
 
                   context.pushNamed(
@@ -224,7 +215,7 @@ class _CreateJobPageTwoState extends State<CreateJobPageTwo> {
 
     if (userState is EmpUserLoaded) {
       contacts = userState.user.contacts ?? [];
-    } 
+    }
 
     // Wait for the bottom sheet to return selected contact (or newly created)
     final selectedContact = await showSelectContactSheet(

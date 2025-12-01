@@ -70,11 +70,7 @@ class _ApplVerifyOtpScreenState extends State<ApplVerifyOtpScreen> {
                             GetUserProfileEvent(user: state.user.user),
                           );
 
-                          if (state.user.subscription.active) {
-                            context.goNamed(RouteName.homeApplicant);
-                          } else {
-                            context.goNamed(RouteName.subscription);
-                          }
+                          context.goNamed(RouteName.homeApplicant);
                         } else if (state is AuthOtpVerified) {
                           // * if email validation passed we have to register user by giiving his PII
 

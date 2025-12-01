@@ -41,8 +41,7 @@ class _CreateJobPageOneState extends State<CreateJobPageOne> {
     _salary = TextEditingController(
       text: widget.job?.salary == '0' ? '' : widget.job?.salary ?? '',
     );
-    _salaryWithAgreement =
-        widget.job?.salary == '0' || widget.job?.salary == null;
+    _salaryWithAgreement = widget.job?.salaryWithAgreement??false;
   }
 
   @override
@@ -176,7 +175,7 @@ class _CreateJobPageOneState extends State<CreateJobPageOne> {
                     salary: _salary.text,
                     status: widget.job?.status ?? '',
                     contactJobs: widget.job?.contactJobs,
-                    salaryWithAgreement: _salaryWithAgreement
+                    salaryWithAgreement: _salaryWithAgreement,
                   );
                   context.pushNamed(
                     RouteName.createJobPageTwo,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
@@ -66,18 +68,21 @@ class _ApplSupportDetailScreenState extends State<ApplSupportDetailScreen> {
                           const SizedBox(height: 24),
                           CustomText(text: widget.support['article'] ?? ''),
 
-                          if (isActive &&
-                              widget.support['hasButton'] != null &&
+                          if (widget.support['hasButton'] != null &&
                               widget.support['hasButton']) ...[
                             const SizedBox(height: 24),
 
                             CustomButtonSec(
                               btnText: widget.support['buttonText'],
                               onTap: () {
-                                HandleLaunchUrl.launchUrlGeneric(
-                                  context,
-                                  url: widget.support['buttonLink'],
-                                );
+                                if (isActive) {
+                                  HandleLaunchUrl.launchUrlGeneric(
+                                    context,
+                                    url: widget.support['buttonLink'],
+                                  );
+                                } else {
+                                  context.pushNamed(RouteName.subscription);
+                                }
                               },
                             ),
                           ],

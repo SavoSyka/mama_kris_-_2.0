@@ -19,8 +19,8 @@ class ResumeModel extends ResumeEntity {
       name: json['name'] as String? ?? 'Unknown',
       specializations: specializationNames,
       age: json['age']?.toString() ?? '',
-      isFavorite: json['isFavorite'],
-      isHidden: json['isHidden'],
+      isFavorite: json['isFavorite'] ?? true,
+      isHidden: json['isHidden'] ?? false,
     );
   }
 }

@@ -58,7 +58,7 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
               width: 20,
               color: AppPalette.primaryColor,
             ),
-            label: AppTextContents.home,
+            label: "Вакансии",
           ),
           const BottomNavigationBarItem(
             icon: CustomImageView(imagePath: MediaRes.myOrders, width: 18),

@@ -16,7 +16,7 @@ import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_job
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_state.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
-enum FilterType { active, drafts, archive }
+enum FilterType { active, drafts, archive, rejected, checking }
 
 class EmpHomeScreen extends StatefulWidget {
   const EmpHomeScreen({super.key});
@@ -46,7 +46,11 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
       case FilterType.drafts:
         return 'drafted';
       case FilterType.archive:
-        return 'checking, rejected';
+        return 'archive'; // Added status string for archive
+      case FilterType.rejected:
+        return 'rejected';
+      case FilterType.checking:
+        return 'checking';
     }
   }
 
@@ -76,63 +80,90 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
                             children: [
                               Container(
                                 // color: Colors.red,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    // Updated section with enum values for Активные, Черновики, Архив
-                                    Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              selectedFilter =
-                                                  FilterType.active;
-                                            });
-                                            _fetchJobs();
-                                          },
-                                          child: _FilterCard(
-                                            isSelected:
-                                                selectedFilter ==
-                                                FilterType.active,
-                                            text: 'Активные',
-                                          ),
+                                child: SizedBox(
+                                  height: 42,
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.all(0),
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedFilter = FilterType.active;
+                                          });
+                                          _fetchJobs();
+                                        },
+                                        child: _FilterCard(
+                                          isSelected:
+                                              selectedFilter ==
+                                              FilterType.active,
+                                          text: 'Активные',
                                         ),
-                                        const SizedBox(width: 12),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              selectedFilter =
-                                                  FilterType.drafts;
-                                            });
-                                            _fetchJobs();
-                                          },
-                                          child: _FilterCard(
-                                            isSelected:
-                                                selectedFilter ==
-                                                FilterType.drafts,
-                                            text: 'Черновики',
-                                          ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedFilter = FilterType.drafts;
+                                          });
+                                          _fetchJobs();
+                                        },
+                                        child: _FilterCard(
+                                          isSelected:
+                                              selectedFilter ==
+                                              FilterType.drafts,
+                                          text: 'Черновики',
                                         ),
-                                        const SizedBox(width: 12),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              selectedFilter =
-                                                  FilterType.archive;
-                                            });
-                                            _fetchJobs();
-                                          },
-                                          child: _FilterCard(
-                                            isSelected:
-                                                selectedFilter ==
-                                                FilterType.archive,
-                                            text: 'Архив',
-                                          ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedFilter = FilterType.archive;
+                                          });
+                                          _fetchJobs();
+                                        },
+                                        child: _FilterCard(
+                                          isSelected:
+                                              selectedFilter ==
+                                              FilterType.archive,
+                                          text: 'Архив',
                                         ),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                      const SizedBox(width: 12),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedFilter =
+                                                FilterType.rejected;
+                                          });
+                                          _fetchJobs();
+                                        },
+                                        child: _FilterCard(
+                                          isSelected:
+                                              selectedFilter ==
+                                              FilterType.rejected,
+                                          text: 'Отклонённые',
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedFilter =
+                                                FilterType.checking;
+                                          });
+                                          _fetchJobs();
+                                        },
+                                        child: _FilterCard(
+                                          isSelected:
+                                              selectedFilter ==
+                                              FilterType.checking,
+                                          text: 'На проверке',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
 
@@ -333,18 +364,15 @@ class _CreateJobCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const SizedBox(
-            width: 175,
-            child: Text(
-              'Но вы можете рассказать о своей задаче нашим мамам',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF596574),
-                fontSize: 16,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w500,
-                height: 1.30,
-              ),
+          const Text(
+            "Но вы можете\nрассказать о своей\nзадаче нашим соискателям",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xFF596574),
+              fontSize: 16,
+              fontFamily: 'Manrope',
+              fontWeight: FontWeight.w500,
+              height: 1.30,
             ),
           ),
           const SizedBox(height: 24),

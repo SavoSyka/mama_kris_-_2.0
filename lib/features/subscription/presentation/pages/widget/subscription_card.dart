@@ -22,7 +22,7 @@ class SubscriptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
       margin: const EdgeInsets.symmetric(horizontal: 30),
 
       decoration: BoxDecoration(
@@ -50,7 +50,7 @@ class SubscriptionCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12,
+        spacing: 10,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,14 +79,11 @@ class SubscriptionCard extends StatelessWidget {
                 ),
             ],
           ),
-            
-          Text(
-            calculatePricePerMonth(),
-            style: const TextStyle(
-              color: Color(0xFF737373),
-              fontSize: 12,
+          if (calculatePricePerMonth().isNotEmpty)
+            Text(
+              calculatePricePerMonth(),
+              style: const TextStyle(color: Color(0xFF737373), fontSize: 12),
             ),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -99,7 +96,7 @@ class SubscriptionCard extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-            
+
               if (period.toLowerCase() == 'year')
                 const Text(
                   'Экономия 16 300',
@@ -157,10 +154,8 @@ class SubscriptionCard extends StatelessWidget {
     final perMonth = pr / months;
 
     // Remove trailing .0 if it's a whole number
-    final formatted = perMonth % 1 == 0
-        ? perMonth.toInt().toString()
-        : perMonth.toStringAsFixed(0);
+    final formatted = perMonth % 1 == 0 ? '' : perMonth.toStringAsFixed(0);
 
-    return "$formatted руб./мес";
+    return formatted.isEmpty ? formatted : "$formatted руб./мес";
   }
 }

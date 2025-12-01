@@ -68,11 +68,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                 GetUserProfileEvent(user: state.user.user),
                               );
 
-                              if (state.user.subscription.active) {
-                                context.goNamed(RouteName.homeApplicant);
-                              } else {
-                                context.goNamed(RouteName.homeApplicant);
-                              }
+                              context.goNamed(RouteName.homeApplicant);
                             } else if (state is AuthFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(state.message)),

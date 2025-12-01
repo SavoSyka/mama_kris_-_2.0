@@ -35,10 +35,7 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
   bool _acceptPrivacyPolicy = false;
   bool _acceptTermsOfUse = false;
 
-  final emailController = TextEditingController(
-   
-
-  );
+  final emailController = TextEditingController();
   final nameController = TextEditingController();
 
   final passwordController = TextEditingController();
@@ -50,14 +47,14 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // 
+    //
     //
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: const CustomAppBar(title: "", isEmployee: true,),
+      appBar: const CustomAppBar(title: "", isEmployee: true),
       extendBodyBehindAppBar: true,
       body: Container(
         decoration: const BoxDecoration(color: AppPalette.empBgColor),
@@ -81,7 +78,6 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
                               'name': nameController.text,
                               'password': passwordController.text,
                               'source': 'signup',
-
                             },
                           );
                         } else if (state is EmpAuthFailure) {
@@ -124,8 +120,8 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
                                         controller: emailController,
                                         validator:
                                             FormValidations.validateEmail,
-                                                   keyboardType:
-                                                TextInputType.emailAddress,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                       ),
                                       const SizedBox(height: 12),
                                       CustomInputText(
@@ -182,7 +178,11 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
                                               child: const CustomText(
                                                 text:
                                                     "Я принимаю условия Политики конфиденциальности и даю согласие на обработку моих персональных данных в соответствии с законодательством",
-                                                style: TextStyle(fontSize: 12),
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppPalette
+                                                      .empPrimaryColor,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -221,7 +221,11 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
                                               child: const CustomText(
                                                 text:
                                                     "Я соглашаюсь с Условиями использования",
-                                                style: TextStyle(fontSize: 12),
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppPalette
+                                                      .empPrimaryColor,
+                                                ),
                                               ),
                                             ),
                                           ),

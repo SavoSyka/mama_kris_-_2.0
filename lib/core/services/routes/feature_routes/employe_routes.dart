@@ -86,7 +86,10 @@ final List<RouteBase> employeRoutes = [
 
       return BlocProvider(
         create: (context) => sl<ResumeBloc>(),
-        child: EmpResumeScreenDetail(userId: extra['userId'] as String),
+        child: EmpResumeScreenDetail(
+          userId: extra['userId'] as String,
+          isHidden: extra['isHidden'] as bool,
+        ),
       );
     },
   ),

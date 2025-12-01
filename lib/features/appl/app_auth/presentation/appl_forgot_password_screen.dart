@@ -54,7 +54,7 @@ class _ApplForgotPasswordScreenState extends State<ApplForgotPasswordScreen> {
                                   ),
                                 ),
                               );
-                              context.goNamed(
+                              context.pushNamed(
                                 RouteName.verifyOptApplicant,
                                 extra: {
                                   "email": emailController.text,

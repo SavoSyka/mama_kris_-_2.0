@@ -54,7 +54,7 @@ class _EmpForgotPasswordScreenState extends State<EmpForgotPasswordScreen> {
                               content: Text('Инструкции отправлены на email'),
                             ),
                           );
-                          context.goNamed(
+                          context.pushNamed(
                             RouteName.verifyOtpEmployee,
                             extra: {
                               "email": emailController.text,

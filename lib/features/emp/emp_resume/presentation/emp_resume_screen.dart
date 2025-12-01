@@ -188,7 +188,9 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
                                       onTap: () {
                                         context.pushNamed(
                                           RouteName.resumeDetail,
-                                          extra: {'userId': user.id.toString()},
+                                          extra: {'userId': user.id.toString(),
+                                          "isHidden": user.isHidden
+                                          },
                                         );
                                       },
                                     );

@@ -8,6 +8,7 @@ import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_constants.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
@@ -181,6 +182,8 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                                         "Я принимаю условия Политики конфиденциальности и даю согласие на обработку моих персональных данных в соответствии с законодательством",
                                                     style: TextStyle(
                                                       fontSize: 12,
+                                                      color: AppPalette
+                                                          .primaryColor,
                                                     ),
                                                   ),
                                                 ),
@@ -224,6 +227,8 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                                         "Я соглашаюсь с Условиями использования",
                                                     style: TextStyle(
                                                       fontSize: 12,
+                                                      color: AppPalette
+                                                          .primaryColor,
                                                     ),
                                                   ),
                                                 ),

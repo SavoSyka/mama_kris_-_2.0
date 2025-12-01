@@ -13,8 +13,10 @@ import 'package:mama_kris/core/common/widgets/custom_specialisation.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/hide_resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
@@ -24,8 +26,14 @@ import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_s
 import 'package:share_plus/share_plus.dart';
 
 class EmpResumeScreenDetail extends StatefulWidget {
-  const EmpResumeScreenDetail({super.key, required this.userId});
+  const EmpResumeScreenDetail({
+    super.key,
+    required this.userId,
+    required this.isHidden,
+  });
   final String userId;
+  final bool isHidden;
+
   @override
   _EmpResumeScreenDetailState createState() => _EmpResumeScreenDetailState();
 }
@@ -132,7 +140,12 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
 
                 IconButton(
                   onPressed: () {
-                    _showJobOptionsMenu(context);
+                    _showJobOptionsMenu(
+                      context,
+                      name: user.name ?? "",
+                      isHidden: widget.isHidden,
+                      isFavorite: isLiked,
+                    );
                   },
                   icon: Container(
                     padding: const EdgeInsets.all(6),
@@ -191,7 +204,12 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
     );
   }
 
-  void _showJobOptionsMenu(BuildContext context) {
+  void _showJobOptionsMenu(
+    BuildContext context, {
+    required bool isFavorite,
+    required bool isHidden,
+    required String name,
+  }) {
     final RenderBox renderBox =
         _menuKey.currentContext!.findRenderObject() as RenderBox;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
@@ -205,25 +223,56 @@ class _EmpResumeScreenDetailState extends State<EmpResumeScreenDetail> {
         offset.dx + size.width,
         offset.dy + size.height,
       ),
+
       items: [
+        /*
         PopupMenuItem(
           onTap: () {
-            // Handle add to favorites
+            // * Handle add to favorites
+
+            debugPrint("On like or dislike isFavorited status $isFavorite");
+            context.read<ResumeBloc>().add(
+              UpdateFavoritingEvent(
+                isFavorited: isFavorite,
+                userId: widget.userId.toString(),
+              ),
+            );
           },
-          child: const Text('В избранное'),
+          child: Text(
+            isFavorite
+                ? 'Remove Удалить из избранного'
+                : 'add Добавить в избранное',
+          ),
         ),
+      */
         PopupMenuItem(
           onTap: () {
             // Handle share
-            Share.share('Check out this job: ', subject: 'Job Opportunity');
+            HandleLaunchUrl.launchTelegram(
+              context,
+              username: "@mamakrisSupport_bot",
+              message:
+                  "Я хотел бы сообщить о резюме как мошенническом.\n\nID резюме: ${widget.userId}\nИмя: $name\nПричина:",
+            );
           },
-          child: const Text('Отправить жалобу'),
+          child: const Text('Отправить жалобу'), // * Submit a complaint
         ),
         PopupMenuItem(
           onTap: () {
-            // Handle report
+            if (isHidden) {
+              context.read<HideResumeBloc>().add(
+                RemoveFromHiddenEvent(userId: widget.userId.toString()),
+              );
+            } else {
+              context.read<HideResumeBloc>().add(
+                AddToHiddenEvent(userId: widget.userId.toString()),
+              );
+            }
           },
-          child: const Text('Скрыть', style: TextStyle(color: Colors.red)),
+          child: Text(
+            isHidden ? "Показать" : 'Скрыть',
+            style: const TextStyle(color: Colors.red),
+          ),
         ),
       ],
     );
