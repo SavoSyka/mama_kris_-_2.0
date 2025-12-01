@@ -100,8 +100,9 @@ class _SplashScreenState extends State<SplashScreen>
             },
             builder: (context, state) {
               if (state is ForceUpdateError) {
-                return CustomErrorRetry(onTap: _checkAppStatus,
-                errorMessage: state.message,
+                return CustomErrorRetry(
+                  onTap: _checkAppStatus,
+                  errorMessage: state.message,
                 );
                 // Center(child: CustomText(text: state.message));
               }
@@ -149,6 +150,8 @@ class _SplashScreenState extends State<SplashScreen>
       final token = await sl<AuthLocalDataSource>().getToken();
       final userType = await sl<AuthLocalDataSource>().getUserType();
       final userId = await sl<AuthLocalDataSource>().getUserId();
+      final hasActiveSubscription = await sl<AuthLocalDataSource>()
+          .getSubscription();
 
       // Check if we have valid authentication data
       if (token.isNotEmpty && userId != null) {
@@ -164,7 +167,9 @@ class _SplashScreenState extends State<SplashScreen>
           await _loadUserProfileIntoBloc(userType);
 
           // Navigate to appropriate home screen based on user type
-          if (userType) {
+          if (!hasActiveSubscription) {
+            context.pushReplacementNamed(RouteName.subscription);
+          } else if (userType) {
             context.pushReplacementNamed(RouteName.homeApplicant);
           } else {
             context.pushReplacementNamed(RouteName.homeEmploye);

@@ -53,7 +53,8 @@ class CustomErrorRetry extends StatelessWidget {
               color: const Color(0xFFADADAD),
             ),
             Text(
-              'Ooops!',
+              "Упс",
+
               textAlign: TextAlign.center,
               style: GoogleFonts.outfit(
                 color: const Color(0xFFADADAD),
@@ -64,7 +65,9 @@ class CustomErrorRetry extends StatelessWidget {
             Opacity(
               opacity: 0.60,
               child: Text(
-                errorMessage ?? 'Something went wrong, Please try again.',
+                errorMessage ??
+                    "Что-то пошло не так. Пожалуйста, попробуйте снова.",
+
                 textAlign: TextAlign.center,
                 style: GoogleFonts.outfit(
                   color: const Color(0xFFADADAD),
@@ -95,7 +98,7 @@ class CustomErrorRetry extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      'Try Again',
+                      "Попробовать снова",
                       style: GoogleFonts.outfit(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,

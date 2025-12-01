@@ -94,7 +94,7 @@ class CustomEmptyContainer extends StatelessWidget {
                                         color: Colors.white,
                                       ),
                                       label: const Text(
-                                        'Refresh',
+                                        'Обновить',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),

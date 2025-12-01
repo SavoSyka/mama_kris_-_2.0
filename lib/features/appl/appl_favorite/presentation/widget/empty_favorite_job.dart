@@ -53,7 +53,8 @@ class EmptyFavoriteJob extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 20),
                                     Text(
-                                      title ?? 'No jobs found',
+                                      title ?? "Вакансии не найдены",
+
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -65,7 +66,8 @@ class EmptyFavoriteJob extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
-                                      'Pull down to refresh or try again later.',
+                                      "Потяните вниз, чтобы обновить, или попробуйте позже.",
+
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium
@@ -92,7 +94,7 @@ class EmptyFavoriteJob extends StatelessWidget {
                                         color: Colors.white,
                                       ),
                                       label: const Text(
-                                        'Refresh',
+                                        'Обновить',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),

@@ -376,7 +376,7 @@ class _AccountsState extends State<_accounts> {
 
           const SizedBox(height: 16),
           _updateButtons(
-            text: "Удалить аккаунт",
+            text: "Выйти из аккаунта",
             error: true,
             errorIcon: MediaRes.logoutIcon,
             onTap: () {

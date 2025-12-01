@@ -121,12 +121,14 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<bool> getUserType() async {
     final isApplicant = prefs.getBool(_applicantkey) ?? false;
+    debugPrint("\n\nType of user data get to app 😊$isApplicant\n\n");
 
     return isApplicant;
   }
 
   @override
   Future<void> saveUserType(bool isApplicant) async {
+    debugPrint("\n\nType of user data saved to app 😊$isApplicant\n\n");
     await prefs.setBool(_applicantkey, isApplicant);
   }
 
