@@ -100,7 +100,12 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
             icon: CustomImageView(
               imagePath: MediaRes.homeIcon,
               width: 28,
-              color: AppPalette.secondaryColor,
+              color: Colors.grey, // inactive
+            ),
+            activeIcon: CustomImageView(
+              imagePath: MediaRes.homeIcon,
+              width: 28,
+              color: AppPalette.empPrimaryColor, // active
             ),
             label: "Вакансии",
           ),
@@ -108,7 +113,12 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
             icon: CustomImageView(
               imagePath: MediaRes.resumeIcon,
               width: 28,
-              color: AppPalette.secondaryColor,
+              color: Colors.grey,
+            ),
+            activeIcon: CustomImageView(
+              imagePath: MediaRes.resumeIcon,
+              width: 28,
+              color: AppPalette.empPrimaryColor,
             ),
             label: "Резюме",
           ),
@@ -116,7 +126,12 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
             icon: CustomImageView(
               imagePath: MediaRes.support,
               width: 28,
-              color: AppPalette.secondaryColor,
+              color: Colors.grey,
+            ),
+            activeIcon: CustomImageView(
+              imagePath: MediaRes.support,
+              width: 28,
+              color: AppPalette.empPrimaryColor,
             ),
             label: "Поддержка",
           ),
@@ -124,7 +139,12 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
             icon: CustomImageView(
               imagePath: MediaRes.profileIcon,
               width: 28,
-              color: AppPalette.secondaryColor,
+              color: Colors.grey,
+            ),
+            activeIcon: CustomImageView(
+              imagePath: MediaRes.profileIcon,
+              width: 28,
+              color: AppPalette.empPrimaryColor,
             ),
             label: "Профиль",
           ),
@@ -193,7 +213,7 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: _isApplicant
               ? AppPalette.primaryColor
-              : AppPalette.secondaryColor,
+              : AppPalette.empPrimaryColor,
           unselectedItemColor: Colors.grey,
           items: _items,
         ),

@@ -8,8 +8,10 @@ import 'package:mama_kris/features/emp/employe_contact/domain/repository/employe
 class UpdateEmpBasicInfoParams {
   final String name;
   final String dob;
+  final String about;
 
-  const UpdateEmpBasicInfoParams({required this.name, required this.dob});
+
+  const UpdateEmpBasicInfoParams({required this.name, required this.dob, required this.about});
 }
 
 /// Use case for updating an existing applicant contact.
@@ -24,6 +26,7 @@ class UpdateEmployeeBasicInfoUsecase
     return await _repository.updateBasicInfo(
       name: params.name,
       dob: params.dob,
+      about: params.about
     );
   }
 }

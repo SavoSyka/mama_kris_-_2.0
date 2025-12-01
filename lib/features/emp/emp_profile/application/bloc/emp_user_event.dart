@@ -32,6 +32,8 @@ class EmpDeleteContactEvent extends EmpUserEvent {
 class EmpUpdateBasicInfoEvent extends EmpUserEvent {
   final String name;
   final String dob;
+  final String about;
 
-  EmpUpdateBasicInfoEvent({required this.name, required this.dob});
+
+  EmpUpdateBasicInfoEvent({required this.name, required this.dob, required this.about});
 }

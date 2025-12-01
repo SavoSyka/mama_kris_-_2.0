@@ -16,7 +16,7 @@ import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_job
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_state.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
-enum FilterType { active, drafts, archive, rejected, checking }
+enum FilterType { active, unpaid, archive, rejected, checking }
 
 class EmpHomeScreen extends StatefulWidget {
   const EmpHomeScreen({super.key});
@@ -43,10 +43,10 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
     switch (filter) {
       case FilterType.active:
         return 'approved';
-      case FilterType.drafts:
-        return 'drafted';
+      case FilterType.unpaid:
+        return 'unpaid';
       case FilterType.archive:
-        return 'archive'; // Added status string for archive
+        return 'archived'; // Added status string for archive
       case FilterType.rejected:
         return 'rejected';
       case FilterType.checking:
@@ -104,15 +104,15 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
                                       InkWell(
                                         onTap: () {
                                           setState(() {
-                                            selectedFilter = FilterType.drafts;
+                                            selectedFilter = FilterType.unpaid;
                                           });
                                           _fetchJobs();
                                         },
                                         child: _FilterCard(
                                           isSelected:
                                               selectedFilter ==
-                                              FilterType.drafts,
-                                          text: 'Черновики',
+                                              FilterType.unpaid,
+                                          text: 'Неоплаченные',
                                         ),
                                       ),
                                       const SizedBox(width: 12),

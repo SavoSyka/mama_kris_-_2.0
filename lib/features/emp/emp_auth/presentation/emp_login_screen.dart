@@ -37,7 +37,7 @@ class EmpLoginScreen extends StatefulWidget {
 }
 
 class _EmpLoginScreenState extends State<EmpLoginScreen> {
-  final emailController = TextEditingController();
+  final emailController = TextEditingController(text: "emproobbi@yopmail.com");
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -69,7 +69,11 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                             EmpGetUserProfileEvent(user: state.user.user),
                           );
 
-                          context.goNamed(RouteName.homeEmploye);
+                          if (state.user.subscription.active) {
+                            context.goNamed(RouteName.homeEmploye);
+                          } else {
+                            context.goNamed(RouteName.subscription);
+                          }
                         } else if (state is EmpAuthFailure) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(state.message)),
@@ -103,8 +107,8 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                                         controller: emailController,
                                         validator:
                                             FormValidations.validateEmail,
-                                                   keyboardType:
-                                                TextInputType.emailAddress,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                       ),
                                       const SizedBox(height: 12),
                                       CustomInputText(

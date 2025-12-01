@@ -125,7 +125,7 @@ class EmployeeContactBloc
 
     Future.delayed(const Duration(microseconds: 200));
     final result = await _basicInfoUsecase(
-      UpdateEmpBasicInfoParams(name: event.name, dob: event.dob),
+      UpdateEmpBasicInfoParams(name: event.name, dob: event.dob, about: event.about),
     );
 
     debugPrint("Updating  User Account name and dob");

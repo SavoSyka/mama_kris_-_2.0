@@ -12,6 +12,7 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/build_error_card.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_edit_screen.dart';
 
@@ -48,7 +49,7 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
               ),
             ),
           ),
-          SizedBox(width: 16,)
+          const SizedBox(width: 16),
         ],
       ),
 
@@ -83,11 +84,13 @@ class _EmpProfileScreenState extends State<EmpProfileScreen> {
                               const SizedBox(height: 20),
 
                               // Контакты -- Contacts
-                              const _Contacts(),
+                              if (user.contacts?.isNotEmpty ?? false)
+                                _Contacts(contact: user.contacts!.last),
                               const SizedBox(height: 20),
 
                               /// Специализация -- Speciliasaton
-                              const _Specalisations(),
+                              if (user.about != null)
+                                _AboutEmployee(about: user.about as String),
                             ],
                           ),
                         ),
@@ -157,19 +160,6 @@ class _AcceptOrders extends StatelessWidget {
                   height: 1.30,
                 ),
               ),
-              const SizedBox(height: 8),
-
-              const Text(
-                'Компания:  GordovCode ',
-                style: TextStyle(
-                  color: AppPalette.greyDark,
-
-                  fontSize: 12,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w500,
-                  height: 1.30,
-                ),
-              ),
             ],
           ),
         ],
@@ -179,19 +169,20 @@ class _AcceptOrders extends StatelessWidget {
 }
 
 class _Contacts extends StatelessWidget {
-  const _Contacts();
+  const _Contacts({required this.contact});
+  final ContactEntity contact;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
-      child: const Row(
+      child: Row(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Контакты',
                 style: TextStyle(
                   color: Colors.black,
@@ -202,64 +193,100 @@ class _Contacts extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 24),
-              Row(
-                children: [
-                  Icon(Icons.email, color: AppPalette.empPrimaryColor),
-                  SizedBox(width: 16),
-                  Text(
-                    'MamaKris@gmail.com',
-                    style: TextStyle(
-                      color: Color(0xFF596574),
-                      fontSize: 16,
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.w500,
-                      height: 1.30,
+              const SizedBox(height: 24),
+              if (contact.email?.isNotEmpty ?? false)
+                Row(
+                  children: [
+                    const Icon(Icons.email, color: AppPalette.empPrimaryColor),
+                    const SizedBox(width: 16),
+                    Text(
+                      contact.email!,
+                      style: const TextStyle(
+                        color: Color(0xFF596574),
+                        fontSize: 16,
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.w500,
+                        height: 1.30,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
-              SizedBox(height: 8),
-
-              Row(
-                children: [
-                  Icon(Icons.phone, color: AppPalette.empPrimaryColor),
-                  SizedBox(width: 16),
-                  Text(
-                    '+79997773322',
-                    style: TextStyle(
-                      color: Color(0xFF596574),
-                      fontSize: 16,
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.w500,
-                      height: 1.30,
+              const SizedBox(height: 8),
+              if (contact.phone?.isNotEmpty ?? false)
+                Row(
+                  children: [
+                    const Icon(Icons.phone, color: AppPalette.empPrimaryColor),
+                    const SizedBox(width: 16),
+                    Text(
+                      contact.phone!,
+                      style: const TextStyle(
+                        color: Color(0xFF596574),
+                        fontSize: 16,
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.w500,
+                        height: 1.30,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
               // * Telegram, VK, whatsapp action cards -- left
+              Row(
+                spacing: 12,
+                children: [
+                  _buildSocialContact(
+                    onTap: () {},
+                    icon: MediaRes.telegramIcon,
+                  ),
+
+                  _buildSocialContact(onTap: () {}, icon: MediaRes.vkIcon),
+                  _buildSocialContact(
+                    onTap: () {},
+                    icon: MediaRes.whatsappIcon,
+                  ),
+                ],
+              ),
             ],
           ),
         ],
       ),
     );
   }
+
+  Widget _buildSocialContact({
+    required VoidCallback onTap,
+    required String icon,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppPalette.empPrimaryColor),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadiusGeometry.circular(12),
+          child: Image.asset(icon, width: 24),
+        ),
+      ),
+    );
+  }
 }
 
-class _Specalisations extends StatelessWidget {
-  const _Specalisations();
-
+class _AboutEmployee extends StatelessWidget {
+  const _AboutEmployee({required this.about});
+  final String about;
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.cardDecoration,
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Описание моей деятельности',
             style: TextStyle(
               color: Colors.black,
@@ -270,13 +297,13 @@ class _Specalisations extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           Row(
             children: [
               Expanded(
                 child: Text(
-                  'Я руковожу компанией среднего масштаба, которая уже несколько лет стабильно работает на рынке. Для меня важно сочетать устойчивость и развитие: мы не гонимся за быстрыми результатами, а строим долгосрочные отношения с клиентами и партнёрами. Основное внимание уделяю качеству услуг и оптимизации процессов, чтобы команда могла работать эффективно, а клиенты видели в нас надёжного партнёра.',
-                  style: TextStyle(
+                  about,
+                  style: const TextStyle(
                     color: Color(0xFF596574),
                     fontSize: 16,
                     fontFamily: 'Manrope',

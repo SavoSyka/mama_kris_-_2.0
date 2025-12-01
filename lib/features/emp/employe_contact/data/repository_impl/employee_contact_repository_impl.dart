@@ -105,9 +105,11 @@ class EmployeeContactRepositoryImpl implements EmployeeContactRepository {
   ResultFuture<bool> updateBasicInfo({
     required String name,
     required String dob,
+    required String about,
+
   }) async {
     try {
-      final result = await _dataSource.updateBasicInfo(name: name, dob: dob);
+      final result = await _dataSource.updateBasicInfo(name: name, dob: dob, about: about);
       return Right(result);
     } catch (e) {
       return Left(ServerFailure(e.toString()));

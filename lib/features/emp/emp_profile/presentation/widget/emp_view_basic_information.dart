@@ -16,6 +16,7 @@ class EmpViewBasicInformation extends StatelessWidget {
   String? name;
   String? email;
   String? dob;
+  String? about;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class EmpViewBasicInformation extends StatelessWidget {
       name = userState.user.name;
       dob = userState.user.birthDate;
       email = userState.user.email;
+      about = userState.user.about;
     }
 
     return Container(
@@ -44,17 +46,24 @@ class EmpViewBasicInformation extends StatelessWidget {
               height: 1.30,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
 
           CustomStaticInput(label: 'Фамилия', value: name ?? ""),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
 
           CustomStaticInput(label: "Дата рождения", value: dob ?? ""),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           CustomStaticInput(
             label: 'Почта',
             value: email ?? "",
             hasGreyBg: true,
+          ),
+
+          const SizedBox(height: 12),
+
+          CustomStaticInput(
+            label: 'Описание моей деятельности',
+            value: about ?? "",
           ),
 
           const SizedBox(height: 20),

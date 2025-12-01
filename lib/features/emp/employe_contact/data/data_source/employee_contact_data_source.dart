@@ -27,7 +27,7 @@ abstract class EmployeeContactDataSource {
 
   Future<bool> deleteUserAccount();
 
-  Future<bool> updateBasicInfo({required String name, required String dob});
+  Future<bool> updateBasicInfo({required String name, required String dob, required String about});
   Future<bool> logout();
 
 }

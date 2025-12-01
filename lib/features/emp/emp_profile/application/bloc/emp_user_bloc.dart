@@ -110,6 +110,7 @@ Future<void> _onUpdateBasicInfo(
     final updatedUser = currentState.user.copyWith(
       name: event.name,
       birthDate: event.dob,
+      about: event.about
     );
 
     debugPrint("🔐 Basic Info Updated");

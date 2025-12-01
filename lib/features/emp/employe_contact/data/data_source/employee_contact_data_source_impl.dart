@@ -195,13 +195,14 @@ class EmployeeContactDataSourceImpl implements EmployeeContactDataSource {
   Future<bool> updateBasicInfo({
     required String name,
     required String dob,
+    required String about,
   }) async {
     try {
       final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
       // final queryParams = {"name": " robby three", "birthDate": "2009-11-01"};
 
-      final postData = {"name": name, "birthDate": dob};
+      final postData = {"name": name, "birthDate": dob, "about": about};
 
       debugPrint("Query params $postData");
 

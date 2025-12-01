@@ -85,7 +85,11 @@ class _EmpVerifyOtpScreenState extends State<EmpVerifyOtpScreen> {
                             context.pushNamed(RouteName.updateEmployeePwd);
                           }
                         } else if (state is EmpAuthSuccess) {
-                          context.goNamed(RouteName.homeEmploye);
+                          if (state.user.subscription.active) {
+                            context.goNamed(RouteName.homeEmploye);
+                          } else {
+                            context.goNamed(RouteName.subscription);
+                          }
                         } else if (state is EmpAuthOtpResent) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

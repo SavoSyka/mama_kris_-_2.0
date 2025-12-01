@@ -39,8 +39,10 @@ class DeleteUserAccountEvent extends EmployeeContactEvent {
 class UpdatingBasicInfoEvent extends EmployeeContactEvent {
   final String name;
   final String dob;
+  final String about;
 
-  const UpdatingBasicInfoEvent({required this.name, required this.dob});
+
+  const UpdatingBasicInfoEvent({required this.name, required this.dob, required this.about});
 }
 
 class EmpLogoutAccountEvent extends EmployeeContactEvent {

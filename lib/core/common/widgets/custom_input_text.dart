@@ -134,7 +134,9 @@ class _CustomInputTextState extends State<CustomInputText> {
               width: isFocused ? 2.0 : 1.0,
             ),
           ),
-          child: TextFormField(
+          child: 
+       
+          TextFormField(
             controller: widget.controller,
             focusNode: _focusNode,
             obscureText: widget.obscureText && !_showPassword,
@@ -199,6 +201,7 @@ class _CustomInputTextState extends State<CustomInputText> {
               focusedErrorBorder: _inputBorder(color: Colors.red.shade400),
             ),
           ),
+      
         ),
       ],
     );

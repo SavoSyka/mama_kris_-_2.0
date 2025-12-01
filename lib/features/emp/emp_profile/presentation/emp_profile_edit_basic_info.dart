@@ -30,6 +30,7 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _dobController = TextEditingController();
+  final _aboutController = TextEditingController();
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
     final userState = context.read<EmpUserBloc>().state;
     if (userState is EmpUserLoaded) {
       _nameController.text = userState.user.name ?? '';
+      _aboutController.text = userState.user.about ?? '';
 
       final rawDob = userState.user.birthDate;
 
@@ -61,6 +63,8 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
   void dispose() {
     _nameController.dispose();
     _dobController.dispose();
+    _aboutController.dispose();
+
     super.dispose();
   }
 
@@ -84,6 +88,7 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
         UpdatingBasicInfoEvent(
           name: _nameController.text,
           dob: _dobController.text,
+          about: _aboutController.text
         ),
       );
     }
@@ -147,9 +152,22 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
                                     controller: _dobController,
                                     label: 'Дата рождения',
                                   ),
+
+                                  const SizedBox(height: 12),
+
+                                  CustomInputText(
+                                    hintText: 'Описание моей деятельности',
+                                    labelText: "Описание моей деятельности",
+                                    controller: _aboutController,
+                                    minLines: 8,
+                                    maxLines: 12,
+                                    validator:
+                                        FormValidations.validateJobDescription,
+                                  ),
                                 ],
                               ),
                             ),
+
                             const SizedBox(height: 32),
 
                             BlocListener<EmpUserBloc, EmpUserState>(
@@ -162,7 +180,9 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
                                       RouteName.homeEmploye,
                                       extra: {'pageIndex': 3},
                                     );
-                                    debugPrint("Navigation to homeEmploye successful.");
+                                    debugPrint(
+                                      "Navigation to homeEmploye successful.",
+                                    );
                                   } catch (e) {
                                     debugPrint("Navigation failed: $e");
                                   }
@@ -180,6 +200,7 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
                                           EmpUpdateBasicInfoEvent(
                                             dob: _dobController.text,
                                             name: _nameController.text,
+                                            about: _aboutController.text
                                           ),
                                         );
                                       }
@@ -204,7 +225,8 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
                                             child: const Text(
                                               'Отмена',
                                               style: TextStyle(
-                                                color: AppPalette.empPrimaryColor,
+                                                color:
+                                                    AppPalette.empPrimaryColor,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w600,
                                               ),

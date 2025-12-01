@@ -31,6 +31,8 @@ abstract class EmployeeContactRepository {
   ResultFuture<bool> updateBasicInfo({
     required String name,
     required String dob,
+    required String about,
+
   });
 
   ResultFuture<bool> logout();
