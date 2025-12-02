@@ -81,6 +81,8 @@ Future<void> _initAuth() async {
   sl.registerLazySingleton(() => UpdatePasswordUsecase(sl()));
   sl.registerLazySingleton(() => LoginWithAppleUsecase(sl()));
 
+  sl.registerLazySingleton(() => LoginUsingCachedUsecase(sl()));
+
   // Bloc (factory → new instance per request)
   sl.registerFactory(
     () => AuthBloc(
@@ -94,6 +96,7 @@ Future<void> _initAuth() async {
       loginWithGoogleUsecase: sl(),
       updatePasswordUsecase: sl(),
       loginWithAppleUsecase: sl(),
+      loginUsingCachedUsecase: sl(),
     ),
   );
 }
@@ -224,6 +227,7 @@ Future<void> _initEmpAuth() async {
   sl.registerLazySingleton(() => EmpLoginWithGoogleUsecase(sl()));
   sl.registerLazySingleton(() => EmpUpdatePasswordUsecase(sl()));
   sl.registerLazySingleton(() => EmpLoginWithAppleUsecase(sl()));
+  sl.registerLazySingleton(() => EmpLoginUsingCachedUsecase(sl()));
 
   // Bloc (factory → new instance per request)
   sl.registerFactory(
@@ -238,6 +242,7 @@ Future<void> _initEmpAuth() async {
       loginWithGoogleUsecase: sl(),
       updatePasswordUsecase: sl(),
       loginWithAppleUsecase: sl(),
+      empLoginUsingCachedUsecase: sl()
     ),
   );
 

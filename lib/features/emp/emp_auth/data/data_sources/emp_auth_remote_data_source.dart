@@ -17,4 +17,7 @@ abstract class EmpAuthRemoteDataSource {
     required String identityToken,
     required Map<String, dynamic> userData,
   });
+
+  Future<EmpUserModel> loginUsingCached();
+
 }

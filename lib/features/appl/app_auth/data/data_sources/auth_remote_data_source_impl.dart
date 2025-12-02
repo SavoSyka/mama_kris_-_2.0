@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
+import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/utils/get_platform_type.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
@@ -42,7 +43,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await local.saveRefreshToken(refreshToken);
         await local.saveUserId(userId);
         await local.saveSubscription(isActive);
-
 
         // Save full user data for persistent login
         await local.saveUser(data['user']);
@@ -342,5 +342,50 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
+  @override
+  Future<UserModel> loginUsingCached() async {
+    try {
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
+      final response = await dio.get(ApiConstants.getUserFromCached(userId));
 
+      if (response.statusCode.toString().startsWith('2')) {
+        final data = response.data as Map<String, dynamic>;
+        debugPrint('Login response: $data');
+
+        final user = UserModel.fromJson(data);
+
+        final accessToken = user.accessToken;
+        final refreshToken = user.refreshToken;
+        final userId = user.userId.toString();
+
+        final isActive = user.subscription.active;
+
+        await local.saveUserType(true);
+        await local.saveToken(accessToken);
+        await local.saveRefreshToken(refreshToken);
+        await local.saveUserId(userId);
+        await local.saveSubscription(isActive);
+
+        // Save full user data for persistent login
+        await local.saveUser(data['user']);
+
+        return user;
+      } else {
+        throw ApiException(
+          message: response.data['message'] ?? 'Login failed',
+          statusCode: response.statusCode ?? 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      debugPrint("erroro $e");
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
 }

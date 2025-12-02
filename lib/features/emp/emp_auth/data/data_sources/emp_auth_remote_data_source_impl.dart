@@ -305,7 +305,6 @@ class EmpAuthRemoteDataSourceImpl implements EmpAuthRemoteDataSource {
       );
 
       if (response.statusCode.toString().startsWith('2')) {
-
         final data = response.data as Map<String, dynamic>;
         debugPrint('Login response: $data');
 
@@ -336,6 +335,54 @@ class EmpAuthRemoteDataSourceImpl implements EmpAuthRemoteDataSource {
         statusCode: e.response?.statusCode ?? 500,
       );
     } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<EmpUserModel> loginUsingCached() async {
+    try {
+      final local = sl<AuthLocalDataSource>();
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
+      final response = await dio.get(ApiConstants.getUserFromCached(userId));
+
+      if (response.statusCode.toString().startsWith('2')) {
+        final data = response.data as Map<String, dynamic>;
+        debugPrint('Login response: $data');
+
+        final user = EmpUserModel.fromJson(data);
+
+        final accessToken = user.accessToken;
+        final refreshToken = user.refreshToken;
+        final userId = user.userId.toString();
+
+        final isActive = user.subscription.active;
+
+        await local.saveUserType(true);
+        await local.saveToken(accessToken);
+        await local.saveRefreshToken(refreshToken);
+        await local.saveUserId(userId);
+        await local.saveSubscription(isActive);
+
+        // Save full user data for persistent login
+        await local.saveUser(data['user']);
+
+        return user;
+      } else {
+        throw ApiException(
+          message: response.data['message'] ?? 'Login failed',
+          statusCode: response.statusCode ?? 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } on DioException catch (e) {
+      throw ApiException(
+        message: e.response?.data['message'] ?? 'Network error',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      debugPrint("erroro $e");
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }

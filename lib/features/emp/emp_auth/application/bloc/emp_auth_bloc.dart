@@ -6,6 +6,7 @@ import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_state.
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_check_email_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_forgot_password_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_usecase.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_using_cached_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_with_apple_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_with_google_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_resend_otp_usecase.dart';
@@ -24,6 +25,7 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
   final EmpLoginWithGoogleUsecase loginWithGoogleUsecase;
   final EmpUpdatePasswordUsecase updatePasswordUsecase;
   final EmpLoginWithAppleUsecase loginWithAppleUsecase;
+  final EmpLoginUsingCachedUsecase empLoginUsingCachedUsecase;
 
   EmpAuthBloc({
     required this.loginUsecase,
@@ -36,6 +38,7 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     required this.loginWithGoogleUsecase,
     required this.updatePasswordUsecase,
     required this.loginWithAppleUsecase,
+    required this.empLoginUsingCachedUsecase,
   }) : super(EmpAuthInitial()) {
     on<EmpLoginEvent>(_onLoginEvent);
     on<EmpSignupEvent>(_onSignupEvent);
@@ -47,6 +50,7 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     on<EmpLoginWithGoogleEvent>(_onLoginWithGoogle);
     on<EmpUpdatePasswordEvent>(_onUpdatePassword);
     on<EmpLoginWithAppleEvent>(_onLoginWithApple);
+    on<EmpLoginWithCachedEvent>(_loginWithCached);
   }
 
   Future<void> _onLoginEvent(
@@ -186,6 +190,19 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
         userData: event.userData,
       ),
     );
+
+    result.fold(
+      (failure) => emit(EmpAuthFailure(failure.message)),
+      (user) => emit(EmpAuthSuccess(user)),
+    );
+  }
+
+  Future<void> _loginWithCached(
+    EmpLoginWithCachedEvent event,
+    Emitter<EmpAuthState> emit,
+  ) async {
+    emit(EmpAuthLoading());
+    final result = await empLoginUsingCachedUsecase();
 
     result.fold(
       (failure) => emit(EmpAuthFailure(failure.message)),

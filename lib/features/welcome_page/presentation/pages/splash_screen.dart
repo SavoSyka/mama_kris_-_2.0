@@ -85,14 +85,6 @@ class _SplashScreenState extends State<SplashScreen>
                   );
                 } else {
                   _checkLoginStatus();
-                  // final isApplicant = await sl<AuthLocalDataSource>()
-                  // .getUserType();
-
-                  // if (isApplicant) {
-                  //   context.pushReplacementNamed(RouteName.applicantHome);
-                  //   return;
-                  // }
-                  // context.pushReplacementNamed(RouteName.welcomePage);
                 }
               }
 
@@ -145,6 +137,7 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
+/*
   Future<void> _checkLoginStatus() async {
     try {
       final token = await sl<AuthLocalDataSource>().getToken();
@@ -293,4 +286,5 @@ class _SplashScreenState extends State<SplashScreen>
       // Don't fail the entire login process if BLoC loading fails
     }
   }
+/*
 }

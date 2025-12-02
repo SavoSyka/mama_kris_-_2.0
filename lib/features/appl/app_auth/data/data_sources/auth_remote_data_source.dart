@@ -12,8 +12,10 @@ abstract class AuthRemoteDataSource {
   Future<bool> loginWithGoogle({required String idToken});
   Future<UserModel> loginWithApple({
     required String identityToken,
-   required Map<String, dynamic> userData,
+    required Map<String, dynamic> userData,
   });
 
   Future<bool> updatePassword(String newPassword);
+
+  Future<UserModel> loginUsingCached();
 }

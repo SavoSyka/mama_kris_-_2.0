@@ -99,3 +99,5 @@ class LoginWithAppleEvent extends AuthEvent {
   @override
   List<Object?> get props => [identityToken, userData];
 }
+
+class LoginWithCachedEvent extends AuthEvent {}

@@ -99,3 +99,6 @@ class EmpLoginWithAppleEvent extends EmpAuthEvent {
   @override
   List<Object?> get props => [identityToken, userData];
 }
+
+class EmpLoginWithCachedEvent extends EmpAuthEvent {}
+

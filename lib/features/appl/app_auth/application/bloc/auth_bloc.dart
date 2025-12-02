@@ -5,6 +5,7 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dar
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/check_email_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_usecase.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_using_cached_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_with_apple_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_with_google_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/resend_otp_usecase.dart';
@@ -24,7 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginWithGoogleUsecase loginWithGoogleUsecase;
   final UpdatePasswordUsecase updatePasswordUsecase;
   final LoginWithAppleUsecase loginWithAppleUsecase;
-
+  final LoginUsingCachedUsecase loginUsingCachedUsecase;
   AuthBloc({
     required this.loginUsecase,
     required this.signupUsecase,
@@ -36,6 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.loginWithGoogleUsecase,
     required this.updatePasswordUsecase,
     required this.loginWithAppleUsecase,
+    required this.loginUsingCachedUsecase,
   }) : super(AuthInitial()) {
     on<LoginEvent>(_onLoginEvent);
     on<SignupEvent>(_onSignupEvent);
@@ -47,6 +49,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginWithGoogleEvent>(_onLoginWithGoogle);
     on<UpdatePasswordEvent>(_onUpdatePassword);
     on<LoginWithAppleEvent>(_onLoginWithApple);
+    on<LoginWithCachedEvent>(_loginWithCached);
   }
 
   Future<void> _onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {
@@ -192,6 +195,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
 
       //  emit(AuthPasswordReset()),
+    );
+  }
+
+  Future<void> _loginWithCached(
+    LoginWithCachedEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final result = await loginUsingCachedUsecase();
+
+    result.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (user) => emit(AuthSuccess(user)),
     );
   }
 }

@@ -131,7 +131,7 @@ class EmpAuthRepositoryImpl implements EmpAuthRepository {
     }
   }
 
-    @override
+  @override
   ResultFuture<EmpUserEntity> loginWithApple({
     required String identityToken,
     required Map<String, dynamic> userData,
@@ -142,6 +142,18 @@ class EmpAuthRepositoryImpl implements EmpAuthRepository {
         userData: userData,
       );
 
+      return Right(result);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<EmpUserEntity> loginUsingCached() async {
+    try {
+      final result = await remoteDataSource.loginUsingCached();
       return Right(result);
     } on ApiException catch (e) {
       return Left(ServerFailure(e.message));

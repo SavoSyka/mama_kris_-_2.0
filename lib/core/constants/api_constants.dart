@@ -55,22 +55,20 @@ class ApiConstants {
   static String loginWIthGoogle = "auth/google/login";
   static String loginWithApple = "auth/apple/login";
 
-
   static String getSpeciality = 'jobs/autocomplete';
 
   static const favoriteProfiles = "favorite-profiles";
-  static  addUsersToFavorite(String userId) => "favorite-profiles/$userId";
+  static addUsersToFavorite(String userId) => "favorite-profiles/$userId";
 
   static generatePaymentLink(String userId) =>
       "payments.v3/generate-link/$userId";
 
-  static  getPublicProfile(String userId) => "users/public/$userId";
+  static getPublicProfile(String userId) => "users/public/$userId";
 
   // ads
   static const getAds = 'advertisements/next';
-  static  addToHide(String userId) => "hidden-profiles/$userId";
-  static  removeFromHide(String userId) => "hidden-profiles/$userId";
-  static  const getHiddenUsers = "hidden-profiles";
-
-
+  static addToHide(String userId) => "hidden-profiles/$userId";
+  static removeFromHide(String userId) => "hidden-profiles/$userId";
+  static const getHiddenUsers = "hidden-profiles";
+  static getUserFromCached(String userId) => "users/$userId";
 }

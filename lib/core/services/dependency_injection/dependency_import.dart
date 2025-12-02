@@ -17,6 +17,7 @@ import 'package:mama_kris/features/appl/app_auth/domain/repositories/auth_reposi
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/check_email_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_usecase.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_using_cached_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_with_apple_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_with_google_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/resend_otp_usecase.dart';
@@ -44,6 +45,7 @@ import 'package:mama_kris/features/emp/emp_auth/domain/repositories/emp_auth_rep
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_check_email_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_forgot_password_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_usecase.dart';
+import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_using_cached_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_with_apple_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_login_with_google_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_resend_otp_usecase.dart';
