@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,9 +11,16 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/utils/version_utils.dart';
+import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
+import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
+import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 import 'package:mama_kris/features/appl/app_auth/data/models/user_profile_model.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/usecases/login_using_cached_usecase.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
+import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_event.dart';
+import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_state.dart';
 import 'package:mama_kris/features/emp/emp_auth/data/models/emp_user_profile_model.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
@@ -72,35 +80,73 @@ class _SplashScreenState extends State<SplashScreen>
       body: Center(
         child: ScaleTransition(
           scale: _scaleAnimation,
-          child: BlocConsumer<ForceUpdateBloc, ForceUpdateState>(
-            listener: (context, state) async {
-              if (state is ForceUpdateLoaded) {
-                if (VersionUtils.isUpdateRequired(
-                  appVersion,
-                  state.data.version,
-                )) {
-                  context.pushReplacementNamed(
-                    RouteName.forceUpdate,
-                    extra: {"isAndroid": isAndroid},
-                  );
+          child: BlocConsumer<EmpAuthBloc, EmpAuthState>(
+            listener: (context, state) {
+              if (state is EmpAuthSuccess) {
+                context.read<EmpUserBloc>().add(
+                  EmpGetUserProfileEvent(user: state.user.user),
+                );
+
+                if (!state.user.subscription.active) {
+                  context.pushReplacementNamed(RouteName.subscription);
                 } else {
-                  _checkLoginStatus();
+                  context.pushReplacementNamed(RouteName.homeEmploye);
                 }
               }
-
               // TODO: implement listener
             },
             builder: (context, state) {
-              if (state is ForceUpdateError) {
-                return CustomErrorRetry(
-                  onTap: _checkAppStatus,
-                  errorMessage: state.message,
-                );
-                // Center(child: CustomText(text: state.message));
-              }
-              return CustomImageView(
-                imagePath: MediaRes.illustrationWelcome,
-                width: 200.w,
+              return BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthSuccess) {
+                    context.read<UserBloc>().add(
+                      GetUserProfileEvent(user: state.user.user),
+                    );
+                    if (!state.user.subscription.active) {
+                      context.pushReplacementNamed(RouteName.subscription);
+                    } else {
+                      context.pushReplacementNamed(RouteName.homeApplicant);
+                    }
+                  }
+                },
+                builder: (context, state) {
+                  return BlocConsumer<ForceUpdateBloc, ForceUpdateState>(
+                    listener: (context, state) async {
+                      if (state is ForceUpdateLoaded) {
+                        if (VersionUtils.isUpdateRequired(
+                          appVersion,
+                          state.data.version,
+                        )) {
+                          context.pushReplacementNamed(
+                            RouteName.forceUpdate,
+                            extra: {"isAndroid": isAndroid},
+                          );
+                        } else {
+                          _checkLoginStatus();
+                        }
+                      }
+
+                      // TODO: implement listener
+                    },
+                    builder: (context, state) {
+                      if (state is ForceUpdateError) {
+                        return CustomErrorRetry(
+                          onTap: _checkAppStatus,
+                          errorMessage: state.message,
+                        );
+                        // Center(child: CustomText(text: state.message));
+                      } else if (state is AuthLoading ||
+                          state is EmpAuthLoading) {
+                        return const CupertinoActivityIndicator(radius: 20);
+                      }
+
+                      return CustomImageView(
+                        imagePath: MediaRes.illustrationWelcome,
+                        width: 200.w,
+                      );
+                    },
+                  );
+                },
               );
             },
           ),
@@ -137,7 +183,43 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-/*
+  Future<void> _checkLoginStatus() async {
+    try {
+      final token = await sl<AuthLocalDataSource>().getToken();
+      final userType = await sl<AuthLocalDataSource>().getUserType();
+      final userId = await sl<AuthLocalDataSource>().getUserId();
+      final hasActiveSubscription = await sl<AuthLocalDataSource>()
+          .getSubscription();
+
+      // Check if we have valid authentication data
+      if (token.isNotEmpty && userId != null) {
+        if (userType) {
+          context.read<AuthBloc>().add(LoginWithCachedEvent());
+        } else {
+          context.read<EmpAuthBloc>().add(EmpLoginWithCachedEvent());
+        }
+        // // Navigate to appropriate home screen based on user type
+        // if (!hasActiveSubscription) {
+        //   context.pushReplacementNamed(RouteName.subscription);
+        // } else if (userType) {
+        //   context.pushReplacementNamed(RouteName.homeApplicant);
+        // } else {
+        //   context.pushReplacementNamed(RouteName.homeEmploye);
+        // }
+      } else {
+        // Token is invalid, clear stored data and go to welcome page
+        await sl<AuthLocalDataSource>().clearAll();
+        context.pushReplacementNamed(RouteName.welcomePage);
+      }
+    } catch (e) {
+      // If there's any error during validation, clear data and go to welcome page
+      debugPrint('Error during login status check: $e');
+      await sl<AuthLocalDataSource>().clearAll();
+      context.pushReplacementNamed(RouteName.welcomePage);
+    }
+  }
+
+  /*
   Future<void> _checkLoginStatus() async {
     try {
       final token = await sl<AuthLocalDataSource>().getToken();
@@ -286,5 +368,7 @@ class _SplashScreenState extends State<SplashScreen>
       // Don't fail the entire login process if BLoC loading fails
     }
   }
-/*
+
+
+*/
 }

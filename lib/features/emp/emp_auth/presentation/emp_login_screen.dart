@@ -37,7 +37,7 @@ class EmpLoginScreen extends StatefulWidget {
 }
 
 class _EmpLoginScreenState extends State<EmpLoginScreen> {
-  final emailController = TextEditingController(text: "emproobbi@yopmail.com");
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 

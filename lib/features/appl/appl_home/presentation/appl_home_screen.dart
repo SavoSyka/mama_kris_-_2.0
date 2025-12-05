@@ -520,12 +520,18 @@ class _AdCards extends StatelessWidget {
       decoration: AppTheme.cardDecoration,
       child: BlocBuilder<AdsCubit, AdsState>(
         builder: (context, state) {
-          if (state is AdsLoading)
-            return SizedBox(
-              width: 24,
-              height: 24,
-              child: const CircularProgressIndicator());
-          else if (state is AdsLoaded) {
+          if (state is AdsLoading) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            );
+          } else if (state is AdsLoaded) {
             return Column(
               children: [
                 Row(
@@ -538,28 +544,6 @@ class _AdCards extends StatelessWidget {
                     ),
                   ],
                 ),
-                // CustomImageView(imagePath: state.ad.imageData),
-                // const CustomText(
-                //   text: 'Место для рекламы',
-                //   textAlign: TextAlign.center,
-                //   style: TextStyle(
-                //     color: Color(0xFF12902A),
-                //     fontSize: 20,
-                //     fontFamily: 'Manrope',
-                //     fontWeight: FontWeight.w600,
-                //   ),
-                // ),
-                // const SizedBox(height: 10),
-                // const CustomText(
-                //   text: 'Нажмите, чтобы оставить заявку',
-                //   textAlign: TextAlign.center,
-                //   style: TextStyle(
-                //     color: Color(0xFF596574),
-                //     fontSize: 16,
-                //     fontFamily: 'Manrope',
-                //     fontWeight: FontWeight.w500,
-                //   ),
-                // ),
               ],
             );
           } else if (state is AdsError)

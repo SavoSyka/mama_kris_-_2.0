@@ -15,9 +15,9 @@ class EmpUserModel extends EmpUserEntity {
 
   factory EmpUserModel.fromJson(Map<String, dynamic> json) {
     return EmpUserModel(
-      userId: json['userId'].toString(),
-      accessToken: json['accessToken'] as String,
-      refreshToken: json['refreshToken'] as String,
+      userId: json['userId']?.toString() ?? '',
+      accessToken: json['accessToken'] ?? "",
+      refreshToken: json['refreshToken'] ?? "",
       user: EmpUserProfileModel.fromJson(json['user']),
       subscription: UserSubscriptionModel.fromJson(json['subscription']),
     );

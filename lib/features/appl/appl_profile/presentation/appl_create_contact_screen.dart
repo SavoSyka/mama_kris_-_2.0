@@ -7,6 +7,7 @@ import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
+import 'package:mama_kris/core/common/widgets/custom_static_input.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
@@ -34,7 +35,6 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
   late TextEditingController _nameController;
   late TextEditingController _telegramController;
   late TextEditingController _whatsappController;
-  late TextEditingController _emailController;
   late TextEditingController _vkController;
   late TextEditingController _phoneController;
 
@@ -50,9 +50,20 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
     _whatsappController = TextEditingController(
       text: widget.contact?.whatsapp ?? '',
     );
-    _emailController = TextEditingController(text: widget.contact?.email ?? '');
     _vkController = TextEditingController(text: widget.contact?.vk ?? '');
     _phoneController = TextEditingController(text: widget.contact?.phone ?? '');
+    getEmail();
+  }
+
+  String _email = '';
+  void getEmail() {
+    final userState = context.read<UserBloc>().state;
+
+    if (userState is UserLoaded) {
+      setState(() {
+        _email = userState.user.email ?? "";
+      });
+    }
   }
 
   @override
@@ -60,7 +71,6 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
     _nameController.dispose();
     _telegramController.dispose();
     _whatsappController.dispose();
-    _emailController.dispose();
     _vkController.dispose();
     _phoneController.dispose();
     super.dispose();
@@ -73,7 +83,7 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
       name: _nameController.text.trim(),
       telegram: _telegramController.text.trim(),
       whatsapp: _whatsappController.text.trim(),
-      email: _emailController.text.trim(),
+      email: _email,
       vk: _vkController.text.trim(),
       phone: _phoneController.text.trim(),
       userId: 0, // MOCKID i donn use it in my ocee
@@ -186,13 +196,10 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
                                 FormValidations.contactWhatsApp(value),
                           ),
                           const SizedBox(height: 16),
-                          CustomInputText(
-                            labelText: "Email",
-                            hintText: "example@email.com",
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) =>
-                                FormValidations.contactEmail(value),
+                          CustomStaticInput(
+                            label: 'Почта',
+                            value: _email ,
+                            hasGreyBg: true,
                           ),
                           const SizedBox(height: 16),
                           CustomInputText(

@@ -80,7 +80,7 @@ Future<String?> AddSpecialisationModal(
 
                               CustomButtonApplicant(
                                 isLoading: state is ApplicantContactLoading,
-                                btnText: "Добавить",
+                                btnText: "Специальность",
                                 onTap: () {
                                   final value = spec.text.trim();
                                   if (value.isEmpty) return;

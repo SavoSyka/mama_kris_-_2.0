@@ -101,7 +101,7 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                       state.jobs.likedJob.isEmpty
                           ? Expanded(
                               child: EmptyFavoriteJob(
-                                title: "No Favorite Jobs Found",
+                                title: "Нет понравившихся вакансий",
                                 onRefresh: _handleRefresh,
                               ),
                             )
@@ -110,7 +110,8 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                                 onRefresh: _handleRefresh,
                                 child: ListView.separated(
                                   controller: _scrollController,
-                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     if (index < state.jobs.likedJob.length) {
                                       final job = state.jobs.likedJob[index];
@@ -119,7 +120,7 @@ class _ApplFavoriteScreenState extends State<ApplFavoriteScreen> {
                                         jobId: job.job.jobId,
                                         salaryRange: job.job.salary.toString(),
                                         showAddToFavorite: false,
-                                      contactJobs: job.job.contactJobs,
+                                        contactJobs: job.job.contactJobs,
 
                                         onTap: () async =>
                                             await ApplicantJobDetail(

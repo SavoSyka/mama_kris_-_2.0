@@ -71,4 +71,8 @@ class ApiConstants {
   static removeFromHide(String userId) => "hidden-profiles/$userId";
   static const getHiddenUsers = "hidden-profiles";
   static getUserFromCached(String userId) => "users/$userId";
+
+  static userEnterSession(String userId) => "session-times/user/$userId";
+  static userLeftSession(String userId, String sessionId) => "session-times/user/$userId/session/$sessionId";
+
 }

@@ -11,6 +11,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
+import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/build_error_card.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
@@ -235,16 +236,37 @@ class _Contacts extends StatelessWidget {
               Row(
                 spacing: 12,
                 children: [
-                  _buildSocialContact(
-                    onTap: () {},
-                    icon: MediaRes.telegramIcon,
-                  ),
-
-                  _buildSocialContact(onTap: () {}, icon: MediaRes.vkIcon),
-                  _buildSocialContact(
-                    onTap: () {},
-                    icon: MediaRes.whatsappIcon,
-                  ),
+                  if (contact.telegram != null && contact.telegram!.isNotEmpty)
+                    _buildSocialContact(
+                      onTap: () {
+                        HandleLaunchUrl.launchTelegram(
+                          context,
+                          message: "",
+                          username: contact.telegram,
+                        );
+                      },
+                      icon: MediaRes.telegramIcon,
+                    ),
+                  if (contact.vk != null && contact.vk!.isNotEmpty)
+                    _buildSocialContact(
+                      onTap: () {
+                        HandleLaunchUrl.launchVK(
+                          context,
+                          vkId: contact.vk ?? "",
+                        );
+                      },
+                      icon: MediaRes.vkIcon,
+                    ),
+                  if (contact.whatsapp != null && contact.whatsapp!.isNotEmpty)
+                    _buildSocialContact(
+                      onTap: () {
+                        HandleLaunchUrl.launchWhatsApp(
+                          context,
+                          phone: contact.whatsapp ?? "",
+                        );
+                      },
+                      icon: MediaRes.whatsappIcon,
+                    ),
                 ],
               ),
             ],

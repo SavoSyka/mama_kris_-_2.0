@@ -1,0 +1,22 @@
+import 'package:mama_kris/core/error/failures.dart';
+import 'package:mama_kris/core/services/lifecycle/domain/repository/life_cycle_manager_repository.dart';
+import 'package:mama_kris/core/utils/typedef.dart';
+import 'package:mama_kris/core/utils/usecase.dart';
+import 'package:mama_kris/features/appl/app_auth/domain/repositories/auth_repository.dart';
+
+class UserLeftParams {
+  final String endDate;
+  final int sessionId;
+  const UserLeftParams({required this.endDate, required this.sessionId});
+}
+
+class UserEnteredUsecase extends UseCase<void, UserLeftParams> {
+  final LifeCycleManagerRepository repository;
+
+  UserEnteredUsecase(this.repository);
+
+  @override
+  ResultFuture<void> call(UserLeftParams params) async {
+    return await repository.userLeft(params.endDate, params.sessionId);
+  }
+}

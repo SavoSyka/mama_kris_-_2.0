@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -31,14 +32,17 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
   bool _acceptTermsOfUse = false;
 
   // final emailController = TextEditingController(text: 'mowerem676@dwakm.com');
+  final emailController = TextEditingController(
+    text: kDebugMode ? "rona@yopmail.com" : "",
+  );
+  final nameController = TextEditingController(text: kDebugMode ? "name" : "");
 
-  final emailController = TextEditingController();
-
-  final nameController = TextEditingController();
-
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-
+  final passwordController = TextEditingController(
+    text: kDebugMode ? '12344321' : "",
+  );
+  final confirmPasswordController = TextEditingController(
+    text: kDebugMode ? '12344321' : "",
+  );
   final _formKey = GlobalKey<FormState>();
 
   @override

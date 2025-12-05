@@ -13,9 +13,9 @@ class UserModel extends UserEntity {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      userId: json['userId'].toString(),
-      accessToken: json['accessToken'] as String,
-      refreshToken: json['refreshToken'] as String,
+      userId: json['userId']?.toString() ?? '',
+      accessToken: json['accessToken'] ?? "",
+      refreshToken: json['refreshToken'] ?? "",
       user: UserProfileModel.fromJson(json['user']),
       subscription: UserSubscriptionModel.fromJson(json['subscription']),
     );

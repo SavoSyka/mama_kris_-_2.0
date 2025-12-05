@@ -40,22 +40,8 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
       _nameController.text = userState.user.name ?? '';
       _aboutController.text = userState.user.about ?? '';
 
-      final rawDob = userState.user.birthDate;
-
-      if (rawDob != null && rawDob.isNotEmpty) {
-        try {
-          // Parse backend format (YYYY-MM-DD)
-          final parsed = DateTime.parse(rawDob);
-
-          // Convert to Russian readable format
-          final formatted = DateFormat.yMMMMd('ru_RU').format(parsed);
-
-          _dobController.text = formatted;
-        } catch (e) {
-          // fallback
-          _dobController.text = rawDob;
-        }
-      }
+      final rawDob = userState.user.birthDate ?? "";
+      _dobController.text = rawDob;
     }
   }
 
@@ -88,7 +74,7 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
         UpdatingBasicInfoEvent(
           name: _nameController.text,
           dob: _dobController.text,
-          about: _aboutController.text
+          about: _aboutController.text,
         ),
       );
     }
@@ -200,7 +186,7 @@ class EmpProfileEditBasicInfoState extends State<EmpProfileEditBasicInfo> {
                                           EmpUpdateBasicInfoEvent(
                                             dob: _dobController.text,
                                             name: _nameController.text,
-                                            about: _aboutController.text
+                                            about: _aboutController.text,
                                           ),
                                         );
                                       }

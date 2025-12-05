@@ -38,6 +38,7 @@ class SubscriptionStatusCubit extends Cubit<SubscriptionStatusState> {
 
   Future<void> getSubscriptionStatus() async {
     try {
+      emit(SubscriptionStatusLoading());
       final dio = sl<Dio>();
 
       final userId = await sl<AuthLocalDataSource>().getUserId();
@@ -48,6 +49,10 @@ class SubscriptionStatusCubit extends Cubit<SubscriptionStatusState> {
         final hasSubscription = data['hasSubscription'] as bool? ?? false;
         final expiresAt = data['expiresAt'] != null
             ? DateTime.tryParse(data['expiresAt'])
+            : null;
+
+              final startsAt = data['startsAt'] != null
+            ? DateTime.tryParse(data['startsAt'])
             : null;
         final type = data['type'] as String?;
 
@@ -60,6 +65,7 @@ class SubscriptionStatusCubit extends Cubit<SubscriptionStatusState> {
             hasSubscription: hasSubscription,
             expiresAt: expiresAt,
             type: type,
+            startsAt: startsAt,
           ),
         );
       } else {

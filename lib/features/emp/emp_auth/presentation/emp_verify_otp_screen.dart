@@ -131,7 +131,8 @@ class _EmpVerifyOtpScreenState extends State<EmpVerifyOtpScreen> {
                                       const SizedBox(height: 12),
                                       const CustomText(
                                         text:
-                                            "Мы отправили код подтверждения на вашу электронную почту. Пожалуйста, введите его для подтверждения",
+                                            "Мы отправили код подтверждения на вашу электронную почту. Пожалуйста, Если не получили письмо, то проверьте папку «Спам». Возможно оно упало туда.",
+
                                         style: TextStyle(fontSize: 12),
                                         textAlign: TextAlign.center,
                                       ),
