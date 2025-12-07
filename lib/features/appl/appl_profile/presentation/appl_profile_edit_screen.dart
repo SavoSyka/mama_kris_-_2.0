@@ -15,6 +15,7 @@ import 'package:mama_kris/core/common/widgets/show_ios_loader.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/auth/auth_service.dart';
+import 'package:mama_kris/core/services/lifecycle/bloc/life_cycle_manager_bloc.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
@@ -58,71 +59,93 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
           bottom: false,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: SafeArea(
-                    child: CustomDefaultPadding(
-                      bottom: 0,
-                      child: Column(
-                        children: [
-                          // Основная информация -- basic information
-                          const _basicInformation(),
-                          const SizedBox(height: 20),
+          child: BlocConsumer<UserBloc, UserState>(
+            listener: (context, state) {
+                debugPrint("boom aree arupd");
 
-                          // Контакты -- Contacts
-                          const ApplContactWidget(),
-                          const SizedBox(height: 20),
+              if (state is UserLoaded) {
+                debugPrint("we aree arupd");
+                setState(() {
+                  _userState = state.user;
+                });
+              }
+              // TODO: implement listener
+            },
+            builder: (context, state) {
+              return Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: SafeArea(
+                        child: CustomDefaultPadding(
+                          bottom: 0,
+                          child: Column(
+                            children: [
+                              // Основная информация -- basic information
+                              const _basicInformation(),
+                              const SizedBox(height: 20),
 
-                          const ApplWorkExperienceWidget(),
-                          const SizedBox(height: 20),
+                              // Контакты -- Contacts
+                              const ApplContactWidget(),
+                              const SizedBox(height: 20),
 
-                          /// Специализация -- Speciliasaton
-                          CustomSpecialisation(
-                            specializations: _userState?.specializations ?? [],
-                            onTap: () async {
-                              final result = await AddSpecialisationModal(
-                                context,
-                                speciality: _userState?.specializations ?? [],
-                              );
+                              const ApplWorkExperienceWidget(),
+                              const SizedBox(height: 20),
 
-                              if (result != null) {
-                                final specList = List<String>.from(
-                                  _userState?.specializations ?? [],
-                                );
-                                specList.add(result);
-                                setState(() {
-                                  final setData = specList.toSet().toList();
-
-                                  context.read<UserBloc>().add(
-                                    UpdateSpecialityInfo(speciality: setData),
+                              /// Специализация -- Speciliasaton
+                              CustomSpecialisation(
+                                specializations:
+                                    _userState?.specializations ?? [],
+                                onTap: () async {
+                                  final result = await AddSpecialisationModal(
+                                    context,
+                                    speciality:
+                                        _userState?.specializations ?? [],
                                   );
-                                });
-                              }
-                            },
+
+                                  if (result != null) {
+                                    final specList = List<String>.from(
+                                      _userState?.specializations ?? [],
+                                    );
+
+                                    debugPrint("Result $result");
+
+                                    setState(() {
+                                      specList.addAll(result);
+                                      final setData = specList.toSet().toList();
+
+                                      context.read<UserBloc>().add(
+                                        UpdateSpecialityInfo(
+                                          speciality: setData,
+                                        ),
+                                      );
+                                    });
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 20),
+
+                              const _accounts(),
+                              const SizedBox(height: 20),
+
+                              // CustomButtonApplicant(
+                              //   btnText: 'Сохранить изменения',
+                              //   onTap: () {
+                              //     Navigator.pop(context);
+                              //   },
+                              // ),
+                              const SizedBox(height: 32),
+
+                              /// Опыт работы-- Experience
+                            ],
                           ),
-                          const SizedBox(height: 20),
-
-                          const _accounts(),
-                          const SizedBox(height: 20),
-
-                          // CustomButtonApplicant(
-                          //   btnText: 'Сохранить изменения',
-                          //   onTap: () {
-                          //     Navigator.pop(context);
-                          //   },
-                          // ),
-                          const SizedBox(height: 32),
-
-                          /// Опыт работы-- Experience
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -329,32 +352,6 @@ class _AccountsState extends State<_accounts> {
           ),
           const SizedBox(height: 16),
 
-          // Row(
-          //   children: [
-          //     const Text(
-          //       'Принимать заказы',
-          //       style: TextStyle(
-          //         color: Color(0xFF596574),
-          //         fontSize: 16,
-          //         fontFamily: 'Manrope',
-          //         fontWeight: FontWeight.w500,
-          //         height: 1.30,
-          //       ),
-          //     ),
-          //     const Spacer(),
-          //     Switch(
-          //       value: _acceptOrders,
-          //       onChanged: (bool value) {
-          //         setState(() {
-          //           _acceptOrders = value;
-          //         });
-          //         // TODO: Save the preference to backend or local storage
-          //       },
-          //       activeThumbColor: AppPalette.primaryColor,
-          //     ),
-          //   ],
-          // ),
-          // const SizedBox(height: 16),
           _updateButtons(
             text:
                 "Управление подпиской", //"Управление подпиской", // manage subscription
@@ -369,14 +366,27 @@ class _AccountsState extends State<_accounts> {
             error: true,
             errorIcon: MediaRes.logoutIcon,
             onTap: () {
-              showLogoutDialog(context, isApplicant: true, () {
+              showLogoutDialog(context, isApplicant: true, () async {
                 print("Account logout");
 
-                context.read<ApplicantContactBloc>().add(
-                  const LogoutAccountEvent(),
-                );
-                AuthService().signOut();
-                context.pushNamed(RouteName.welcomePage);
+                final lifeCycleState = context
+                    .read<LifeCycleManagerBloc>()
+                    .state;
+
+                if (lifeCycleState is LifeCycleManagerStartedState) {
+                  context.read<LifeCycleManagerBloc>().add(
+                    EndUserSessionEvent(
+                      sessionId: lifeCycleState.sessionId,
+                      endDate: DateTime.now().toUtc().toIso8601String(),
+                    ),
+                  );
+                  await Future.delayed(const Duration(seconds: 1));
+                  context.read<ApplicantContactBloc>().add(
+                    const LogoutAccountEvent(),
+                  );
+                  AuthService().signOut();
+                  context.pushNamed(RouteName.welcomePage);
+                }
               });
             },
           ),

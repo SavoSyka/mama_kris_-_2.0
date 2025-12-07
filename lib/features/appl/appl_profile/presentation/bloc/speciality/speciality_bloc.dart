@@ -18,10 +18,10 @@ class SpecialityBloc extends Bloc<SpecialityEvent, SpecialityState> {
     SearchSpecialityEvent event,
     Emitter<SpecialityState> emit,
   ) async {
-    if (event.query.isEmpty) {
-      emit(state.copyWith(suggestions: []));
-      return;
-    }
+    // if (event.query.isEmpty) {
+    //   emit(state.copyWith(suggestions: []));
+    //   return;
+    // }
 
     emit(state.copyWith(loading: true));
 

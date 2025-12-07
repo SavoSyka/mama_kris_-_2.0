@@ -10,6 +10,7 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/expanded_scroll_wrapper.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/lifecycle/bloc/life_cycle_manager_bloc.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
@@ -68,6 +69,13 @@ class _ApplVerifyOtpScreenState extends State<ApplVerifyOtpScreen> {
                         if (state is AuthSuccess) {
                           context.read<UserBloc>().add(
                             GetUserProfileEvent(user: state.user.user),
+                          );
+                          context.read<LifeCycleManagerBloc>().add(
+                            StartUserSessionEvent(
+                              startDate: DateTime.now()
+                                  .toUtc()
+                                  .toIso8601String(),
+                            ),
                           );
 
                           context.goNamed(RouteName.homeApplicant);

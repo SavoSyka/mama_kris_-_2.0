@@ -1,15 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
-import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
-import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
-import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_event.dart';
@@ -35,6 +34,9 @@ class _ResumeSpecialitySearchPageState
   final TextEditingController _searchController = TextEditingController();
   late SpecialitySearchBloc _specialitySearchBloc;
 
+  final ScrollController _scrollController = ScrollController();
+  Timer? _debounceTimer;
+
   @override
   void initState() {
     super.initState();
@@ -44,12 +46,17 @@ class _ResumeSpecialitySearchPageState
     _specialitySearchBloc.add(LoadSearchHistoryEvent());
 
     _searchController.addListener(_onSearchChanged);
+    _scrollController.addListener(_scrollListener);
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
+    _debounceTimer?.cancel();
+    _scrollController
+      ..removeListener(_scrollListener)
+      ..dispose();
     super.dispose();
   }
 
@@ -177,7 +184,7 @@ class _ResumeSpecialitySearchPageState
     }
 
     /// ---------- Empty Results ----------
-    if (state is SpecialitySearchLoaded && state.specialities.isEmpty) {
+    if (state is SpecialitySearchLoaded && state.specialities.jobs.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -198,62 +205,76 @@ class _ResumeSpecialitySearchPageState
       );
     }
 
+    if (state is SpecialitySearchLoaded)
     /// ---------- Results List ----------
-    final specialities = state is SpecialitySearchLoaded
-        ? state.specialities
-        : [];
+    {
+      final specialities = state.specialities;
 
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      itemCount: specialities.length,
-      itemBuilder: (context, index) {
-        final speciality = specialities[index];
-        return InkWell(
-          onTap: () => _selectSpeciality(speciality.name),
-          borderRadius: BorderRadius.circular(14),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Colors.grey.withOpacity(0.15)),
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.work_outline,
-                  color: Colors.grey.withOpacity(0.7),
-                  size: 20,
+      return ListView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        itemCount: specialities.jobs.length + 1,
+        itemBuilder: (context, index) {
+          if (index < state.specialities.jobs.length) {
+            final speciality = specialities.jobs[index];
+            return InkWell(
+              onTap: () => _selectSpeciality(speciality.name),
+              borderRadius: BorderRadius.circular(14),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 14,
+                  horizontal: 6,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: CustomText(
-                    text: speciality.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Manrope',
-                    ),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey.withOpacity(0.15)),
                   ),
                 ),
-                Icon(Icons.chevron_right, color: Colors.grey.withOpacity(0.5)),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.work_outline,
+                      color: Colors.grey.withOpacity(0.7),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: CustomText(
+                        text: speciality.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Manrope',
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else if (state.specialities.hasNextPage) {
+            return const IPhoneLoader();
+          }
+          return null;
+        },
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _buildSearchHistory(List<String> history) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: CustomText(
             text: 'Недавние поиски',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.grey,
@@ -273,7 +294,10 @@ class _ResumeSpecialitySearchPageState
                 },
                 borderRadius: BorderRadius.circular(14),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 6,
+                  ),
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(color: Colors.grey.withOpacity(0.15)),
@@ -297,7 +321,10 @@ class _ResumeSpecialitySearchPageState
                           ),
                         ),
                       ),
-                      Icon(Icons.chevron_right, color: Colors.grey.withOpacity(0.5)),
+                      Icon(
+                        Icons.chevron_right,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
                     ],
                   ),
                 ),
@@ -306,6 +333,34 @@ class _ResumeSpecialitySearchPageState
           ),
         ),
       ],
+    );
+  }
+
+  // * 0. ────────────────────── SCROLL LISTENER ───────────────────────
+  void _scrollListener() {
+    final state = context.read<SpecialitySearchBloc>().state;
+    if (state is! SpecialitySearchLoaded) return;
+
+    // 2. Already loading more or no next page → ignore
+    if (state.isLoadingMore || !state.specialities.hasNextPage) return;
+
+    // 3. Not near the bottom (80 % of max) → ignore
+    final max = _scrollController.position.maxScrollExtent;
+    final cur = _scrollController.position.pixels;
+    if (cur < max * 0.8) return;
+
+    // 4. Debounce – fire **once** every seconds
+    if (_debounceTimer?.isActive ?? false) return;
+    _debounceTimer = Timer(const Duration(seconds: 1), () {
+      final nextPage = state.specialities.currentPage + 1;
+      debugPrint("Next page $nextPage");
+      _loadMoreJobs(nextPage);
+    });
+  }
+
+  void _loadMoreJobs(int page) {
+    context.read<SpecialitySearchBloc>().add(
+      LoadNextSpecialityPageEvent(page, _searchController.text),
     );
   }
 }

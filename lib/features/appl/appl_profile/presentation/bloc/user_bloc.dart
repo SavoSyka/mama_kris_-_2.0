@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_entity.dart';
@@ -142,7 +143,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       emit(UserLoaded(updatedUser));
 
-      debugPrint("🔐 Emitted updated user: $updatedUser");
+      debugPrint("🔐 Emitted updated user: $state");
     }
   }
 }

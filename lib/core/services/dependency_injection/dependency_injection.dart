@@ -18,6 +18,7 @@ Future<void> dependencyInjection() async {
   await _initResumes();
   await _initSubscriptions();
   await _initEmployeeContact();
+  await _initAppLifeCyle();
 }
 
 Future<void> _initLocalCache() async {
@@ -202,6 +203,23 @@ Future<void> initAppAuthInjection() async {
 
   // -------- BLOC --------
   sl.registerFactory<UserBloc>(() => UserBloc(getUserProfileUseCase: sl()));
+
+  // TODO
+  // User speciality should be added here
+  sl.registerLazySingleton<srd.SpecialityRemoteDataSource>(
+    () => srd.SpecialityRemoteDataSourceImpl(dio: sl()),
+  );
+
+  sl.registerLazySingleton<sr.SpecialityRepository>(
+    () => sp.SpecialityRepositoryImpl(sl()),
+  );
+
+  // -------- USE CASE --------
+  sl.registerLazySingleton<GetSpecialityListUsecase>(
+    () => GetSpecialityListUsecase(sl()),
+  );
+
+  sl.registerFactory<SpecialityBloc>(() => SpecialityBloc(sl()));
 }
 
 Future<void> _initEmpAuth() async {
@@ -242,7 +260,7 @@ Future<void> _initEmpAuth() async {
       loginWithGoogleUsecase: sl(),
       updatePasswordUsecase: sl(),
       loginWithAppleUsecase: sl(),
-      empLoginUsingCachedUsecase: sl()
+      empLoginUsingCachedUsecase: sl(),
     ),
   );
 
@@ -424,4 +442,25 @@ Future<void> _initSubscriptions() async {
   sl.registerFactory(() => TarriffsBloc(getTariffsUsecase: sl()));
 
   sl.registerFactory(() => SubscriptionStatusCubit());
+}
+
+Future<void> _initAppLifeCyle() async {
+  // Data sources
+  sl.registerLazySingleton<LifeCycleManagerDataSource>(
+    () => LifeCycleManagerDataSourceImpl(dio: sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<LifeCycleManagerRepository>(
+    () => LifeCycleManagerRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => UserEnteredUsecase(sl()));
+  sl.registerLazySingleton(() => UserLeftUsecase(sl()));
+
+  // Bloc
+  sl.registerFactory(
+    () => LifeCycleManagerBloc(userEnteredUsecase: sl(), userLeftUsecase: sl()),
+  );
 }

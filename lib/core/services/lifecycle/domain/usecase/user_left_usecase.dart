@@ -10,10 +10,10 @@ class UserLeftParams {
   const UserLeftParams({required this.endDate, required this.sessionId});
 }
 
-class UserEnteredUsecase extends UseCase<void, UserLeftParams> {
+class UserLeftUsecase extends UseCase<void, UserLeftParams> {
   final LifeCycleManagerRepository repository;
 
-  UserEnteredUsecase(this.repository);
+  UserLeftUsecase(this.repository);
 
   @override
   ResultFuture<void> call(UserLeftParams params) async {

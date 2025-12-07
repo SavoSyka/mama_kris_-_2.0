@@ -10,13 +10,13 @@ class UserEnteredParams {
   const UserEnteredParams({required this.startDate});
 }
 
-class UserEnteredUsecase extends UseCase<void, UserEnteredParams> {
+class UserEnteredUsecase extends UseCase<int, UserEnteredParams> {
   final LifeCycleManagerRepository repository;
 
   UserEnteredUsecase(this.repository);
 
   @override
-  ResultFuture<void> call(UserEnteredParams params) async {
+  ResultFuture<int> call(UserEnteredParams params) async {
     return await repository.userEntered(params.startDate);
   }
 }

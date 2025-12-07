@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/lifecycle/bloc/life_cycle_manager_bloc.dart';
 import 'package:mama_kris/core/services/lifecycle/lifecycle_manager.dart';
 import 'package:mama_kris/core/services/routes/router.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
@@ -111,6 +112,9 @@ void main() async {
 
         BlocProvider(create: (context) => sl<SubscriptionStatusCubit>()),
         BlocProvider(create: (context) => sl<HideResumeBloc>()),
+
+        BlocProvider(create: (context) => sl<LifeCycleManagerBloc>()),
+
       ],
       child: const MyApp(),
     ),

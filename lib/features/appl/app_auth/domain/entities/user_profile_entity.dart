@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
-class UserProfileEntity {
+class UserProfileEntity extends Equatable{
   final int? userID;
   final String? email;
   final String? name;
@@ -94,6 +94,10 @@ class UserProfileEntity {
       defaultContact: defaultContact ?? this.defaultContact,
     );
   }
+  
+  @override
+  // TODO: implement props
+  List<Object?> get props => [userID, name,email, phone,dateTime,signedIn,choice,appleID,role,provider,defaultContact,defaultContactId,specializations, specializationsNorm,birthDate, education,about, workExperience,age, isFavorite];
 }
 
 class ApplWorkExperienceEntity {

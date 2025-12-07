@@ -6,35 +6,34 @@ import 'package:mama_kris/core/services/dependency_injection/dependency_import.d
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 
 abstract class SpecialityRemoteDataSource {
-  Future<List<String>> getSpeciality(String query);
+  Future<List<String>> searchSpeciality(String query);
 }
 
 class SpecialityRemoteDataSourceImpl extends SpecialityRemoteDataSource {
   final Dio dio;
 
-  SpecialityRemoteDataSourceImpl({required this.dio})
-  
+  SpecialityRemoteDataSourceImpl({required this.dio});
+
   @override
-  Future<List<String>> getSpeciality(String query) async {
+  Future<List<String>> searchSpeciality(String query) async {
     try {
-      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
-
-      final postData = {"query": query, "userId": userId};
-
-      final response = await dio.post(
-        ApiConstants.userEnterSession(userId),
-        data: postData,
-        // options: Options(headers: {...dio.options.headers, ...requestHeaders}),
+      final queryParams = {'page': 1, "pageSize": 40, "query": query};
+      final response = await dio.get(
+        ApiConstants.getSpeciality,
+        queryParameters: queryParams,
       );
 
-      if (response.statusCode.toString().startsWith('2')) {
-        final data = response.data as Map<String, dynamic>;
-        debugPrint('Login response: $data');
-        return [];
+      if (response.statusCode == 200) {
+        final data = response.data['data'] as List<dynamic>;
+        debugPrint("Speciality Searched 😌");
+        final returnData = data.map((json) => json.toString()).toList();
+        return returnData;
       } else {
-        throw const ApiException(
-          message: 'Login with Google failed',
-          statusCode: 500,
+        debugPrint("Speciality Error 😌");
+
+        throw ApiException(
+          message: response.data['message'] ?? 'Failed to search specialities',
+          statusCode: response.statusCode ?? 500,
         );
       }
     } on DioException catch (e) {
@@ -43,9 +42,9 @@ class SpecialityRemoteDataSourceImpl extends SpecialityRemoteDataSource {
         statusCode: e.response?.statusCode ?? 500,
       );
     } catch (e) {
+      debugPrint("Speciality Error 😌 $e");
+
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
-
 }
-

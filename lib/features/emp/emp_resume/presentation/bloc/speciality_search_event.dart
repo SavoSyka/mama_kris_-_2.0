@@ -21,9 +21,17 @@ class ClearSearchEvent extends SpecialitySearchEvent {}
 class GetUserPublicProfileEvent extends SpecialitySearchEvent {
   final String userId;
 
-  const GetUserPublicProfileEvent({
-    required this.userId,
-  });
+  const GetUserPublicProfileEvent({required this.userId});
 }
 
 class LoadSearchHistoryEvent extends SpecialitySearchEvent {}
+
+class LoadNextSpecialityPageEvent extends SpecialitySearchEvent {
+  final int nextPage;
+  final String query;
+
+  const LoadNextSpecialityPageEvent(this.nextPage, this.query);
+
+  @override
+  List<Object> get props => [nextPage];
+}

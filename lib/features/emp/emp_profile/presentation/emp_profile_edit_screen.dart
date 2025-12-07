@@ -13,6 +13,7 @@ import 'package:mama_kris/core/common/widgets/show_ios_loader.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/auth/auth_service.dart';
+import 'package:mama_kris/core/services/lifecycle/bloc/life_cycle_manager_bloc.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
@@ -380,15 +381,28 @@ class _AccountsState extends State<_accounts> {
             error: true,
             errorIcon: MediaRes.logoutIcon,
             onTap: () {
-              showLogoutDialog(context, () {
+              showLogoutDialog(context, () async {
                 print("Account logout");
 
-                context.read<EmployeeContactBloc>().add(
-                  const EmpLogoutAccountEvent(),
-                );
-                AuthService().signOut();
+                final lifeCycleState = context
+                    .read<LifeCycleManagerBloc>()
+                    .state;
 
-                context.pushNamed(RouteName.welcomePage);
+                if (lifeCycleState is LifeCycleManagerStartedState) {
+                  context.read<LifeCycleManagerBloc>().add(
+                    EndUserSessionEvent(
+                      sessionId: lifeCycleState.sessionId,
+                      endDate: DateTime.now().toUtc().toIso8601String(),
+                    ),
+                  );
+                  await Future.delayed(const Duration(seconds: 1));
+                  context.read<EmployeeContactBloc>().add(
+                    const EmpLogoutAccountEvent(),
+                  );
+                  AuthService().signOut();
+
+                  context.pushNamed(RouteName.welcomePage);
+                }
               });
             },
           ),

@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/speciality_remote_data_source.dart';
+import 'package:mama_kris/features/emp/emp_resume/data/models/Speciality_list_model.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/entities/speciality.dart';
 
 class SpecialityRemoteDataSourceImpl implements SpecialityRemoteDataSource {
@@ -11,18 +12,19 @@ class SpecialityRemoteDataSourceImpl implements SpecialityRemoteDataSource {
   SpecialityRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<Speciality>> searchSpecialities(String query) async {
+  Future<SpecialityListModel> searchSpecialities(String query, int page) async {
     try {
-      final queryParams = {'page': 1, "pageSize": 20, "query": query};
+      final queryParams = {'page': page, "pageSize": 20, "query": query};
       final response = await dio.get(
         ApiConstants.getSpeciality,
         queryParameters: queryParams,
       );
 
       if (response.statusCode == 200) {
-        final data = response.data['data'] as List<dynamic>;
+        final data = response.data;
+        final returnData = SpecialityListModel.fromJson(data);
         debugPrint("Speciality Searched 😌");
-        return data.map((json) => Speciality.fromJson(json)).toList();
+        return returnData;
       } else {
         debugPrint("Speciality Error 😌");
 

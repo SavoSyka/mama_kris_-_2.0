@@ -11,6 +11,7 @@ import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/expanded_scroll_wrapper.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/lifecycle/bloc/life_cycle_manager_bloc.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
@@ -85,6 +86,15 @@ class _EmpVerifyOtpScreenState extends State<EmpVerifyOtpScreen> {
                             context.pushNamed(RouteName.updateEmployeePwd);
                           }
                         } else if (state is EmpAuthSuccess) {
+                        
+                          context.read<LifeCycleManagerBloc>().add(
+                            StartUserSessionEvent(
+                              startDate: DateTime.now()
+                                  .toUtc()
+                                  .toIso8601String(),
+                            ),
+                          );
+
                           if (state.user.subscription.active) {
                             context.goNamed(RouteName.homeEmploye);
                           } else {

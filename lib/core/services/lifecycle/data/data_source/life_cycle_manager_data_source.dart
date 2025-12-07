@@ -6,7 +6,7 @@ import 'package:mama_kris/core/services/dependency_injection/dependency_import.d
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 
 abstract class LifeCycleManagerDataSource {
-  Future<void> userEntered(String startDate);
+  Future<int> userEntered(String startDate);
   Future<void> userLeft(String endDate, int sessionId);
 }
 
@@ -16,11 +16,11 @@ class LifeCycleManagerDataSourceImpl extends LifeCycleManagerDataSource {
   final Dio dio;
 
   @override
-  Future<void> userEntered(String startDate) async {
+  Future<int> userEntered(String startDate) async {
     try {
       final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
-      final postData = {"startDate": startDate, "userId": userId};
+      final postData = {"startTime": startDate, "userId": userId};
 
       final response = await dio.post(
         ApiConstants.userEnterSession(userId),
@@ -31,6 +31,8 @@ class LifeCycleManagerDataSourceImpl extends LifeCycleManagerDataSource {
       if (response.statusCode.toString().startsWith('2')) {
         final data = response.data as Map<String, dynamic>;
         debugPrint('Login response: $data');
+        final sessionId = data['sessionID'] as int;
+        return sessionId;
       } else {
         throw const ApiException(
           message: 'Login with Google failed',
@@ -51,9 +53,12 @@ class LifeCycleManagerDataSourceImpl extends LifeCycleManagerDataSource {
   Future<void> userLeft(String endDate, int sessionId) async {
     try {
       final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
-      final postData = {"endDate": endDate, 'userId': userId};
+      final postData = {
+         "endTime": endDate
+        // "endTime": endDate, 'userId': userId}
+      };
 
-      final response = await dio.post(
+      final response = await dio.put(
         ApiConstants.userLeftSession(userId, sessionId.toString()),
         data: postData,
         // options: Options(headers: {...dio.options.headers, ...requestHeaders}),

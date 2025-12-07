@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +14,7 @@ import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/auth/auth_service.dart';
+import 'package:mama_kris/core/services/lifecycle/bloc/life_cycle_manager_bloc.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/form_validations.dart';
@@ -36,8 +38,12 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
 
   // final emailController = TextEditingController(text: 'toli@yopmail.com');
 
-  final emailController = TextEditingController(); // subscription with one year
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController(
+    text: kDebugMode ? "rona@yopmail.com" : "",
+  ); // subscription with one year
+  final passwordController = TextEditingController(
+    text: kDebugMode ? "12344321" : "",
+  );
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -68,6 +74,13 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                 GetUserProfileEvent(user: state.user.user),
                               );
 
+                              context.read<LifeCycleManagerBloc>().add(
+                                StartUserSessionEvent(
+                                  startDate: DateTime.now()
+                                      .toUtc()
+                                      .toIso8601String(),
+                                ),
+                              );
                               context.goNamed(RouteName.homeApplicant);
                             } else if (state is AuthFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(

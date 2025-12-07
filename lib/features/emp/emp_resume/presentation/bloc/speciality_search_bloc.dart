@@ -24,6 +24,7 @@ class SpecialitySearchBloc
     on<ClearSearchEvent>(_onClearSearch);
     on<GetUserPublicProfileEvent>(_onGetUserProfile);
     on<LoadSearchHistoryEvent>(_onLoadSearchHistory);
+    on<LoadNextSpecialityPageEvent>(_onLoadNextJob);
   }
 
   Future<void> _onSearchSpecialities(
@@ -44,13 +45,18 @@ class SpecialitySearchBloc
 
     try {
       final result = await searchSpecialityUsecase(
-        SearchSpecialityParams(query: event.query),
+        SearchSpecialityParams(query: event.query, page: 1),
       );
 
       result.fold(
         (failure) => emit(SpecialitySearchError(message: failure.message)),
         (specialities) {
-          emit(SpecialitySearchLoaded(specialities: specialities));
+          emit(
+            SpecialitySearchLoaded(
+              specialities: specialities,
+              isLoadingMore: false,
+            ),
+          );
           // Save search query asynchronously without blocking
           if (event.query.isNotEmpty) {
             searchHistoryDataSource.saveSearchQuery(event.query);
@@ -66,7 +72,7 @@ class SpecialitySearchBloc
     ClearSearchEvent event,
     Emitter<SpecialitySearchState> emit,
   ) async {
-    emit(const SpecialitySearchLoaded(specialities: []));
+    // emit(const SpecialitySearchLoaded(specialities: []));
   }
 
   void searchWithDebounce(String query) {
@@ -115,4 +121,51 @@ class SpecialitySearchBloc
     }
   }
 
+  // * ────────────────────── LOAD NEXT PAGE ───────────────────────
+  Future<void> _onLoadNextJob(
+    LoadNextSpecialityPageEvent event,
+    Emitter<SpecialitySearchState> emit,
+  ) async {
+    final currentState = state;
+
+    // ── Guard: already loading or no more pages ─────────────────
+    if (currentState is! SpecialitySearchLoaded ||
+        currentState.isLoadingMore ||
+        !currentState.specialities.hasNextPage) {
+      return;
+    }
+
+    // ── Emit “loading more” (keeps old list) ───────────────────
+    emit(currentState.copyWith(isLoadingMore: true));
+
+    try {
+      final result = await searchSpecialityUsecase(
+        SearchSpecialityParams(query: event.query, page: event.nextPage),
+      );
+      result.fold(
+        (failure) => emit(SpecialitySearchError(message: failure.message)),
+        (newJobList) {
+          final updatedJobs = [
+            ...currentState.specialities.jobs,
+            ...newJobList.jobs,
+          ];
+
+          emit(
+            SpecialitySearchLoaded(
+              specialities: currentState.specialities.copyWith(
+                jobs: updatedJobs,
+                currentPage: newJobList.currentPage,
+                totalPage: newJobList.totalPage,
+                hasNextPage: newJobList.hasNextPage,
+              ),
+              isLoadingMore: false,
+            ),
+          );
+        },
+      );
+    } catch (e, stack) {
+      debugPrint('Load next page error: $e\n$stack');
+      emit(SpecialitySearchError(message: e.toString()));
+    }
+  }
 }

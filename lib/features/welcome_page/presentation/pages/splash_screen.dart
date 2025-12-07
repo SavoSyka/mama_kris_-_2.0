@@ -9,6 +9,7 @@ import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/lifecycle/bloc/life_cycle_manager_bloc.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/utils/version_utils.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
@@ -87,6 +88,12 @@ class _SplashScreenState extends State<SplashScreen>
                   EmpGetUserProfileEvent(user: state.user.user),
                 );
 
+                context.read<LifeCycleManagerBloc>().add(
+                  StartUserSessionEvent(
+                    startDate: DateTime.now().toUtc().toIso8601String(),
+                  ),
+                );
+
                 if (!state.user.subscription.active) {
                   context.pushReplacementNamed(RouteName.subscription);
                 } else {
@@ -101,6 +108,11 @@ class _SplashScreenState extends State<SplashScreen>
                   if (state is AuthSuccess) {
                     context.read<UserBloc>().add(
                       GetUserProfileEvent(user: state.user.user),
+                    );
+                    context.read<LifeCycleManagerBloc>().add(
+                      StartUserSessionEvent(
+                        startDate: DateTime.now().toUtc().toIso8601String(),
+                      ),
                     );
                     if (!state.user.subscription.active) {
                       context.pushReplacementNamed(RouteName.subscription);

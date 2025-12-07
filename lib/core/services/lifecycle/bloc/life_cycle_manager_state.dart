@@ -7,13 +7,17 @@ sealed class LifeCycleManagerState extends Equatable {
   List<Object> get props => [];
 }
 
- class LifeCycleManagerInitial extends LifeCycleManagerState {}
+class LifeCycleManagerInitial extends LifeCycleManagerState {}
 
- class LifeCycleManagerLoadingState extends LifeCycleManagerState {}
+class LifeCycleManagerLoadingState extends LifeCycleManagerState {}
 
- class LifeCycleManagerStartedState extends LifeCycleManagerState {
+class LifeCycleManagerStartedState extends LifeCycleManagerState {
   final int sessionId;
   const LifeCycleManagerStartedState({required this.sessionId});
 }
 
- class LifeCycleManagerErrorState extends LifeCycleManagerState {}
+class LifeCycleManagerEndedState extends LifeCycleManagerState {
+  const LifeCycleManagerEndedState();
+}
+
+class LifeCycleManagerErrorState extends LifeCycleManagerState {}

@@ -10,10 +10,10 @@ class LifeCycleManagerRepositoryImpl extends LifeCycleManagerRepository {
   LifeCycleManagerRepositoryImpl({required this.remoteDataSource});
 
   @override
-  ResultFuture<void> userEntered(String startDate) async {
+  ResultFuture<int> userEntered(String startDate) async {
     try {
       final result = await remoteDataSource.userEntered(startDate);
-      return const Right(null);
+      return  Right(result);
     } on ApiException catch (e) {
       return Left(ServerFailure(e.message));
     } catch (e) {

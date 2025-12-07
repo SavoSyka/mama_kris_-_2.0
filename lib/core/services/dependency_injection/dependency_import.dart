@@ -8,6 +8,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mama_kris/core/constants/app_constants.dart';
 import 'package:mama_kris/core/constants/hive_constants.dart';
 import 'package:mama_kris/core/services/api/api_service.dart';
+import 'package:mama_kris/core/services/lifecycle/bloc/life_cycle_manager_bloc.dart';
+import 'package:mama_kris/core/services/lifecycle/data/data_source/life_cycle_manager_data_source.dart';
+import 'package:mama_kris/core/services/lifecycle/data/repository_impl/life_cycle_manager_repository_impl.dart';
+import 'package:mama_kris/core/services/lifecycle/domain/repository/life_cycle_manager_repository.dart';
+import 'package:mama_kris/core/services/lifecycle/domain/usecase/user_entered_usecase.dart';
+import 'package:mama_kris/core/services/lifecycle/domain/usecase/user_left_usecase.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_remote_data_source.dart';
@@ -30,7 +36,9 @@ import 'package:mama_kris/features/appl/appl_home/domain/usecases/filter_jobs_us
 import 'package:mama_kris/features/appl/appl_profile/data/data_source/user_remote_data_source.dart';
 import 'package:mama_kris/features/appl/appl_profile/data/repository_impl/user_repository_impl.dart';
 import 'package:mama_kris/features/appl/appl_profile/domain/repository/user_repository.dart';
+import 'package:mama_kris/features/appl/appl_profile/domain/usecase/get_speciality_usecase.dart';
 import 'package:mama_kris/features/appl/appl_profile/domain/usecase/get_user_data.dart';
+import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/speciality/speciality_bloc.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/create_speciality_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_user_account_usecase.dart';
@@ -114,13 +122,18 @@ import 'package:mama_kris/features/appl/appl_home/data/repositories/ads_reposito
 import 'package:mama_kris/features/appl/appl_home/domain/repositories/ads_repository.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/usecases/fetch_ads_usecase.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_cubit.dart';
-import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source.dart' as emp_user_remote;
-import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source_impl.dart' as emp_user_remote_impl;
-import 'package:mama_kris/features/emp/emp_resume/data/repositories/resume_repository_impl.dart' as emp_user_repo_impl;
-import 'package:mama_kris/features/emp/emp_resume/domain/repositories/resume_repository.dart' as emp_user_repo;
+import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source.dart'
+    as emp_user_remote;
+import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source_impl.dart'
+    as emp_user_remote_impl;
+import 'package:mama_kris/features/emp/emp_resume/data/repositories/resume_repository_impl.dart'
+    as emp_user_repo_impl;
+import 'package:mama_kris/features/emp/emp_resume/domain/repositories/resume_repository.dart'
+    as emp_user_repo;
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/fetch_resume_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/search_speciality_usecase.dart';
-import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart' as emp_user_bloc;
+import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart'
+    as emp_user_bloc;
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_bloc.dart';
@@ -146,5 +159,12 @@ import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/get_all
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_applicant_contact.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:mama_kris/features/appl/appl_profile/data/data_source/speciality_remote_data_source.dart'
+    as srd;
+import 'package:mama_kris/features/appl/appl_profile/data/repository_impl/speciality_repository_impl.dart'
+    as sp;
+import 'package:mama_kris/features/appl/appl_profile/domain/repository/speciality_repository.dart'
+    as sr;
 
 part 'dependency_injection.dart';
