@@ -26,8 +26,7 @@ class UserLoaded extends UserState {
   const UserLoaded(this.user);
 
   @override
-  // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [user];
 }
 
 class UserError extends UserState {
@@ -54,6 +53,5 @@ class UserUpdated extends UserState {
   const UserUpdated(this.user);
 
   @override
-  // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [user];
 }
