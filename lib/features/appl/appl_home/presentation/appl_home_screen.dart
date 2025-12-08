@@ -370,7 +370,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     context.read<JobBloc>().add(FetchJobsEvent());
   }
 
-  void _handleVacancyReaction({required bool isLiked}) {
+  Future<void> _handleVacancyReaction({required bool isLiked}) async {
     final bloc = context.read<JobBloc>();
     final state = bloc.state;
 
@@ -384,6 +384,14 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
 
     // Dispatch like/dislike event
     if (isLiked) {
+      await ApplicantJobDetail(
+        context,
+        job: currentJob,
+        onLiked: () async {
+          context.read<JobBloc>().add(LikeJobEvent(currentJob.jobId));
+          Navigator.maybePop(context);
+        },
+      );
       bloc.add(LikeJobEvent(currentJob.jobId));
     } else {
       bloc.add(DislikeJobEvent(currentJob.jobId));

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,8 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
+
+
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/hide_resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
@@ -33,6 +36,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mama_kris/screens/main_screen.dart';
 import 'package:mama_kris/screens/welcome_screen.dart';
 import 'package:mama_kris/utils/funcs.dart' as funcs;
+
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mama_kris/constants/api_constants.dart';
@@ -40,10 +44,10 @@ import 'package:mama_kris/screens/update_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDateFormatting('ru_RU', null);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   // Force status bar icons to dark
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -52,44 +56,8 @@ void main() async {
     ),
   );
 
-  // Initialize Firebase app, handling potential duplicate app error in debug mode
-  // try {
-  //   print('Checking if Firebase app exists...');
-  //   // Try to get the default app - if it exists, we don't need to initialize
-  //   Firebase.app();
-  //   print('Firebase app already exists, skipping initialization');
-  // } catch (e) {
-  //   // App doesn't exist, so initialize it
-  //   try {
-  //     print('Initializing Firebase app...');
-  //     await Firebase.initializeApp(
-  //       options: DefaultFirebaseOptions.currentPlatform,
-  //     );
-  //     print('Firebase app initialized successfully.');
-  //   } catch (initError) {
-  //     print('Firebase initialization error: $initError');
-  //     // Continue anyway in debug mode
-  //     print('Continuing despite Firebase initialization error...');
-  //   }
-  // }
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // final localNotificationsService = LocalNotificationsService.instance();
-  // await localNotificationsService.init();
-
-  // final firebaseMessagingService = FirebaseMessagingService.instance();
-  // await firebaseMessagingService.init(
-  //   localNotificationsService: localNotificationsService,
-  // );
-
   await dependencyInjection();
 
-  // final localNotificationsService = getIt<LocalNotificationsService>();
-  // await localNotificationsService.init();
-  // final firebaseMessagingService = getIt<FirebaseMessagingService>();
-  // await firebaseMessagingService.init(
-  //   localNotificationsService: localNotificationsService,
-  // );
   runApp(
     MultiBlocProvider(
       providers: [
@@ -106,15 +74,11 @@ void main() async {
         BlocProvider(create: (context) => sl<ApplicantContactBloc>()),
         BlocProvider(create: (context) => sl<EmployeeContactBloc>()),
         BlocProvider(create: (context) => sl<TarriffsBloc>()),
-
         BlocProvider.value(value: sl<AdsCubit>()),
         BlocProvider.value(value: sl<SpecialitySearchBloc>()),
-
         BlocProvider(create: (context) => sl<SubscriptionStatusCubit>()),
         BlocProvider(create: (context) => sl<HideResumeBloc>()),
-
         BlocProvider(create: (context) => sl<LifeCycleManagerBloc>()),
-
       ],
       child: const MyApp(),
     ),
@@ -159,8 +123,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Обёртка, которая отслеживает жизненный цикл приложения
-/// и вызывает startSession при открытии и endSession при закрытии.
 class SessionManager extends StatefulWidget {
   final Widget child;
   const SessionManager({super.key, required this.child});
