@@ -55,6 +55,7 @@ dependencies:
   cupertino_country_picker: ^1.0.4
   intl_phone_field: ^3.2.0
   auto_size_text: ^3.0.0
+  freerasp: ^7.3.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.3

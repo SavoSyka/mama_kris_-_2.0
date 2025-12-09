@@ -21,7 +21,6 @@ import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/appl
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
 
-
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/hide_resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
@@ -32,6 +31,7 @@ import 'package:mama_kris/features/subscription/application/bloc/subscription_pa
 import 'package:mama_kris/features/subscription/application/cubit/subscription_status_cubit.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/firebase_options.dart';
+import 'package:mama_kris/security_gate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mama_kris/screens/main_screen.dart';
 import 'package:mama_kris/screens/welcome_screen.dart';
@@ -80,7 +80,7 @@ void main() async {
         BlocProvider(create: (context) => sl<HideResumeBloc>()),
         BlocProvider(create: (context) => sl<LifeCycleManagerBloc>()),
       ],
-      child: const MyApp(),
+      child: const SecurityGate(child: MyApp()),
     ),
   );
 }
