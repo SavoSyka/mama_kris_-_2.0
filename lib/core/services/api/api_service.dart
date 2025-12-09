@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/constants/app_constants.dart';
+import 'package:mama_kris/core/services/api/api_error_utils.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/services/navigator_key/global_navigator_key.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
@@ -59,6 +60,7 @@ Future<void> apiService() async {
         return handler.next(options);
       },
       onError: (DioException e, handler) async {
+        debugPrint("😎 Eroororr");
         // Check for subscription required 403 error
         if (e.response?.statusCode == 403) {
           try {
@@ -70,7 +72,7 @@ Future<void> apiService() async {
                 "statusCode": 403,
               };
 
-               await sl<AuthLocalDataSource>().saveSubscription(false);
+              await sl<AuthLocalDataSource>().saveSubscription(false);
 
               // Check if response matches exactly
               if (responseData['message'] == expectedResponse['message'] &&
@@ -80,6 +82,12 @@ Future<void> apiService() async {
                 debugPrint(
                   "Subscription required error detected, navigating to subscription screen",
                 );
+
+                e.response?.data = {
+                  "message": "You must subscribe to continue",
+                  "error": "SubscriptionRequired",
+                  "statusCode": 403,
+                };
 
                 // Use AppRouter directly
                 try {
@@ -114,6 +122,8 @@ Future<void> apiService() async {
             debugPrint("Error parsing 403 response: $parseError");
           }
         }
+
+        // return handler.next(modifiedError);
 
         // Bypass 401 handling for auth-related paths
         if (e.requestOptions.uri.path.contains('/auth')) {
@@ -172,7 +182,21 @@ Future<void> apiService() async {
             }
           }
         }
-        return handler.next(e);
+
+        final friendlyMessage = DioErrorUtil.handleError(e);
+
+        debugPrint("Error handler message compare e ${e.message} and  ${friendlyMessage}");
+
+        final modifiedError = e.copyWith(
+          message: friendlyMessage,
+          response: Response(
+            requestOptions: e.requestOptions,
+            statusCode: e.response?.statusCode,
+            data: {"message": friendlyMessage},
+          ),
+        );
+
+        return handler.next(modifiedError);
       },
     ),
   );

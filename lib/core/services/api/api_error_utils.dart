@@ -9,28 +9,35 @@ class DioErrorUtil {
 
     switch (error.type) {
       case DioExceptionType.cancel:
-        message = "Request was cancelled";
+        message = "Запрос был отменён";
         break;
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        message = "Connection timed out. Please check your internet and try again.";
+        message =
+            "Время ожидания истекло. Проверьте интернет-соединение и попробуйте снова.";
         break;
       case DioExceptionType.badResponse:
-        message = _handleResponseError(error.response?.statusCode, error.response?.data);
+        message = _handleResponseError(
+          error.response?.statusCode,
+          error.response?.data,
+        );
         break;
       case DioExceptionType.unknown:
         if (error.error is SocketException) {
-          message = "No internet connection. Please check your network.";
+          message = "Нет интернет-соединения. Проверьте сеть.";
         } else {
-          message = "Something went wrong. Please try again.";
+          message = "Произошла ошибка. Пожалуйста, попробуйте снова.";
         }
         break;
+      case DioExceptionType.connectionError:
+        message = "Нет интернет-соединения. Проверьте сеть.";
+        break;
       case DioExceptionType.badCertificate:
-        message = "Security certificate error. Please contact support.";
+        message = "Ошибка сертификата безопасности. Свяжитесь с поддержкой.";
         break;
       default:
-        message = "An unexpected error occurred. Please try again.";
+        message = "Произошла непредвиденная ошибка. Попробуйте снова.";
     }
 
     return message;
@@ -39,26 +46,29 @@ class DioErrorUtil {
   static String _handleResponseError(int? statusCode, dynamic errorData) {
     switch (statusCode) {
       case 400:
-        return _extractMessage(errorData) ?? "Invalid request. Please check your input.";
+        return _extractMessage(errorData) ??
+            "Неверный запрос. Проверьте введённые данные.";
       case 401:
-        return "Session expired. Please log in again.";
+        return "Сессия истекла. Пожалуйста, выполните вход снова.";
       case 403:
-        // This will be overridden by your existing subscription logic
-        return _extractMessage(errorData) ?? "You don't have permission to perform this action.";
+        return _extractMessage(errorData) ??
+            "У вас нет прав для выполнения этого действия.";
       case 404:
-        return "Requested resource not found.";
+        return "Запрашиваемый ресурс не найден.";
       case 409:
-        return _extractMessage(errorData) ?? "Conflict occurred. Try again.";
+        return _extractMessage(errorData) ?? "Конфликт. Попробуйте снова.";
       case 422:
-        return _extractMessage(errorData) ?? "Validation failed. Check your input.";
+        return _extractMessage(errorData) ??
+            "Ошибка валидации. Проверьте введённые данные.";
       case 500:
-        return "Server error. Our team has been notified.";
+        return "Ошибка сервера. Наша команда уже уведомлена.";
       case 502:
-        return "Server is down. Please try again later.";
+        return "Сервер недоступен. Попробуйте позже.";
       case 503:
-        return "Service unavailable. Please try again later.";
+        return "Сервис временно недоступен. Попробуйте позже.";
       default:
-        return _extractMessage(errorData) ?? "An error occurred. Please try again.";
+        return _extractMessage(errorData) ??
+            "Произошла ошибка. Пожалуйста, попробуйте снова.";
     }
   }
 
