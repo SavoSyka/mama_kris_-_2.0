@@ -207,6 +207,7 @@ MamaKris объединяет десятки тысяч активных сои�
                                           // discount: subscription.name,
                                           price: subscription.price,
                                           isApplicant: _isApplicant,
+                                          pricePerMonth: subscription.pricePerMonth,
                                         ),
                                       ),
                                     ),

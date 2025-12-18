@@ -30,6 +30,7 @@ class ApplSignupScreen extends StatefulWidget {
 class _ApplSignupScreenState extends State<ApplSignupScreen> {
   bool _acceptPrivacyPolicy = false;
   bool _acceptTermsOfUse = false;
+  bool _subscribeEmail = false;
 
   // final emailController = TextEditingController(text: 'mowerem676@dwakm.com');
   final emailController = TextEditingController(
@@ -240,6 +241,50 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                             ],
                                           ),
 
+                                          const SizedBox(height: 12),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  if (state is! AuthLoading) {
+                                                    setState(() {
+                                                      _subscribeEmail =
+                                                          !_subscribeEmail;
+                                                    });
+                                                  }
+                                                },
+                                                child: Image.asset(
+                                                  _subscribeEmail
+                                                      ? MediaRes.markedBox
+                                                      : MediaRes.unMarkedBox,
+                                                  width: 28,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _subscribeEmail =
+                                                          !_subscribeEmail;
+                                                    });
+                                                  },
+
+                                                  child: const CustomText(
+                                                    text:
+                                                        "Согласен на получение рассылки по электронной почте",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: AppPalette.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
                                           const SizedBox(height: 20),
                                           CustomButtonApplicant(
                                             btnText: 'Зарегистрироваться',
@@ -255,6 +300,8 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                                 context.read<AuthBloc>().add(
                                                   CheckEmailEvent(
                                                     email: emailController.text,
+                                                    isSubscribe:
+                                                        _subscribeEmail,
                                                   ),
                                                 );
                                               }

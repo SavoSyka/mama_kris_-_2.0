@@ -36,6 +36,8 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
   bool _acceptPrivacyPolicy = false;
   bool _acceptTermsOfUse = false;
 
+  bool _subscribeEmail = false;
+
   final emailController = TextEditingController(
     text: kDebugMode ? "rona@yopmail.com" : "",
   );
@@ -239,6 +241,50 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
                                         ],
                                       ),
 
+                                      const SizedBox(height: 12),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              if (state is! AuthLoading) {
+                                                setState(() {
+                                                  _subscribeEmail =
+                                                      !_subscribeEmail;
+                                                });
+                                              }
+                                            },
+                                            child: Image.asset(
+                                              _subscribeEmail
+                                                  ? MediaRes.markedBox
+                                                  : MediaRes.unMarkedBox,
+                                              width: 28,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  _subscribeEmail =
+                                                      !_subscribeEmail;
+                                                });
+                                              },
+
+                                              child: const CustomText(
+                                                text:
+                                                    "Согласен на получение рассылки по электронной почте",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppPalette.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
                                       const SizedBox(height: 20),
                                       CustomButtonEmployee(
                                         btnText: 'Зарегистрироваться',
@@ -253,6 +299,7 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
                                             context.read<EmpAuthBloc>().add(
                                               EmpCheckEmailEvent(
                                                 email: emailController.text,
+                                                isSubscribe: _subscribeEmail,
                                               ),
                                             );
 

@@ -8,7 +8,7 @@ abstract class EmpAuthRepository {
     String email,
     String password,
   );
-  ResultFuture<bool> checkEmail(String email);
+  ResultFuture<bool> checkEmail(String email, bool isSubscribe);
 
   ResultFuture<bool> verifyOtp(String email, String otp);
   ResultFuture<bool> resendOtp(String email);

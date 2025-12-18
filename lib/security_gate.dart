@@ -22,6 +22,13 @@ class _SecurityGateState extends State<SecurityGate> {
     _startSecurity();
   }
 
+  // keytool -list -v \
+  // -keystore "android/app/new-debug.keystore" \
+  // -alias androiddebugkey \
+  // -storepass android \
+  // -keypass android
+
+
   /// Initialize FreeRASP / Talsec
   Future<void> _startSecurity() async {
     try {
@@ -30,12 +37,12 @@ class _SecurityGateState extends State<SecurityGate> {
         androidConfig: AndroidConfig(
           packageName: 'com.mama.kris',
           signingCertHashes: [
-            'F7E59211DD649944AC8CFB8F5E7D5776FDCB8A9E8B16DC9BCD97821DD7FFC7DC', // Get from Google Play Console
+            "8zRRE5DP5CHZZ1o2635/6Noc+qnEy8P6j1eruoYW9LA="
           ], // required, get from Play Console
         ),
         iosConfig: IOSConfig(
           bundleIds: ['com.mama.kris'], // Update with actual bundle ID
-          teamId: 'YOUR_APPLE_TEAM_ID', // Update with actual team ID
+          teamId: 'R6HKJV8SD9', // Update with actual team ID
         ),
         watcherMail: 'security@yourdomain.com',
         isProd: false, // Set false for dev mode

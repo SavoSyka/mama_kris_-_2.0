@@ -120,11 +120,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  ResultFuture<bool> checkEmail(String email) async {
+  ResultFuture<bool> checkEmail(String email, bool isSubscribe) async {
     try {
       final response = await dio.post(
         ApiConstants.checkEmail,
-        data: {'email': email},
+        data: {'email': email, "subscribedEmail": isSubscribe},
       );
 
       if (response.statusCode == 201) {

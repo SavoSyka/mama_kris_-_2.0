@@ -6,7 +6,7 @@ abstract class EmpAuthRemoteDataSource {
   ResultFuture<EmpUserModel> login(String email, String password);
   ResultFuture<EmpUserModel> signup(String name, String email, String password);
   ResultFuture<bool> verifyOtp(String email, String otp);
-  ResultFuture<bool> checkEmail(String email);
+  ResultFuture<bool> checkEmail(String email, bool isSubscribe);
 
   ResultFuture<bool> resendOtp(String email);
   ResultFuture<bool> forgotPassword(String email);

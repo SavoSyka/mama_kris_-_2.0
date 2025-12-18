@@ -89,7 +89,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     final result = await checkEmailUsecase(
-      CheckEmailParams(email: event.email),
+      CheckEmailParams(email: event.email, isSubscribe: event.isSubscribe),
     );
 
     result.fold(

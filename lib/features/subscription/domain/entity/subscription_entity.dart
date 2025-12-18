@@ -5,6 +5,8 @@ class SubscriptionEntity extends Equatable {
   final String price;
   final String type;
   final String paidContent;
+  final String pricePerMonth;
+
   final String name;
 
   const SubscriptionEntity({
@@ -13,6 +15,8 @@ class SubscriptionEntity extends Equatable {
     required this.type,
     required this.paidContent,
     required this.name,
+    required this.pricePerMonth,
+
   });
 
   @override

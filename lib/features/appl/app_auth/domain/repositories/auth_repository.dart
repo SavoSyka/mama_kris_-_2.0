@@ -5,7 +5,7 @@ import 'package:mama_kris/features/appl/app_auth/domain/entities/user_entity.dar
 abstract class AuthRepository {
   ResultFuture<UserEntity> login(String email, String password);
   ResultFuture<UserEntity> signup(String name, String email, String password);
-  ResultFuture<bool> checkEmail(String email);
+  ResultFuture<bool> checkEmail(String email, bool isSubscribe);
 
   ResultFuture<bool> verifyOtp(String email, String otp);
   ResultFuture<bool> resendOtp(String email);

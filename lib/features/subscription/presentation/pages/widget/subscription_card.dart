@@ -10,8 +10,11 @@ class SubscriptionCard extends StatelessWidget {
     this.isSelected = false,
     this.paidContent,
     required this.isApplicant,
+    required this.pricePerMonth,
   });
   final String period;
+  final String pricePerMonth;
+
   // final String discount;
   final String price;
   final String? paidContent;
@@ -79,11 +82,11 @@ class SubscriptionCard extends StatelessWidget {
                 ),
             ],
           ),
-          if (calculatePricePerMonth().isNotEmpty)
-            Text(
-              calculatePricePerMonth(),
-              style: const TextStyle(color: Color(0xFF737373), fontSize: 12),
-            ),
+
+          Text(
+            "$pricePerMonth руб./мес",
+            style: const TextStyle(color: Color(0xFF737373), fontSize: 12),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

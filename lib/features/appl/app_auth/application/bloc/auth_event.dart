@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
 abstract class AuthEvent extends Equatable {
@@ -34,11 +35,14 @@ class SignupEvent extends AuthEvent {
 
 class CheckEmailEvent extends AuthEvent {
   final String email;
-
-  const CheckEmailEvent({required this.email});
+  final bool isSubscribe;
+  const CheckEmailEvent({
+    required this.email,
+    required this.isSubscribe,
+  });
 
   @override
-  List<Object?> get props => [email];
+  List<Object?> get props => [email, isSubscribe];
 }
 
 class VerifyOtpEvent extends AuthEvent {

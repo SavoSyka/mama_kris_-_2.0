@@ -93,7 +93,7 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
   ) async {
     emit(EmpAuthLoading());
     final result = await checkEmailUsecase(
-      CheckEmailParams(email: event.email),
+      CheckEmailParams(email: event.email, isSubscibe: event.isSubscribe),
     );
 
     result.fold(

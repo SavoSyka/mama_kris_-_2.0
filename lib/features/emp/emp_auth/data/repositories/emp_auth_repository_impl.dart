@@ -62,9 +62,9 @@ class EmpAuthRepositoryImpl implements EmpAuthRepository {
   }
 
   @override
-  ResultFuture<bool> checkEmail(String email) async {
+  ResultFuture<bool> checkEmail(String email, bool isSubscribe) async {
     try {
-      final result = await remoteDataSource.checkEmail(email);
+      final result = await remoteDataSource.checkEmail(email, isSubscribe);
       return result.fold(
         (failure) => Left(failure),
         (success) => Right(success),
