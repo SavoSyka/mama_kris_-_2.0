@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:freerasp/freerasp.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
+import 'package:mama_kris/core/constants/media_res.dart';
 
 /// SecurityGate wraps your app or page to protect against security threats
 /// using FreeRASP / Talsec. It blocks access if high severity threats are detected.

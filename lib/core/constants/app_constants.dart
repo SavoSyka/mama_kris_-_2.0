@@ -2,7 +2,7 @@ class AppConstants {
   AppConstants._();
 
   static const isDevelopmentMode = true;
-  static const baseUrl = 'https://app.mamakris.ru/api/';
+  static const baseUrl = 'https://dev.mamakris.ru/api/';
 
   static const String appStoreUrl =
       "https://apps.apple.com/gb/app/mamakris/id6479370258";

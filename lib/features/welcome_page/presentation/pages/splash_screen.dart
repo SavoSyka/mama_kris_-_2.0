@@ -27,7 +27,6 @@ import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_blo
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_event.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_state.dart';
-import 'package:mama_kris/utils/funcs.dart' as funcs;
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SplashScreen extends StatefulWidget {

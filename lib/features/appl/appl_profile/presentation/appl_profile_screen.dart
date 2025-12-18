@@ -96,23 +96,23 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
                               ),
                               const SizedBox(height: 20),
 
-                              BlocBuilder<
-                                EmailSubscriptionBloc,
-                                EmailSubscriptionState
-                              >(
-                                builder: (context, state) {
-                                  return ElevatedButton(
-                                    onPressed: () {
-                                      context.read<EmailSubscriptionBloc>().add(
-                                        SubscribeEmailEvent(
-                                          email: user.email ?? "ds",
-                                        ),
-                                      );
-                                    },
-                                    child: const Text("SUbscribe"),
-                                  );
-                                },
-                              ),
+                              // BlocBuilder<
+                              //   EmailSubscriptionBloc,
+                              //   EmailSubscriptionState
+                              // >(
+                              //   builder: (context, state) {
+                              //     return ElevatedButton(
+                              //       onPressed: () {
+                              //         context.read<EmailSubscriptionBloc>().add(
+                              //           SubscribeEmailEvent(
+                              //             email: user.email ?? "ds",
+                              //           ),
+                              //         );
+                              //       },
+                              //       child: const Text("SUbscribe"),
+                              //     );
+                              //   },
+                              // ),
 
                               // Контакты -- Contacts
                               _Contacts(email: user.email, phone: user.phone),
