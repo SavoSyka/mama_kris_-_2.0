@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:freerasp/freerasp.dart';
+import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 
 /// SecurityGate wraps your app or page to protect against security threats
 /// using FreeRASP / Talsec. It blocks access if high severity threats are detected.
@@ -22,11 +25,6 @@ class _SecurityGateState extends State<SecurityGate> {
     _startSecurity();
   }
 
-  // keytool -list -v \
-  // -keystore "android/app/new-debug.keystore" \
-  // -alias androiddebugkey \
-  // -storepass android \
-  // -keypass android
 
 
   /// Initialize FreeRASP / Talsec
@@ -37,14 +35,14 @@ class _SecurityGateState extends State<SecurityGate> {
         androidConfig: AndroidConfig(
           packageName: 'com.mama.kris',
           signingCertHashes: [
-            "8zRRE5DP5CHZZ1o2635/6Noc+qnEy8P6j1eruoYW9LA="
+            "8zRRE5DP5CHZZ1o2635/6Noc+qnEy8P6j1eruoYW9LA=",
           ], // required, get from Play Console
         ),
         iosConfig: IOSConfig(
           bundleIds: ['com.mama.kris'], // Update with actual bundle ID
           teamId: 'R6HKJV8SD9', // Update with actual team ID
         ),
-        watcherMail: 'security@yourdomain.com',
+        watcherMail: 'security@mamakris.ru',
         isProd: false, // Set false for dev mode
         killOnBypass: true, // Stops the app if bypass is detected
       );
@@ -117,17 +115,69 @@ class _SecurityGateState extends State<SecurityGate> {
     ),
   );
 
-  Widget _blockedScreen() => const Directionality(
+  Widget _blockedScreen() =>  Directionality(
     textDirection: TextDirection.ltr,
-    child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Text(
-          "Access Blocked\nSuspicious Activity Detected",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+    child:
+    Scaffold(
+      backgroundColor: Color(0xFFF8F8F8),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(flex: 2),
+
+              // Developer Mode Icon
+
+              Center(
+                child: Image.asset(
+                  MediaRes.compromizedDeviceIcon,
+                  width: 120,
+                  height: 120,
+                ),
+              ),
+
+              SizedBox(height: 16),
+
+              
+              Text(
+                textAlign: TextAlign.center,
+               "Suspicioius Activity",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                         "Access Blocked\nSuspicious Activity Detected",
+
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Color(0xFF595959),
+                ),
+              ),
+
+              Spacer(flex: 3),
+
+              CustomButtonApplicant(
+                btnText: 'Exit',
+                isLoading: false,
+                onTap: (){
+                    exit(0);
+                }
+                // bgColor: Color(0xFF0D451B),
+              ),
+
+              SizedBox(height: 16,)
+             
+            ],
+          ),
         ),
       ),
-    ),
+    )
   );
 }

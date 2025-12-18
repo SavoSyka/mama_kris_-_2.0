@@ -18,6 +18,7 @@ import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_cubit.da
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/create_job_cubit.dart';
 
@@ -79,8 +80,10 @@ void main() async {
         BlocProvider(create: (context) => sl<SubscriptionStatusCubit>()),
         BlocProvider(create: (context) => sl<HideResumeBloc>()),
         BlocProvider(create: (context) => sl<LifeCycleManagerBloc>()),
+        BlocProvider(create: (context) => sl<EmailSubscriptionBloc>()),
       ],
-      child: const SecurityGate(child: MyApp()),
+      child: const MyApp(),
+      //  const SecurityGate(child: MyApp()),
     ),
   );
 }

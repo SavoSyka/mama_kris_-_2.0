@@ -18,6 +18,9 @@ import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_en
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/widget/build_error_card.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_bloc.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_event.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_state.dart';
 
 class ApplProfileScreen extends StatefulWidget {
   const ApplProfileScreen({super.key});
@@ -92,6 +95,24 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
                                 birthDate: user.birthDate,
                               ),
                               const SizedBox(height: 20),
+
+                              BlocBuilder<
+                                EmailSubscriptionBloc,
+                                EmailSubscriptionState
+                              >(
+                                builder: (context, state) {
+                                  return ElevatedButton(
+                                    onPressed: () {
+                                      context.read<EmailSubscriptionBloc>().add(
+                                        SubscribeEmailEvent(
+                                          email: user.email ?? "ds",
+                                        ),
+                                      );
+                                    },
+                                    child: const Text("SUbscribe"),
+                                  );
+                                },
+                              ),
 
                               // Контакты -- Contacts
                               _Contacts(email: user.email, phone: user.phone),

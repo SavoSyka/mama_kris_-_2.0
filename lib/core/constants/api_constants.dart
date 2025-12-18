@@ -75,4 +75,8 @@ class ApiConstants {
   static userEnterSession(String userId) => "session-times/user/$userId";
   static userLeftSession(String userId, String sessionId) => "session-times/user/$userId/session/$sessionId";
 
+  // email subscription
+  static const subscribeEmail = 'mail/api/mail/confirm-subscription/2379';
+  static const unsubscribeEmail = 'email-subscription/unsubscribe';
+
 }

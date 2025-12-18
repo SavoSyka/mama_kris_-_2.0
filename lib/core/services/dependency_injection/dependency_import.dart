@@ -45,6 +45,13 @@ import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/delete_
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/logout_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_basic_info_usecase.dart';
 import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_work_experience_usecase.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_bloc.dart';
+import 'package:mama_kris/features/email_subscription/data/data_sources/email_subscription_remote_data_source.dart';
+import 'package:mama_kris/features/email_subscription/data/data_sources/email_subscription_remote_data_source_impl.dart';
+import 'package:mama_kris/features/email_subscription/data/repositories/email_subscription_repository_impl.dart';
+import 'package:mama_kris/features/email_subscription/domain/repositories/email_subscription_repository.dart';
+import 'package:mama_kris/features/email_subscription/domain/usecases/subscribe_email_usecase.dart';
+import 'package:mama_kris/features/email_subscription/domain/usecases/unsubscribe_email_usecase.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/data/data_sources/emp_auth_remote_data_source.dart';
 import 'package:mama_kris/features/emp/emp_auth/data/data_sources/emp_auth_remote_data_source_impl.dart';

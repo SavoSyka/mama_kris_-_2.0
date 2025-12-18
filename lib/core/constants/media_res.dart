@@ -70,4 +70,6 @@ class MediaRes {
 
   static const subscribedIcon = '$_baseIcons/subscribed.jpg';
   static const noSubscriptionIcon = '$_baseIcons/no_subscription.jpg';
+  static const compromizedDeviceIcon = '$_baseIcons/compromised_icon.png';
+
 }

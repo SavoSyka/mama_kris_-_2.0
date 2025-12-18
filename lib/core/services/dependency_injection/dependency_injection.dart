@@ -19,6 +19,7 @@ Future<void> dependencyInjection() async {
   await _initSubscriptions();
   await _initEmployeeContact();
   await _initAppLifeCyle();
+  await initEmailSubscription();
 }
 
 Future<void> _initLocalCache() async {
@@ -462,5 +463,28 @@ Future<void> _initAppLifeCyle() async {
   // Bloc
   sl.registerFactory(
     () => LifeCycleManagerBloc(userEnteredUsecase: sl(), userLeftUsecase: sl()),
+  );
+}
+
+Future<void> initEmailSubscription() async {
+  sl.registerLazySingleton<EmailSubscriptionRemoteDataSource>(
+    () => EmailSubscriptionRemoteDataSourceImpl(sl()),
+  );
+
+  // Repositories
+  sl.registerLazySingleton<EmailSubscriptionRepository>(
+    () => EmailSubscriptionRepositoryImpl(sl()),
+  );
+
+  // Use Cases
+  sl.registerLazySingleton(() => SubscribeEmailUsecase(sl()));
+  sl.registerLazySingleton(() => UnsubscribeEmailUsecase(sl()));
+
+  // BLoC
+  sl.registerFactory(
+    () => EmailSubscriptionBloc(
+      subscribeEmailUsecase: sl(),
+      unsubscribeEmailUsecase: sl(),
+    ),
   );
 }
