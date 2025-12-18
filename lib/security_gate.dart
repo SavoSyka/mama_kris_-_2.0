@@ -64,7 +64,7 @@ class _SecurityGateState extends State<SecurityGate> {
   late final ThreatCallback _threatCallback = ThreatCallback(
     onAppIntegrity: () => _handleLowSeverityThreat("App integrity"),
     onObfuscationIssues: () => _handleLowSeverityThreat("Obfuscation issues"),
-    onDebug: () => _handleLowSeverityThreat("Debugging"),
+    onDebug: () => _handleHighSeverityThreat("Debugging"),
     onDeviceBinding: () => _handleLowSeverityThreat("Device binding"),
     onDeviceID: () => _handleLowSeverityThreat("Device ID"),
     onHooks: () => _handleHighSeverityThreat("Hooks detected"),
@@ -72,7 +72,7 @@ class _SecurityGateState extends State<SecurityGate> {
     onPrivilegedAccess: () =>
         _handleHighSeverityThreat("Privileged access (root/jailbreak)"),
     onSecureHardwareNotAvailable: () =>
-        _handleLowSeverityThreat("Secure hardware not available"),
+        _handleHighSeverityThreat("Secure hardware not available"),
     onSimulator: () => _handleHighSeverityThreat("Running on simulator"),
     onSystemVPN: () => _handleLowSeverityThreat("System VPN"),
     onDevMode: () => _handleHighSeverityThreat("Developer mode enabled"),
