@@ -16,39 +16,39 @@ import 'package:crypto/crypto.dart';
 class AuthService {
   // ==================== GOOGLE SIGN-IN ====================
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['openid', 'email', 'profile'],
-    serverClientId:
-        "86099763542-a94uom1ijlqu6jp263dtc43dvgd540np.apps.googleusercontent.com",
-    // '86099763542-9tgb2dqc63hj0utf8fc9mvve0fplc8e1.apps.googleusercontent.com',
-  );
+  // final GoogleSignIn _googleSignIn = GoogleSignIn(
+  //   scopes: ['openid', 'email', 'profile'],
+  //   serverClientId:
+  //       "86099763542-a94uom1ijlqu6jp263dtc43dvgd540np.apps.googleusercontent.com",
+  //   // '86099763542-9tgb2dqc63hj0utf8fc9mvve0fplc8e1.apps.googleusercontent.com',
+  // );
 
-  Future<Map<String, dynamic>?> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+  // Future<Map<String, dynamic>?> signInWithGoogle() async {
+  //   try {
+  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      if (googleUser == null) {
-        debugPrint('❌ [Google Sign-In] Пользователь отменил вход');
-        return null;
-      }
+  //     if (googleUser == null) {
+  //       debugPrint('❌ [Google Sign-In] Пользователь отменил вход');
+  //       return null;
+  //     }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+  //     final GoogleSignInAuthentication googleAuth =
+  //         await googleUser.authentication;
 
-      final String? idToken = googleAuth.idToken;
-      if (idToken == null) {
-        debugPrint('❗ [Google Sign-In] Не удалось получить ID токен');
-        return null;
-      }
+  //     final String? idToken = googleAuth.idToken;
+  //     if (idToken == null) {
+  //       debugPrint('❗ [Google Sign-In] Не удалось получить ID токен');
+  //       return null;
+  //     }
 
-      return {'idToken': idToken};
-    } catch (e) {
-      print('🛑 Ошибка входа через Google: $e');
-      print('🔍 Stacktrace: ');
-      // lgn.showErrorSnackBar(context, 'Ошибка. Попробуйте ещё раз.');
-    }
-    return null;
-  }
+  //     return {'idToken': idToken};
+  //   } catch (e) {
+  //     print('🛑 Ошибка входа через Google: $e');
+  //     print('🔍 Stacktrace: ');
+  //     // lgn.showErrorSnackBar(context, 'Ошибка. Попробуйте ещё раз.');
+  //   }
+  //   return null;
+  // }
 
   /*
   final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -256,7 +256,7 @@ xiqoo dhiyoo
   Future<void> signOut() async {
     try {
       // Sign out from Google (prevents auto-login)
-      await GoogleSignIn().signOut();
+      // await GoogleSignIn().signOut();
 
       // Sign out from Apple (optional, but good practice)
       // Note: Apple doesn't have a direct sign-out, but we disconnect to avoid auto-login

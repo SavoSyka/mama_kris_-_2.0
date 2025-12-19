@@ -26,8 +26,6 @@ class _SecurityGateState extends State<SecurityGate> {
     _startSecurity();
   }
 
-
-
   /// Initialize FreeRASP / Talsec
   Future<void> _startSecurity() async {
     try {
@@ -44,7 +42,7 @@ class _SecurityGateState extends State<SecurityGate> {
           teamId: 'R6HKJV8SD9', // Update with actual team ID
         ),
         watcherMail: 'security@mamakris.ru',
-        isProd: false, // Set false for dev mode
+        isProd: true, // Set false for dev mode
         killOnBypass: true, // Stops the app if bypass is detected
       );
 
@@ -116,10 +114,9 @@ class _SecurityGateState extends State<SecurityGate> {
     ),
   );
 
-  Widget _blockedScreen() =>  Directionality(
+  Widget _blockedScreen() => Directionality(
     textDirection: TextDirection.ltr,
-    child:
-    Scaffold(
+    child: Scaffold(
       backgroundColor: Color(0xFFF8F8F8),
       body: SafeArea(
         child: Padding(
@@ -130,7 +127,6 @@ class _SecurityGateState extends State<SecurityGate> {
               Spacer(flex: 2),
 
               // Developer Mode Icon
-
               Center(
                 child: Image.asset(
                   MediaRes.compromizedDeviceIcon,
@@ -141,10 +137,9 @@ class _SecurityGateState extends State<SecurityGate> {
 
               SizedBox(height: 16),
 
-              
               Text(
                 textAlign: TextAlign.center,
-               "Suspicioius Activity",
+                "Suspicioius Activity",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -153,13 +148,10 @@ class _SecurityGateState extends State<SecurityGate> {
               ),
               SizedBox(height: 8),
               Text(
-                         "Access Blocked\nSuspicious Activity Detected",
+                "Access Blocked\nSuspicious Activity Detected",
 
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Color(0xFF595959),
-                ),
+                style: TextStyle(fontSize: 18, color: Color(0xFF595959)),
               ),
 
               Spacer(flex: 3),
@@ -167,18 +159,17 @@ class _SecurityGateState extends State<SecurityGate> {
               CustomButtonApplicant(
                 btnText: 'Exit',
                 isLoading: false,
-                onTap: (){
-                    exit(0);
-                }
+                onTap: () {
+                  exit(0);
+                },
                 // bgColor: Color(0xFF0D451B),
               ),
 
-              SizedBox(height: 16,)
-             
+              SizedBox(height: 16),
             ],
           ),
         ),
       ),
-    )
+    ),
   );
 }

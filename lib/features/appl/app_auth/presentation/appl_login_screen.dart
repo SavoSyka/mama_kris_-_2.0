@@ -244,20 +244,20 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
 
   // * 1. ────────────── Google login called here started ───────────────────────
 
-  Future<void> signInWithGoogle() async {
-    await AuthService().signOut();
-    final user = await AuthService().signInWithGoogle();
+  // Future<void> signInWithGoogle() async {
+  //   // await AuthService().signOut();
+  //   // final user = await AuthService().signInWithGoogle();
 
-    if (user != null) {
-      final idToken = user['idToken'];
-      debugPrint("Id tokhen $idToken");
-      context.read<AuthBloc>().add(LoginWithGoogleEvent(idToken: idToken));
-    }
+  //   // if (user != null) {
+  //   //   final idToken = user['idToken'];
+  //   //   debugPrint("Id tokhen $idToken");
+  //   //   context.read<AuthBloc>().add(LoginWithGoogleEvent(idToken: idToken));
+  //   // }
 
-    debugPrint("user data $user");
+  //   debugPrint("user data $user");
 
-    debugPrint('');
-  }
+  //   debugPrint('');
+  // }
 
   Future<void> signInWithApple() async {
     await AuthService().signOut();

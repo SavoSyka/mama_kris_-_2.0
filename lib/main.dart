@@ -53,6 +53,9 @@ void main() async {
     ),
   );
 
+    debugPrint = (String? message, {int? wrapWidth}) => '';
+
+
   await dependencyInjection();
 
   runApp(
@@ -79,8 +82,8 @@ void main() async {
         BlocProvider(create: (context) => sl<EmailSubscriptionBloc>()),
       ],
       child:
-          //  const MyApp(),
-          const SecurityGate(child: MyApp()),
+       const MyApp(),
+      // const SecurityGate(child: MyApp()),
     ),
   );
 }
@@ -122,4 +125,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

@@ -60,7 +60,6 @@ class SubscriptionRemoteDataSourceImpl implements SubscriptionRemoteDataSource {
       final body = {
         "tariffType": tariff.type,
         "demoMode": false,
-        // jobId is removed as per requirements
       };
 
       debugPrint("The same as month $body");

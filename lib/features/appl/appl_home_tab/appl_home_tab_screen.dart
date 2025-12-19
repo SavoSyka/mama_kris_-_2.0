@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/features/appl/appl_favorite/presentation/appl_favorite_screen.dart';
+import 'package:mama_kris/features/appl/appl_favorite/presentation/bloc/liked_job_bloc_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/appl_home_screen.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_screen.dart';
 import 'package:mama_kris/features/appl/appl_support/presentation/appl_support_screen.dart';
@@ -31,6 +33,9 @@ class _ApplHomeTabScreenState extends State<ApplHomeTabScreen> {
     setState(() {
       _selectedIndex = index;
     });
+    if (index == 1) {
+      context.read<LikedJobBlocBloc>().add(const FetchLikedJobEvent());
+    }
   }
 
   @override
