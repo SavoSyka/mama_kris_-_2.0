@@ -53,7 +53,7 @@ void main() async {
     ),
   );
 
-    debugPrint = (String? message, {int? wrapWidth}) => '';
+    // debugPrint = (String? message, {int? wrapWidth}) => '';
 
 
   await dependencyInjection();

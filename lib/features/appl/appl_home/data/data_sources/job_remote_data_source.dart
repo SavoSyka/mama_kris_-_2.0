@@ -85,6 +85,8 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
         "page": page,
         "pageSize": 10,
         if (title != null) 'titleQuery': title,
+        if (title != null) 'description': title,
+
         if (minSalary != null) 'minSalary': minSalary,
         if (maxSalary != null) 'maxSalary': maxSalary,
         "excludeViewed": false,
@@ -93,7 +95,10 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
       final response = await dio.get(
+        title != null ? 
+        ApiConstants.getJobs(userID):
         ApiConstants.getRandomJobs(userID),
+
         queryParameters: queryParameters,
       );
 
@@ -152,7 +157,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
 
       final response = await dio.put(
         ApiConstants.likeOrDislikeJob(userID, jobId.toString()),
-        data: {"isLiked": true},
+        data: {"isLiked": true, "isviewed": true},
       );
     } catch (e) {
       debugPrint("erroro $e");

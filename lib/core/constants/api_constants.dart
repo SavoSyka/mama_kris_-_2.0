@@ -18,22 +18,23 @@ class ApiConstants {
 
   // jobs
 
-  static getJobs(String userID) => "jobs/search-combined/$userID";
+  static String getJobs(String userID) => "jobs/search-combined/$userID";
 
-  static getRandomJobs(String userID) => 'jobs/search-by-profile/$userID';
-  static likeOrDislikeJob(String userID, String jobID) =>
+  static String getRandomJobs(String userID) =>
+      'jobs/search-by-profile/$userID';
+  static String likeOrDislikeJob(String userID, String jobID) =>
       '/viewed-jobs/$userID/$jobID';
-  static getLikedJobs(String userID) => '/viewed-jobs/liked-ids/$userID';
+  static String getLikedJobs(String userID) => '/viewed-jobs/liked-ids/$userID';
 
-  static getUserProfile(String userID) => '/users/$userID';
+  static String getUserProfile(String userID) => '/users/$userID';
 
-  static searchJobs(String query) => 'jobs/autocomplete?query=$query';
+  static String searchJobs(String query) => 'jobs/autocomplete?query=$query';
   static const getAllSphereVacancies = 'jobs/autocomplete?query=';
-  static userPreference(String? userId) => '/user-preferences/$userId';
+  static String userPreference(String? userId) => '/user-preferences/$userId';
   static const searchCombined = 'jobs/search-combined';
-  static createJob(String? userId) => 'jobs/user/$userId';
-  static getUserJob(String? userId) => 'jobs/user/$userId';
-  static updateContacts(String? userId, String? contactId) =>
+  static String createJob(String? userId) => 'jobs/user/$userId';
+  static String getUserJob(String? userId) => 'jobs/user/$userId';
+  static String updateContacts(String? userId, String? contactId) =>
       'contacts/$userId/$contactId';
   static const getProfessions = 'professions';
   static const getContacts = 'contacts';
@@ -43,40 +44,42 @@ class ApiConstants {
 
   static const getTariffs = "tariffs";
 
-  static createContact(String userId) => "contacts/$userId";
-  static updateContact(String userId, String contactId) =>
+  static String createContact(String userId) => "contacts/$userId";
+  static String updateContact(String userId, String contactId) =>
       "contacts/$userId/$contactId";
-  static deleteContact(String userId, String contactId) =>
+  static String deleteContact(String userId, String contactId) =>
       "contacts/$userId/$contactId";
 
-  static updateUser(String userId) => "users/$userId/update-info";
+  static String updateUser(String userId) => "users/$userId/update-info";
 
-  static deleteUserAcct(String userId) => "users/$userId";
+  static String deleteUserAcct(String userId) => "users/$userId";
   static String loginWIthGoogle = "auth/google/login";
   static String loginWithApple = "auth/apple/login";
 
   static String getSpeciality = 'jobs/autocomplete';
 
   static const favoriteProfiles = "favorite-profiles";
-  static addUsersToFavorite(String userId) => "favorite-profiles/$userId";
+  static String addUsersToFavorite(String userId) =>
+      "favorite-profiles/$userId";
 
-  static generatePaymentLink(String userId) =>
+  static String generatePaymentLink(String userId) =>
       "payments.v3/generate-link/$userId";
 
-  static getPublicProfile(String userId) => "users/public/$userId";
+  static String getPublicProfile(String userId) => "users/public/$userId";
 
   // ads
   static const getAds = 'advertisements/next';
-  static addToHide(String userId) => "hidden-profiles/$userId";
-  static removeFromHide(String userId) => "hidden-profiles/$userId";
+  static String addToHide(String userId) => "hidden-profiles/$userId";
+  static String removeFromHide(String userId) => "hidden-profiles/$userId";
   static const getHiddenUsers = "hidden-profiles";
-  static getUserFromCached(String userId) => "users/$userId";
+  static String getUserFromCached(String userId) => "users/$userId";
 
-  static userEnterSession(String userId) => "session-times/user/$userId";
-  static userLeftSession(String userId, String sessionId) => "session-times/user/$userId/session/$sessionId";
+  static String userEnterSession(String userId) => "session-times/user/$userId";
+  static String userLeftSession(String userId, String sessionId) =>
+      "session-times/user/$userId/session/$sessionId";
 
   // email subscription
-  static const subscribeEmail = 'mail/api/mail/confirm-subscription/2379';
+  static String subscribeEmail(String userID) =>
+      '/mail/confirm-subscription/$userID';
   static const unsubscribeEmail = 'email-subscription/unsubscribe';
-
 }

@@ -56,6 +56,8 @@ final List<RouteBase> authRoutes = [
       var email = '';
       var password = '';
       var isFrom = '';
+      bool subscribeEmail = false;
+
       final extra = state.extra;
 
       if (extra is DataMap) {
@@ -63,12 +65,16 @@ final List<RouteBase> authRoutes = [
         email = extra['email'] as String;
         password = extra['password'] as String;
         isFrom = extra['source'] as String;
+        subscribeEmail = extra['subscribeEmail'] != null
+            ? (extra['subscribeEmail'] as bool)
+            : false;
       }
       return ApplVerifyOtpScreen(
         name: name,
         email: email,
         password: password,
         isFrom: isFrom,
+        subscribeEmail: subscribeEmail,
       );
     },
   ),

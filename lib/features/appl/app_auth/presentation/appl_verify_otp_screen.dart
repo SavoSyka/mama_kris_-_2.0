@@ -18,6 +18,8 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_bloc.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_event.dart';
 import 'package:pinput/pinput.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 
@@ -28,11 +30,13 @@ class ApplVerifyOtpScreen extends StatefulWidget {
     required this.password,
     required this.email,
     required this.isFrom,
+    this.subscribeEmail = false,
   });
   final String name;
   final String password;
   final String email;
   final String isFrom;
+  final bool subscribeEmail;
 
   @override
   State<ApplVerifyOtpScreen> createState() => _ApplVerifyOtpScreenState();
@@ -79,6 +83,13 @@ class _ApplVerifyOtpScreenState extends State<ApplVerifyOtpScreen> {
                           );
 
                           context.goNamed(RouteName.homeApplicant);
+
+                          if (widget.isFrom == 'signup' &&
+                              widget.subscribeEmail) {
+                            context.read<EmailSubscriptionBloc>().add(
+                              SubscribeEmailEvent(email: widget.email),
+                            );
+                          }
                         } else if (state is AuthOtpVerified) {
                           // * if email validation passed we have to register user by giiving his PII
 

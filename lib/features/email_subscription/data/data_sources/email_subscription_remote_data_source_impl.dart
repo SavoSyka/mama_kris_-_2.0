@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
+import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
+import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 import 'package:mama_kris/features/email_subscription/data/data_sources/email_subscription_remote_data_source.dart';
 
 class EmailSubscriptionRemoteDataSourceImpl
@@ -14,9 +16,10 @@ class EmailSubscriptionRemoteDataSourceImpl
   @override
   ResultFuture<bool> subscribeEmail(String email) async {
     try {
+      final userId = await sl<AuthLocalDataSource>().getUserId() ?? "";
       final response = await dio.post(
-        ApiConstants.subscribeEmail,
-        data: {'email': email},
+        ApiConstants.subscribeEmail(userId),
+        data: {'email': email, 'userId': userId},
       );
 
       if (response.statusCode.toString().startsWith('2')) {

@@ -22,7 +22,7 @@ Future<void> apiService() async {
   final dio = Dio(
     BaseOptions(
       baseUrl: AppConstants.baseUrl,
-      connectTimeout: const Duration(seconds: 20),
+      connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
       sendTimeout: const Duration(seconds: 30),
 
@@ -185,7 +185,9 @@ Future<void> apiService() async {
 
         final friendlyMessage = DioErrorUtil.handleError(e);
 
-        debugPrint("Error handler message compare e ${e.message} and  ${friendlyMessage}");
+        debugPrint(
+          "Error handler message compare e ${e.message} and  $friendlyMessage",
+        );
 
         final modifiedError = e.copyWith(
           message: friendlyMessage,

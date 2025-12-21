@@ -80,6 +80,7 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
                                   'email': emailController.text,
                                   'name': nameController.text,
                                   'password': passwordController.text,
+                                  'subscribeEmail': _subscribeEmail,
                                 },
                               );
                             } else if (state is AuthFailure) {
