@@ -122,6 +122,8 @@ class SubscriptionCard extends StatelessWidget {
     switch (period) {
       case 'MONTH':
         return '1 месяц';
+      case 'WEEK':
+        return '1 неделя';
       case 'YEAR':
         return '1 год';
       case "THREE_MONTHS":
@@ -129,7 +131,7 @@ class SubscriptionCard extends StatelessWidget {
       case 'HALF':
         return '6 месяцев';
       default:
-        return 'месяц';
+        return '1 месяц';
     }
   }
 

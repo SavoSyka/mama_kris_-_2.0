@@ -151,8 +151,8 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
         },
         builder: (context, state) {
           return BlocListener<UserBloc, UserState>(
-            listener: (context, state) {
-              if (state is UserLoaded) {
+            listener: (context, userState) {
+              if (userState is UserLoaded) {
                 context.pop(true);
               }
               // TODO: implement listener

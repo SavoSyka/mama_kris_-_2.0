@@ -97,7 +97,7 @@ class UserProfileEntity extends Equatable{
   
   @override
   // TODO: implement props
-  List<Object?> get props => [userID, name,email, phone,dateTime,signedIn,choice,appleID,role,provider,defaultContact,defaultContactId,specializations, specializationsNorm,birthDate, education,about, workExperience,age, isFavorite];
+  List<Object?> get props => [contacts,userID, name,email, phone,dateTime,signedIn,choice,appleID,role,provider,defaultContact,defaultContactId,specializations, specializationsNorm,birthDate, education,about, workExperience,age, isFavorite];
 }
 
 class ApplWorkExperienceEntity {

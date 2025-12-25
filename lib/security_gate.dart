@@ -32,7 +32,7 @@ class _SecurityGateState extends State<SecurityGate> {
       // ── Configure Talsec
       final config = TalsecConfig(
         androidConfig: AndroidConfig(
-          packageName: 'com.mama.kris',
+          packageName: 'com.mama.mama_kris',
           signingCertHashes: [
             "8zRRE5DP5CHZZ1o2635/6Noc+qnEy8P6j1eruoYW9LA=",
           ], // required, get from Play Console
