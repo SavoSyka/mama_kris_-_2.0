@@ -20,6 +20,9 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_e
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_screen.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_edit_work_experience.dart';
 import 'package:mama_kris/features/appl/appl_support/presentation/appl_support_detail_screen.dart';
+import 'package:mama_kris/features/appl/appl_support/presentation/article_one_page.dart';
+import 'package:mama_kris/features/appl/appl_support/presentation/article_three_page.dart';
+import 'package:mama_kris/features/appl/appl_support/presentation/article_two_page.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
 import 'package:mama_kris/features/emp/emp_auth/presentation/emp_forgot_password_screen.dart';

@@ -385,6 +385,7 @@ class _WorkExperienceFormState extends State<_WorkExperienceForm> {
           CustomDateInput(
             controller: data.startDateController,
             label: 'Дата начала',
+            placeholder: "Дата начала",
             validator: FormValidations.validateWorkStartDate,
             isApplicant: true,
           ),
@@ -394,6 +395,8 @@ class _WorkExperienceFormState extends State<_WorkExperienceForm> {
             CustomDateInput(
               controller: data.endDateController,
               label: 'Дата окончания',
+              placeholder: 'Дата окончания',
+
               validator: (value) => FormValidations.validateWorkEndDate(
                 value,
                 data.startDateController.text,

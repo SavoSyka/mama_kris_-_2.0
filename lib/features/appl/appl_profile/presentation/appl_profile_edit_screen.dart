@@ -61,7 +61,7 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
           bottom: false,
           child: BlocConsumer<UserBloc, UserState>(
             listener: (context, state) {
-                debugPrint("boom aree arupd");
+              debugPrint("boom aree arupd");
 
               if (state is UserLoaded) {
                 debugPrint("we aree arupd");
@@ -104,9 +104,10 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                                   );
 
                                   if (result != null) {
-                                    final specList = List<String>.from(
-                                      _userState?.specializations ?? [],
-                                    );
+                                    final List<String> specList = [];
+                                    // List<String>.from(
+                                    //   _userState?.specializations ?? [],
+                                    // );
 
                                     debugPrint("Result $result");
 

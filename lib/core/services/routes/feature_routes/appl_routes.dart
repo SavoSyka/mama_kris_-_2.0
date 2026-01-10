@@ -108,6 +108,35 @@ final List<RouteBase> jobRoutes = [
     },
   ),
 
+  GoRoute(
+    path: RouteName.articleOne,
+    name: RouteName.articleOne,
+    builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+      return ArticleOnePage(support: extra['support'] as DataMap);
+    },
+  ),
+
+  GoRoute(
+    path: RouteName.articleTwo,
+    name: RouteName.articleTwo,
+    builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+      return ArticleTwoPage(support: extra['support'] as DataMap);
+    },
+  ),
+  GoRoute(
+    path: RouteName.articleThree,
+    name: RouteName.articleThree,
+    builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as Map<String, dynamic>? ?? {};
+
+      return ArticleThreePage(support: extra['support'] as DataMap);
+    },
+  ),
+
   /*
 
 
