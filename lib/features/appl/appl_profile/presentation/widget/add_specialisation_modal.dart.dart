@@ -176,8 +176,18 @@ class _SpecialityBottomSheetState extends State<_SpecialityBottomSheet> {
   @override
   void initState() {
     super.initState();
+
+    setState(() {
+      _selectedSpeciality.addAll(widget.speciality);
+    });
     context.read<SpecialityBloc>().add(SearchSpecialityEvent(""));
-    debugPrint("check");
+
+    for (var item in _selectedSpeciality) {
+      debugPrint("Adding speciality $item");
+      context.read<SpecialityBloc>().add(AddSpecialityEvent(item));
+    }
+
+    debugPrint("_selectedSpeciality ${_selectedSpeciality.length}");
   }
 
   @override
@@ -188,7 +198,7 @@ class _SpecialityBottomSheetState extends State<_SpecialityBottomSheet> {
         BlocListener<ApplicantContactBloc, ApplicantContactState>(
           listener: (context, state) {
             if (state is SpecialityUpdatedState) {
-              debugPrint(" _selectedSpeciality, $_selectedSpeciality");
+              debugPrint(" before we pop, $_selectedSpeciality");
               Navigator.pop(context, _selectedSpeciality);
             } else if (state is ApplicantContactError) {
               // Optional: show error
@@ -199,7 +209,15 @@ class _SpecialityBottomSheetState extends State<_SpecialityBottomSheet> {
           },
         ),
       ],
-      child: BlocBuilder<SpecialityBloc, SpecialityState>(
+      child: BlocConsumer<SpecialityBloc, SpecialityState>(
+        listener: (context, listenerState) {
+          debugPrint("state updated");
+
+          setState(() {
+            _selectedSpeciality = listenerState.selected;
+          });
+          debugPrint("\n\nstate updated $_selectedSpeciality");
+        },
         builder: (context, specialityState) {
           // Get the loading state from ApplicantContactBloc
           final bool isSaving = context.select<ApplicantContactBloc, bool>(
@@ -306,10 +324,14 @@ class _SpecialityBottomSheetState extends State<_SpecialityBottomSheet> {
                         onTap: isLoading
                             ? null
                             : () {
-                                if (specialityState.selected.isEmpty) return;
+                                // if (specialityState.selected.isEmpty) return;
                                 _selectedSpeciality = specialityState.selected;
-                                _selectedSpeciality.addAll(widget.speciality);
+                                // _selectedSpeciality.addAll(widget.speciality);
                                 _selectedSpeciality.toSet().toList();
+
+                                debugPrint(
+                                  "We are sending this data $_selectedSpeciality",
+                                );
                                 context.read<ApplicantContactBloc>().add(
                                   CreateSpecialityEvent(
                                     speciality: _selectedSpeciality,

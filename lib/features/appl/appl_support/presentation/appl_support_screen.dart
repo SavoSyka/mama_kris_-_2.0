@@ -101,6 +101,8 @@ MamaKris — это агрегатор вакансий, который помо
     'salary': 'Ссылка',
     'isTelegram': false,
     'hasButton': true,
+    'routeName': RouteName.articleThree,
+
     "buttonText": "Запустить консультанцию",
     "buttonLink": "https://recruiter.mamakris.ru/",
     "article":
@@ -194,7 +196,8 @@ class _ApplSupportScreenState extends State<ApplSupportScreen> {
                                   );
                                 } else {
                                   context.pushNamed(
-                                    RouteName.supportDetail,
+                                    support['routeName'],
+                                    // RouteName.supportDetail,
                                     extra: {'support': support},
                                   );
                                   // Navigator.push(

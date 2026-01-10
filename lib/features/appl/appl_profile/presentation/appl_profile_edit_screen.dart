@@ -100,9 +100,10 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
                                   );
 
                                   if (result != null) {
-                                    final specList = List<String>.from(
-                                      _userState?.specializations ?? [],
-                                    );
+                                    final List<String> specList = [];
+                                    // List<String>.from(
+                                    //   _userState?.specializations ?? [],
+                                    // );
 
                                     debugPrint("Result $result");
 

@@ -55,7 +55,11 @@ class CustomSpecialisation extends StatelessWidget {
                 if (onTap != null) ...[
                   const SizedBox(height: 20),
                   CustomButtonSec(
-                    btnText: '+  Добавить специальность',
+                    btnText:
+                        specializations != null && specializations!.isNotEmpty
+                        ? "Обновить специальность"
+                        : '+  Добавить специальность',
+
                     onTap: onTap,
                   ),
                 ],
