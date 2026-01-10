@@ -66,7 +66,7 @@ class _ApplSupportDetailScreenState extends State<ApplSupportDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          CustomText(text: widget.support['article'] ?? ''),
+                          _buildFormattedArticle(widget.support['article'] ?? ''),
 
                           if (widget.support['hasButton'] != null &&
                               widget.support['hasButton']) ...[
@@ -107,6 +107,58 @@ class _ApplSupportDetailScreenState extends State<ApplSupportDetailScreen> {
     setState(() {
       isActive = isAct;
     });
+  }
+
+  Widget _buildFormattedArticle(String article) {
+    const headings = [
+      'Почему пользователи выбирают MamaKris',
+      'Как это работает',
+      '1. Для исполнителей',
+      '2. Для работодателей',
+      'Поддержка',
+      'Основные правила безопасности',
+      'Помните',
+    ];
+    
+    final List<TextSpan> spans = [];
+    int currentIndex = 0;
+    
+    // Find all headings and format them
+    for (final heading in headings) {
+      int headingIndex = article.indexOf(heading, currentIndex);
+      if (headingIndex != -1) {
+        // Add text before heading
+        if (headingIndex > currentIndex) {
+          spans.add(TextSpan(text: article.substring(currentIndex, headingIndex)));
+        }
+        // Add formatted heading
+        spans.add(TextSpan(
+          text: heading,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Manrope',
+          ),
+        ));
+        currentIndex = headingIndex + heading.length;
+      }
+    }
+    
+    // Add remaining text
+    if (currentIndex < article.length) {
+      spans.add(TextSpan(text: article.substring(currentIndex)));
+    }
+    
+    if (spans.isEmpty) {
+      return CustomText(text: article);
+    }
+    
+    return RichText(
+      text: TextSpan(
+        style: Theme.of(context).textTheme.bodyMedium,
+        children: spans,
+      ),
+    );
   }
 }
 

@@ -58,11 +58,17 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
             }
 
             void onFromChanged(String value) {
+              // If field is empty, don't update anything - let user type freely
+              if (value.isEmpty) {
+                return;
+              }
+
               if (debounce?.isActive ?? false) debounce!.cancel();
               debounce = Timer(const Duration(milliseconds: 300), () {
-                final fromValue = double.tryParse(fromCtrl.text) ?? 0;
-                final toValue =
-                    double.tryParse(toCtrl.text) ?? currentSlider.end;
+                final fromValue = double.tryParse(fromCtrl.text);
+                if (fromValue == null) return;
+
+                final toValue = double.tryParse(toCtrl.text) ?? currentSlider.end;
 
                 setModalState(() {
                   if (fromValue > toValue) {
@@ -79,19 +85,22 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                     currentSlider.start.clamp(0, dynamicMax),
                     currentSlider.end.clamp(currentSlider.start, dynamicMax),
                   );
-
-                  fromCtrl.text = currentSlider.start.round().toString();
-                  toCtrl.text = currentSlider.end.round().toString();
                 });
               });
             }
 
             void onToChanged(String value) {
+              // If field is empty, don't update anything - let user type freely
+              if (value.isEmpty) {
+                return;
+              }
+
               if (debounce?.isActive ?? false) debounce!.cancel();
               debounce = Timer(const Duration(milliseconds: 300), () {
-                final toValue = double.tryParse(toCtrl.text) ?? 0;
-                final fromValue =
-                    double.tryParse(fromCtrl.text) ?? currentSlider.start;
+                final toValue = double.tryParse(toCtrl.text);
+                if (toValue == null) return;
+
+                final fromValue = double.tryParse(fromCtrl.text) ?? currentSlider.start;
 
                 setModalState(() {
                   if (toValue > dynamicMax) {
@@ -109,9 +118,6 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                     currentSlider.start.clamp(0, dynamicMax),
                     currentSlider.end.clamp(currentSlider.start, dynamicMax),
                   );
-
-                  fromCtrl.text = currentSlider.start.round().toString();
-                  toCtrl.text = currentSlider.end.round().toString();
                 });
               });
             }
@@ -172,13 +178,28 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
 
                     // Scrollable Content
                     Expanded(
-                      child: SingleChildScrollView(
-                        controller: scrollController,
-                        physics: const ClampingScrollPhysics(),
-                        padding: const EdgeInsets.fromLTRB(30, 10, 30, 40),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                      child: GestureDetector(
+                        onTap: () {
+                          // When user taps outside text fields, handle empty fields
+                          FocusScope.of(context).unfocus();
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setModalState(() {
+                              if (fromCtrl.text.isEmpty || fromCtrl.text.trim().isEmpty) {
+                                fromCtrl.text = currentSlider.start.round().toString();
+                              }
+                              if (toCtrl.text.isEmpty || toCtrl.text.trim().isEmpty) {
+                                toCtrl.text = currentSlider.end.round().toString();
+                              }
+                            });
+                          });
+                        },
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          physics: const ClampingScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(30, 10, 30, 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                             // Salary Fields
                          if(!showByAgreement)...[
                             Row(
@@ -290,6 +311,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                           ],
                         ),
                       ),
+                        ),
                     ),
                   ],
                 ),

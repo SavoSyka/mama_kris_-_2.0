@@ -14,6 +14,7 @@ class SubscriptionPaymentBloc
     required this.initiatePaymentUsecase,
   }) : super(PaymentInitiatingState()) {
     on<InitiatePaymentEvent>(_onInitiatePayment);
+    on<ResetPaymentStateEvent>(_onResetPaymentState);
   }
 
   //* ────────────────────── INITIATE PAYMENT ──────────────────────
@@ -40,5 +41,13 @@ class SubscriptionPaymentBloc
     } catch (e) {
       emit(PaymentErrorState(e.toString()));
     }
+  }
+
+  //* ────────────────────── RESET PAYMENT STATE ──────────────────────
+  Future<void> _onResetPaymentState(
+    ResetPaymentStateEvent event,
+    Emitter<SubscriptionPaymentState> emit,
+  ) async {
+    emit(PaymentInitiatingState());
   }
 }

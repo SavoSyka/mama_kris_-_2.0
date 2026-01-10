@@ -30,6 +30,8 @@ import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/appl
 import 'package:mama_kris/core/common/widgets/show_delete_icon_dialog.dart';
 import 'package:mama_kris/core/common/widgets/show_logout_dialog.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
+import 'package:mama_kris/core/common/widgets/custom_switch.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApplProfileEditScreen extends StatefulWidget {
   const ApplProfileEditScreen({super.key});
@@ -61,7 +63,7 @@ class _ApplProfileEditScreenState extends State<ApplProfileEditScreen> {
           bottom: false,
           child: BlocConsumer<UserBloc, UserState>(
             listener: (context, state) {
-                debugPrint("boom aree arupd");
+              debugPrint("boom aree arupd");
 
               if (state is UserLoaded) {
                 debugPrint("we aree arupd");
@@ -328,103 +330,156 @@ class _accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<_accounts> {
-  final bool _acceptOrders =
-      false; // Default to false, can be loaded from preferences or API
+  @override
+  void initState() {
+    super.initState();
+    _loadAcceptOrdersFromPrefs();
+  }
+
+  Future<void> _loadAcceptOrdersFromPrefs() async {
+    final userState = context.read<UserBloc>().state;
+    if (userState is UserLoaded) {
+      final prefs = await SharedPreferences.getInstance();
+      final savedValue = prefs.getBool('accept_orders');
+      // Only update if there's a saved value, otherwise use default (true)
+      if (savedValue != null) {
+        context.read<UserBloc>().add(
+          UpdateAcceptOrdersEvent(acceptOrders: savedValue),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        bool acceptOrders = true; // Default to true
+        if (state is UserLoaded) {
+          acceptOrders = state.user.acceptOrders;
+        }
 
-        children: [
-          const Text(
-            'Аккаунт',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              height: 1.30,
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          _updateButtons(
-            text:
-                "Управление подпиской", //"Управление подпиской", // manage subscription
-            onTap: () {
-              context.pushNamed(RouteName.viewPaymentScreenDetail);
-            },
-          ),
-          const SizedBox(height: 16),
-
-          _updateButtons(
-            text: "Выйти из аккаунта",
-            error: true,
-            errorIcon: MediaRes.logoutIcon,
-            onTap: () {
-              showLogoutDialog(context, isApplicant: true, () async {
-                print("Account logout");
-
-                final lifeCycleState = context
-                    .read<LifeCycleManagerBloc>()
-                    .state;
-
-                if (lifeCycleState is LifeCycleManagerStartedState) {
-                  context.read<LifeCycleManagerBloc>().add(
-                    EndUserSessionEvent(
-                      sessionId: lifeCycleState.sessionId,
-                      endDate: DateTime.now().toUtc().toIso8601String(),
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: AppTheme.cardDecoration,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Аккаунт',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontFamily: 'Manrope',
+                  fontWeight: FontWeight.w600,
+                  height: 1.30,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  const Text(
+                    'Принимать заказы',
+                    style: TextStyle(
+                      color: Color(0xFF596574),
+                      fontSize: 16,
+                      fontFamily: 'Manrope',
+                      fontWeight: FontWeight.w500,
+                      height: 1.30,
                     ),
-                  );
-                  await Future.delayed(const Duration(seconds: 1));
-                  context.read<ApplicantContactBloc>().add(
-                    const LogoutAccountEvent(),
-                  );
-                  AuthService().signOut();
-                  context.pushNamed(RouteName.welcomePage);
-                }
-              });
-            },
+                  ),
+                  const Spacer(),
+                  CustomSwitch(
+                    value: acceptOrders,
+                    onChanged: (bool value) {
+                      context.read<UserBloc>().add(
+                        UpdateAcceptOrdersEvent(acceptOrders: value),
+                      );
+                      // Also save to SharedPreferences for persistence
+                      SharedPreferences.getInstance().then((prefs) {
+                        prefs.setBool('accept_orders', value);
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildAccountButtons(context),
+            ],
           ),
-          const SizedBox(height: 16),
-          BlocConsumer<ApplicantContactBloc, ApplicantContactState>(
-            listener: (context, state) {
-              if (state is AccountDeleteLoadingState) {
-                showIOSLoader(context);
-              } else if (state is UserAccountDeleted) {
-                Navigator.pop(context);
+        );
+      },
+    );
+  }
+
+  Widget _buildAccountButtons(BuildContext context) {
+    return Column(
+      children: [
+        _updateButtons(
+          text: "Управление подпиской",
+          onTap: () {
+            context.pushNamed(RouteName.viewPaymentScreenDetail);
+          },
+        ),
+        const SizedBox(height: 16),
+
+        _updateButtons(
+          text: "Выйти из аккаунта",
+          error: true,
+          errorIcon: MediaRes.logoutIcon,
+          onTap: () {
+            showLogoutDialog(context, isApplicant: true, () async {
+              print("Account logout");
+
+              final lifeCycleState = context
+                  .read<LifeCycleManagerBloc>()
+                  .state;
+
+              if (lifeCycleState is LifeCycleManagerStartedState) {
+                context.read<LifeCycleManagerBloc>().add(
+                  EndUserSessionEvent(
+                    sessionId: lifeCycleState.sessionId,
+                    endDate: DateTime.now().toUtc().toIso8601String(),
+                  ),
+                );
+                await Future.delayed(const Duration(seconds: 1));
+                context.read<ApplicantContactBloc>().add(
+                  const LogoutAccountEvent(),
+                );
+                AuthService().signOut();
                 context.pushNamed(RouteName.welcomePage);
               }
-              // TODO: implement listener
-            },
-            builder: (context, state) {
-              return _updateButtons(
-                text: "Удалить аккаунт",
-                error: true,
+            });
+          },
+        ),
+        const SizedBox(height: 16),
+        BlocConsumer<ApplicantContactBloc, ApplicantContactState>(
+          listener: (context, state) {
+            if (state is AccountDeleteLoadingState) {
+              showIOSLoader(context);
+            } else if (state is UserAccountDeleted) {
+              Navigator.pop(context);
+              context.pushNamed(RouteName.welcomePage);
+            }
+          },
+          builder: (context, state) {
+            return _updateButtons(
+              text: "Удалить аккаунт",
+              error: true,
+              onTap: () {
+                showDeleteAccountDialog(context, () {
+                  print("Account deleted");
 
-                onTap: () {
-                  showDeleteAccountDialog(context, () {
-                    print("Account deleted");
-
-                    context.read<ApplicantContactBloc>().add(
-                      const DeleteUserAccountEvent(),
-                    );
-                    // context.pushNamed(RouteName.welcomePage);
-                  });
-                  // context.pushNamed(RouteName.welcomePage);
-                },
-              );
-            },
-          ),
-
-          // delete
-          const SizedBox(height: 24),
-        ],
-      ),
+                  context.read<ApplicantContactBloc>().add(
+                    const DeleteUserAccountEvent(),
+                  );
+                });
+              },
+            );
+          },
+        ),
+        const SizedBox(height: 24),
+      ],
     );
   }
 }

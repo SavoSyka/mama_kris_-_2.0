@@ -23,6 +23,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     on<UpdateBasicInfo>(_onUpdateBasicInfo);
     on<UpdateSpecialityInfo>(_onUpdateSpeciality);
+    on<UpdateAcceptOrdersEvent>(_onUpdateAcceptOrders);
   }
 
   Future<void> _onGetUserProfile(
@@ -144,6 +145,25 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UserLoaded(updatedUser));
 
       debugPrint("🔐 Emitted updated user: $state");
+    }
+  }
+
+  // * ───────────── Update Accept Orders ─────────────────────────
+
+  Future<void> _onUpdateAcceptOrders(
+    UpdateAcceptOrdersEvent event,
+    Emitter<UserState> emit,
+  ) async {
+    final currentState = state;
+
+    if (currentState is UserLoaded) {
+      final updatedUser = currentState.user.copyWith(
+        acceptOrders: event.acceptOrders,
+      );
+
+      emit(UserLoaded(updatedUser));
+
+      debugPrint("🔐 Accept Orders Updated: ${event.acceptOrders}");
     }
   }
 }

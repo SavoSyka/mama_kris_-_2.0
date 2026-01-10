@@ -21,6 +21,7 @@ class UserProfileEntity extends Equatable{
   final List<ApplWorkExperienceEntity>? workExperience;
   final dynamic age;
   final bool isFavorite;
+  final bool acceptOrders;
 
   final List<ApplContactEntity>? contacts;
   final ApplContactEntity? defaultContact;
@@ -47,6 +48,7 @@ class UserProfileEntity extends Equatable{
     this.contacts,
     this.defaultContact,
     this.isFavorite = false,
+    this.acceptOrders = true,
   });
 
   UserProfileEntity copyWith({
@@ -70,6 +72,7 @@ class UserProfileEntity extends Equatable{
     dynamic? age,
     List<ApplContactEntity>? contacts,
     ApplContactEntity? defaultContact,
+    bool? acceptOrders,
   }) {
     return UserProfileEntity(
       userID: userID ?? this.userID,
@@ -92,12 +95,13 @@ class UserProfileEntity extends Equatable{
       age: age ?? this.age,
       contacts: contacts ?? this.contacts,
       defaultContact: defaultContact ?? this.defaultContact,
+      acceptOrders: acceptOrders ?? this.acceptOrders,
     );
   }
   
   @override
   // TODO: implement props
-  List<Object?> get props => [userID, name,email, phone,dateTime,signedIn,choice,appleID,role,provider,defaultContact,defaultContactId,specializations, specializationsNorm,birthDate, education,about, workExperience,age, isFavorite];
+  List<Object?> get props => [userID, name,email, phone,dateTime,signedIn,choice,appleID,role,provider,defaultContact,defaultContactId,specializations, specializationsNorm,birthDate, education,about, workExperience,age, isFavorite, acceptOrders];
 }
 
 class ApplWorkExperienceEntity {

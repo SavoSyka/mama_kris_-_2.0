@@ -114,7 +114,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     );
                     if (!state.user.subscription.active) {
-                      context.pushReplacementNamed(RouteName.subscription);
+                      context.pushReplacementNamed(RouteName.homeApplicant);
                     } else {
                       context.pushReplacementNamed(RouteName.homeApplicant);
                     }

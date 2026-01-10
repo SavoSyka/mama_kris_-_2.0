@@ -21,6 +21,7 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/widget/build_e
 import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_bloc.dart';
 import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_event.dart';
 import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApplProfileScreen extends StatefulWidget {
   const ApplProfileScreen({super.key});
@@ -93,6 +94,7 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
                               _AcceptOrders(
                                 name: user.name,
                                 birthDate: user.birthDate,
+                                acceptOrders: user.acceptOrders,
                               ),
                               const SizedBox(height: 20),
 
@@ -146,9 +148,10 @@ class _ApplProfileScreenState extends State<ApplProfileScreen> {
 }
 
 class _AcceptOrders extends StatelessWidget {
-  const _AcceptOrders({this.name, this.birthDate});
+  const _AcceptOrders({this.name, this.birthDate, this.acceptOrders = true});
   final String? name;
   final String? birthDate;
+  final bool acceptOrders;
 
   @override
   Widget build(BuildContext context) {
@@ -161,22 +164,26 @@ class _AcceptOrders extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
-              ///  Rounded Chips
+              ///  Rounded Chips - show status based on acceptOrders
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: ShapeDecoration(
                   shape: RoundedRectangleBorder(
-                    side: const BorderSide(
+                    side: BorderSide(
                       width: 1,
-                      color: AppPalette.primaryColor,
+                      color: acceptOrders 
+                          ? AppPalette.primaryColor 
+                          : AppPalette.error,
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
-                  'Принимает заказы',
+                child: Text(
+                  acceptOrders ? 'Принимает заказы' : 'Не принимает заказы',
                   style: TextStyle(
-                    color: Color(0xFF2E7866),
+                    color: acceptOrders 
+                        ? const Color(0xFF2E7866) 
+                        : AppPalette.error,
                     fontSize: 12,
                     fontFamily: 'Manrope',
                     fontWeight: FontWeight.w600,

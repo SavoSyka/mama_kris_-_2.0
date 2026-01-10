@@ -25,6 +25,7 @@ class UserProfileModel extends UserProfileEntity {
     super.contacts,
     super.defaultContact,
     super.isFavorite,
+    super.acceptOrders,
   });
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) {
@@ -77,6 +78,7 @@ class UserProfileModel extends UserProfileEntity {
       age: json['age'],
       contacts: cont,
       isFavorite: json['isFavorite'] ?? false,
+      acceptOrders: json['acceptOrders'] as bool? ?? true,
     );
   }
 }

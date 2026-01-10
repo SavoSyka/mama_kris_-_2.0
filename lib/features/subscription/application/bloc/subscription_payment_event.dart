@@ -16,3 +16,7 @@ class InitiatePaymentEvent extends SubscriptionPaymentEvent {
   @override
   List<Object> get props => [tariff];
 }
+
+class ResetPaymentStateEvent extends SubscriptionPaymentEvent {
+  const ResetPaymentStateEvent();
+}

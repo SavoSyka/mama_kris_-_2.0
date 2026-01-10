@@ -20,6 +20,7 @@ class CustomDateInput extends StatefulWidget {
     required this.label,
     this.validator,
     this.isApplicant = false,
+    this.hintText,
   });
 
   final TextEditingController controller;
@@ -27,6 +28,7 @@ class CustomDateInput extends StatefulWidget {
   final String label;
   final bool isApplicant;
   final FormFieldValidator<String>? validator;
+  final String? hintText;
 
   @override
   State<CustomDateInput> createState() => _CustomDateInputState();
@@ -192,7 +194,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
   @override
   Widget build(BuildContext context) {
     return CustomInputText(
-      hintText: 'Выберите дату рождения',
+      hintText: widget.hintText ?? 'Выберите дату рождения',
       labelText: widget.label,
       controller: widget.controller,
       keyboardType: TextInputType.none,

@@ -48,4 +48,10 @@ class UpdateSpecialityInfo extends UserEvent {
   UpdateSpecialityInfo({required this.speciality});
 }
 
+class UpdateAcceptOrdersEvent extends UserEvent {
+  final bool acceptOrders;
+
+  const UpdateAcceptOrdersEvent({required this.acceptOrders});
+}
+
 

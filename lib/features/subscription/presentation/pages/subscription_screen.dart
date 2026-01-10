@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -295,10 +296,10 @@ MamaKris объединяет десятки тысяч активных сои�
     );
   }
 
-  void _navigateToPayment(String paymentUrl) {
+  void _navigateToPayment(String paymentUrl) async {
     debugPrint("✅✅✅✅✅✅ SUbscription started here");
 
-    context.pushNamed(
+    await context.pushNamed(
       RouteName.paymentWebView,
       extra: {
         'url': paymentUrl,
@@ -322,5 +323,12 @@ MamaKris объединяет десятки тысяч активных сои�
         },
       },
     );
+
+    // When pop happens, reset state to PaymentInitiatingState
+    if (mounted) {
+      context.read<SubscriptionPaymentBloc>().add(
+        const ResetPaymentStateEvent(),
+      );
+    }
   }
 }
