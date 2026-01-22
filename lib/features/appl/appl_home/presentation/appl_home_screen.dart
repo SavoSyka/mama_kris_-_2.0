@@ -16,6 +16,7 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/build_base64image.dart';
+import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_cubit.dart';
@@ -284,16 +285,22 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                   salaryRange: job.salary.toString(),
                                   jobId: job.jobId,
                                   contactJobs: job.contactJobs,
-                                  onTap: () async => await ApplicantJobDetail(
-                                    context,
-                                    job: job,
-                                    onLiked: () async {
-                                      context.read<JobBloc>().add(
-                                        LikeJobEvent(job.jobId),
-                                      );
-                                      Navigator.maybePop(context);
-                                    },
-                                  ),
+                                  onTap: () async {
+                                    // Mark job as viewed when opened
+                                    context.read<JobBloc>().add(
+                                      ViewJobEvent(job.jobId),
+                                    );
+                                    await ApplicantJobDetail(
+                                      context,
+                                      job: job,
+                                      onLiked: () async {
+                                        context.read<JobBloc>().add(
+                                          LikeJobEvent(job.jobId),
+                                        );
+                                        Navigator.maybePop(context);
+                                      },
+                                    );
+                                  },
                                 ),
                               );
                             }
@@ -350,7 +357,15 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   // * 1. ────────────── Helper functions started ───────────────────────
 
   void _loadMoreJobs(int page) {
-    context.read<JobBloc>().add(LoadNextJobsPageEvent(page));
+    context.read<JobBloc>().add(
+      LoadNextJobsPageEvent(
+        page,
+        title: _searchQuery,
+        minSalary: _minSalary,
+        maxSalary: _maxSalary,
+        salaryWithAgreement: _byAgreement,
+      ),
+    );
   }
 
   void _handleFilters() {
@@ -381,6 +396,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     final currentJob = jobs[currentJobIndex];
 
     debugPrint("🧩 Current job index: $currentJobIndex | Liked: $isLiked");
+
+    // Mark job as viewed when opened (before like/dislike action)
+    bloc.add(ViewJobEvent(currentJob.jobId));
 
     // Dispatch like/dislike event
     if (isLiked) {
@@ -421,7 +439,15 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     if (hasFewJobsLeft && state.jobs.hasNextPage) {
       final nextPage = state.jobs.currentPage + 1;
       debugPrint("📡 Fetching next page: $nextPage");
-      bloc.add(LoadNextJobsPageEvent(nextPage));
+      bloc.add(
+        LoadNextJobsPageEvent(
+          nextPage,
+          title: _searchQuery,
+          minSalary: _minSalary,
+          maxSalary: _maxSalary,
+          salaryWithAgreement: _byAgreement,
+        ),
+      );
     }
   }
 
@@ -545,9 +571,19 @@ class _AdCards extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: buildBase64Image(state.ad.imageData),
+                      child: InkWell(
+                        onTap: () {
+                          if (state.ad.link.isNotEmpty) {
+                            HandleLaunchUrl.launchUrlGeneric(
+                              context,
+                              url: state.ad.link,
+                            );
+                          }
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: buildBase64Image(state.ad.imageData),
+                        ),
                       ),
                     ),
                   ],

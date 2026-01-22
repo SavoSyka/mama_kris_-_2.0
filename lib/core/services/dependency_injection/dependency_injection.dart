@@ -152,6 +152,7 @@ Future<void> _initJobs() async {
   sl.registerLazySingleton(() => SearchJobsUseCase(sl()));
   sl.registerLazySingleton(() => LikeJobUseCase(sl()));
   sl.registerLazySingleton(() => DislikeJobUseCase(sl()));
+  sl.registerLazySingleton(() => ViewJobUseCase(sl()));
   sl.registerLazySingleton(() => FetchLikedJobs(sl()));
   sl.registerLazySingleton(() => FilterJobsUsecase(sl()));
 
@@ -163,6 +164,7 @@ Future<void> _initJobs() async {
       likeJobUseCase: sl(),
       dislikeJobUseCase: sl(),
       filterJobsUsecase: sl(),
+      viewJobUseCase: sl(),
     ),
   );
 

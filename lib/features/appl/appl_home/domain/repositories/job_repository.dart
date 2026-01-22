@@ -17,5 +17,6 @@ abstract class JobRepository {
   ResultFuture<JobList> searchJobs(String query);
   ResultFuture<void> likeJob(int jobId);
   ResultFuture<void> dislikeJob(int jobId);
+  ResultFuture<void> viewJob(int jobId);
   ResultFuture<LikedListJob> fetchLikedJobs(int page);
 }

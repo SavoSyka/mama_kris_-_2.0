@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_sec.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
@@ -41,9 +42,18 @@ Future<String?> ApplicantJobDetail(
                     showStar
                         ? InkWell(
                             onTap: onLiked,
-                            child: const CustomImageView(
-                              imagePath: MediaRes.modalStarIcon,
-                              width: 32,
+                            child: Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              padding: const EdgeInsets.all(4),
+                              child: CustomImageView(
+                                imagePath: MediaRes.myOrders,
+                                color: AppPalette.primaryColor,
+                              ),
                             ),
                           )
                         : const SizedBox.shrink(),
@@ -185,8 +195,8 @@ Future<String?> ApplicantJobDetail(
                               btnText: '',
 
                               child: _contactCard(
-                                icon: MediaRes.vkIcon,
-                                label: 'Перейти в VK',
+                                icon: MediaRes.linkSupport,
+                                label: 'Открыть ссылку',
                               ),
 
                               onTap: () {
@@ -204,9 +214,9 @@ Future<String?> ApplicantJobDetail(
                             CustomButtonSec(
                               btnText: '',
 
-                              child: _contactCard(
-                                icon: MediaRes.vkIcon,
-                                label: 'Перейти в VK',
+                              child: _contactCardWithIcon(
+                                icon: Icons.email_rounded,
+                                label: 'Написать на Email',
                               ),
 
                               onTap: () {
@@ -224,9 +234,9 @@ Future<String?> ApplicantJobDetail(
                             CustomButtonSec(
                               btnText: '',
 
-                              child: _contactCard(
-                                icon: MediaRes.vkIcon,
-                                label: 'Перейти в VK',
+                              child: _contactCardWithIcon(
+                                icon: Icons.phone,
+                                label: 'Позвонить',
                               ),
 
                               onTap: () {
@@ -257,6 +267,16 @@ Widget _contactCard({required String label, required String icon}) {
     children: [
       Center(child: CustomText(text: label)),
       CustomImageView(imagePath: icon, width: 32),
+    ],
+  );
+}
+
+Widget _contactCardWithIcon({required String label, required IconData icon}) {
+  return Row(
+    children: [
+      Center(child: CustomText(text: label)),
+      const SizedBox(width: 8),
+      Icon(icon, size: 24),
     ],
   );
 }

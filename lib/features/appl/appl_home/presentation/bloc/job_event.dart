@@ -36,12 +36,38 @@ class DislikeJobEvent extends JobEvent {
   List<Object> get props => [jobId];
 }
 
-class LoadNextJobsPageEvent extends JobEvent {
-  final int nextPage;
-  const LoadNextJobsPageEvent(this.nextPage);
+class ViewJobEvent extends JobEvent {
+  final int jobId;
+
+  const ViewJobEvent(this.jobId);
 
   @override
-  List<Object> get props => [nextPage];
+  List<Object> get props => [jobId];
+}
+
+class LoadNextJobsPageEvent extends JobEvent {
+  final int nextPage;
+  final String? title;
+  final String? minSalary;
+  final String? maxSalary;
+  final bool? salaryWithAgreement;
+  
+  const LoadNextJobsPageEvent(
+    this.nextPage, {
+    this.title,
+    this.minSalary,
+    this.maxSalary,
+    this.salaryWithAgreement,
+  });
+
+  @override
+  List<Object> get props => [
+        nextPage,
+        title ?? '',
+        minSalary ?? '',
+        maxSalary ?? '',
+        salaryWithAgreement ?? false,
+      ];
 }
 
 class FilterJobEvent extends JobEvent {

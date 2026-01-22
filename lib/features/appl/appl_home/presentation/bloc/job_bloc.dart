@@ -7,6 +7,7 @@ import 'package:mama_kris/features/appl/appl_home/domain/usecases/fetch_jobs_use
 import 'package:mama_kris/features/appl/appl_home/domain/usecases/filter_jobs_usecase.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/usecases/like_job_usecase.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/usecases/search_jobs_usecase.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/usecases/view_job_usecase.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_state.dart';
 
@@ -16,6 +17,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
   final LikeJobUseCase likeJobUseCase;
   final DislikeJobUseCase dislikeJobUseCase;
   final FilterJobsUsecase filterJobsUsecase;
+  final ViewJobUseCase viewJobUseCase;
 
   JobBloc({
     required this.fetchJobsUseCase,
@@ -23,6 +25,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     required this.likeJobUseCase,
     required this.dislikeJobUseCase,
     required this.filterJobsUsecase,
+    required this.viewJobUseCase,
   }) : super(JobInitial()) {
     on<FetchJobsEvent>(_onFetchJobs);
     on<LoadNextJobsPageEvent>(_onLoadNextJobsPage);
@@ -30,6 +33,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     on<SearchJobsEvent>(_onSearchJobs);
     on<LikeJobEvent>(_onLikeJob);
     on<DislikeJobEvent>(_onDislikeJob);
+    on<ViewJobEvent>(_onViewJob);
     on<FilterJobEvent>(_onFilterJob);
   }
 
@@ -99,26 +103,66 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       return;
     }
 
-    // ── Emit “loading more” (keeps old list) ───────────────────
+    // ── Emit "loading more" (keeps old list) ───────────────────
     emit(currentState.copyWith(isLoadingMore: true));
 
     try {
-      final result = await fetchJobsUseCase(event.nextPage);
-      result.fold((failure) => emit(JobError(failure.message)), (newJobList) {
-        final updatedJobs = [...currentState.jobs.jobs, ...newJobList.jobs];
+      // Check if filters are active
+      final hasFilters = event.minSalary != null ||
+          event.maxSalary != null ||
+          event.title != null ||
+          event.salaryWithAgreement != null;
 
-        emit(
-          JobLoaded(
-            jobs: currentState.jobs.copyWith(
-              jobs: updatedJobs,
-              currentPage: newJobList.currentPage,
-              totalPage: newJobList.totalPage,
-              hasNextPage: newJobList.hasNextPage,
-            ),
-            isLoadingMore: false,
+      if (hasFilters) {
+        // Use filter usecase when filters are active
+        final result = await filterJobsUsecase(
+          FilterJobParams(
+            page: event.nextPage,
+            perPage: 10,
+            maxSalary: event.maxSalary,
+            minSalary: event.minSalary,
+            title: event.title,
+            salaryWithAgreement: event.salaryWithAgreement,
           ),
         );
-      });
+
+        result.fold(
+          (failure) => emit(JobError(failure.message)),
+          (newJobList) {
+            final updatedJobs = [...currentState.jobs.jobs, ...newJobList.jobs];
+
+            emit(
+              JobLoaded(
+                jobs: currentState.jobs.copyWith(
+                  jobs: updatedJobs,
+                  currentPage: newJobList.currentPage,
+                  totalPage: newJobList.totalPage,
+                  hasNextPage: newJobList.hasNextPage,
+                ),
+                isLoadingMore: false,
+              ),
+            );
+          },
+        );
+      } else {
+        // Use regular fetch when no filters
+        final result = await fetchJobsUseCase(event.nextPage);
+        result.fold((failure) => emit(JobError(failure.message)), (newJobList) {
+          final updatedJobs = [...currentState.jobs.jobs, ...newJobList.jobs];
+
+          emit(
+            JobLoaded(
+              jobs: currentState.jobs.copyWith(
+                jobs: updatedJobs,
+                currentPage: newJobList.currentPage,
+                totalPage: newJobList.totalPage,
+                hasNextPage: newJobList.hasNextPage,
+              ),
+              isLoadingMore: false,
+            ),
+          );
+        });
+      }
     } catch (e, stack) {
       debugPrint('Load next page error: $e\n$stack');
       emit(JobError(e.toString()));
@@ -183,6 +227,18 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       // emit(const JobActionSuccess('Job disliked successfully'));
     } catch (e) {
       emit(JobError(e.toString()));
+    }
+  }
+
+  Future<void> _onViewJob(
+    ViewJobEvent event,
+    Emitter<JobState> emit,
+  ) async {
+    try {
+      await viewJobUseCase(event.jobId);
+    } catch (e) {
+      // Silently fail for view job - don't show error to user
+      debugPrint('Error viewing job: $e');
     }
   }
 }

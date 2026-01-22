@@ -87,6 +87,16 @@ class JobRepositoryImpl implements JobRepository {
   }
 
   @override
+  ResultFuture<void> viewJob(int jobId) async {
+    try {
+      await remoteDataSource.viewJob(jobId);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   ResultFuture<LikedListJob> fetchLikedJobs(int page) async {
     try {
       final result = await remoteDataSource.fetchLikedJobs(page);

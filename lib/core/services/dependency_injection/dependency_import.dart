@@ -121,6 +121,7 @@ import 'package:mama_kris/features/appl/appl_home/domain/usecases/fetch_jobs_use
 import 'package:mama_kris/features/appl/appl_home/domain/usecases/search_jobs_usecase.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/usecases/like_job_usecase.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/usecases/dislike_job_usecase.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/usecases/view_job_usecase.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_state.dart';

@@ -117,30 +117,7 @@ class ApplicantJobSlider extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: AppTheme.cardDecoration,
-                  child: InkWell(
-                    onTap: onInterestedPressed,
-
-                    child: const Text(
-                      'Интересно', // TODO Интересно
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'Jost',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-
-                        color: AppPalette.primaryColor,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               // Фиксированная кнопка "Неинтересно" (слева)
-              const SizedBox(width: 12),
-
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -158,6 +135,28 @@ class ApplicantJobSlider extends StatelessWidget {
                         height: 28 / 18,
                         letterSpacing: -0.54 * scaleX,
                         color: AppPalette.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: AppTheme.cardDecoration,
+                  child: InkWell(
+                    onTap: onInterestedPressed,
+
+                    child: const Text(
+                      'Интересно', // TODO Интересно
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Jost',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+
+                        color: AppPalette.primaryColor,
                       ),
                     ),
                   ),

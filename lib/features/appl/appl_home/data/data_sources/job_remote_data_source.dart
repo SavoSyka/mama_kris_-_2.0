@@ -25,6 +25,7 @@ abstract class JobRemoteDataSource {
   Future<JobListModel> searchJobs(String query);
   Future<void> likeJob(int jobId);
   Future<void> dislikeJob(int jobId);
+  Future<void> viewJob(int jobId);
   Future<LikedJobListModel> fetchLikedJobs(int page);
 }
 
@@ -175,6 +176,20 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
       );
     } catch (e) {
       debugPrint("erroro $e");
+    }
+  }
+
+  @override
+  Future<void> viewJob(int jobId) async {
+    try {
+      final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
+
+      final response = await dio.put(
+        ApiConstants.likeOrDislikeJob(userID, jobId.toString()),
+        data: {"isviewed": true},
+      );
+    } catch (e) {
+      debugPrint("error viewing job $e");
     }
   }
 

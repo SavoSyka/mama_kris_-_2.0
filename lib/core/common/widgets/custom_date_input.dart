@@ -152,7 +152,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
                         Navigator.pop(context);
                       },
                       isLoading: false,
-                      btnText: 'Set',
+                      btnText: 'Применить',
                     ):
                   
                     CustomButtonEmployee(
@@ -178,7 +178,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
                         Navigator.pop(context);
                       },
                       isLoading: false,
-                      btnText: 'Set',
+                      btnText: 'Применить',
                     ),
                   
                   ),

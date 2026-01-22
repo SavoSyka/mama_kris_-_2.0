@@ -112,16 +112,16 @@ class _EmpSupportScreenState extends State<EmpSupportScreen> {
                                           ),
                                         ),
                                         const SizedBox(height: 8),
-                                        const Text(
-                                          "Ссылка",
-                                          style: TextStyle(
-                                            color: Color(0xFF596574),
-                                            fontSize: 12,
-                                            fontFamily: 'Manrope',
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.30,
-                                          ),
-                                        ),
+                                        // const Text(
+                                        //   "Ссылка",
+                                        //   style: TextStyle(
+                                        //     color: Color(0xFF596574),
+                                        //     fontSize: 12,
+                                        //     fontFamily: 'Manrope',
+                                        //     fontWeight: FontWeight.w500,
+                                        //     height: 1.30,
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                     CustomImageView(

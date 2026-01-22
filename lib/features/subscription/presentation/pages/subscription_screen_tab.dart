@@ -90,7 +90,7 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
         ];
       } else {
         pages.addAll([
-          const EmpResumeScreen(),
+          // const EmpResumeScreen(),
           const EmpSupportScreen(),
           const EmpProfileScreen(),
         ]);
@@ -109,19 +109,19 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
             ),
             label: "Вакансии",
           ),
-          const BottomNavigationBarItem(
-            icon: CustomImageView(
-              imagePath: MediaRes.resumeIcon,
-              width: 28,
-              color: Colors.grey,
-            ),
-            activeIcon: CustomImageView(
-              imagePath: MediaRes.resumeIcon,
-              width: 28,
-              color: AppPalette.empPrimaryColor,
-            ),
-            label: "Резюме",
-          ),
+          // const BottomNavigationBarItem(
+          //   icon: CustomImageView(
+          //     imagePath: MediaRes.resumeIcon,
+          //     width: 28,
+          //     color: Colors.grey,
+          //   ),
+          //   activeIcon: CustomImageView(
+          //     imagePath: MediaRes.resumeIcon,
+          //     width: 28,
+          //     color: AppPalette.empPrimaryColor,
+          //   ),
+          //   label: "Резюме",
+          // ),
           const BottomNavigationBarItem(
             icon: CustomImageView(
               imagePath: MediaRes.support,
