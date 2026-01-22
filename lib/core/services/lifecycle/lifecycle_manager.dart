@@ -35,6 +35,9 @@ class _LifecycleManagerState extends State<LifecycleManager>
         state == AppLifecycleState.paused) {
       // End session when app is closed or goes to background
       _endSession();
+    } else if (state == AppLifecycleState.resumed) {
+      // Start new session when app is resumed
+      _startSession();
     }
   }
 
@@ -53,6 +56,29 @@ class _LifecycleManagerState extends State<LifecycleManager>
       }
     } catch (e) {
       debugPrint('Error ending session: $e');
+    }
+  }
+
+  Future<void> _startSession() async {
+    try {
+      // Check if user is logged in before starting a session
+      final userId = await sl<AuthLocalDataSource>().getUserId();
+      final token = await sl<AuthLocalDataSource>().getToken();
+      final existingSessionId = await sl<AuthLocalDataSource>().getSessionId();
+      
+      // Only start session if:
+      // 1. User is authenticated
+      // 2. There's no existing session (to avoid duplicates)
+      if (userId != null && 
+          userId.isNotEmpty && 
+          token.isNotEmpty && 
+          existingSessionId == null) {
+        final startDate = DateTime.now().toUtc().toIso8601String();
+        final bloc = sl<LifeCycleManagerBloc>();
+        bloc.add(StartUserSessionEvent(startDate: startDate));
+      }
+    } catch (e) {
+      debugPrint('Error starting session: $e');
     }
   }
 
