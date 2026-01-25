@@ -69,8 +69,14 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
             ),
             label: "Мои заказы",
           ),
-          const BottomNavigationBarItem(
-            icon: CustomImageView(imagePath: MediaRes.support, width: 18),
+          BottomNavigationBarItem(
+            icon: CustomImageView(
+              imagePath: MediaRes.support,
+              width: 18,
+              color: _selectedIndex == 2
+                  ? AppPalette.primaryColor
+                  : Colors.grey,
+            ),
             activeIcon: CustomImageView(
               imagePath: MediaRes.support,
               width: 18,
