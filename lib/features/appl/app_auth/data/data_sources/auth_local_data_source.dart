@@ -38,6 +38,8 @@ abstract class AuthLocalDataSource {
   Future<void> clearAll();
   Future<bool> getSubscription();
   Future<void> saveSubscription(bool status);
+  Future<int?> getViewedJobsCount();
+  Future<void> saveViewedJobsCount(int count);
   Future<void> saveSessionId(int sessionId);
   Future<int?> getSessionId();
   Future<void> removeSessionId();
@@ -57,6 +59,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   static const _refreshKey = 'refresh_token';
   static const _applicantkey = '_applicationKey';
   static const _subscriptionKey = '_subscriptionKey';
+  static const _viewedJobsCountKey = '_viewedJobsCountKey';
   static const _sessionIdKey = '_sessionId';
 
   @override
@@ -146,6 +149,16 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> saveSubscription(bool status) async {
     await prefs.setBool(_subscriptionKey, status);
+  }
+
+  @override
+  Future<int?> getViewedJobsCount() async {
+    return prefs.getInt(_viewedJobsCountKey);
+  }
+
+  @override
+  Future<void> saveViewedJobsCount(int count) async {
+    await prefs.setInt(_viewedJobsCountKey, count);
   }
 
   @override

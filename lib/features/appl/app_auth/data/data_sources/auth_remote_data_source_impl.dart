@@ -44,6 +44,34 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await local.saveUserId(userId);
         await local.saveSubscription(isActive);
 
+        // Fetch and save viewed jobs count
+        try {
+          final countResponse = await dio.get(
+            ApiConstants.getViewedJobsCount(userId),
+          );
+          if (countResponse.statusCode.toString().startsWith('2')) {
+            int? count;
+            final data = countResponse.data;
+            
+            if (data is int) {
+              count = data;
+            } else if (data is String) {
+              count = int.tryParse(data);
+            } else if (data is double) {
+              count = data.toInt();
+            } else if (data is Map<String, dynamic>) {
+              count = data['count'] as int?;
+            }
+            
+            if (count != null) {
+              await local.saveViewedJobsCount(count);
+            }
+          }
+        } catch (e) {
+          debugPrint('Error fetching viewed jobs count: $e');
+          // Don't fail login if count fetch fails
+        }
+
         // Save full user data for persistent login
         await local.saveUser(data['user']);
 
@@ -359,6 +387,34 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
         await local.saveUserId(userId);
         await local.saveSubscription(isActive);
+
+        // Fetch and save viewed jobs count
+        try {
+          final countResponse = await dio.get(
+            ApiConstants.getViewedJobsCount(userId),
+          );
+          if (countResponse.statusCode.toString().startsWith('2')) {
+            int? count;
+            final data = countResponse.data;
+            
+            if (data is int) {
+              count = data;
+            } else if (data is String) {
+              count = int.tryParse(data);
+            } else if (data is double) {
+              count = data.toInt();
+            } else if (data is Map<String, dynamic>) {
+              count = data['count'] as int?;
+            }
+            
+            if (count != null) {
+              await local.saveViewedJobsCount(count);
+            }
+          }
+        } catch (e) {
+          debugPrint('Error fetching viewed jobs count: $e');
+          // Don't fail login if count fetch fails
+        }
 
         // Save full user data for persistent login
         await local.saveUser(data['user']);

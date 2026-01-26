@@ -103,7 +103,7 @@ class _SplashScreenState extends State<SplashScreen>
             },
             builder: (context, state) {
               return BlocConsumer<AuthBloc, AuthState>(
-                listener: (context, state) {
+                listener: (context, state) async {
                   if (state is AuthSuccess) {
                     context.read<UserBloc>().add(
                       GetUserProfileEvent(user: state.user.user),
@@ -113,10 +113,17 @@ class _SplashScreenState extends State<SplashScreen>
                         startDate: DateTime.now().toUtc().toIso8601String(),
                       ),
                     );
-                    if (!state.user.subscription.active) {
-                      context.pushReplacementNamed(RouteName.subscription);
-                    } else {
+
+
+                    final viewedCount = await sl<AuthLocalDataSource>()
+                        .getViewedJobsCount();
+
+
+                    if (state.user.subscription.active ||
+                        (viewedCount != null && viewedCount < 10)) {
                       context.pushReplacementNamed(RouteName.homeApplicant);
+                    } else {
+                      context.pushReplacementNamed(RouteName.subscription);
                     }
                   }
                 },

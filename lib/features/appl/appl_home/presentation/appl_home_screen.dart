@@ -32,6 +32,8 @@ import 'package:mama_kris/features/appl/appl_home/presentation/widget/filter_act
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/home_search_page.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/widget/resume_speciality_search_page.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
 
 class ApplHomeScreen extends StatefulWidget {
   const ApplHomeScreen({super.key});
@@ -92,22 +94,36 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
-          child: BlocBuilder<JobBloc, JobState>(
-            builder: (context, state) {
-              // ---------- Loading ----------
-              if (state is JobLoading) {
-                return const Center(child: IPhoneLoader(height: 200));
-              }
-
-              // ---------- Error ----------
+          child: BlocListener<JobBloc, JobState>(
+            listener: (context, state) {
+              // Check for 403 subscription required error
               if (state is JobError) {
-                return Center(
-                  child: CustomErrorRetry(
-                    errorMessage: state.message,
-                    onTap: () => handleFetchJobs(),
-                  ),
-                );
+                final errorMessage = state.message.toLowerCase();
+                // Check if error message contains subscription required message
+                if (errorMessage.contains('subscription required to view more than 10 jobs') ||
+                    (errorMessage.contains('subscription required') && 
+                     (errorMessage.contains('403') || errorMessage.contains('forbidden')))) {
+                  // Navigate to subscription page immediately
+                  context.pushReplacementNamed(RouteName.subscription);
+                }
               }
+            },
+            child: BlocBuilder<JobBloc, JobState>(
+              builder: (context, state) {
+                // ---------- Loading ----------
+                if (state is JobLoading) {
+                  return const Center(child: IPhoneLoader(height: 200));
+                }
+
+                // ---------- Error ----------
+                if (state is JobError) {
+                  return Center(
+                    child: CustomErrorRetry(
+                      errorMessage: state.message,
+                      onTap: () => handleFetchJobs(),
+                    ),
+                  );
+                }
 
               // inside your BlocBuilder when state is JobLoaded
               if (state is JobLoaded) {
@@ -323,6 +339,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
               // ---------- Default Empty ----------
               return const SizedBox();
             },
+            ),
           ),
         ),
       ),

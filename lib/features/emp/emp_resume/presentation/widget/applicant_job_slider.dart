@@ -124,7 +124,7 @@ class ApplicantJobSlider extends StatelessWidget {
                   vertical: 12,
                   horizontal: 32,
                 ),
-                decoration: AppTheme.primaryColordecoration,
+                decoration: AppTheme.cardDecoration,
                 child: InkWell(
                   onTap: onNotInterestedPressed,
 
@@ -137,7 +137,7 @@ class ApplicantJobSlider extends StatelessWidget {
                       fontSize: 18 * scaleX,
                       height: 28 / 18,
                       letterSpacing: -0.54 * scaleX,
-                      color: AppPalette.white,
+                      color: AppPalette.primaryColor,
                     ),
                   ),
                 ),
@@ -148,7 +148,7 @@ class ApplicantJobSlider extends StatelessWidget {
                   vertical: 12,
                   horizontal: 32,
                 ),
-                decoration: AppTheme.cardDecoration,
+                decoration: AppTheme.primaryColordecoration,
                 child: InkWell(
                   onTap: onInterestedPressed,
 
@@ -160,7 +160,7 @@ class ApplicantJobSlider extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
 
-                      color: AppPalette.primaryColor,
+                      color: AppPalette.white,
                     ),
                   ),
                 ),

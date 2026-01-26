@@ -25,6 +25,7 @@ class ApiConstants {
   static String likeOrDislikeJob(String userID, String jobID) =>
       '/viewed-jobs/$userID/$jobID';
   static String getLikedJobs(String userID) => '/viewed-jobs/liked-ids/$userID';
+  static String getViewedJobsCount(String userID) => '/viewed-jobs/viewed-count/$userID';
 
   static String getUserProfile(String userID) => '/users/$userID';
 
