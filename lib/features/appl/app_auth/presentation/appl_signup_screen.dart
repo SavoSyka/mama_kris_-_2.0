@@ -34,15 +34,15 @@ class _ApplSignupScreenState extends State<ApplSignupScreen> {
 
   // final emailController = TextEditingController(text: 'mowerem676@dwakm.com');
   final emailController = TextEditingController(
-    text: kDebugMode ? "rona@yopmail.com" : "",
+    text: kDebugMode ? "" : "",
   );
-  final nameController = TextEditingController(text: kDebugMode ? "name" : "");
+  final nameController = TextEditingController(text: kDebugMode ? "" : "");
 
   final passwordController = TextEditingController(
-    text: kDebugMode ? '12344321' : "",
+    text: kDebugMode ? '' : "",
   );
   final confirmPasswordController = TextEditingController(
-    text: kDebugMode ? '12344321' : "",
+    text: kDebugMode ? '' : "",
   );
   final _formKey = GlobalKey<FormState>();
 

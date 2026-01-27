@@ -39,15 +39,15 @@ class _EmpSignupScreenState extends State<EmpSignupScreen> {
   bool _subscribeEmail = false;
 
   final emailController = TextEditingController(
-    text: kDebugMode ? "rona@yopmail.com" : "",
+    text: kDebugMode ? "" : "",
   );
-  final nameController = TextEditingController(text: kDebugMode ? "name" : "");
+  final nameController = TextEditingController(text: kDebugMode ? "" : "");
 
   final passwordController = TextEditingController(
-    text: kDebugMode ? '12344321' : "",
+    text: kDebugMode ? '' : "",
   );
   final confirmPasswordController = TextEditingController(
-    text: kDebugMode ? '12344321' : "",
+    text: kDebugMode ? '' : "",
   );
 
   final _formKey = GlobalKey<FormState>();

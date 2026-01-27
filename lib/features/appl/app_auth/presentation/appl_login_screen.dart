@@ -39,10 +39,10 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
   // final emailController = TextEditingController(text: 'toli@yopmail.com');
 
   final emailController = TextEditingController(
-    text: kDebugMode ? "rona@yopmail.com" : "",
+    text: kDebugMode ? "" : "",
   ); // subscription with one year
   final passwordController = TextEditingController(
-    text: kDebugMode ? "12344321" : "",
+    text: kDebugMode ? "" : "",
   );
   final _formKey = GlobalKey<FormState>();
 
