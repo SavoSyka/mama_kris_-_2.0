@@ -130,6 +130,11 @@ import 'package:mama_kris/features/appl/appl_home/data/repositories/ads_reposito
 import 'package:mama_kris/features/appl/appl_home/domain/repositories/ads_repository.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/usecases/fetch_ads_usecase.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_cubit.dart';
+import 'package:mama_kris/features/appl/appl_home/data/data_sources/public_counts_remote_data_source.dart';
+import 'package:mama_kris/features/appl/appl_home/data/repositories/public_counts_repository_impl.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/repositories/public_counts_repository.dart';
+import 'package:mama_kris/features/appl/appl_home/domain/usecases/get_public_counts.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/public_counts_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source.dart'
     as emp_user_remote;
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source_impl.dart'

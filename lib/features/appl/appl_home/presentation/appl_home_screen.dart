@@ -24,6 +24,9 @@ import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_state.da
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_event.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_state.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/public_counts_bloc.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/public_counts_event.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/public_counts_state.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_detail.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_filter.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/applicant_job_slider.dart';
@@ -68,6 +71,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     super.initState();
     handleFetchJobs();
     context.read<AdsCubit>().fetchAds();
+    context.read<PublicCountsBloc>().add(FetchPublicCountsEvent());
     _scrollController.addListener(_scrollListener);
   }
 
@@ -100,9 +104,12 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
               if (state is JobError) {
                 final errorMessage = state.message.toLowerCase();
                 // Check if error message contains subscription required message
-                if (errorMessage.contains('subscription required to view more than 10 jobs') ||
-                    (errorMessage.contains('subscription required') && 
-                     (errorMessage.contains('403') || errorMessage.contains('forbidden')))) {
+                if (errorMessage.contains(
+                      'subscription required to view more than 10 jobs',
+                    ) ||
+                    (errorMessage.contains('subscription required') &&
+                        (errorMessage.contains('403') ||
+                            errorMessage.contains('forbidden')))) {
                   // Navigate to subscription page immediately
                   context.pushReplacementNamed(RouteName.subscription);
                 }
@@ -125,220 +132,265 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                   );
                 }
 
-              // inside your BlocBuilder when state is JobLoaded
-              if (state is JobLoaded) {
-                final jobs = state.jobs.jobs;
+                // inside your BlocBuilder when state is JobLoaded
+                if (state is JobLoaded) {
+                  final jobs = state.jobs.jobs;
 
-                if (jobs.isEmpty)
-                  return Container(
-                    child: EmptyJobView(onRefresh: _handleRefresh),
-                  );
+                  if (jobs.isEmpty)
+                    return Container(
+                      child: EmptyJobView(onRefresh: _handleRefresh),
+                    );
 
-                return SizedBox(
-                  child: RefreshIndicator(
-                    onRefresh: _handleRefresh,
-                    color: AppPalette.primaryColor,
-                    backgroundColor: Colors.white,
-                    displacement: 40,
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(16),
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: _calculateItemCount(
-                        jobs.length,
-                        state.jobs.hasNextPage,
-                        isSlider,
-                      ),
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          // ---------- Top Section (header/search/filter) ----------
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // ---------- Search Field ----------
-                              GestureDetector(
-                                onTap: _openSearchPage,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.search,
-                                        color: Colors.grey,
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        _searchQuery ?? 'Search jobs...',
-                                        style: TextStyle(
-                                          color: _searchQuery == null
-                                              ? Colors.grey
-                                              : Colors.black,
+                  return SizedBox(
+                    child: RefreshIndicator(
+                      onRefresh: _handleRefresh,
+                      color: AppPalette.primaryColor,
+                      backgroundColor: Colors.white,
+                      displacement: 40,
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.all(16),
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: _calculateItemCount(
+                          jobs.length,
+                          state.jobs.hasNextPage,
+                          isSlider,
+                        ),
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            // ---------- Top Section (header/search/filter) ----------
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // ---------- Search Field ----------
+                                GestureDetector(
+                                  onTap: _openSearchPage,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.search,
+                                          color: Colors.grey,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 14),
-
-                              // ---------- Filter Buttons ----------
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () =>
-                                            setState(() => isSlider = true),
-                                        child: FilterActionButtons(
-                                          isSelected: isSlider,
-                                          text: 'Слайдер',
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          _searchQuery ?? 'Search jobs...',
+                                          style: TextStyle(
+                                            color: _searchQuery == null
+                                                ? Colors.grey
+                                                : Colors.black,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      InkWell(
-                                        onTap: () =>
-                                            setState(() => isSlider = false),
-                                        child: FilterActionButtons(
-                                          isSelected: !isSlider,
-                                          text: 'Список',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  InkWell(
-                                    onTap: () async {
-                                      final filter = await ApplicantJobFilter(
-                                        context,
-                                      );
-                                      if (filter != null) _applyFilters(filter);
-                                    },
-                                    child: const CustomImageView(
-                                      imagePath: MediaRes.btnFilter,
-                                      width: 48,
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 14),
-                            ],
-                          );
-                        }
-
-                        // For indices > 0:
-                        final contentIndex = index - 1;
-
-                        // ---------- If Slider mode: show slider in a single slot ----------
-                        if (isSlider) {
-                          // We placed the slider as the first content slot (index==1)
-                          if (contentIndex == 0) {
-                            // Ensure currentVacancyIndex is within bounds
-                            if (jobs.isEmpty) {
-                              // fallback empty placeholder
-                              return const SizedBox.shrink();
-                            }
-                            final safeIndex = currentVacancyIndex.clamp(
-                              0,
-                              jobs.length - 1,
-                            );
-                            final job = jobs[safeIndex];
-
-                            return Column(
-                              children: [
-                                ApplicantJobSlider(
-                                  vacancy: {
-                                    'title': job.title,
-                                    'description': job.description,
-                                    'salary': job.salary.toString(),
-                                  },
-                                  vacancyIndex: currentVacancyIndex,
-                                  previousVacancyIndex: previousVacancyIndex,
-                                  slideDirection: slideDirection,
-                                  onInterestedPressed: () {
-                                    _handleVacancyReaction(isLiked: true);
-                                  },
-                                  onNotInterestedPressed: () {
-                                    _handleVacancyReaction(isLiked: false);
-                                  },
                                 ),
+                                const SizedBox(height: 14),
 
-                                const SizedBox(height: 16),
-                                const _AdCards(),
+                                // ---------- Filter Buttons ----------
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () =>
+                                              setState(() => isSlider = true),
+                                          child: FilterActionButtons(
+                                            isSelected: isSlider,
+                                            text: 'Слайдер',
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        InkWell(
+                                          onTap: () =>
+                                              setState(() => isSlider = false),
+                                          child: FilterActionButtons(
+                                            isSelected: !isSlider,
+                                            text: 'Список',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    InkWell(
+                                      onTap: () async {
+                                        final filter = await ApplicantJobFilter(
+                                          context,
+                                        );
+                                        if (filter != null)
+                                          _applyFilters(filter);
+                                      },
+                                      child: const CustomImageView(
+                                        imagePath: MediaRes.btnFilter,
+                                        width: 48,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 14),
                               ],
                             );
                           }
 
-                          // If slider mode and there's nothing else to show, just shrink
-                          return const SizedBox.shrink();
-                        }
+                          // For indices > 0:
+                          final contentIndex = index - 1;
 
-                        // ---------- List mode ----------
-                        if (!isSlider) {
-                          int ads = jobs.length ~/ 3;
-                          int totalContent = jobs.length + ads;
-                          if (contentIndex < totalContent) {
-                            if ((contentIndex + 1) % 4 == 0) {
-                              // Ad card
-                              return Container(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                child: const _AdCards(),
+                          // ---------- If Slider mode: show slider in a single slot ----------
+                          if (isSlider) {
+                            // We placed the slider as the first content slot (index==1)
+                            if (contentIndex == 0) {
+                              // Ensure currentVacancyIndex is within bounds
+                              if (jobs.isEmpty) {
+                                // fallback empty placeholder
+                                return const SizedBox.shrink();
+                              }
+                              final safeIndex = currentVacancyIndex.clamp(
+                                0,
+                                jobs.length - 1,
                               );
-                            } else {
-                              int jobIndex = contentIndex - (contentIndex ~/ 4);
-                              final job = jobs[jobIndex];
-                              return Container(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                child: JobListItem(
-                                  jobTitle: job.title,
-                                  salaryRange: job.salary.toString(),
-                                  jobId: job.jobId,
-                                  contactJobs: job.contactJobs,
-                                  onTap: () async {
-                                    // Mark job as viewed when opened
-                                    context.read<JobBloc>().add(
-                                      ViewJobEvent(job.jobId),
-                                    );
-                                    await ApplicantJobDetail(
-                                      context,
-                                      job: job,
-                                      onLiked: () async {
-                                        context.read<JobBloc>().add(
-                                          LikeJobEvent(job.jobId),
+                              final job = jobs[safeIndex];
+
+                              return Column(
+                                children: [
+                                  ApplicantJobSlider(
+                                    vacancy: {
+                                      'title': job.title,
+                                      'description': job.description,
+                                      'salary': job.salary.toString(),
+                                    },
+                                    vacancyIndex: currentVacancyIndex,
+                                    previousVacancyIndex: previousVacancyIndex,
+                                    slideDirection: slideDirection,
+                                    onInterestedPressed: () {
+                                      _handleVacancyReaction(isLiked: true);
+                                    },
+                                    onNotInterestedPressed: () {
+                                      _handleVacancyReaction(isLiked: false);
+                                    },
+                                  ),
+
+                                  const SizedBox(height: 16),
+
+                                  // Public Counts
+                                  BlocBuilder<
+                                    PublicCountsBloc,
+                                    PublicCountsState
+                                  >(
+                                    builder: (context, state) {
+                                      if (state is PublicCountsLoaded) {
+                                        return Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 0,
+                                          ),
+
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                '${state.counts.jobs}+ мам',
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black45,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 40),
+                                              Text(
+                                                '${state.counts.users} вакансий',
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black45,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         );
-                                        Navigator.maybePop(context);
-                                      },
-                                    );
-                                  },
-                                ),
+                                      }
+                                      return const SizedBox.shrink();
+                                    },
+                                  ),
+
+                                  const SizedBox(height: 16),
+                                  const _AdCards(),
+                                ],
                               );
                             }
-                          } else if (contentIndex == totalContent &&
-                              state.jobs.hasNextPage) {
-                            return const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16.0),
-                              child: IPhoneLoader(),
-                            );
+
+                            // If slider mode and there's nothing else to show, just shrink
+                            return const SizedBox.shrink();
                           }
-                        }
 
-                        return const SizedBox.shrink();
-                      },
+                          // ---------- List mode ----------
+                          if (!isSlider) {
+                            int ads = jobs.length ~/ 3;
+                            int totalContent = jobs.length + ads;
+                            if (contentIndex < totalContent) {
+                              if ((contentIndex + 1) % 4 == 0) {
+                                // Ad card
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 12),
+                                  child: const _AdCards(),
+                                );
+                              } else {
+                                int jobIndex =
+                                    contentIndex - (contentIndex ~/ 4);
+                                final job = jobs[jobIndex];
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 12),
+                                  child: JobListItem(
+                                    jobTitle: job.title,
+                                    salaryRange: job.salary.toString(),
+                                    jobId: job.jobId,
+                                    contactJobs: job.contactJobs,
+                                    onTap: () async {
+                                      // Mark job as viewed when opened
+                                      context.read<JobBloc>().add(
+                                        ViewJobEvent(job.jobId),
+                                      );
+                                      await ApplicantJobDetail(
+                                        context,
+                                        job: job,
+                                        onLiked: () async {
+                                          context.read<JobBloc>().add(
+                                            LikeJobEvent(job.jobId),
+                                          );
+                                          Navigator.maybePop(context);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            } else if (contentIndex == totalContent &&
+                                state.jobs.hasNextPage) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16.0),
+                                child: IPhoneLoader(),
+                              );
+                            }
+                          }
+
+                          return const SizedBox.shrink();
+                        },
+                      ),
                     ),
-                  ),
-                );
-              }
+                  );
+                }
 
-              // ---------- Default Empty ----------
-              return const SizedBox();
-            },
+                // ---------- Default Empty ----------
+                return const SizedBox();
+              },
             ),
           ),
         ),

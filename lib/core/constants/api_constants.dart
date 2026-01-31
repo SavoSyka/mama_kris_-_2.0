@@ -70,6 +70,9 @@ class ApiConstants {
 
   // ads
   static const getAds = 'advertisements/next';
+  
+  // analytics
+  static const getPublicCounts = 'analytics/public-counts';
   static String addToHide(String userId) => "hidden-profiles/$userId";
   static String removeFromHide(String userId) => "hidden-profiles/$userId";
   static const getHiddenUsers = "hidden-profiles";

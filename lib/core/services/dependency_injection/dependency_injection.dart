@@ -11,6 +11,7 @@ Future<void> dependencyInjection() async {
   await _initNotifications();
   await _initJobs();
   await _initAds();
+  await _initPublicCounts();
   await initAppAuthInjection();
   await _initEmpAuth();
   await _initEmpJobs();
@@ -188,6 +189,24 @@ Future<void> _initAds() async {
 
   // Cubit
   sl.registerFactory(() => AdsCubit(fetchAdsUseCase: sl()));
+}
+
+Future<void> _initPublicCounts() async {
+  // Data sources
+  sl.registerLazySingleton<PublicCountsRemoteDataSource>(
+    () => PublicCountsRemoteDataSourceImpl(sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<PublicCountsRepository>(
+    () => PublicCountsRepositoryImpl(sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => GetPublicCounts(sl()));
+
+  // Bloc
+  sl.registerFactory(() => PublicCountsBloc(getPublicCounts: sl()));
 }
 
 Future<void> initAppAuthInjection() async {

@@ -16,6 +16,7 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart
 import 'package:mama_kris/features/appl/appl_favorite/presentation/bloc/liked_job_bloc_bloc.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/ads_cubit.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/bloc/job_bloc.dart';
+import 'package:mama_kris/features/appl/appl_home/presentation/bloc/public_counts_bloc.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_bloc.dart';
@@ -80,6 +81,7 @@ void main() async {
         BlocProvider(create: (context) => sl<HideResumeBloc>()),
         BlocProvider(create: (context) => sl<LifeCycleManagerBloc>()),
         BlocProvider(create: (context) => sl<EmailSubscriptionBloc>()),
+        BlocProvider(create: (context) => sl<PublicCountsBloc>()),
       ],
       child:
        const MyApp(),
