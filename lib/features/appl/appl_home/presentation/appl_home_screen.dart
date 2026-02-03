@@ -297,7 +297,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                '${state.counts.jobs}+ мам',
+                                                '${state.counts.users}+ мам',
                                                 style: const TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w500,
@@ -306,7 +306,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                               ),
                                               const SizedBox(width: 40),
                                               Text(
-                                                '${state.counts.users} вакансий',
+                                                '${state.counts.jobs} вакансий',
                                                 style: const TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w500,
