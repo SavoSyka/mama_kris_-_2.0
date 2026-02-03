@@ -25,7 +25,10 @@ if (flutterVersionName == null) {
 
 
 android {
-    namespace "com.mama.kris"
+    namespace "com.mama.mama_kris"
+
+    
+    // namespace "com.mama.mama_kris"
     compileSdk 36
    // ndkVersion flutter.ndkVersion
   ndkVersion = "26.3.11579264"
@@ -45,13 +48,15 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mama.kris"
+        applicationId "com.mama.mama_kris"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk 25
-        targetSdk 34
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        minSdk = 28
+        targetSdk = flutter.targetSdkVersion
+
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
     }
     signingConfigs {
          release {

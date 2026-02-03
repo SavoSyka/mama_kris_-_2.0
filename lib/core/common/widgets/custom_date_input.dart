@@ -21,6 +21,7 @@ class CustomDateInput extends StatefulWidget {
     this.validator,
     this.isApplicant = false,
     this.hintText,
+    this.placeholder = 'Выберите дату рождения',
   });
 
   final TextEditingController controller;
@@ -29,6 +30,7 @@ class CustomDateInput extends StatefulWidget {
   final bool isApplicant;
   final FormFieldValidator<String>? validator;
   final String? hintText;
+  final String placeholder;
 
   @override
   State<CustomDateInput> createState() => _CustomDateInputState();
@@ -126,61 +128,59 @@ class _CustomDateInputState extends State<CustomDateInput> {
 
                   Padding(
                     padding: EdgeInsets.fromLTRB(16.w, 8, 16.w, 16.w),
-                    child: 
-                  widget.isApplicant ?
+                    child: widget.isApplicant
+                        ? CustomButtonApplicant(
+                            onTap: () {
+                              final backend = DateFormat(
+                                'yyyy-MM-dd',
+                              ).format(selectedDate);
 
-                    CustomButtonApplicant(
-                      onTap: () {
-                        final backend = DateFormat(
-                          'yyyy-MM-dd',
-                        ).format(selectedDate);
+                              setState(() {
+                                widget.controller.text = backend;
+                              });
 
-                        setState(() {
-                          widget.controller.text = backend;
-                        });
+                              widget.controller.selection =
+                                  TextSelection.fromPosition(
+                                TextPosition(
+                                  offset: widget.controller.text.length,
+                                ),
+                              );
 
-                        widget
-                            .controller
-                            .selection = TextSelection.fromPosition(
-                          TextPosition(offset: widget.controller.text.length),
-                        );
+                              debugPrint(
+                                "Saved to controller: ${widget.controller.text}",
+                              );
 
-                        debugPrint(
-                          "Saved to controller: ${widget.controller.text}",
-                        );
+                              Navigator.pop(context);
+                            },
+                            isLoading: false,
+                            btnText: 'Применить',
+                          )
+                        : CustomButtonEmployee(
+                            onTap: () {
+                              final backend = DateFormat(
+                                'yyyy-MM-dd',
+                              ).format(selectedDate);
 
-                        Navigator.pop(context);
-                      },
-                      isLoading: false,
-                      btnText: 'Применить',
-                    ):
-                  
-                    CustomButtonEmployee(
-                      onTap: () {
-                        final backend = DateFormat(
-                          'yyyy-MM-dd',
-                        ).format(selectedDate);
+                              setState(() {
+                                widget.controller.text = backend;
+                              });
 
-                        setState(() {
-                          widget.controller.text = backend;
-                        });
+                              widget.controller.selection =
+                                  TextSelection.fromPosition(
+                                TextPosition(
+                                  offset: widget.controller.text.length,
+                                ),
+                              );
 
-                        widget
-                            .controller
-                            .selection = TextSelection.fromPosition(
-                          TextPosition(offset: widget.controller.text.length),
-                        );
+                              debugPrint(
+                                "Saved to controller: ${widget.controller.text}",
+                              );
 
-                        debugPrint(
-                          "Saved to controller: ${widget.controller.text}",
-                        );
-
-                        Navigator.pop(context);
-                      },
-                      isLoading: false,
-                      btnText: 'Применить',
-                    ),
-                  
+                              Navigator.pop(context);
+                            },
+                            isLoading: false,
+                            btnText: 'Применить',
+                          ),
                   ),
                 ],
               ),
@@ -194,7 +194,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
   @override
   Widget build(BuildContext context) {
     return CustomInputText(
-      hintText: widget.hintText ?? 'Выберите дату рождения',
+      hintText: widget.hintText ?? widget.placeholder,
       labelText: widget.label,
       controller: widget.controller,
       keyboardType: TextInputType.none,

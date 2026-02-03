@@ -85,7 +85,7 @@ class AppTextContents {
   // applicant home page.
   static const slider = 'Слайдер';
   static const list = 'Список';
-  static const home = 'Дом';
+  static const home = 'Вакансии';
 
   static const updateRequired = 'Update Required';
   static const updateNow = 'Update Now';
@@ -93,7 +93,8 @@ class AppTextContents {
       'A new version of the app is available! To continue using all features and ensure the best experience, please update to the latest version.';
   static const edit = "редактировать";
 
-static const String privacyPolicyRequired = 'You must accept the Privacy Policy';
+  static const String privacyPolicyRequired =
+      'You must accept the Privacy Policy';
   static const String termsRequired = 'You must accept the Terms of Use';
 }
 

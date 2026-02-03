@@ -29,6 +29,10 @@ class RouteName {
       '/$_applicant/edit-education-info';
 
   static String supportDetail = '/$_applicant/support-detail';
+  static String articleOne = '/$_applicant/article-one';
+  static String articleTwo = '/$_applicant/article-two';
+  static String articleThree = '/$_applicant/article-three';
+
   static String empSupportDetail = '/$_employee/support-detail';
 
   // * EMPLOYE ROUTES
