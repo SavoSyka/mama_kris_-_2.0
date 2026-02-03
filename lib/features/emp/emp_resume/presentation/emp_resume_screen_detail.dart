@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_with.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
@@ -15,15 +14,12 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
-import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/hide_resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
-import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_state.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_event.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_state.dart';
-import 'package:share_plus/share_plus.dart';
 
 class EmpResumeScreenDetail extends StatefulWidget {
   const EmpResumeScreenDetail({

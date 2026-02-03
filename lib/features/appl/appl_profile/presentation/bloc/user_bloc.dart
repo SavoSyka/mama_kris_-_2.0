@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mama_kris/features/appl/app_auth/domain/entities/user_entity.dart';
-import 'package:mama_kris/features/appl/app_auth/data/models/user_profile_model.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/entities/user_profile_entity.dart';
 import 'package:mama_kris/features/appl/appl_profile/domain/usecase/get_user_data.dart';
 

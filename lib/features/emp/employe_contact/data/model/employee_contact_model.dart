@@ -1,4 +1,3 @@
-import 'package:mama_kris/features/appl/applicant_contact/domain/entity/applicant_contact.dart';
 import 'package:mama_kris/features/emp/employe_contact/domain/entity/employee_contact.dart';
 
 /// Data model for applicant contact, used for API/JSON serialization.

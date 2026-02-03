@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
@@ -33,12 +32,7 @@ import 'package:mama_kris/features/subscription/application/bloc/subscription_pa
 import 'package:mama_kris/features/subscription/application/cubit/subscription_status_cubit.dart';
 import 'package:mama_kris/features/welcome_page/application/force_update_bloc.dart';
 import 'package:mama_kris/firebase_options.dart';
-import 'package:mama_kris/security_gate.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:http/http.dart' as http;
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:mama_kris/constants/api_constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

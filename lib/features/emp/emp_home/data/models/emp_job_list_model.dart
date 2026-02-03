@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:mama_kris/features/emp/emp_home/data/models/emp_job_model.dart';
 
 class EmpJobListModel {

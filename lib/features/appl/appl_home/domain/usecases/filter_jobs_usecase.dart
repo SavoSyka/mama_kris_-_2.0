@@ -1,8 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/core/utils/usecase.dart';
-import 'package:mama_kris/features/appl/appl_favorite/domain/entity/liked_list_job.dart';
-import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_list.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/repositories/job_repository.dart';
 

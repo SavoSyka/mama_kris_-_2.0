@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:mama_kris/features/appl/appl_profile/domain/usecase/get_speciality_usecase.dart';
 
 part 'speciality_event.dart';

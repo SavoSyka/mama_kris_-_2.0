@@ -1,9 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:mama_kris/core/error/failures.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
-import 'package:mama_kris/features/emp/emp_resume/data/data_sources/resume_remote_data_source.dart';
-import 'package:mama_kris/features/emp/emp_resume/domain/entities/resume_list.dart';
-import 'package:mama_kris/features/emp/emp_resume/domain/repositories/resume_repository.dart';
 import 'package:mama_kris/features/subscription/data/data_source/subscription_remote_data_source.dart';
 import 'package:mama_kris/features/subscription/domain/entity/subscription_entity.dart';
 import 'package:mama_kris/features/subscription/domain/repository/subscription_repository.dart';

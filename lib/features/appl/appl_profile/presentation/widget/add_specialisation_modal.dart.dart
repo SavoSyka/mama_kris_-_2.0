@@ -153,7 +153,6 @@ class _SpecialityBottomSheet extends StatefulWidget {
   final TextEditingController controller;
   final List<String> speciality;
   const _SpecialityBottomSheet({
-    super.key,
     required this.controller,
     required this.speciality,
   });

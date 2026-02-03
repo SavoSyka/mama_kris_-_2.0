@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/appl_favorite/data/model/liked_job_model.dart';
 import 'package:mama_kris/features/appl/appl_favorite/domain/entity/liked_list_job.dart';
-import 'package:mama_kris/features/appl/appl_home/data/models/job_model.dart';
-import 'package:mama_kris/features/appl/appl_home/domain/entities/job_list.dart';
 
 class LikedJobListModel extends LikedListJob {
   LikedJobListModel({

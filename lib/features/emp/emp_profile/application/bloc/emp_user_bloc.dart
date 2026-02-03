@@ -1,7 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/entities/emp_user_profile_entity.dart';
-import 'package:mama_kris/features/emp/employe_contact/domain/entity/employee_contact.dart';
 
 part 'emp_user_event.dart';
 part 'emp_user_state.dart';

@@ -4,8 +4,6 @@ import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/appl_favorite/domain/entity/liked_list_job.dart';
 import 'package:mama_kris/features/appl/appl_home/data/data_sources/job_local_data_source.dart';
 import 'package:mama_kris/features/appl/appl_home/data/data_sources/job_remote_data_source.dart';
-import 'package:mama_kris/features/appl/appl_home/data/models/job_list_model.dart';
-import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_list.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/repositories/job_repository.dart';
 

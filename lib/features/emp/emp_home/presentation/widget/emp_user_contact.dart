@@ -189,8 +189,8 @@ Future<ContactEntity?> showSelectContactSheet(
                                       ? AppPalette.empPrimaryColor.withOpacity(
                                           0.35,
                                         )
-                                      : CupertinoColors.separator.withOpacity(
-                                          0.4,
+                                      : CupertinoColors.separator.withValues(
+                                          alpha: 0.4,
                                         ),
                                   width: isSelected ? 1.5 : 1,
                                 ),
@@ -389,7 +389,7 @@ Widget _buildSmartRow({
             value,
             style: TextStyle(
               fontSize: 15,
-              color: CupertinoColors.label.withOpacity(0.95),
+              color: CupertinoColors.label.withValues(alpha: 0.95),
               fontWeight: FontWeight.w500,
               letterSpacing: -0.2,
             ),

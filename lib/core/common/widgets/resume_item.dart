@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +9,6 @@ import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/hide_resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_bloc.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/resume_event.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ResumeItem extends StatefulWidget {
   final String name;

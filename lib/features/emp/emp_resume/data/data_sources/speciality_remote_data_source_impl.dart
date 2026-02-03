@@ -4,7 +4,6 @@ import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/speciality_remote_data_source.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/models/Speciality_list_model.dart';
-import 'package:mama_kris/features/emp/emp_resume/domain/entities/speciality.dart';
 
 class SpecialityRemoteDataSourceImpl implements SpecialityRemoteDataSource {
   final Dio dio;

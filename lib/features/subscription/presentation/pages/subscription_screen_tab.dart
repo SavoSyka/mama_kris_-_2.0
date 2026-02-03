@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
-import 'package:mama_kris/core/constants/app_text_contents.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 import 'package:mama_kris/features/appl/appl_favorite/presentation/appl_favorite_screen.dart';
-import 'package:mama_kris/features/appl/appl_home/presentation/appl_home_screen.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_screen.dart';
 import 'package:mama_kris/features/appl/appl_support/presentation/appl_support_screen.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_screen.dart';
-import 'package:mama_kris/features/emp/emp_resume/presentation/emp_resume_screen.dart';
 import 'package:mama_kris/features/emp/emp_support/presentation/emp_support_screen.dart';
 import 'package:mama_kris/features/subscription/presentation/pages/subscription_screen.dart';
 

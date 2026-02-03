@@ -5,7 +5,7 @@ import 'package:mama_kris/core/constants/app_palette.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 
 class FilterActionButtons extends StatelessWidget {
-  const FilterActionButtons({required this.isSelected, required this.text});
+  const FilterActionButtons({super.key, required this.isSelected, required this.text});
 
   final bool isSelected;
   final String text;

@@ -136,10 +136,11 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                 if (state is JobLoaded) {
                   final jobs = state.jobs.jobs;
 
-                  if (jobs.isEmpty)
+                  if (jobs.isEmpty) {
                     return Container(
                       child: EmptyJobView(onRefresh: _handleRefresh),
                     );
+                  }
 
                   return SizedBox(
                     child: RefreshIndicator(
@@ -226,8 +227,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                         final filter = await ApplicantJobFilter(
                                           context,
                                         );
-                                        if (filter != null)
+                                        if (filter != null) {
                                           _applyFilters(filter);
+                                        }
                                       },
                                       child: const CustomImageView(
                                         imagePath: MediaRes.btnFilter,

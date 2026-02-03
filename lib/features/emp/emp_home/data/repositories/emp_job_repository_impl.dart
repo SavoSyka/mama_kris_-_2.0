@@ -19,7 +19,7 @@ class EmpJobRepositoryImpl implements EmpJobRepository {
   @override
   ResultFuture<void> createOrUpdateJob(CreateJobParams params) async {
     try {
-      final userID = int.tryParse(await sl<AuthLocalDataSource>().getUserId().toString()) ?? 1;
+      final userID = int.tryParse(sl<AuthLocalDataSource>().getUserId().toString()) ?? 1;
 
       final request = CreateJobRequestModel(
         userID: userID,

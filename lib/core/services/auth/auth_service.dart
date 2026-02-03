@@ -104,8 +104,9 @@ class AuthService {
 
   Future<Map<String, dynamic>?> signInWithApple() async {
     try {
-      if (kDebugMode)
+      if (kDebugMode) {
         print('🍏 [Apple Sign-In] Запуск процесса входа через Apple...');
+      }
 
       final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [

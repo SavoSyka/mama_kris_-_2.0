@@ -168,7 +168,7 @@ class _ApplContactWidgetState extends State<ApplContactWidget> {
           color: CupertinoColors.systemBackground,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: CupertinoColors.separator.withOpacity(0.4),
+            color: CupertinoColors.separator.withValues(alpha: 0.4),
             width: 1,
           ),
           boxShadow: [
@@ -295,7 +295,7 @@ Widget _buildSmartRow({
               value,
               style: TextStyle(
                 fontSize: 15,
-                color: CupertinoColors.label.withOpacity(0.95),
+                color: CupertinoColors.label.withValues(alpha: 0.95),
                 fontWeight: FontWeight.w500,
                 letterSpacing: -0.2,
               ),

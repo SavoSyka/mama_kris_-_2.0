@@ -7,7 +7,6 @@ import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_da
 import 'package:mama_kris/features/appl/app_auth/data/models/user_profile_model.dart';
 import 'package:mama_kris/features/appl/applicant_contact/data/data_source/applicant_contact_data_source.dart';
 import 'package:mama_kris/features/appl/applicant_contact/data/model/applicant_contact_model.dart';
-import 'package:uuid/uuid.dart';
 
 /// Mock implementation of ApplicantContactDataSource for testing and development.
 /// Uses in-memory storage to simulate API operations.

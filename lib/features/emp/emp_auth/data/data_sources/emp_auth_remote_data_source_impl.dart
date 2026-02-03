@@ -7,8 +7,6 @@ import 'package:mama_kris/core/services/dependency_injection/dependency_import.d
 import 'package:mama_kris/core/utils/get_platform_type.dart';
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
-import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_remote_data_source.dart';
-import 'package:mama_kris/features/appl/app_auth/data/models/user_model.dart';
 import 'package:mama_kris/features/emp/emp_auth/data/data_sources/emp_auth_remote_data_source.dart';
 import 'package:mama_kris/features/emp/emp_auth/data/models/emp_user_model.dart';
 

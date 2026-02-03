@@ -1,5 +1,3 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/contact_job.dart';
 
 class ContactJobsModel extends ContactJobs {

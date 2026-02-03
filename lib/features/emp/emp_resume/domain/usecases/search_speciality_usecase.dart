@@ -1,6 +1,5 @@
 import 'package:mama_kris/core/utils/typedef.dart';
 import 'package:mama_kris/core/utils/usecase.dart';
-import 'package:mama_kris/features/emp/emp_resume/domain/entities/speciality.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/entities/speciality_list.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/repositories/speciality_repository.dart';
 

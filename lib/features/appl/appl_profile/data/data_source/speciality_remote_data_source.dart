@@ -2,8 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
-import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
-import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 
 abstract class SpecialityRemoteDataSource {
   Future<List<String>> searchSpeciality(String query);

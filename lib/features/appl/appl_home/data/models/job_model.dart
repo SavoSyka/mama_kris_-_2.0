@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:mama_kris/features/appl/appl_home/data/models/contact_jobs_model.dart';
 import 'package:mama_kris/features/appl/appl_home/domain/entities/job_entity.dart';
 
