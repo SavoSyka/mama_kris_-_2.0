@@ -49,15 +49,10 @@ dependencies:
   auto_size_text: ^3.0.0
   freerasp: ^7.3.0
   flutter_svg: ^2.2.3
-<<<<<<< HEAD
-=======
   rename: ^3.1.0
   change_app_package_name: ^1.5.0
   get: ^4.7.3
-<<<<<<< HEAD
->>>>>>> 4d0c480 (feat(support): add detailed support articles and update app configuration)
-=======
->>>>>>> 4d0c480 (feat(support): add detailed support articles and update app configuration)
+
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.3

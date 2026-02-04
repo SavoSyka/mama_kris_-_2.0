@@ -124,12 +124,14 @@ class SubscriptionCard extends StatelessWidget {
         return '1 месяц';
       case 'YEAR':
         return '1 год';
+      case 'WEEK':
+        return '1 неделя';
       case "THREE_MONTHS":
         return '3 месяца';
       case 'HALF':
         return '6 месяцев';
       default:
-        return 'месяц';
+        return 'error';
     }
   }
 
