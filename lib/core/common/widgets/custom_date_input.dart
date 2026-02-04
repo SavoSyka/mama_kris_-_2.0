@@ -126,38 +126,28 @@ class _CustomDateInputState extends State<CustomDateInput> {
 
                   Padding(
                     padding: EdgeInsets.fromLTRB(16.w, 8, 16.w, 16.w),
-                    child: widget.isApplicant
-                        ? CustomButtonApplicant(
-                            onTap: () {
-                              final backend = DateFormat(
-                                'yyyy-MM-dd',
-                              ).format(selectedDate);
+                    child: 
+                  widget.isApplicant ?
 
-                              setState(() {
-                                widget.controller.text = backend;
-                              });
+                    CustomButtonApplicant(
+                      onTap: () {
+                        final backend = DateFormat(
+                          'yyyy-MM-dd',
+                        ).format(selectedDate);
 
-                              widget.controller.selection =
-                                  TextSelection.fromPosition(
-                                    TextPosition(
-                                      offset: widget.controller.text.length,
-                                    ),
-                                  );
+                        setState(() {
+                          widget.controller.text = backend;
+                        });
 
-                              debugPrint(
-                                "Saved to controller: ${widget.controller.text}",
-                              );
+                        widget
+                            .controller
+                            .selection = TextSelection.fromPosition(
+                          TextPosition(offset: widget.controller.text.length),
+                        );
 
-                              Navigator.pop(context);
-                            },
-                            isLoading: false,
-                            btnText: 'Set',
-                          )
-                        : CustomButtonEmployee(
-                            onTap: () {
-                              final backend = DateFormat(
-                                'yyyy-MM-dd',
-                              ).format(selectedDate);
+                        debugPrint(
+                          "Saved to controller: ${widget.controller.text}",
+                        );
 
                         Navigator.pop(context);
                       },
@@ -171,16 +161,15 @@ class _CustomDateInputState extends State<CustomDateInput> {
                           'yyyy-MM-dd',
                         ).format(selectedDate);
 
-                              widget.controller.selection =
-                                  TextSelection.fromPosition(
-                                    TextPosition(
-                                      offset: widget.controller.text.length,
-                                    ),
-                                  );
+                        setState(() {
+                          widget.controller.text = backend;
+                        });
 
-                              debugPrint(
-                                "Saved to controller: ${widget.controller.text}",
-                              );
+                        widget
+                            .controller
+                            .selection = TextSelection.fromPosition(
+                          TextPosition(offset: widget.controller.text.length),
+                        );
 
                         debugPrint(
                           "Saved to controller: ${widget.controller.text}",
@@ -205,11 +194,7 @@ class _CustomDateInputState extends State<CustomDateInput> {
   @override
   Widget build(BuildContext context) {
     return CustomInputText(
-<<<<<<< HEAD
       hintText: widget.hintText ?? 'Выберите дату рождения',
-=======
-      hintText: widget.placeholder,
->>>>>>> 4d0c480 (feat(support): add detailed support articles and update app configuration)
       labelText: widget.label,
       controller: widget.controller,
       keyboardType: TextInputType.none,
