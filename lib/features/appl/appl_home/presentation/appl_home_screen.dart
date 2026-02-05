@@ -100,12 +100,15 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
         child: SafeArea(
           child: BlocListener<JobBloc, JobState>(
             listener: (context, state) {
-              // Check for 403 subscription required error
               if (state is JobError) {
                 final errorMessage = state.message.toLowerCase();
-                print(errorMessage);
-                // Check if error message contains subscription required message
-                if (errorMessage.contains('402')) {
+                final shouldOpenSubscription =
+                    errorMessage.contains('402') ||
+                    errorMessage.contains('403') ||
+                    errorMessage.contains('subscription') ||
+                    errorMessage.contains('подпис');
+
+                if (shouldOpenSubscription) {
                   context.pushReplacementNamed(RouteName.subscription);
                 }
               }

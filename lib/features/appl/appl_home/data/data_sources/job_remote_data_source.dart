@@ -59,7 +59,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
       }
     } on DioException catch (e) {
       throw ApiException(
-        message: e.response?.data['message'] ?? 'Network error',
+        message: _extractDioMessage(e),
         statusCode: e.response?.statusCode ?? 500,
       );
     } catch (e) {
@@ -111,7 +111,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
       }
     } on DioException catch (e) {
       throw ApiException(
-        message: e.response?.data['message'] ?? 'Network error',
+        message: _extractDioMessage(e),
         statusCode: e.response?.statusCode ?? 500,
       );
     } catch (e) {
@@ -138,7 +138,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
       }
     } on DioException catch (e) {
       throw ApiException(
-        message: e.response?.data['message'] ?? 'Network error',
+        message: _extractDioMessage(e),
         statusCode: e.response?.statusCode ?? 500,
       );
     } catch (e) {
@@ -152,7 +152,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     try {
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
-      final response = await dio.put(
+      await dio.put(
         ApiConstants.likeOrDislikeJob(userID, jobId.toString()),
         data: {"isLiked": true, "isviewed": true},
       );
@@ -166,7 +166,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     try {
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
-      final response = await dio.put(
+      await dio.put(
         ApiConstants.likeOrDislikeJob(userID, jobId.toString()),
         data: {"isLiked": false},
       );
@@ -180,7 +180,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     try {
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
-      final response = await dio.put(
+      await dio.put(
         ApiConstants.likeOrDislikeJob(userID, jobId.toString()),
         data: {"isviewed": true},
       );
@@ -208,5 +208,23 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     } else {
       throw Exception('Failed to fetch liked jobs');
     }
+  }
+
+  String _extractDioMessage(DioException e) {
+    final data = e.response?.data;
+    if (data is Map<String, dynamic>) {
+      final message = data['message']?.toString();
+      if (message != null && message.isNotEmpty) return message;
+      final error = data['error']?.toString();
+      if (error != null && error.isNotEmpty) return error;
+    } else if (data is String && data.isNotEmpty) {
+      return data;
+    }
+
+    if (e.message != null && e.message!.isNotEmpty) {
+      return e.message!;
+    }
+
+    return 'Network error';
   }
 }

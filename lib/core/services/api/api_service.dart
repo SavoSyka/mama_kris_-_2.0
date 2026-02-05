@@ -60,66 +60,49 @@ Future<void> apiService() async {
       },
       onError: (DioException e, handler) async {
         debugPrint("😎 Eroororr");
-        // Check for subscription required 403 error
-        if (e.response?.statusCode == 403) {
+        // Check for subscription required error on jobs endpoints.
+        final statusCode = e.response?.statusCode;
+        final path = e.requestOptions.path.toLowerCase();
+        final isJobsEndpoint = path.contains('jobs/search');
+        if ((statusCode == 402 || statusCode == 403) &&
+            isJobsEndpoint &&
+            _isSubscriptionRequiredResponse(e.response?.data, statusCode)) {
+          await sl<AuthLocalDataSource>().saveSubscription(false);
+          debugPrint(
+            "Subscription required error detected, navigating to subscription screen",
+          );
+
+          e.response?.data = {
+            "message": "You must subscribe to continue",
+            "error": "SubscriptionRequired",
+            "statusCode": statusCode,
+          };
+
+          // Use AppRouter directly
           try {
-            final responseData = e.response?.data;
-            if (responseData is Map<String, dynamic>) {
-              final expectedResponse = {
-                "message": "Subscription required to view more jobs",
-                "error": "Forbidden",
-                "statusCode": 403,
-              };
-
-              await sl<AuthLocalDataSource>().saveSubscription(false);
-
-              // Check if response matches exactly
-              if (responseData['message'] == expectedResponse['message'] &&
-                  responseData['error'] == expectedResponse['error'] &&
-                  responseData['statusCode'] ==
-                      expectedResponse['statusCode']) {
+            AppRouter.router.go(RouteName.subscription);
+            debugPrint(
+              "Navigation to subscription screen executed successfully via AppRouter",
+            );
+          } catch (e) {
+            debugPrint("Navigation failed via AppRouter: $e");
+            // Fallback to global navigator key with post frame callback
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (globalNavigatorKey.currentContext != null) {
+                globalNavigatorKey.currentContext!.go(RouteName.subscription);
                 debugPrint(
-                  "Subscription required error detected, navigating to subscription screen",
+                  "Navigation to subscription screen executed successfully via fallback",
                 );
-
-                e.response?.data = {
-                  "message": "You must subscribe to continue",
-                  "error": "SubscriptionRequired",
-                  "statusCode": 403,
-                };
-
-                // Use AppRouter directly
-                try {
-                  AppRouter.router.go(RouteName.subscription);
-                  debugPrint(
-                    "Navigation to subscription screen executed successfully via AppRouter",
-                  );
-                } catch (e) {
-                  debugPrint("Navigation failed via AppRouter: $e");
-                  // Fallback to global navigator key with post frame callback
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (globalNavigatorKey.currentContext != null) {
-                      globalNavigatorKey.currentContext!.go(
-                        RouteName.subscription,
-                      );
-                      debugPrint(
-                        "Navigation to subscription screen executed successfully via fallback",
-                      );
-                    } else {
-                      debugPrint(
-                        "Navigation failed: context is still null after post frame callback",
-                      );
-                    }
-                  });
-                }
-                return handler.next(
-                  e,
-                ); // Still pass the error up but navigation is handled
+              } else {
+                debugPrint(
+                  "Navigation failed: context is still null after post frame callback",
+                );
               }
-            }
-          } catch (parseError) {
-            debugPrint("Error parsing 403 response: $parseError");
+            });
           }
+          return handler.next(
+            e,
+          ); // Still pass the error up but navigation is handled
         }
 
         // return handler.next(modifiedError);
@@ -203,6 +186,29 @@ Future<void> apiService() async {
   );
 
   sl.registerLazySingleton<Dio>(() => dio);
+}
+
+bool _isSubscriptionRequiredResponse(dynamic responseData, int? statusCode) {
+  if (statusCode == 402) return true;
+
+  if (responseData is Map<String, dynamic>) {
+    final message = (responseData['message']?.toString() ?? '').toLowerCase();
+    final error = (responseData['error']?.toString() ?? '').toLowerCase();
+
+    return message.contains('subscription') ||
+        message.contains('подпис') ||
+        error.contains('subscription') ||
+        (message.contains('forbidden') && statusCode == 403);
+  }
+
+  if (responseData is String) {
+    final text = responseData.toLowerCase();
+    return text.contains('subscription') ||
+        text.contains('подпис') ||
+        (text.contains('forbidden') && statusCode == 403);
+  }
+
+  return false;
 }
 
 /// Handles logout process when authentication fails

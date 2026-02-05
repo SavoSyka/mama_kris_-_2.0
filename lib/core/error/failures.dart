@@ -23,6 +23,9 @@ class ApiException extends Equatable implements Exception {
   final int statusCode;
 
   @override
+  String toString() => 'ApiException($statusCode): $message';
+
+  @override
   List<Object?> get props => [message, statusCode];
 }
 

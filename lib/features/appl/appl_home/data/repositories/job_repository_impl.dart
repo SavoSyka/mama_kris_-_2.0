@@ -21,6 +21,8 @@ class JobRepositoryImpl implements JobRepository {
     try {
       final value = await remoteDataSource.fetchJobs(page: page);
       return Right(value);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
@@ -45,6 +47,8 @@ class JobRepositoryImpl implements JobRepository {
         salaryWithAgreemen: salaryWithAgreemen,
       );
       return Right(value);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
@@ -55,6 +59,8 @@ class JobRepositoryImpl implements JobRepository {
     try {
       final value = await remoteDataSource.searchJobs(query);
       return Right(value);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
@@ -63,10 +69,12 @@ class JobRepositoryImpl implements JobRepository {
   @override
   ResultFuture<void> likeJob(int jobId) async {
     try {
-      final value = await remoteDataSource.likeJob(jobId);
+      await remoteDataSource.likeJob(jobId);
       await localDataSource.saveLikedJob(jobId);
 
       return const Right(null);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
@@ -75,10 +83,12 @@ class JobRepositoryImpl implements JobRepository {
   @override
   ResultFuture<void> dislikeJob(int jobId) async {
     try {
-      final value = await remoteDataSource.dislikeJob(jobId);
+      await remoteDataSource.dislikeJob(jobId);
       await localDataSource.saveDislikedJob(jobId);
 
       return const Right(null);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
@@ -89,6 +99,8 @@ class JobRepositoryImpl implements JobRepository {
     try {
       await remoteDataSource.viewJob(jobId);
       return const Right(null);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
@@ -99,6 +111,8 @@ class JobRepositoryImpl implements JobRepository {
     try {
       final result = await remoteDataSource.fetchLikedJobs(page);
       return Right(result);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
