@@ -103,14 +103,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
               // Check for 403 subscription required error
               if (state is JobError) {
                 final errorMessage = state.message.toLowerCase();
+                print(errorMessage);
                 // Check if error message contains subscription required message
-                if (errorMessage.contains(
-                      'subscription required to view more than 10 jobs',
-                    ) ||
-                    (errorMessage.contains('subscription required') &&
-                        (errorMessage.contains('403') ||
-                            errorMessage.contains('forbidden')))) {
-                  // Navigate to subscription page immediately
+                if (errorMessage.contains('402')) {
                   context.pushReplacementNamed(RouteName.subscription);
                 }
               }
