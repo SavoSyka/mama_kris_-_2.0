@@ -2,7 +2,7 @@ name: mama_kris
 description: "MamaKris Flutter project."
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 2.1.2+43
+version: 2.1.3+44
 
 environment:
   sdk: ^3.9.0
