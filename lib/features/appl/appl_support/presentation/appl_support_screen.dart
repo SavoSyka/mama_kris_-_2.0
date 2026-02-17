@@ -15,6 +15,7 @@ final List<Map<String, dynamic>> supports = [
     'title': 'Как пользоваться приложением?',
     'salary': 'Ссылка',
     'isTelegram': false,
+    'routeName': RouteName.articleOne,
     "article": """
 Добро пожаловать в MamaKris — удобный сервис для поиска удалённой работы и сотрудников!
 \nМеня зовут Кристина, я — создатель и руководитель IT-проекта MamaKris, а также многодетная мама с 12-летним опытом работы онлайн. Я знаю, как непросто найти проверенные вакансии и надёжных исполнителей.
@@ -59,6 +60,7 @@ final List<Map<String, dynamic>> supports = [
     'title': 'Как защититься от мошенников',
     'salary': 'Ссылка',
     'isTelegram': false,
+    'routeName': RouteName.articleTwo,
     "article": """
 Поиск удалённой работы открывает новые возможности, но, к сожалению, может привлечь и недобросовестных людей.
 Команда MamaKris тщательно проверяет вакансии, но на 100% исключить риск мошенничества невозможно.
@@ -195,9 +197,11 @@ class _ApplSupportScreenState extends State<ApplSupportScreen> {
                                     url: support['channel'],
                                   );
                                 } else {
+                                  final routeName =
+                                      support['routeName'] as String? ??
+                                      RouteName.supportDetail;
                                   context.pushNamed(
-                                    support['routeName'],
-                                    // RouteName.supportDetail,
+                                    routeName,
                                     extra: {'support': support},
                                   );
                                   // Navigator.push(
