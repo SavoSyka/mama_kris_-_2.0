@@ -38,6 +38,7 @@ import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/features/stories/presentation/widgets/stories_section.dart';
+import 'package:mama_kris/core/common/widgets/show_vacancy_warning_dialog.dart';
 
 class ApplHomeScreen extends StatefulWidget {
   const ApplHomeScreen({super.key});
@@ -274,7 +275,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     vacancyIndex: currentVacancyIndex,
                                     previousVacancyIndex: previousVacancyIndex,
                                     slideDirection: slideDirection,
-                                    onInterestedPressed: () {
+                                    onInterestedPressed: () async {
+                                      final confirmed = await showVacancyWarningDialog(context);
+                                      if (!confirmed) return;
                                       _handleVacancyReaction(isLiked: true);
                                     },
                                     onNotInterestedPressed: () {
@@ -358,6 +361,8 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     jobId: job.jobId,
                                     contactJobs: job.contactJobs,
                                     onTap: () async {
+                                      final confirmed = await showVacancyWarningDialog(context);
+                                      if (!confirmed) return;
                                       // Mark job as viewed when opened
                                       context.read<JobBloc>().add(
                                         ViewJobEvent(job.jobId),
