@@ -152,6 +152,9 @@ import 'package:mama_kris/features/appl/applicant_contact/domain/usecase/update_
 import 'package:mama_kris/features/appl/applicant_contact/presentation/bloc/applicant_contact_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:mama_kris/features/stories/data/data_source/stories_remote_data_source.dart';
+import 'package:mama_kris/features/stories/application/cubit/stories_cubit.dart';
+
 import 'package:mama_kris/features/appl/appl_profile/data/data_source/speciality_remote_data_source.dart'
     as srd;
 import 'package:mama_kris/features/appl/appl_profile/data/repository_impl/speciality_repository_impl.dart'

@@ -37,6 +37,7 @@ import 'package:mama_kris/features/emp/emp_resume/presentation/widget/resume_spe
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/features/stories/presentation/widgets/stories_section.dart';
 
 class ApplHomeScreen extends StatefulWidget {
   const ApplHomeScreen({super.key});
@@ -161,6 +162,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // ---------- Stories ----------
+                                const StoriesSection(),
+
                                 // ---------- Search Field ----------
                                 GestureDetector(
                                   onTap: _openSearchPage,

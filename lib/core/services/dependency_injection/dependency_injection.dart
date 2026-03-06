@@ -21,6 +21,7 @@ Future<void> dependencyInjection() async {
   await _initEmployeeContact();
   await _initAppLifeCyle();
   await initEmailSubscription();
+  await _initStories();
 }
 
 Future<void> _initLocalCache() async {
@@ -507,5 +508,15 @@ Future<void> initEmailSubscription() async {
       subscribeEmailUsecase: sl(),
       unsubscribeEmailUsecase: sl(),
     ),
+  );
+}
+
+Future<void> _initStories() async {
+  sl.registerLazySingleton<StoriesRemoteDataSource>(
+    () => StoriesRemoteDataSourceImpl(sl()),
+  );
+
+  sl.registerFactory(
+    () => StoriesCubit(remoteDataSource: sl()),
   );
 }

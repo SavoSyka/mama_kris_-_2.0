@@ -81,13 +81,18 @@ class _ApplVerifyOtpScreenState extends State<ApplVerifyOtpScreen> {
                             ),
                           );
 
-                          context.goNamed(RouteName.homeApplicant);
-
-                          if (widget.isFrom == 'signup' &&
-                              widget.subscribeEmail) {
-                            context.read<EmailSubscriptionBloc>().add(
-                              SubscribeEmailEvent(email: widget.email),
+                          if (widget.isFrom == 'signup') {
+                            context.goNamed(
+                              RouteName.onboarding,
+                              extra: {'isApplicant': true},
                             );
+                            if (widget.subscribeEmail) {
+                              context.read<EmailSubscriptionBloc>().add(
+                                SubscribeEmailEvent(email: widget.email),
+                              );
+                            }
+                          } else {
+                            context.goNamed(RouteName.homeApplicant);
                           }
                         } else if (state is AuthOtpVerified) {
                           // * if email validation passed we have to register user by giiving his PII

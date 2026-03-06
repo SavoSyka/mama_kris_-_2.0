@@ -72,4 +72,21 @@ class MediaRes {
   static const noSubscriptionIcon = '$_baseIcons/no_subscription.jpg';
   static const compromizedDeviceIcon = '$_baseIcons/compromised_icon.png';
 
+  // onboarding - applicant (9 steps)
+  static const onboardingAppl1 = '$_baseImages/onboarding/applicant/step_1.png';
+  static const onboardingAppl2 = '$_baseImages/onboarding/applicant/step_2.png';
+  static const onboardingAppl3 = '$_baseImages/onboarding/applicant/step_3.png';
+  static const onboardingAppl4 = '$_baseImages/onboarding/applicant/step_4.png';
+  static const onboardingAppl5 = '$_baseImages/onboarding/applicant/step_5.png';
+  static const onboardingAppl6 = '$_baseImages/onboarding/applicant/step_6.png';
+  static const onboardingAppl7 = '$_baseImages/onboarding/applicant/step_7.png';
+  static const onboardingAppl8 = '$_baseImages/onboarding/applicant/step_8.png';
+  static const onboardingAppl9 = '$_baseImages/onboarding/applicant/step_9.png';
+
+  // onboarding - employee (5 steps)
+  static const onboardingEmp1 = '$_baseImages/onboarding/employee/step_1.png';
+  static const onboardingEmp2 = '$_baseImages/onboarding/employee/step_2.png';
+  static const onboardingEmp3 = '$_baseImages/onboarding/employee/step_3.png';
+  static const onboardingEmp4 = '$_baseImages/onboarding/employee/step_4.png';
+  static const onboardingEmp5 = '$_baseImages/onboarding/employee/step_5.png';
 }

@@ -9,6 +9,7 @@ import 'package:mama_kris/features/appl/appl_profile/presentation/appl_profile_s
 import 'package:mama_kris/features/appl/appl_support/presentation/appl_support_screen.dart';
 import 'package:mama_kris/features/emp/emp_profile/presentation/emp_profile_screen.dart';
 import 'package:mama_kris/features/emp/emp_support/presentation/emp_support_screen.dart';
+import 'package:mama_kris/features/subscription/data/data_source/subscription_remote_data_source.dart';
 import 'package:mama_kris/features/subscription/presentation/pages/subscription_screen.dart';
 
 class SubscriptionScreenTab extends StatefulWidget {
@@ -35,6 +36,7 @@ class _SubscriptionScreenTabState extends State<SubscriptionScreenTab> {
 
   Future<void> _loadUserTypeAndSetupTabs() async {
     try {
+      sl<SubscriptionRemoteDataSource>().registerBannerImpression();
       final bool isApplicant = await sl<AuthLocalDataSource>().getUserType();
 
       final List<Widget> pages = [const SubscriptionScreen()];

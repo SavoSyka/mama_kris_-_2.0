@@ -10,6 +10,7 @@ import 'package:mama_kris/features/subscription/domain/entity/subscription_entit
 abstract class SubscriptionRemoteDataSource {
   Future<List<SubscriptionModel>> getTariffs();
   Future<String?> initiatePayment(SubscriptionEntity tariff);
+  Future<void> registerBannerImpression();
 }
 
 class SubscriptionRemoteDataSourceImpl implements SubscriptionRemoteDataSource {
@@ -84,6 +85,18 @@ class SubscriptionRemoteDataSourceImpl implements SubscriptionRemoteDataSource {
     } catch (e) {
       debugPrint("Payment initiation error: $e");
       throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<void> registerBannerImpression() async {
+    try {
+      final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
+      if (userID.isEmpty) return;
+
+      await dio.post(ApiConstants.subscriptionBannerImpression(userID));
+    } catch (e) {
+      debugPrint("Banner impression error: $e");
     }
   }
 }

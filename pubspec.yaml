@@ -52,6 +52,7 @@ dependencies:
   rename: ^3.1.0
   change_app_package_name: ^1.5.0
   get: ^4.7.3
+  video_player: ^2.11.0
 
 
 dev_dependencies:
@@ -69,6 +70,8 @@ flutter_launcher_icons:
 flutter:
   assets:
     - assets/images/
+    - assets/images/onboarding/applicant/
+    - assets/images/onboarding/employee/
     - assets/icon/
     - shorebird.yaml
 

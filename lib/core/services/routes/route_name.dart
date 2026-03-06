@@ -89,4 +89,6 @@ class RouteName {
 
   static String notificationList = "/notifications";
   static String notificationDetail = "/notification-detail";
+
+  static String onboarding = "/onboarding";
 }

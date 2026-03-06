@@ -43,6 +43,8 @@ abstract class AuthLocalDataSource {
   Future<void> saveSessionId(int sessionId);
   Future<int?> getSessionId();
   Future<void> removeSessionId();
+  Future<bool> getOnboardingCompleted();
+  Future<void> saveOnboardingCompleted(bool completed);
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -61,6 +63,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   static const _subscriptionKey = '_subscriptionKey';
   static const _viewedJobsCountKey = '_viewedJobsCountKey';
   static const _sessionIdKey = '_sessionId';
+  static const _onboardingCompletedKey = '_onboarding_completed';
 
   @override
   Future<void> saveToken(String token) async {
@@ -174,5 +177,15 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> removeSessionId() async {
     await prefs.remove(_sessionIdKey);
+  }
+
+  @override
+  Future<bool> getOnboardingCompleted() async {
+    return prefs.getBool(_onboardingCompletedKey) ?? false;
+  }
+
+  @override
+  Future<void> saveOnboardingCompleted(bool completed) async {
+    await prefs.setBool(_onboardingCompletedKey, completed);
   }
 }

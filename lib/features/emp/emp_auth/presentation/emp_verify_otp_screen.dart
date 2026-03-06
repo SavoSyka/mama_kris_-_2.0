@@ -91,7 +91,12 @@ class _EmpVerifyOtpScreenState extends State<EmpVerifyOtpScreen> {
                             ),
                           );
 
-                          if (state.user.subscription.active) {
+                          if (widget.isFrom == 'signup') {
+                            context.goNamed(
+                              RouteName.onboarding,
+                              extra: {'isApplicant': false},
+                            );
+                          } else if (state.user.subscription.active) {
                             context.goNamed(RouteName.homeEmploye);
                           } else {
                             context.goNamed(RouteName.subscription);

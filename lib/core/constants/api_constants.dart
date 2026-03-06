@@ -82,8 +82,15 @@ class ApiConstants {
   static String userLeftSession(String userId, String sessionId) =>
       "session-times/user/$userId/session/$sessionId";
 
+  // subscription banner impression
+  static String subscriptionBannerImpression(String userId) =>
+      'viewed-jobs/subscription-banner-impression/$userId';
+
   // email subscription
   static String subscribeEmail(String userID) =>
       '/mail/confirm-subscription/$userID';
   static const unsubscribeEmail = 'email-subscription/unsubscribe';
+
+  // stories
+  static const getStories = 'stories/list';
 }

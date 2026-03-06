@@ -23,6 +23,7 @@ import 'package:mama_kris/features/subscription/application/bloc/subscription_pa
 import 'package:mama_kris/features/subscription/domain/entity/subscription_entity.dart';
 import 'package:mama_kris/features/subscription/application/cubit/subscription_status_cubit.dart';
 import 'package:mama_kris/features/subscription/presentation/pages/widget/subscription_card.dart';
+import 'package:mama_kris/features/stories/presentation/widgets/stories_section.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
@@ -174,6 +175,8 @@ MamaKris объединяет десятки тысяч активных сои�
                                 ),
 
                                 const SizedBox(height: 16),
+
+                                const StoriesSection(),
 
                                 if (state is TariffsLoadingState)
                                   const Center(child: IPhoneLoader(height: 200))

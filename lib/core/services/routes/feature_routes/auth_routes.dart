@@ -153,4 +153,14 @@ final List<RouteBase> authRoutes = [
       return const EmpUpdatePasswordScreen();
     },
   ),
+
+  GoRoute(
+    path: RouteName.onboarding,
+    name: RouteName.onboarding,
+    builder: (BuildContext context, GoRouterState state) {
+      final extra = state.extra as Map<String, dynamic>?;
+      final isApplicant = extra?['isApplicant'] as bool? ?? true;
+      return OnboardingScreen(isApplicant: isApplicant);
+    },
+  ),
 ];

@@ -110,10 +110,8 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     );
 
-
                     final viewedCount = await sl<AuthLocalDataSource>()
                         .getViewedJobsCount();
-
 
                     if (state.user.subscription.active ||
                         (viewedCount != null && viewedCount < 10)) {

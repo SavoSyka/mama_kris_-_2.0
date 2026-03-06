@@ -12,6 +12,7 @@ import 'package:mama_kris/features/emp/emp_home/domain/entities/emp_job_entity.d
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_cubit.dart';
 import 'package:mama_kris/features/emp/emp_home/presentation/cubit/fetch_emp_jobs_state.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
+import 'package:mama_kris/features/stories/presentation/widgets/stories_section.dart';
 
 enum FilterType { active, unpaid, archive, rejected, checking }
 
@@ -75,6 +76,8 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
                         child: CustomDefaultPadding(
                           child: Column(
                             children: [
+                              const StoriesSection(),
+
                               Container(
                                 // color: Colors.red,
                                 child: SizedBox(
