@@ -73,14 +73,13 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
                       onRefresh: _fetchJobs,
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
-                        child: CustomDefaultPadding(
-                          child: Column(
+                        child: Column(
+                          children: [
+                            const StoriesSection(),
+                            CustomDefaultPadding(
+                              child: Column(
                             children: [
-                              const StoriesSection(),
-
-                              Container(
-                                // color: Colors.red,
-                                child: SizedBox(
+                                SizedBox(
                                   height: 42,
                                   child: ListView(
                                     scrollDirection: Axis.horizontal,
@@ -165,7 +164,6 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
                                     ],
                                   ),
                                 ),
-                              ),
 
                               const SizedBox(height: 28),
 
@@ -215,6 +213,8 @@ class _EmpHomeScreenState extends State<EmpHomeScreen> {
                                 const _AdCards(),
                             ],
                           ),
+                        ),
+                          ],
                         ),
                       ),
                     ),

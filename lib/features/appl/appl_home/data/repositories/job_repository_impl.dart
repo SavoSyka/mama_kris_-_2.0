@@ -36,6 +36,7 @@ class JobRepositoryImpl implements JobRepository {
     String? maxSalary,
     String? title,
     bool? salaryWithAgreemen,
+    List<String>? searchSpheres,
   }) async {
     try {
       final value = await remoteDataSource.filterJobs(
@@ -45,6 +46,7 @@ class JobRepositoryImpl implements JobRepository {
         maxSalary: maxSalary,
         minSalary: minSalary,
         salaryWithAgreemen: salaryWithAgreemen,
+        searchSpheres: searchSpheres,
       );
       return Right(value);
     } on ApiException catch (e) {

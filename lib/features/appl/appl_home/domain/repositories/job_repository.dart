@@ -12,6 +12,7 @@ abstract class JobRepository {
     String? maxSalary,
     String? title,
     bool? salaryWithAgreemen,
+    List<String>? searchSpheres,
   });
   ResultFuture<JobList> searchJobs(String query);
   ResultFuture<void> likeJob(int jobId);

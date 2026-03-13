@@ -4,8 +4,10 @@ class StoryModel extends StoryEntity {
   const StoryModel({
     required super.id,
     required super.queue,
-    required super.imageUrl,
-    required super.imageWebpUrl,
+    super.title,
+    super.description,
+    super.imageUrl,
+    super.imageWebpUrl,
     super.videoUrl,
     super.videoWebmUrl,
   });
@@ -14,8 +16,10 @@ class StoryModel extends StoryEntity {
     return StoryModel(
       id: json['id'] as int,
       queue: json['queue'] as int,
-      imageUrl: _toHttps(json['imageUrl'] as String),
-      imageWebpUrl: _toHttps(json['imageWebpUrl'] as String),
+      title: json['title'] as String?,
+      description: json['description'] as String?,
+      imageUrl: json['imageUrl'] != null ? _toHttps(json['imageUrl'] as String) : null,
+      imageWebpUrl: json['imageWebpUrl'] != null ? _toHttps(json['imageWebpUrl'] as String) : null,
       videoUrl: json['videoUrl'] != null ? _toHttps(json['videoUrl'] as String) : null,
       videoWebmUrl: json['videoWebmUrl'] != null ? _toHttps(json['videoWebmUrl'] as String) : null,
     );

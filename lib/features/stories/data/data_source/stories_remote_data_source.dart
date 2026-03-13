@@ -2,10 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/error/failures.dart';
-import 'package:mama_kris/features/stories/data/model/story_model.dart';
+import 'package:mama_kris/features/stories/data/model/story_category_model.dart';
 
 abstract class StoriesRemoteDataSource {
-  Future<List<StoryModel>> getStories();
+  Future<List<StoryCategoryModel>> getStoryCategories();
 }
 
 class StoriesRemoteDataSourceImpl implements StoriesRemoteDataSource {
@@ -14,17 +14,18 @@ class StoriesRemoteDataSourceImpl implements StoriesRemoteDataSource {
   StoriesRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<StoryModel>> getStories() async {
+  Future<List<StoryCategoryModel>> getStoryCategories() async {
     try {
       final response = await dio.get(ApiConstants.getStories);
 
       if (response.statusCode.toString().startsWith('2')) {
         final listData = response.data as List;
-        final stories = listData
-            .map((data) => StoryModel.fromJson(data as Map<String, dynamic>))
+        final categories = listData
+            .map((data) => StoryCategoryModel.fromJson(data as Map<String, dynamic>))
+            .where((c) => c.stories.isNotEmpty)
             .toList();
-        stories.sort((a, b) => a.queue.compareTo(b.queue));
-        return stories;
+        categories.sort((a, b) => a.queue.compareTo(b.queue));
+        return categories;
       } else {
         throw ApiException(
           message: response.data['message'] ?? 'Failed to fetch stories',

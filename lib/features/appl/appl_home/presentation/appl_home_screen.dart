@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_error_retry.dart';
@@ -60,6 +61,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   String? _minSalary;
   String? _maxSalary;
   bool? _byAgreement;
+  List<String>? _selectedSpheres;
 
   final ScrollController _scrollController = ScrollController();
   Timer? _debounceTimer;
@@ -150,7 +152,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                       displacement: 40,
                       child: ListView.builder(
                         controller: _scrollController,
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(0),
                         physics: const AlwaysScrollableScrollPhysics(),
                         itemCount: _calculateItemCount(
                           jobs.length,
@@ -167,79 +169,100 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                 const StoriesSection(),
 
                                 // ---------- Search Field ----------
-                                GestureDetector(
-                                  onTap: _openSearchPage,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 8,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.search,
-                                          color: Colors.grey,
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          _searchQuery ?? 'Search jobs...',
-                                          style: TextStyle(
-                                            color: _searchQuery == null
-                                                ? Colors.grey
-                                                : Colors.black,
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: _openSearchPage,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 8.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.search,
+                                            color: Colors.grey,
                                           ),
-                                        ),
-                                      ],
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Text(
+                                              _searchQuery ?? 'Search jobs...',
+                                              style: TextStyle(
+                                                color: _searchQuery == null
+                                                    ? Colors.grey
+                                                    : Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                          if (_searchQuery != null && _searchQuery!.isNotEmpty)
+                                            GestureDetector(
+                                              onTap: _clearSearch,
+                                              child: const Icon(
+                                                Icons.close,
+                                                color: Colors.grey,
+                                                size: 20,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 14),
 
                                 // ---------- Filter Buttons ----------
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () =>
-                                              setState(() => isSlider = true),
-                                          child: FilterActionButtons(
-                                            isSelected: isSlider,
-                                            text: 'Слайдер',
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          InkWell(
+                                            onTap: () =>
+                                                setState(() => isSlider = true),
+                                            child: FilterActionButtons(
+                                              isSelected: isSlider,
+                                              text: 'Слайдер',
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        InkWell(
-                                          onTap: () =>
-                                              setState(() => isSlider = false),
-                                          child: FilterActionButtons(
-                                            isSelected: !isSlider,
-                                            text: 'Список',
+                                          const SizedBox(width: 12),
+                                          InkWell(
+                                            onTap: () => setState(
+                                              () => isSlider = false,
+                                            ),
+                                            child: FilterActionButtons(
+                                              isSelected: !isSlider,
+                                              text: 'Список',
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    InkWell(
-                                      onTap: () async {
-                                        final filter = await ApplicantJobFilter(
-                                          context,
-                                        );
-                                        if (filter != null) {
-                                          _applyFilters(filter);
-                                        }
-                                      },
-                                      child: const CustomImageView(
-                                        imagePath: MediaRes.btnFilter,
-                                        width: 48,
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                      InkWell(
+                                        onTap: () async {
+                                          final filter =
+                                              await ApplicantJobFilter(context);
+                                          if (filter != null) {
+                                            _applyFilters(filter);
+                                          }
+                                        },
+                                        child: const CustomImageView(
+                                          imagePath: MediaRes.btnFilter,
+                                          width: 48,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 const SizedBox(height: 14),
                               ],
@@ -276,7 +299,10 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     previousVacancyIndex: previousVacancyIndex,
                                     slideDirection: slideDirection,
                                     onInterestedPressed: () async {
-                                      final confirmed = await showVacancyWarningDialog(context);
+                                      final confirmed =
+                                          await showVacancyWarningDialog(
+                                            context,
+                                          );
                                       if (!confirmed) return;
                                       _handleVacancyReaction(isLiked: true);
                                     },
@@ -295,6 +321,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     builder: (context, state) {
                                       if (state is PublicCountsLoaded) {
                                         return Container(
+                                          margin: EdgeInsets.symmetric(
+                                            horizontal: 16.w,
+                                          ),
                                           padding: const EdgeInsets.symmetric(
                                             vertical: 0,
                                           ),
@@ -329,7 +358,10 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                   ),
 
                                   const SizedBox(height: 16),
-                                  const _AdCards(),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                    child: const _AdCards()),
+                                         const SizedBox(height: 16),
                                 ],
                               );
                             }
@@ -346,7 +378,11 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                               if ((contentIndex + 1) % 4 == 0) {
                                 // Ad card
                                 return Container(
-                                  margin: const EdgeInsets.only(bottom: 12),
+                                  margin: const EdgeInsets.only(
+                                    bottom: 12,
+                                    left: 16,
+                                    right: 16,
+                                  ),
                                   child: const _AdCards(),
                                 );
                               } else {
@@ -354,14 +390,21 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     contentIndex - (contentIndex ~/ 4);
                                 final job = jobs[jobIndex];
                                 return Container(
-                                  margin: const EdgeInsets.only(bottom: 12),
+                                  margin: const EdgeInsets.only(
+                                    bottom: 12,
+                                    left: 16,
+                                    right: 16,
+                                  ),
                                   child: JobListItem(
                                     jobTitle: job.title,
                                     salaryRange: job.salary.toString(),
                                     jobId: job.jobId,
                                     contactJobs: job.contactJobs,
                                     onTap: () async {
-                                      final confirmed = await showVacancyWarningDialog(context);
+                                      final confirmed =
+                                          await showVacancyWarningDialog(
+                                            context,
+                                          );
                                       if (!confirmed) return;
                                       // Mark job as viewed when opened
                                       context.read<JobBloc>().add(
@@ -384,7 +427,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                             } else if (contentIndex == totalContent &&
                                 state.jobs.hasNextPage) {
                               return const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 16.0),
+                                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                                 child: IPhoneLoader(),
                               );
                             }
@@ -442,6 +485,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
         minSalary: _minSalary,
         maxSalary: _maxSalary,
         salaryWithAgreement: _byAgreement,
+        searchSpheres: _selectedSpheres,
       ),
     );
   }
@@ -450,11 +494,12 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     context.read<JobBloc>().add(
       FilterJobEvent(
         page: 1,
-        perPage: 10,
+        perPage: 7,
         title: _searchQuery,
         minSalary: _minSalary,
         maxSalary: _maxSalary,
         salaryWithAgreement: _byAgreement,
+        searchSpheres: _selectedSpheres,
       ),
     );
   }
@@ -506,7 +551,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
           currentVacancyIndex = currentJobIndex + 1;
         }
       } else {
-        // If we're at the end, loop or stop safely
+        // At the end of the list
         currentVacancyIndex = jobs.isNotEmpty ? jobs.length - 1 : 0;
       }
     });
@@ -526,6 +571,18 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
           salaryWithAgreement: _byAgreement,
         ),
       );
+    } else if (currentJobIndex >= jobs.length - 1 && !state.jobs.hasNextPage) {
+      // No more jobs and no next page — auto-clear search and reload defaults
+      debugPrint("🔄 No more jobs, auto-clearing search and reloading defaults");
+      setState(() {
+        _searchQuery = null;
+        _minSalary = null;
+        _maxSalary = null;
+        _byAgreement = null;
+        currentVacancyIndex = 0;
+        previousVacancyIndex = 0;
+      });
+      bloc.add(FetchJobsEvent());
     }
   }
 
@@ -539,6 +596,11 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
 
   void _onSearchChanged(String query) {
     context.read<JobBloc>().add(SearchJobsEvent(query));
+  }
+
+  void _clearSearch() {
+    setState(() => _searchQuery = null);
+    handleFetchJobs();
   }
 
   void _openSearchPage() async {
@@ -593,6 +655,12 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   void _applyFilters(DataMap filter) {
     debugPrint("FIlter $filter");
 
+    setState(() {
+      if (filter['spheres'] != null) {
+        _selectedSpheres = List<String>.from(filter['spheres']);
+      }
+    });
+
     if (filter['agreement'] != null && (filter['agreement'] as bool) == true) {
       debugPrint("BY Agreemenet ${filter['agreement']}");
 
@@ -604,8 +672,8 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
 
       _handleFilters();
     } else {
-      final min = filter['min'].toString();
-      final max = filter['max'].toString();
+      final min = filter['min']?.toString();
+      final max = filter['max']?.toString();
 
       setState(() {
         _byAgreement = false;

@@ -1,46 +1,48 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
-import 'package:mama_kris/features/stories/domain/entity/story_entity.dart';
+import 'package:mama_kris/features/stories/domain/entity/story_category_entity.dart';
 import 'package:mama_kris/features/stories/presentation/widgets/story_viewer.dart';
 
 class StoriesThumbnailList extends StatelessWidget {
-  final List<StoryEntity> stories;
-  final Set<int> viewedStoryIds;
-  final ValueChanged<int>? onStoryViewed;
+  final List<StoryCategoryEntity> categories;
+  final Set<int> viewedCategoryIds;
+  final ValueChanged<int>? onCategoryViewed;
+  final double? horizontalPadding;
 
   const StoriesThumbnailList({
     super.key,
-    required this.stories,
-    this.viewedStoryIds = const {},
-    this.onStoryViewed,
+    required this.categories,
+    this.viewedCategoryIds = const {},
+    this.onCategoryViewed,
+    this.horizontalPadding,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (stories.isEmpty) return const SizedBox.shrink();
+    if (categories.isEmpty) return const SizedBox.shrink();
 
     return SizedBox(
-      height: 100,
+      height: 81,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: stories.length,
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 16),
+        itemCount: categories.length,
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
-          final story = stories[index];
-          final isViewed = viewedStoryIds.contains(story.id);
+          final category = categories[index];
+          final isViewed = viewedCategoryIds.contains(category.id);
 
           return GestureDetector(
             onTap: () {
-              onStoryViewed?.call(story.id);
+              if (category.stories.isEmpty) return;
               Navigator.of(context).push(
                 PageRouteBuilder(
                   opaque: false,
                   pageBuilder: (_, __, ___) => StoryViewer(
-                    stories: stories,
-                    initialIndex: index,
-                    onStoryViewed: onStoryViewed,
+                    categories: categories,
+                    initialCategoryIndex: index,
+                    onCategoryViewed: onCategoryViewed,
                   ),
                   transitionsBuilder: (_, animation, __, child) {
                     return FadeTransition(opacity: animation, child: child);
@@ -49,8 +51,8 @@ class StoriesThumbnailList extends StatelessWidget {
               );
             },
             child: Container(
-              width: 80,
-              height: 80,
+              width: 81,
+              height: 81,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
@@ -63,11 +65,10 @@ class StoriesThumbnailList extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child: CachedNetworkImage(
-                  imageUrl: story.imageWebpUrl,
+                  imageUrl: category.imageWebpUrl,
                   fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(
-                    color: AppPalette.greyLight,
-                  ),
+                  placeholder: (_, __) =>
+                      Container(color: AppPalette.greyLight),
                   errorWidget: (_, __, ___) => Container(
                     color: AppPalette.greyLight,
                     child: const Icon(Icons.error_outline, size: 20),

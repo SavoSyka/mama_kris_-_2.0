@@ -23,6 +23,9 @@ import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dar
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 import 'package:mama_kris/features/appl/appl_profile/presentation/bloc/user_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
+import 'package:mama_kris/core/common/widgets/show_social_login_consent_dialog.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_bloc.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_event.dart';
 
 class ApplLoginScreen extends StatefulWidget {
   const ApplLoginScreen({super.key});
@@ -43,6 +46,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
     text: kDebugMode ? "" : "",
   );
   final _formKey = GlobalKey<FormState>();
+  bool _isAppleLogin = false;
 
   @override
   void initState() {
@@ -65,7 +69,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                     child: CustomDefaultPadding(
                       child: SingleChildScrollView(
                         child: BlocListener<AuthBloc, AuthState>(
-                          listener: (context, state) {
+                          listener: (context, state) async {
                             debugPrint('auth state $state');
                             if (state is AuthSuccess) {
                               context.read<UserBloc>().add(
@@ -79,6 +83,31 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
                                       .toIso8601String(),
                                 ),
                               );
+
+                              if (_isAppleLogin) {
+                                _isAppleLogin = false;
+                                final consent =
+                                    await showSocialLoginConsentDialog(context);
+                                if (consent != null && consent.accepted) {
+                                  if (consent.subscribeEmail &&
+                                      state.user.user.email != null) {
+                                    if (context.mounted) {
+                                      context
+                                          .read<EmailSubscriptionBloc>()
+                                          .add(
+                                            SubscribeEmailEvent(
+                                              email: state.user.user.email!,
+                                            ),
+                                          );
+                                    }
+                                  }
+                                  if (context.mounted) {
+                                    context.goNamed(RouteName.homeApplicant);
+                                  }
+                                }
+                                return;
+                              }
+
                               context.goNamed(RouteName.homeApplicant);
                             } else if (state is AuthFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -258,6 +287,7 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
   // }
 
   Future<void> signInWithApple() async {
+    _isAppleLogin = true;
     await AuthService().signOut();
     final user = await AuthService().signInWithApple();
 

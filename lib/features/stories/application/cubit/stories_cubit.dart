@@ -10,8 +10,8 @@ class StoriesCubit extends Cubit<StoriesState> {
   Future<void> fetchStories() async {
     emit(StoriesLoading());
     try {
-      final stories = await remoteDataSource.getStories();
-      emit(StoriesLoaded(stories));
+      final categories = await remoteDataSource.getStoryCategories();
+      emit(StoriesLoaded(categories));
     } catch (e) {
       emit(StoriesError(e.toString()));
     }

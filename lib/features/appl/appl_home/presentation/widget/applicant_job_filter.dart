@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mama_kris/core/common/widgets/buttons/custom_button_applicant.dart';
 import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
+import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
+import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 
 Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
   const RangeValues initialSlider = RangeValues(20, 1000);
@@ -22,6 +25,11 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
   Map<String, dynamic>? result;
   double dynamicMax = 1000.0;
 
+  // Sphere state
+  List<Map<String, dynamic>> spheres = [];
+  String? selectedSphereTitle;
+  bool isLoadingSpheres = true;
+
   await showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -36,6 +44,26 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
         return StatefulBuilder(
           builder: (BuildContext ctx, StateSetter setModalState) {
             Timer? debounce;
+
+            // Fetch spheres on first build
+            if (isLoadingSpheres) {
+              isLoadingSpheres = false;
+              sl<Dio>().get(ApiConstants.searchSpheres).then((response) {
+                if (response.statusCode.toString().startsWith('2') &&
+                    response.data is List) {
+                  setModalState(() {
+                    spheres = (response.data as List)
+                        .map((e) => {
+                              'sphereID': e['sphereID'],
+                              'title': e['title'] ?? '',
+                            })
+                        .toList();
+                  });
+                }
+              }).catchError((e) {
+                debugPrint('Error fetching spheres: $e');
+              });
+            }
 
             void applyFilter() {
               if (showByAgreement) {
@@ -53,6 +81,9 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                 }
 
                 result = {'min': min, 'max': max};
+              }
+              if (selectedSphereTitle != null) {
+                result!['spheres'] = [selectedSphereTitle];
               }
               Navigator.pop(context, result);
             }
@@ -200,6 +231,71 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                            // Sphere selector
+                            const Text(
+                              'Специальность',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Manrope',
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String?>(
+                                  value: selectedSphereTitle,
+                                  hint: const Text(
+                                    'Специальность',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  isExpanded: true,
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  items: [
+                                    const DropdownMenuItem<String?>(
+                                      value: null,
+                                      child: Text('Все специальности'),
+                                    ),
+                                    ...spheres.map((sphere) {
+                                      final title = sphere['title'] as String;
+                                      return DropdownMenuItem<String?>(
+                                        value: title,
+                                        child: Text(
+                                          title,
+                                          style: const TextStyle(fontSize: 15),
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                  onChanged: (value) {
+                                    setModalState(() {
+                                      selectedSphereTitle = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Salary section
+                            const Text(
+                              'Зарплата',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Manrope',
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+
                             // Salary Fields
                          if(!showByAgreement)...[
                             Row(
@@ -264,15 +360,6 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
 
                             const SizedBox(height: 20),
                          ],
-                            const Text(
-                              'Зарплата',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Manrope',
-                              ),
-                            ),
-                            const SizedBox(height: 24),
 
                             // Checkbox
                             InkWell(
@@ -291,7 +378,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                                   const Expanded(
                                     child: CustomText(
                                       text:
-                                          "Показывать вакансии “по договоренности”",
+                                          "Показывать вакансии \u201Cпо договоренности\u201D",
                                       style: TextStyle(fontSize: 15),
                                     ),
                                   ),

@@ -21,7 +21,7 @@ class ResumeRemoteDataSourceImpl implements ResumeRemoteDataSource {
     try {
       final queryParameters = {
         "excludeViewed": false,
-        "pageSize": 10,
+        "pageSize": 7,
         "page": page,
         'q': searchQuery,
       };
@@ -63,7 +63,7 @@ class ResumeRemoteDataSourceImpl implements ResumeRemoteDataSource {
     try {
       final queryParameters = {
         "excludeViewed": false,
-        "pageSize": 10,
+        "pageSize": 7,
         "page": page,
         'q': searchQuery,
       };

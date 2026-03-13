@@ -58,6 +58,7 @@ class ApiConstants {
   static String loginWithApple = "auth/apple/login";
 
   static String getSpeciality = 'jobs/autocomplete';
+  static const searchSpheres = 'search-spheres';
 
   static const favoriteProfiles = "favorite-profiles";
   static String addUsersToFavorite(String userId) =>
@@ -92,5 +93,5 @@ class ApiConstants {
   static const unsubscribeEmail = 'email-subscription/unsubscribe';
 
   // stories
-  static const getStories = 'stories/list';
+  static const getStories = 'stories/categories';
 }

@@ -53,7 +53,7 @@ class EmpJobRemoteDataSourceImpl implements EmpJobRemoteDataSource {
 
       final queryParameters = {
         "page": page,
-        "pageSize": 10,
+        "pageSize": 7,
         "statuses": status,
       };
 

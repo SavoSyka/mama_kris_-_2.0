@@ -6,14 +6,15 @@ import 'package:mama_kris/features/stories/application/cubit/stories_state.dart'
 import 'package:mama_kris/features/stories/presentation/widgets/stories_thumbnail_list.dart';
 
 class StoriesSection extends StatefulWidget {
-  const StoriesSection({super.key});
+  final double? horizontalPadding;
+  const StoriesSection({super.key, this.horizontalPadding});
 
   @override
   State<StoriesSection> createState() => _StoriesSectionState();
 }
 
 class _StoriesSectionState extends State<StoriesSection> {
-  final Set<int> _viewedStoryIds = {};
+  final Set<int> _viewedCategoryIds = {};
   late final StoriesCubit _storiesCubit;
 
   @override
@@ -35,17 +36,18 @@ class _StoriesSectionState extends State<StoriesSection> {
       value: _storiesCubit,
       child: BlocBuilder<StoriesCubit, StoriesState>(
         builder: (context, state) {
-          if (state is StoriesLoaded && state.stories.isNotEmpty) {
+          if (state is StoriesLoaded && state.categories.isNotEmpty) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: EdgeInsets.only(bottom: 16),
               child: StoriesThumbnailList(
-                stories: state.stories,
-                viewedStoryIds: _viewedStoryIds,
-                onStoryViewed: (id) {
-                  if (_viewedStoryIds.contains(id)) return;
+                categories: state.categories,
+                horizontalPadding: widget.horizontalPadding,
+                viewedCategoryIds: _viewedCategoryIds,
+                onCategoryViewed: (id) {
+                  if (_viewedCategoryIds.contains(id)) return;
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (mounted) {
-                      setState(() => _viewedStoryIds.add(id));
+                      setState(() => _viewedCategoryIds.add(id));
                     }
                   });
                 },

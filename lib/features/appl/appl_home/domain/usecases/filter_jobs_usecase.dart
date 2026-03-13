@@ -19,6 +19,7 @@ class FilterJobsUsecase
       maxSalary: params.maxSalary,
       minSalary: params.minSalary,
       salaryWithAgreemen: params.salaryWithAgreement,
+      searchSpheres: params.searchSpheres,
     );
   }
 }
@@ -30,6 +31,7 @@ class FilterJobParams {
   final String? maxSalary;
   final String? title;
   final bool? salaryWithAgreement;
+  final List<String>? searchSpheres;
 
   FilterJobParams({
     required this.page,
@@ -38,5 +40,6 @@ class FilterJobParams {
     this.maxSalary,
     this.title,
     this.salaryWithAgreement,
+    this.searchSpheres,
   });
 }

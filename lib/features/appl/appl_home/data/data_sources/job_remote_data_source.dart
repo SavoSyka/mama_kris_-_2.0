@@ -16,6 +16,7 @@ abstract class JobRemoteDataSource {
     String? maxSalary,
     String? title,
     bool? salaryWithAgreemen,
+    List<String>? searchSpheres,
   });
 
   Future<JobListModel> searchJobs(String query);
@@ -35,7 +36,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     try {
       final queryParameters = {
         "excludeViewed": false,
-        "pageSize": 10,
+        "pageSize": 7,
         "page": page,
       };
 
@@ -76,26 +77,29 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     String? maxSalary,
     String? title,
     bool? salaryWithAgreemen,
+    List<String>? searchSpheres,
   }) async {
     try {
       final queryParameters = {
         "page": page,
-        "pageSize": 10,
+        "pageSize": 7,
         if (title != null) 'titleQuery': title,
         if (title != null) 'description': title,
-
         if (minSalary != null) 'minSalary': minSalary,
         if (maxSalary != null) 'maxSalary': maxSalary,
+        if (searchSpheres != null && searchSpheres.isNotEmpty)
+          'searchSpheres': searchSpheres.join(','),
         "excludeViewed": false,
       };
 
       final userID = await sl<AuthLocalDataSource>().getUserId() ?? "";
 
-      final response = await dio.get(
-        title != null ? 
-        ApiConstants.getJobs(userID):
-        ApiConstants.getRandomJobs(userID),
+      final useSearchCombined = title != null || (searchSpheres != null && searchSpheres.isNotEmpty);
 
+      final response = await dio.get(
+        useSearchCombined
+            ? ApiConstants.getJobs(userID)
+            : ApiConstants.getRandomJobs(userID),
         queryParameters: queryParameters,
       );
 
@@ -193,7 +197,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
   Future<LikedJobListModel> fetchLikedJobs(page) async {
     final queryParameters = {
       "excludeViewed": false,
-      "pageSize": 10,
+      "pageSize": 7,
       "page": page,
     };
 

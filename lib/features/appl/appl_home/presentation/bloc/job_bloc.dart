@@ -73,6 +73,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
           minSalary: event.minSalary,
           title: event.title,
           salaryWithAgreement: event.salaryWithAgreement,
+          searchSpheres: event.searchSpheres,
         ),
       );
 
@@ -111,18 +112,20 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       final hasFilters = event.minSalary != null ||
           event.maxSalary != null ||
           event.title != null ||
-          event.salaryWithAgreement != null;
+          event.salaryWithAgreement != null ||
+          (event.searchSpheres != null && event.searchSpheres!.isNotEmpty);
 
       if (hasFilters) {
         // Use filter usecase when filters are active
         final result = await filterJobsUsecase(
           FilterJobParams(
             page: event.nextPage,
-            perPage: 10,
+            perPage: 7,
             maxSalary: event.maxSalary,
             minSalary: event.minSalary,
             title: event.title,
             salaryWithAgreement: event.salaryWithAgreement,
+            searchSpheres: event.searchSpheres,
           ),
         );
 

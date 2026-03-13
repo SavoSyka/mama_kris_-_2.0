@@ -24,6 +24,9 @@ import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_event.
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_state.dart';
 import 'package:mama_kris/features/emp/emp_profile/application/bloc/emp_user_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
+import 'package:mama_kris/core/common/widgets/show_social_login_consent_dialog.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_bloc.dart';
+import 'package:mama_kris/features/email_subscription/application/bloc/email_subscription_event.dart';
 
 class EmpLoginScreen extends StatefulWidget {
   const EmpLoginScreen({super.key});
@@ -36,6 +39,7 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isAppleLogin = false;
 
   @override
   void initState() {
@@ -57,10 +61,9 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                 child: CustomDefaultPadding(
                   child: SingleChildScrollView(
                     child: BlocListener<EmpAuthBloc, EmpAuthState>(
-                      listener: (context, state) {
+                      listener: (context, state) async {
                         debugPrint('auth state $state');
                         if (state is EmpAuthSuccess) {
-                          // TODO  i have to update employe profile.
                           context.read<EmpUserBloc>().add(
                             EmpGetUserProfileEvent(user: state.user.user),
                           );
@@ -72,6 +75,37 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                                   .toIso8601String(),
                             ),
                           );
+
+                          if (_isAppleLogin) {
+                            _isAppleLogin = false;
+                            final consent =
+                                await showSocialLoginConsentDialog(
+                              context,
+                              isEmployee: true,
+                            );
+                            if (consent != null && consent.accepted) {
+                              if (consent.subscribeEmail &&
+                                  state.user.user.email != null) {
+                                if (context.mounted) {
+                                  context
+                                      .read<EmailSubscriptionBloc>()
+                                      .add(
+                                        SubscribeEmailEvent(
+                                          email: state.user.user.email!,
+                                        ),
+                                      );
+                                }
+                              }
+                              if (context.mounted) {
+                                if (state.user.subscription.active) {
+                                  context.goNamed(RouteName.homeEmploye);
+                                } else {
+                                  context.goNamed(RouteName.subscription);
+                                }
+                              }
+                            }
+                            return;
+                          }
 
                           if (state.user.subscription.active) {
                             context.goNamed(RouteName.homeEmploye);
@@ -236,6 +270,7 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
   }
 
   Future<void> signInWithApple() async {
+    _isAppleLogin = true;
     await AuthService().signOut();
     final user = await AuthService().signInWithApple();
 

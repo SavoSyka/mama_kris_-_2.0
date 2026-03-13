@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
@@ -68,18 +69,18 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   SubscriptionEntity? _subscription;
 
-  final applicantDesc = '''
-Вся удаленная работа в вашем телефоне
 
-Наш ИИ-парсер 24/7 мониторит 500 000+ чатов Telegram и ВКонтакте, отсеивает 98% мусора и мошенников. Вы получаете только реальные вакансии с хорошей оплатой
- 
- Вы получаете:
-  • 10 000+ вакансий всегда в доступе
-  • Новые предложения добавляются ежедневно
-  • Только проверенные работодатели
-  • Поддержка 24/7
-  • Неограниченное количество откликов
-''';
+
+  final applicantBody =
+      'Вся удаленная работа в вашем телефоне\n\nНаш ИИ-парсер 24/7 мониторит 500 000+ чатов Telegram и ВКонтакте, отсеивает 98% мусора и мошенников. Вы получаете только реальные вакансии с хорошей оплатой';
+
+  final applicantListItems = [
+    '10 000+ вакансий всегда в доступе',
+    'Новые предложения добавляются ежедневно',
+    'Только проверенные работодатели',
+    'Поддержка 24/7',
+    'Неограниченное количество откликов',
+  ];
 
   final empDesc = '''
 Тысячи кандидатов уже ждут именно вашу удаленную вакансию!
@@ -157,26 +158,129 @@ MamaKris объединяет десятки тысяч активных сои�
 
                                 const SizedBox(height: 32),
 
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 30,
-                                  ),
-
-                                  child: Text(
-                                    _isApplicant ? applicantDesc : empDesc,
-                                    style: const TextStyle(
-                                      color: Color(0xFF596574),
-                                      fontSize: 16,
-                                      fontFamily: 'Manrope',
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.30,
+                                if (_isApplicant) ...[
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 30,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Text(
+                                        //   applicantSubheading,
+                                        //   style: const TextStyle(
+                                        //     color: Colors.black,
+                                        //     fontSize: 16,
+                                        //     fontFamily: 'Manrope',
+                                        //     fontWeight: FontWeight.w600,
+                                        //     height: 1.30,
+                                        //   ),
+                                        // ),
+                                        // const SizedBox(height: 12),
+                                        Text(
+                                          applicantBody,
+                                          style: const TextStyle(
+                                            color: Color(0xFF596574),
+                                            fontSize: 16,
+                                            fontFamily: 'Manrope',
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.30,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        const Text(
+                                          'Вы получаете:',
+                                          style: TextStyle(
+                                            color: Color(0xFF596574),
+                                            fontSize: 16,
+                                            fontFamily: 'Manrope',
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.30,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        ...applicantListItems.map(
+                                          (item) => Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 4,
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  '  •  ',
+                                                  style: TextStyle(
+                                                    color: Color(0xFF596574),
+                                                    fontSize: 16,
+                                                    fontFamily: 'Manrope',
+                                                    fontWeight: FontWeight.w500,
+                                                    height: 1.30,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    item,
+                                                    style: const TextStyle(
+                                                      color: Color(0xFF596574),
+                                                      fontSize: 16,
+                                                      fontFamily: 'Manrope',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      height: 1.30,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
+                                ] else
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 30,
+                                    ),
+                                    child: Text(
+                                      empDesc,
+                                      style: const TextStyle(
+                                        color: Color(0xFF596574),
+                                        fontSize: 16,
+                                        fontFamily: 'Manrope',
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.30,
+                                      ),
+                                    ),
+                                  ),
 
                                 const SizedBox(height: 16),
 
-                                const StoriesSection(),
+                                if (_isApplicant)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 30,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Отзывы',
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontFamily: 'Manrope',
+                                          fontWeight: FontWeight.w700,
+                                          height: 1.30,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
+                                const SizedBox(height: 8),
+
+                                 StoriesSection(horizontalPadding: 32,),
 
                                 if (state is TariffsLoadingState)
                                   const Center(child: IPhoneLoader(height: 200))
