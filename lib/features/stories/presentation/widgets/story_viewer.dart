@@ -142,6 +142,11 @@ class _StoryViewerState extends State<StoryViewer>
       setState(() {});
       _progressController.duration = _textDuration;
       _progressController.forward(from: 0);
+      if (story.description != null && story.description!.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _showDescription(story.description!);
+        });
+      }
     } else {
       setState(() {});
       _progressController.duration = _imageDuration;
@@ -313,21 +318,15 @@ class _StoryViewerState extends State<StoryViewer>
     }
 
     if (story.hasVideo) {
-      return const Center(
-        child: CircularProgressIndicator(color: Colors.white),
-      );
+      return const _FullScreenShimmer();
     }
 
     if (story.hasImage) {
       return CachedNetworkImage(
         imageUrl: story.imageUrl!,
         fit: BoxFit.cover,
-        placeholder: (_, __) => const Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
-        errorWidget: (_, __, ___) => const Center(
-          child: Icon(Icons.error, color: Colors.white, size: 48),
-        ),
+        placeholder: (_, __) => const _FullScreenShimmer(),
+        errorWidget: (_, __, ___) => Container(color: Colors.black),
       );
     }
 
@@ -507,6 +506,60 @@ class _StoryProgressBar extends StatelessWidget {
               valueColor: const AlwaysStoppedAnimation(Colors.white),
               minHeight: 3,
             ),
+    );
+  }
+}
+
+class _FullScreenShimmer extends StatefulWidget {
+  const _FullScreenShimmer();
+
+  @override
+  State<_FullScreenShimmer> createState() => _FullScreenShimmerState();
+}
+
+class _FullScreenShimmerState extends State<_FullScreenShimmer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: const [
+                Color(0xFF1A1A1A),
+                Color(0xFF2A2A2A),
+                Color(0xFF1A1A1A),
+              ],
+              stops: [
+                (_controller.value - 0.3).clamp(0.0, 1.0),
+                _controller.value,
+                (_controller.value + 0.3).clamp(0.0, 1.0),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
