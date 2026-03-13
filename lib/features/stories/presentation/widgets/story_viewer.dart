@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mama_kris/features/stories/domain/entity/story_category_entity.dart';
 import 'package:mama_kris/features/stories/domain/entity/story_entity.dart';
 import 'package:video_player/video_player.dart';
@@ -279,14 +280,40 @@ class _StoryViewerState extends State<StoryViewer>
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
+              child: Markdown(
+                data: description,
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-                child: Text(
-                  description,
-                  style: const TextStyle(
+                styleSheet: MarkdownStyleSheet(
+                  p: const TextStyle(
                     color: Colors.black87,
                     fontSize: 15,
                     height: 1.5,
+                  ),
+                  h1: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    height: 1.4,
+                  ),
+                  h2: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w700,
+                    height: 1.4,
+                  ),
+                  h3: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    height: 1.4,
+                  ),
+                  horizontalRuleDecoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.grey.shade300,
+                        width: 1,
+                      ),
+                    ),
                   ),
                 ),
               ),
