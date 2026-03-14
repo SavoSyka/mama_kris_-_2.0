@@ -31,7 +31,7 @@ class FilterJobParams {
   final String? maxSalary;
   final String? title;
   final bool? salaryWithAgreement;
-  final List<String>? searchSpheres;
+  final List<int>? searchSpheres;
 
   FilterJobParams({
     required this.page,

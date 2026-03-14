@@ -16,7 +16,7 @@ abstract class JobRemoteDataSource {
     String? maxSalary,
     String? title,
     bool? salaryWithAgreemen,
-    List<String>? searchSpheres,
+    List<int>? searchSpheres,
   });
 
   Future<JobListModel> searchJobs(String query);
@@ -77,7 +77,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     String? maxSalary,
     String? title,
     bool? salaryWithAgreemen,
-    List<String>? searchSpheres,
+    List<int>? searchSpheres,
   }) async {
     try {
       final queryParameters = {

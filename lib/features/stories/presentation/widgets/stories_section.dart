@@ -100,7 +100,7 @@ class _StoriesShimmerState extends State<_StoriesShimmer>
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 81,
+      height: 101,
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {

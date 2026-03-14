@@ -51,7 +51,7 @@ class LoadNextJobsPageEvent extends JobEvent {
   final String? minSalary;
   final String? maxSalary;
   final bool? salaryWithAgreement;
-  final List<String>? searchSpheres;
+  final List<int>? searchSpheres;
 
   const LoadNextJobsPageEvent(
     this.nextPage, {
@@ -81,7 +81,7 @@ class FilterJobEvent extends JobEvent {
   final String? minSalary;
   final String? maxSalary;
   final bool? salaryWithAgreement;
-  final List<String>? searchSpheres;
+  final List<int>? searchSpheres;
 
   const FilterJobEvent({
     required this.page,

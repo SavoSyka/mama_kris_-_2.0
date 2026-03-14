@@ -61,7 +61,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   String? _minSalary;
   String? _maxSalary;
   bool? _byAgreement;
-  List<String>? _selectedSpheres;
+  List<int>? _selectedSpheres;
 
   final ScrollController _scrollController = ScrollController();
   Timer? _debounceTimer;
@@ -657,7 +657,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
 
     setState(() {
       if (filter['spheres'] != null) {
-        _selectedSpheres = List<String>.from(filter['spheres']);
+        _selectedSpheres = List<int>.from(filter['spheres']);
       }
     });
 

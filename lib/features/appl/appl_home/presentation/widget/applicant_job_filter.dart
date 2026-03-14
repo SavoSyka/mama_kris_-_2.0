@@ -28,6 +28,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
   // Sphere state
   List<Map<String, dynamic>> spheres = [];
   String? selectedSphereTitle;
+  int? selectedSphereId;
   bool isLoadingSpheres = true;
 
   await showModalBottomSheet(
@@ -82,8 +83,8 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
 
                 result = {'min': min, 'max': max};
               }
-              if (selectedSphereTitle != null) {
-                result!['spheres'] = [selectedSphereTitle];
+              if (selectedSphereId != null) {
+                result!['spheres'] = [selectedSphereId];
               }
               Navigator.pop(context, result);
             }
@@ -278,6 +279,11 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                                   onChanged: (value) {
                                     setModalState(() {
                                       selectedSphereTitle = value;
+                                      selectedSphereId = value == null
+                                          ? null
+                                          : spheres.firstWhere(
+                                              (s) => s['title'] == value,
+                                            )['sphereID'] as int;
                                     });
                                   },
                                 ),

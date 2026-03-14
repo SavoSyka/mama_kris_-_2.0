@@ -23,7 +23,7 @@ class StoriesThumbnailList extends StatelessWidget {
     if (categories.isEmpty) return const SizedBox.shrink();
 
     return SizedBox(
-      height: 81,
+      height: 101,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 16),
@@ -50,30 +50,47 @@ class StoriesThumbnailList extends StatelessWidget {
                 ),
               );
             },
-            child: Container(
+            child: SizedBox(
               width: 81,
-              height: 81,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isViewed
-                      ? AppPalette.greyLight
-                      : AppPalette.storyBorder,
-                  width: 2,
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: CachedNetworkImage(
-                  imageUrl: category.imageWebpUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (_, __) =>
-                      Container(color: AppPalette.greyLight),
-                  errorWidget: (_, __, ___) => Container(
-                    color: AppPalette.greyLight,
-                    child: const Icon(Icons.error_outline, size: 20),
+              child: Column(
+                children: [
+                  Container(
+                    width: 81,
+                    height: 81,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isViewed
+                            ? AppPalette.greyLight
+                            : AppPalette.storyBorder,
+                        width: 2,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: CachedNetworkImage(
+                        imageUrl: category.imageWebpUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (_, __) =>
+                            Container(color: AppPalette.greyLight),
+                        errorWidget: (_, __, ___) => Container(
+                          color: AppPalette.greyLight,
+                          child: const Icon(Icons.error_outline, size: 20),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 4),
+                  Text(
+                    category.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
               ),
             ),
           );

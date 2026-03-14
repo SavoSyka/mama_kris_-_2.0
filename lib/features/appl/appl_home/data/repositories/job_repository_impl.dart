@@ -36,7 +36,7 @@ class JobRepositoryImpl implements JobRepository {
     String? maxSalary,
     String? title,
     bool? salaryWithAgreemen,
-    List<String>? searchSpheres,
+    List<int>? searchSpheres,
   }) async {
     try {
       final value = await remoteDataSource.filterJobs(
