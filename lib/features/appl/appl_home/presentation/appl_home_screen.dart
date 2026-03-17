@@ -694,54 +694,30 @@ class _AdCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-      decoration: AppTheme.cardDecoration,
-      child: BlocBuilder<AdsCubit, AdsState>(
-        builder: (context, state) {
-          if (state is AdsLoading) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(),
-                ),
+    return BlocBuilder<AdsCubit, AdsState>(
+      builder: (context, state) {
+        if (state is AdsLoaded) {
+          return Container(
+            width: double.infinity,
+            decoration: AppTheme.cardDecoration,
+            child: InkWell(
+              onTap: () {
+                if (state.ad.link.isNotEmpty) {
+                  HandleLaunchUrl.launchUrlGeneric(
+                    context,
+                    url: state.ad.link,
+                  );
+                }
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: buildBase64Image(state.ad.imageData),
               ),
-            );
-          } else if (state is AdsLoaded) {
-            return Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          if (state.ad.link.isNotEmpty) {
-                            HandleLaunchUrl.launchUrlGeneric(
-                              context,
-                              url: state.ad.link,
-                            );
-                          }
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: buildBase64Image(state.ad.imageData),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          } else if (state is AdsError)
-            CustomErrorRetry(onTap: () {});
-
-          return const Text("che");
-        },
-      ),
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mama_kris/core/utils/handle_launch_url.dart';
 import 'package:mama_kris/features/stories/domain/entity/story_category_entity.dart';
 import 'package:mama_kris/features/stories/domain/entity/story_entity.dart';
 import 'package:video_player/video_player.dart';
@@ -283,6 +284,11 @@ class _StoryViewerState extends State<StoryViewer>
               child: Markdown(
                 data: description,
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+                onTapLink: (text, href, title) {
+                  if (href != null && href.isNotEmpty) {
+                    HandleLaunchUrl.launchUrlGeneric(context, url: href);
+                  }
+                },
                 styleSheet: MarkdownStyleSheet(
                   p: const TextStyle(
                     color: Colors.black87,
