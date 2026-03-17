@@ -23,7 +23,7 @@ class _NotificationListPageState extends State<NotificationListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: const Text('Уведомления'),
         backgroundColor: AppPalette.primaryColor,
         actions: [
           IconButton(
@@ -48,7 +48,7 @@ class _NotificationListPageState extends State<NotificationListPage> {
                     onPressed: () {
                       context.read<NotificationListCubit>().loadNotifications();
                     },
-                    child: const Text('Retry'),
+                    child: const Text('Повторить'),
                   ),
                 ],
               ),
@@ -57,7 +57,7 @@ class _NotificationListPageState extends State<NotificationListPage> {
             final notifications = state.notifications;
             if (notifications.isEmpty) {
               return const Center(
-                child: Text('No notifications yet'),
+                child: Text('Уведомлений пока нет'),
               );
             }
             return ListView.builder(

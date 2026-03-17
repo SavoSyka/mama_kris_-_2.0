@@ -104,7 +104,7 @@ class _CustomPhonePickerState extends State<CustomPhonePicker> {
         disableLengthCheck: true,
   
        decoration: InputDecoration(
-         hintText: 'Enter phone number',
+         hintText: 'Введите номер телефона',
             errorMaxLines: 3,
             hintStyle: GoogleFonts.outfit(
               color: const Color(0xFF7c7c7c),

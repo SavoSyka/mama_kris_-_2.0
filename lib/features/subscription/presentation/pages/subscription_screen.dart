@@ -266,7 +266,7 @@ MamaKris объединяет десятки тысяч активных сои�
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        'Отзывы',
+                                        'Сторисы',
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 18,

@@ -26,7 +26,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notification Details'),
+        title: const Text('Уведомление'),
         backgroundColor: AppPalette.primaryColor,
       ),
       body: BlocBuilder<NotificationDetailCubit, NotificationDetailState>(
@@ -43,7 +43,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                     onPressed: () {
                       context.read<NotificationDetailCubit>().loadNotification(widget.notificationId);
                     },
-                    child: const Text('Retry'),
+                    child: const Text('Повторить'),
                   ),
                 ],
               ),
@@ -127,7 +127,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                           ),
                         ),
                         child: const Text(
-                          'Mark as Read',
+                          'Прочитано',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -137,7 +137,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                   if (notification.data != null && notification.data!.isNotEmpty) ...[
                     const SizedBox(height: 24),
                     const Text(
-                      'Additional Information:',
+                      'Дополнительная информация:',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

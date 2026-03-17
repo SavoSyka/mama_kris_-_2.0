@@ -111,7 +111,7 @@ class _HomeSearchPageState extends State<HomeSearchPage> {
             onSubmitted: (_) => _submit(),
             style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(
-              hintText: 'Search jobs...',
+              hintText: 'Поиск вакансий...',
               hintStyle: const TextStyle(color: Colors.grey),
               filled: true,
               fillColor: Color(0xFfF6FEF7),

@@ -20,6 +20,8 @@ class CustomInputText extends StatefulWidget {
   final String labelText;
   final bool hasGreyBg;
   final Function(String)? onChanged;
+  final Function(String)? onFieldSubmitted;
+  final TextInputAction? textInputAction;
   final InputBorder? border;
   final EdgeInsetsGeometry? contentPadding;
 
@@ -40,6 +42,8 @@ class CustomInputText extends StatefulWidget {
     this.labelText = '',
     this.hasGreyBg = false,
     this.onChanged,
+    this.onFieldSubmitted,
+    this.textInputAction,
     this.border,
     this.contentPadding,
   });
@@ -143,7 +147,9 @@ class _CustomInputTextState extends State<CustomInputText> {
             readOnly: widget.readOnly,
             autofocus: widget.autoFocus,
             keyboardType: widget.keyboardType,
+            textInputAction: widget.textInputAction,
             validator: widget.validator,
+            onFieldSubmitted: widget.onFieldSubmitted,
             style: const TextStyle(fontSize: 15.5, color: Colors.black87),
             minLines: widget.minLines,
             maxLines: widget.maxLines,

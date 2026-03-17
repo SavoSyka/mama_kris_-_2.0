@@ -15,16 +15,18 @@ class SpecialityRemoteDataSourceImpl extends SpecialityRemoteDataSource {
   @override
   Future<List<String>> searchSpeciality(String query) async {
     try {
-      final queryParams = {'page': 1, "pageSize": 40, "query": query};
-      final response = await dio.get(
-        ApiConstants.getSpeciality,
-        queryParameters: queryParams,
-      );
+      final response = await dio.get(ApiConstants.searchSpheres);
 
       if (response.statusCode == 200) {
-        final data = response.data['data'] as List<dynamic>;
+        final data = response.data as List<dynamic>;
         debugPrint("Speciality Searched 😌");
-        final returnData = data.map((json) => json.toString()).toList();
+        final returnData = data
+            .map((json) => (json['title'] ?? '').toString())
+            .where((title) => title.isNotEmpty)
+            .where((title) =>
+                query.isEmpty ||
+                title.toLowerCase().contains(query.toLowerCase()))
+            .toList();
         return returnData;
       } else {
         debugPrint("Speciality Error 😌");

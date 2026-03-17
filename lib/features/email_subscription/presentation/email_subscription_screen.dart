@@ -34,7 +34,7 @@ class _EmailSubscriptionScreenState extends State<EmailSubscriptionScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(title: 'Email Subscription'),
+      appBar: const CustomAppBar(title: 'Email рассылка'),
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
@@ -83,7 +83,7 @@ class _EmailSubscriptionScreenState extends State<EmailSubscriptionScreen> {
                                     child: Column(
                                       children: [
                                         const CustomText(
-                                          text: "Email Subscription",
+                                          text: "Email рассылка",
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w600,
@@ -92,7 +92,7 @@ class _EmailSubscriptionScreenState extends State<EmailSubscriptionScreen> {
                                         const SizedBox(height: 10),
                                         const CustomText(
                                           text:
-                                              "Subscribe or unsubscribe from our email updates",
+                                              "Подпишитесь или отпишитесь от наших email обновлений",
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.grey,
@@ -101,7 +101,7 @@ class _EmailSubscriptionScreenState extends State<EmailSubscriptionScreen> {
                                         const SizedBox(height: 30),
                                         CustomInputText(
                                           hintText: 'example@email.com',
-                                          labelText: "Email Address",
+                                          labelText: "Email",
                                           controller: emailController,
                                           validator:
                                               FormValidations.validateEmail,
@@ -110,7 +110,7 @@ class _EmailSubscriptionScreenState extends State<EmailSubscriptionScreen> {
                                         ),
                                         const SizedBox(height: 30),
                                         CustomButtonApplicant(
-                                          btnText: 'Subscribe',
+                                          btnText: 'Подписаться',
                                           isLoading: isLoading,
                                           isBtnActive: !isLoading,
                                           onTap: () {
@@ -129,7 +129,7 @@ class _EmailSubscriptionScreenState extends State<EmailSubscriptionScreen> {
                                         ),
                                         const SizedBox(height: 15),
                                         CustomButtonApplicant(
-                                          btnText: 'Unsubscribe',
+                                          btnText: 'Отписаться',
                                           isLoading: isLoading,
                                           isBtnActive: !isLoading,
                                           onTap: () {

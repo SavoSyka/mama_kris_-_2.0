@@ -107,7 +107,14 @@ class _ResumeSpecialitySearchPageState
                       ),
 
                       prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                      textInputAction: TextInputAction.search,
                       onChanged: (_) => _onSearchChanged(),
+                      onFieldSubmitted: (value) {
+                        final query = value.trim();
+                        if (query.isNotEmpty) {
+                          _selectSpeciality(query);
+                        }
+                      },
                     ),
                   ),
 

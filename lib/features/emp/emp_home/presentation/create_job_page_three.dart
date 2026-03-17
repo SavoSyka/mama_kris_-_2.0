@@ -152,7 +152,7 @@ class _CreateJobPageThreeState extends State<CreateJobPageThree> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Contact information through",
+                  "Контактная информация через",
                   style: TextStyle(
                     color: Color(0xFF596574),
                     fontSize: 16,

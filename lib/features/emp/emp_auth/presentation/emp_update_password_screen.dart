@@ -91,8 +91,8 @@ class _EmpUpdatePasswordScreenState extends State<EmpUpdatePasswordScreen> {
                                       ),
                                       const SizedBox(height: 20),
                                       CustomInputText(
-                                        hintText: 'enter your new password',
-                                        labelText: "password",
+                                        hintText: 'Введите новый пароль',
+                                        labelText: "Пароль",
                                         controller: password,
                                         validator:
                                             FormValidations.validatePassword,
@@ -100,8 +100,8 @@ class _EmpUpdatePasswordScreenState extends State<EmpUpdatePasswordScreen> {
                                       ),
                                       const SizedBox(height: 20),
                                       CustomInputText(
-                                        hintText: 'enter your confirm password',
-                                        labelText: "Confirm Password",
+                                        hintText: 'Подтвердите пароль',
+                                        labelText: "Подтверждение пароля",
                                         controller: confirmPassword,
                                         validator: (value) =>
                                             FormValidations.validateConfirmPassword(

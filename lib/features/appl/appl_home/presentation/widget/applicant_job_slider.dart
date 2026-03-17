@@ -11,6 +11,7 @@ class ApplicantJobSlider extends StatelessWidget {
   final int slideDirection;
   final VoidCallback onInterestedPressed;
   final VoidCallback onNotInterestedPressed;
+  final VoidCallback? onTap;
 
   const ApplicantJobSlider({
     super.key,
@@ -20,6 +21,7 @@ class ApplicantJobSlider extends StatelessWidget {
     required this.slideDirection,
     required this.onInterestedPressed,
     required this.onNotInterestedPressed,
+    this.onTap,
   });
 
   @override
@@ -38,15 +40,16 @@ class ApplicantJobSlider extends StatelessWidget {
 
       child: Column(
         children: [
-          Container(
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
             width: 395 * scaleX,
             padding: EdgeInsets.symmetric(horizontal: 16 * scaleX),
             decoration: BoxDecoration(
-              color: Colors.white, // или другой фон, если требуется
+              color: Colors.white,
               borderRadius: BorderRadius.circular(15 * scaleX),
             ),
-            clipBehavior:
-                Clip.hardEdge, // обрезаем всё, что выходит за рамки контейнерак
+            clipBehavior: Clip.hardEdge,
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               transitionBuilder: (Widget child, Animation<double> animation) {
@@ -111,6 +114,7 @@ class ApplicantJobSlider extends StatelessWidget {
                 key: ValueKey(vacancyIndex),
               ),
             ),
+          ),
           ),
           // Фиксированная кнопка "Интересно" (справа)
           const SizedBox(height: 16),

@@ -193,7 +193,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                           const SizedBox(width: 10),
                                           Expanded(
                                             child: Text(
-                                              _searchQuery ?? 'Search jobs...',
+                                              _searchQuery ?? 'Поиск вакансий...',
                                               style: TextStyle(
                                                 color: _searchQuery == null
                                                     ? Colors.grey
@@ -308,6 +308,14 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     },
                                     onNotInterestedPressed: () {
                                       _handleVacancyReaction(isLiked: false);
+                                    },
+                                    onTap: () async {
+                                      final confirmed =
+                                          await showVacancyWarningDialog(
+                                            context,
+                                          );
+                                      if (!confirmed) return;
+                                      _handleVacancyReaction(isLiked: true);
                                     },
                                   ),
 
