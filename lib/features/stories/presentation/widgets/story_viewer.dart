@@ -144,11 +144,6 @@ class _StoryViewerState extends State<StoryViewer>
       setState(() {});
       _progressController.duration = _textDuration;
       _progressController.forward(from: 0);
-      if (story.description != null && story.description!.isNotEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _showDescription(story.description!);
-        });
-      }
     } else {
       setState(() {});
       _progressController.duration = _imageDuration;
@@ -206,7 +201,6 @@ class _StoryViewerState extends State<StoryViewer>
         curve: Curves.easeInOut,
       );
     } else {
-      // Already first category, first story — do nothing
       _isNavigating = false;
     }
   }
@@ -253,88 +247,13 @@ class _StoryViewerState extends State<StoryViewer>
     _videoController?.play();
   }
 
-  void _showDescription(String description) {
-    _pause();
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      isScrollControlled: true,
-      useRootNavigator: false,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => SizedBox(
-        height: MediaQuery.of(context).size.height * 0.8,
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 12),
-            Center(
-              child: Container(
-                height: 4,
-                width: 33,
-                decoration: BoxDecoration(
-                  color: Colors.black12,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Markdown(
-                data: description,
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-                onTapLink: (text, href, title) {
-                  if (href != null && href.isNotEmpty) {
-                    HandleLaunchUrl.launchUrlGeneric(context, url: href);
-                  }
-                },
-                styleSheet: MarkdownStyleSheet(
-                  p: const TextStyle(
-                    color: Colors.black87,
-                    fontSize: 15,
-                    height: 1.5,
-                  ),
-                  h1: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    height: 1.4,
-                  ),
-                  h2: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 19,
-                    fontWeight: FontWeight.w700,
-                    height: 1.4,
-                  ),
-                  h3: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                    height: 1.4,
-                  ),
-                  horizontalRuleDecoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ).whenComplete(() {
-      _resume();
-    });
-  }
-
   // --- Build ---
 
+  /// Returns true if the current story should use dark-on-light theme (text-only stories)
+  bool _isLightTheme(StoryEntity story) => story.isTextOnly;
+
   Widget _buildContent(StoryEntity story) {
+    // Video
     if (story.hasVideo &&
         _videoController != null &&
         _videoController!.value.isInitialized) {
@@ -354,6 +273,7 @@ class _StoryViewerState extends State<StoryViewer>
       return const _FullScreenShimmer();
     }
 
+    // Image
     if (story.hasImage) {
       return CachedNetworkImage(
         imageUrl: story.imageUrl!,
@@ -363,15 +283,72 @@ class _StoryViewerState extends State<StoryViewer>
       );
     }
 
-    // Text-only story — black background, description shown as bottom sheet in stack
-    return Container(color: Colors.black);
+    // Text-only: white background with inline markdown
+    return Container(
+      color: Colors.white,
+      child: SafeArea(
+        child: Column(
+          children: [
+            // Top spacing for indicators + title
+            const SizedBox(height: 80),
+            Expanded(
+              child: story.description != null && story.description!.isNotEmpty
+                  ? Markdown(
+                      data: story.description!,
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      onTapLink: (text, href, title) {
+                        if (href != null && href.isNotEmpty) {
+                          HandleLaunchUrl.launchUrlGeneric(context, url: href);
+                        }
+                      },
+                      styleSheet: MarkdownStyleSheet(
+                        p: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 15,
+                          height: 1.5,
+                        ),
+                        h1: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          height: 1.4,
+                        ),
+                        h2: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w700,
+                          height: 1.4,
+                        ),
+                        h3: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          height: 1.4,
+                        ),
+                        horizontalRuleDecoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+            // Reserve space for button
+            if (story.hasButton) const SizedBox(height: 70),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildStoryPage(BuildContext context, int categoryIndex) {
     final isActive = categoryIndex == _currentCategoryIndex;
 
     if (!isActive) {
-      // Static placeholder for non-active pages (visible during swipe)
       final category = widget.categories[categoryIndex];
       return Container(
         color: Colors.black,
@@ -387,6 +364,12 @@ class _StoryViewerState extends State<StoryViewer>
     final story = _currentStory;
     final displayTitle = story.title ?? _currentCategoryTitle;
     final stories = _currentStories;
+    final isLight = _isLightTheme(story);
+
+    final uiColor = isLight ? Colors.black : Colors.white;
+    final indicatorBg = isLight
+        ? Colors.black.withValues(alpha: 0.15)
+        : Colors.white.withValues(alpha: 0.3);
 
     return GestureDetector(
       onTapUp: _onTapUp,
@@ -397,7 +380,7 @@ class _StoryViewerState extends State<StoryViewer>
         children: [
           _buildContent(story),
 
-          // Top bar
+          // Top bar: title + indicators
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -412,8 +395,8 @@ class _StoryViewerState extends State<StoryViewer>
                         child: displayTitle.isNotEmpty
                             ? Text(
                                 displayTitle,
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  color: uiColor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -422,9 +405,9 @@ class _StoryViewerState extends State<StoryViewer>
                       ),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pop(),
-                        child: const Icon(
+                        child: Icon(
                           Icons.close,
-                          color: Colors.white,
+                          color: uiColor,
                           size: 28,
                         ),
                       ),
@@ -447,6 +430,8 @@ class _StoryViewerState extends State<StoryViewer>
                                 ? _progressController
                                 : null,
                             isFilled: i < _currentStoryIndex,
+                            activeColor: uiColor,
+                            backgroundColor: indicatorBg,
                           ),
                         ),
                       );
@@ -457,9 +442,8 @@ class _StoryViewerState extends State<StoryViewer>
             ),
           ),
 
-          // Bottom "Показать описание" button
-          if (story.description != null &&
-              story.description!.isNotEmpty)
+          // Bottom button — show only when story has buttonText + buttonUrl
+          if (story.hasButton)
             Positioned(
               left: 16,
               right: 16,
@@ -468,19 +452,24 @@ class _StoryViewerState extends State<StoryViewer>
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: GestureDetector(
-                    onTap: () => _showDescription(story.description!),
+                    onTap: () {
+                      HandleLaunchUrl.launchUrlGeneric(
+                        context,
+                        url: story.buttonUrl!,
+                      );
+                    },
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isLight ? Colors.black : Colors.white,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          'Показать описание',
+                          story.buttonText!,
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: isLight ? Colors.white : Colors.black87,
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),
@@ -491,7 +480,6 @@ class _StoryViewerState extends State<StoryViewer>
                 ),
               ),
             ),
-
         ],
       ),
     );
@@ -514,8 +502,15 @@ class _StoryViewerState extends State<StoryViewer>
 class _StoryProgressBar extends StatelessWidget {
   final AnimationController? animation;
   final bool isFilled;
+  final Color activeColor;
+  final Color backgroundColor;
 
-  const _StoryProgressBar({this.animation, this.isFilled = false});
+  const _StoryProgressBar({
+    this.animation,
+    this.isFilled = false,
+    this.activeColor = Colors.white,
+    this.backgroundColor = const Color(0x4DFFFFFF),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -527,16 +522,16 @@ class _StoryProgressBar extends StatelessWidget {
               builder: (context, _) {
                 return LinearProgressIndicator(
                   value: animation!.value,
-                  backgroundColor: Colors.white.withValues(alpha: 0.3),
-                  valueColor: const AlwaysStoppedAnimation(Colors.white),
+                  backgroundColor: backgroundColor,
+                  valueColor: AlwaysStoppedAnimation(activeColor),
                   minHeight: 3,
                 );
               },
             )
           : LinearProgressIndicator(
               value: isFilled ? 1.0 : 0.0,
-              backgroundColor: Colors.white.withValues(alpha: 0.3),
-              valueColor: const AlwaysStoppedAnimation(Colors.white),
+              backgroundColor: backgroundColor,
+              valueColor: AlwaysStoppedAnimation(activeColor),
               minHeight: 3,
             ),
     );

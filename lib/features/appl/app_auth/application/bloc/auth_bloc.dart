@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mama_kris/core/services/firebase/firebase_messaging_service.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
 import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_state.dart';
 import 'package:mama_kris/features/appl/app_auth/domain/usecases/check_email_usecase.dart';
@@ -50,6 +51,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<UpdatePasswordEvent>(_onUpdatePassword);
     on<LoginWithAppleEvent>(_onLoginWithApple);
     on<LoginWithCachedEvent>(_loginWithCached);
+  }
+
+  @override
+  void onChange(Change<AuthState> change) {
+    super.onChange(change);
+    if (change.nextState is AuthSuccess) {
+      FirebaseMessagingService.instance().registerTokenAfterLogin();
+    }
   }
 
   Future<void> _onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {

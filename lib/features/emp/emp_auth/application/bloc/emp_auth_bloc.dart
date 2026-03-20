@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:mama_kris/core/services/firebase/firebase_messaging_service.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_event.dart';
 import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_state.dart';
 import 'package:mama_kris/features/emp/emp_auth/domain/usecases/emp_check_email_usecase.dart';
@@ -51,6 +51,14 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     on<EmpUpdatePasswordEvent>(_onUpdatePassword);
     on<EmpLoginWithAppleEvent>(_onLoginWithApple);
     on<EmpLoginWithCachedEvent>(_loginWithCached);
+  }
+
+  @override
+  void onChange(Change<EmpAuthState> change) {
+    super.onChange(change);
+    if (change.nextState is EmpAuthSuccess) {
+      FirebaseMessagingService.instance().registerTokenAfterLogin();
+    }
   }
 
   Future<void> _onLoginEvent(

@@ -7,6 +7,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/firebase/firebase_messaging_service.dart';
+import 'package:mama_kris/core/services/firebase/local_notification_service.dart';
 import 'package:mama_kris/core/services/lifecycle/bloc/life_cycle_manager_bloc.dart';
 import 'package:mama_kris/core/services/lifecycle/lifecycle_manager.dart';
 import 'package:mama_kris/core/services/routes/router.dart';
@@ -52,6 +54,13 @@ void main() async {
 
 
   await dependencyInjection();
+
+  // Initialize push notifications
+  final localNotifications = LocalNotificationsService.instance();
+  await localNotifications.init();
+  await FirebaseMessagingService.instance().init(
+    localNotificationsService: localNotifications,
+  );
 
   runApp(
     MultiBlocProvider(

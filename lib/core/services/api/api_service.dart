@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/constants/app_constants.dart';
 import 'package:mama_kris/core/services/api/api_error_utils.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/firebase/firebase_messaging_service.dart';
 import 'package:mama_kris/core/services/navigator_key/global_navigator_key.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/core/services/routes/router.dart';
@@ -222,6 +223,8 @@ Future<void> _handleLogout() async {
   _isLogoutInProgress = true;
 
   try {
+    // Revoke FCM token before logout
+    await FirebaseMessagingService.instance().revokeToken();
     // Call logout usecase to clear data
     final logoutUsecase = sl<LogoutUsecase>();
     await logoutUsecase();

@@ -5,6 +5,8 @@ class StoryEntity extends Equatable {
   final int queue;
   final String? title;
   final String? description;
+  final String? buttonText;
+  final String? buttonUrl;
   final String? imageUrl;
   final String? imageWebpUrl;
   final String? videoUrl;
@@ -15,6 +17,8 @@ class StoryEntity extends Equatable {
     required this.queue,
     this.title,
     this.description,
+    this.buttonText,
+    this.buttonUrl,
     this.imageUrl,
     this.imageWebpUrl,
     this.videoUrl,
@@ -24,7 +28,12 @@ class StoryEntity extends Equatable {
   bool get hasVideo => videoUrl != null && videoUrl!.isNotEmpty;
   bool get hasImage => imageUrl != null && imageUrl!.isNotEmpty;
   bool get isTextOnly => !hasVideo && !hasImage;
+  bool get hasButton =>
+      buttonText != null &&
+      buttonText!.isNotEmpty &&
+      buttonUrl != null &&
+      buttonUrl!.isNotEmpty;
 
   @override
-  List<Object?> get props => [id, queue, title, description, imageUrl, imageWebpUrl, videoUrl, videoWebmUrl];
+  List<Object?> get props => [id, queue, title, description, buttonText, buttonUrl, imageUrl, imageWebpUrl, videoUrl, videoWebmUrl];
 }
