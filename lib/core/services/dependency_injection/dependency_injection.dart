@@ -430,6 +430,7 @@ Future<void> _initResumes() async {
       searchSpecialityUsecase: sl(),
       getPublicProfilesUsecase: sl(),
       searchHistoryDataSource: sl(),
+      dio: sl(),
     ),
   );
 

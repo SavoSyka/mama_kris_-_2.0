@@ -42,8 +42,8 @@ class _ResumeSpecialitySearchPageState
     super.initState();
     _specialitySearchBloc = context.read<SpecialitySearchBloc>();
 
-    // Load search history on first open
-    _specialitySearchBloc.add(LoadSearchHistoryEvent());
+    // Load spheres list on first open
+    _specialitySearchBloc.add(LoadSpheresEvent());
 
     _searchController.addListener(_onSearchChanged);
     _scrollController.addListener(_scrollListener);
@@ -169,9 +169,9 @@ class _ResumeSpecialitySearchPageState
       );
     }
 
-    /// ---------- Initial State with Search History ----------
-    if (_searchController.text.isEmpty && state is SearchHistoryLoaded) {
-      if (state.searchHistory.isEmpty) {
+    /// ---------- Initial State with Spheres List ----------
+    if (state is SpheresLoadedState) {
+      if (state.spheres.isEmpty) {
         return const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -186,7 +186,7 @@ class _ResumeSpecialitySearchPageState
           ),
         );
       } else {
-        return _buildSearchHistory(state.searchHistory);
+        return _buildSpheresList(state.spheres);
       }
     }
 
@@ -273,14 +273,14 @@ class _ResumeSpecialitySearchPageState
     return const SizedBox.shrink();
   }
 
-  Widget _buildSearchHistory(List<String> history) {
+  Widget _buildSpheresList(List<Map<String, dynamic>> spheres) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: CustomText(
-            text: 'Недавние поиски',
+            text: 'Сферы деятельности',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -291,14 +291,11 @@ class _ResumeSpecialitySearchPageState
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            itemCount: history.length,
+            itemCount: spheres.length,
             itemBuilder: (context, index) {
-              final query = history[index];
+              final title = spheres[index]['title'] as String;
               return InkWell(
-                onTap: () {
-                  _searchController.text = query;
-                  _selectSpeciality(query);
-                },
+                onTap: () => _selectSpeciality(title),
                 borderRadius: BorderRadius.circular(14),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -313,14 +310,14 @@ class _ResumeSpecialitySearchPageState
                   child: Row(
                     children: [
                       Icon(
-                        Icons.history,
+                        Icons.work_outline,
                         color: Colors.grey.withOpacity(0.7),
                         size: 20,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: CustomText(
-                          text: query,
+                          text: title,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/features/emp/emp_resume/data/data_sources/search_history_local_data_source.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/get_public_profiles_usecase.dart';
 import 'package:mama_kris/features/emp/emp_resume/domain/usecases/search_speciality_usecase.dart';
@@ -11,6 +13,7 @@ class SpecialitySearchBloc
     extends Bloc<SpecialitySearchEvent, SpecialitySearchState> {
   final SearchSpecialityUsecase searchSpecialityUsecase;
   final SearchHistoryLocalDataSource searchHistoryDataSource;
+  final Dio dio;
   Timer? _debounce;
 
   final GetPublicProfilesUsecase getPublicProfilesUsecase;
@@ -19,12 +22,14 @@ class SpecialitySearchBloc
     required this.searchSpecialityUsecase,
     required this.getPublicProfilesUsecase,
     required this.searchHistoryDataSource,
+    required this.dio,
   }) : super(SpecialitySearchInitial()) {
     on<SearchSpecialitiesEvent>(_onSearchSpecialities);
     on<ClearSearchEvent>(_onClearSearch);
     on<GetUserPublicProfileEvent>(_onGetUserProfile);
     on<LoadSearchHistoryEvent>(_onLoadSearchHistory);
     on<LoadNextSpecialityPageEvent>(_onLoadNextJob);
+    on<LoadSpheresEvent>(_onLoadSpheres);
   }
 
   Future<void> _onSearchSpecialities(
@@ -77,9 +82,34 @@ class SpecialitySearchBloc
 
   void searchWithDebounce(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
+    if (query.length < 3) {
+      add(LoadSpheresEvent());
+      return;
+    }
     _debounce = Timer(const Duration(milliseconds: 400), () {
       add(SearchSpecialitiesEvent(query: query));
     });
+  }
+
+  Future<void> _onLoadSpheres(
+    LoadSpheresEvent event,
+    Emitter<SpecialitySearchState> emit,
+  ) async {
+    try {
+      final response = await dio.get(ApiConstants.searchSpheres);
+      if (response.statusCode.toString().startsWith('2') &&
+          response.data is List) {
+        final spheres = (response.data as List)
+            .map((e) => {
+                  'sphereID': e['sphereID'],
+                  'title': e['title'] ?? '',
+                })
+            .toList();
+        emit(SpheresLoadedState(spheres: spheres));
+      }
+    } catch (e) {
+      debugPrint('Error fetching spheres: $e');
+    }
   }
 
   @override

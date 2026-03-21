@@ -64,3 +64,12 @@ class SearchHistoryLoaded extends SpecialitySearchState {
   @override
   List<Object> get props => [searchHistory];
 }
+
+class SpheresLoadedState extends SpecialitySearchState {
+  final List<Map<String, dynamic>> spheres;
+
+  const SpheresLoadedState({required this.spheres});
+
+  @override
+  List<Object> get props => [spheres];
+}

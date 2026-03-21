@@ -26,6 +26,8 @@ class GetUserPublicProfileEvent extends SpecialitySearchEvent {
 
 class LoadSearchHistoryEvent extends SpecialitySearchEvent {}
 
+class LoadSpheresEvent extends SpecialitySearchEvent {}
+
 class LoadNextSpecialityPageEvent extends SpecialitySearchEvent {
   final int nextPage;
   final String query;
