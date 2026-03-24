@@ -51,6 +51,7 @@ class EmpAuthBloc extends Bloc<EmpAuthEvent, EmpAuthState> {
     on<EmpUpdatePasswordEvent>(_onUpdatePassword);
     on<EmpLoginWithAppleEvent>(_onLoginWithApple);
     on<EmpLoginWithCachedEvent>(_loginWithCached);
+    on<ResetEmpAuthEvent>((event, emit) => emit(EmpAuthInitial()));
   }
 
   @override

@@ -24,6 +24,10 @@ import 'package:mama_kris/core/common/widgets/show_delete_icon_dialog.dart';
 import 'package:mama_kris/core/common/widgets/show_logout_dialog.dart';
 import 'package:mama_kris/features/emp/employe_contact/presentation/bloc/employee_contact_bloc.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
+import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_bloc.dart';
+import 'package:mama_kris/features/appl/app_auth/application/bloc/auth_event.dart';
+import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_bloc.dart';
+import 'package:mama_kris/features/emp/emp_auth/application/bloc/emp_auth_event.dart';
 
 class EmpProfileEditScreen extends StatefulWidget {
   const EmpProfileEditScreen({super.key});
@@ -399,16 +403,19 @@ class _AccountsState extends State<_accounts> {
                   context.read<EmployeeContactBloc>().add(
                     const EmpLogoutAccountEvent(),
                   );
-                  AuthService().signOut();
-
-                  context.pushNamed(RouteName.welcomePage);
+                  await AuthService().signOut();
+                  if (context.mounted) {
+                    context.read<AuthBloc>().add(ResetAuthEvent());
+                    context.read<EmpAuthBloc>().add(ResetEmpAuthEvent());
+                    context.goNamed(RouteName.welcomePage);
+                  }
                 }
               });
             },
           ),
           const SizedBox(height: 16),
           BlocConsumer<EmployeeContactBloc, EmployeeContactState>(
-            listener: (context, state) {
+            listener: (context, state) async {
               if (state is AccountDeleteLoadingState) {
                 showIOSLoader(context);
               } else if (state is UserAccountDeleted) {
@@ -416,8 +423,12 @@ class _AccountsState extends State<_accounts> {
                 context.read<EmployeeContactBloc>().add(
                   const EmpLogoutAccountEvent(),
                 );
-                AuthService().signOut();
-                context.pushNamed(RouteName.welcomePage);
+                await AuthService().signOut();
+                if (context.mounted) {
+                  context.read<AuthBloc>().add(ResetAuthEvent());
+                  context.read<EmpAuthBloc>().add(ResetEmpAuthEvent());
+                  context.goNamed(RouteName.welcomePage);
+                }
               }
               // TODO: implement listener
             },

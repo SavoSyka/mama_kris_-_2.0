@@ -103,3 +103,5 @@ class EmpLoginWithAppleEvent extends EmpAuthEvent {
 }
 
 class EmpLoginWithCachedEvent extends EmpAuthEvent {}
+
+class ResetEmpAuthEvent extends EmpAuthEvent {}

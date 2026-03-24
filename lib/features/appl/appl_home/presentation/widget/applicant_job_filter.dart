@@ -85,6 +85,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
               }
               if (selectedSphereId != null) {
                 result!['spheres'] = [selectedSphereId];
+                result!['sphereTitle'] = selectedSphereTitle;
               }
               Navigator.pop(context, result);
             }

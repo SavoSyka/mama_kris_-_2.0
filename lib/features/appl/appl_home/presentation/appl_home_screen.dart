@@ -677,8 +677,11 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     debugPrint("FIlter $filter");
 
     setState(() {
+      _searchQuery = filter['sphereTitle'] as String?;
       if (filter['spheres'] != null) {
         _selectedSpheres = List<int>.from(filter['spheres']);
+      } else {
+        _selectedSpheres = null;
       }
     });
 
@@ -690,8 +693,6 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
         _minSalary = null;
         _maxSalary = null;
       });
-
-      _handleFilters();
     } else {
       final min = filter['min']?.toString();
       final max = filter['max']?.toString();
@@ -702,9 +703,19 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
         _maxSalary = max;
       });
 
-      _handleFilters();
       debugPrint("minimum and maimum $min, ... $max");
     }
+
+    context.read<JobBloc>().add(
+      FilterJobEvent(
+        page: 1,
+        perPage: 7,
+        minSalary: _minSalary,
+        maxSalary: _maxSalary,
+        salaryWithAgreement: _byAgreement,
+        searchSpheres: _selectedSpheres,
+      ),
+    );
   }
 
   // * ────────────── Helper functions Ended ───────────────────────

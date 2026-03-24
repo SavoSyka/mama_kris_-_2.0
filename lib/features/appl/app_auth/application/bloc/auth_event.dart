@@ -105,3 +105,5 @@ class LoginWithAppleEvent extends AuthEvent {
 }
 
 class LoginWithCachedEvent extends AuthEvent {}
+
+class ResetAuthEvent extends AuthEvent {}

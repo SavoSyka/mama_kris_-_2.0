@@ -51,6 +51,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<UpdatePasswordEvent>(_onUpdatePassword);
     on<LoginWithAppleEvent>(_onLoginWithApple);
     on<LoginWithCachedEvent>(_loginWithCached);
+    on<ResetAuthEvent>((event, emit) => emit(AuthInitial()));
   }
 
   @override
