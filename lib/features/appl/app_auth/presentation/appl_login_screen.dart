@@ -287,23 +287,31 @@ class _ApplLoginScreenState extends State<ApplLoginScreen> {
   // }
 
   Future<void> signInWithApple() async {
+    if (_isAppleLogin) return;
     _isAppleLogin = true;
-    await AuthService().signOut();
-    final user = await AuthService().signInWithApple();
 
-    if (user != null) {
+    try {
+      final user = await AuthService().signInWithApple();
+
+      if (!mounted) return;
+
+      if (user == null) {
+        _isAppleLogin = false;
+        return;
+      }
+
       final identityToken = user['identityToken'];
       final userData = user['userData'] as DataMap;
-
-      debugPrint("Id tokhen $identityToken");
 
       context.read<AuthBloc>().add(
         LoginWithAppleEvent(identityToken: identityToken, userData: userData),
       );
+    } catch (e) {
+      _isAppleLogin = false;
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка входа через Apple: $e')),
+      );
     }
-
-    debugPrint("user data $user");
-
-    debugPrint('');
   }
 }

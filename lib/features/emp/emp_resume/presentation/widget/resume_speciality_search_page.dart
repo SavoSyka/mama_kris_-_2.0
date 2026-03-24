@@ -15,7 +15,7 @@ import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_s
 import 'package:mama_kris/features/emp/emp_resume/presentation/bloc/speciality_search_state.dart';
 
 class ResumeSpecialitySearchPage extends StatefulWidget {
-  final Function(String speciality) onSpecialitySelected;
+  final Function(String displayName, {int? sphereId}) onSpecialitySelected;
   final bool isApplicant;
 
   const ResumeSpecialitySearchPage({
@@ -65,8 +65,8 @@ class _ResumeSpecialitySearchPageState
     _specialitySearchBloc.searchWithDebounce(query);
   }
 
-  void _selectSpeciality(String speciality) {
-    widget.onSpecialitySelected(speciality);
+  void _selectSpeciality(String speciality, {int? sphereId}) {
+    widget.onSpecialitySelected(speciality, sphereId: sphereId);
     Navigator.pop(context);
   }
 
@@ -294,8 +294,9 @@ class _ResumeSpecialitySearchPageState
             itemCount: spheres.length,
             itemBuilder: (context, index) {
               final title = spheres[index]['title'] as String;
+              final sphereId = spheres[index]['sphereID'] as int;
               return InkWell(
-                onTap: () => _selectSpeciality(title),
+                onTap: () => _selectSpeciality(title, sphereId: sphereId),
                 borderRadius: BorderRadius.circular(14),
                 child: Container(
                   padding: const EdgeInsets.symmetric(

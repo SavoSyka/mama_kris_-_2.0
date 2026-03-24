@@ -327,12 +327,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       //   'provider': platformType,
       // };
 
-      final postData = {"identityToken": identityToken, "userData": userData};
+      final postData = {
+        "identityToken": identityToken,
+        "userData": userData,
+        "HaveVacancies": false,
+      };
 
       final response = await dio.post(
         ApiConstants.loginWithApple,
         data: postData,
-        // options: Options(headers: {...dio.options.headers, ...requestHeaders}),
       );
 
       if (response.statusCode.toString().startsWith('2')) {
@@ -345,10 +348,40 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         final refreshToken = user.refreshToken;
         final userId = user.userId.toString();
 
+        final isActive = user.subscription.active;
+
         await local.saveUserType(true);
         await local.saveToken(accessToken);
         await local.saveRefreshToken(refreshToken);
         await local.saveUserId(userId);
+        await local.saveSubscription(isActive);
+
+        // Fetch and save viewed jobs count
+        try {
+          final countResponse = await dio.get(
+            ApiConstants.getViewedJobsCount(userId),
+          );
+          if (countResponse.statusCode.toString().startsWith('2')) {
+            int? count;
+            final countData = countResponse.data;
+
+            if (countData is int) {
+              count = countData;
+            } else if (countData is String) {
+              count = int.tryParse(countData);
+            } else if (countData is double) {
+              count = countData.toInt();
+            } else if (countData is Map<String, dynamic>) {
+              count = countData['count'] as int?;
+            }
+
+            if (count != null) {
+              await local.saveViewedJobsCount(count);
+            }
+          }
+        } catch (e) {
+          debugPrint('Error fetching viewed jobs count: $e');
+        }
 
         // Save full user data for persistent login
         await local.saveUser(data['user']);
@@ -356,7 +389,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return user;
       } else {
         throw const ApiException(
-          message: 'Login with Google failed',
+          message: 'Login with Apple failed',
           statusCode: 500,
         );
       }

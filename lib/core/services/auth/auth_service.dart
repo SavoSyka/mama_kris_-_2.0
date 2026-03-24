@@ -105,7 +105,7 @@ class AuthService {
   Future<Map<String, dynamic>?> signInWithApple() async {
     try {
       if (kDebugMode) {
-        print('🍏 [Apple Sign-In] Запуск процесса входа через Apple...');
+        print('[Apple Sign-In] Starting Apple sign-in...');
       }
 
       final credential = await SignInWithApple.getAppleIDCredential(
@@ -116,57 +116,51 @@ class AuthService {
       );
 
       if (kDebugMode) {
-        print('✅ [Apple Sign-In] Получены данные от Apple ID');
-        print('🔑 Identity Token: ${credential.identityToken}');
-        print(
-          '📧 Email: ${credential.email ?? 'не предоставлен (первый вход)'}',
-        );
-        print('👤 Имя: ${credential.givenName ?? 'не предоставлено'}');
-        print('👥 Фамилия: ${credential.familyName ?? 'не предоставлено'}');
+        print('[Apple Sign-In] Got Apple ID credential');
+        print('Identity Token: ${credential.identityToken}');
+        print('Email: ${credential.email ?? 'not provided (repeat sign-in)'}');
+        print('Name: ${credential.givenName ?? 'not provided'}');
       }
 
-      // Декодируем payload из identityToken (для отладки и понимания, что внутри)
-      if (credential.identityToken != null) {
+      if (credential.identityToken == null) {
+        if (kDebugMode) print('[Apple Sign-In] identityToken == null');
+        throw Exception('Apple Identity Token is null');
+      }
+
+      if (kDebugMode) {
         final parts = credential.identityToken!.split('.');
         if (parts.length == 3) {
           final payload = base64Url.normalize(parts[1]);
           final decoded = utf8.decode(base64Url.decode(payload));
-          if (kDebugMode) print('🔍 Apple Token Payload: $decoded');
+          print('Apple Token Payload: $decoded');
         }
-      } else {
-        if (kDebugMode) print('❌ [Apple Sign-In] identityToken == null');
-        // lgn.showErrorSnackBar(context, 'Не удалось получить Apple Identity Token');
-        return null;
       }
 
-      // Формируем результат
       final result = {
         'identityToken': credential.identityToken,
-
         "userData": {
           'email': credential.email,
           'firstName': credential.givenName,
           'lastName': credential.familyName,
-          'authorizationCode': credential.authorizationCode, // иногда нужен
-          'userIdentifier':
-              credential.userIdentifier, // Apple User ID (стабильный)
+          'authorizationCode': credential.authorizationCode,
+          'userIdentifier': credential.userIdentifier,
         },
       };
 
-      if (kDebugMode) {
-        print('🎉 Успешно получены данные от Apple!');
-        print('Результат: $result');
-      }
-
-      // Возвращаем данные — НИКАКИХ HTTP-запросов!
       return result;
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
+        debugPrint('[Apple Sign-In] User cancelled');
+        return null;
+      }
+      debugPrint('[Apple Sign-In] Authorization error: ${e.message}');
+      rethrow;
     } catch (e, stacktrace) {
+      debugPrint('[Apple Sign-In] Error: $e');
       if (kDebugMode) {
-        print('🛑 Ошибка при входе через Apple: $e');
         print('Stacktrace: $stacktrace');
       }
-      // lgn.showErrorSnackBar(context, 'Ошибка входа через Apple. Попробуйте ещё раз.');
-      return null;
+      rethrow;
     }
   }
 

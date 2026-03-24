@@ -96,12 +96,12 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
                                       );
                                 }
                               }
-                              if (context.mounted) {
-                                if (state.user.subscription.active) {
-                                  context.goNamed(RouteName.homeEmploye);
-                                } else {
-                                  context.goNamed(RouteName.subscription);
-                                }
+                            }
+                            if (context.mounted) {
+                              if (state.user.subscription.active) {
+                                context.goNamed(RouteName.homeEmploye);
+                              } else {
+                                context.goNamed(RouteName.subscription);
                               }
                             }
                             return;
@@ -270,15 +270,21 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
   }
 
   Future<void> signInWithApple() async {
+    if (_isAppleLogin) return;
     _isAppleLogin = true;
-    await AuthService().signOut();
-    final user = await AuthService().signInWithApple();
 
-    if (user != null) {
+    try {
+      final user = await AuthService().signInWithApple();
+
+      if (!mounted) return;
+
+      if (user == null) {
+        _isAppleLogin = false;
+        return;
+      }
+
       final identityToken = user['identityToken'];
       final userData = user['userData'] as DataMap;
-
-      debugPrint("Id tokhen $identityToken");
 
       context.read<EmpAuthBloc>().add(
         EmpLoginWithAppleEvent(
@@ -286,10 +292,12 @@ class _EmpLoginScreenState extends State<EmpLoginScreen> {
           userData: userData,
         ),
       );
+    } catch (e) {
+      _isAppleLogin = false;
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка входа через Apple: $e')),
+      );
     }
-
-    debugPrint("user data $user");
-
-    debugPrint('');
   }
 }

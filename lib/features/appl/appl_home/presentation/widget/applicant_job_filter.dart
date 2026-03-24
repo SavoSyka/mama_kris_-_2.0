@@ -11,7 +11,7 @@ import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 
 Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
-  const RangeValues initialSlider = RangeValues(20, 1000);
+  const RangeValues initialSlider = RangeValues(0, 200000);
   RangeValues currentSlider = initialSlider;
 
   final TextEditingController fromCtrl = TextEditingController(
@@ -23,7 +23,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
 
   bool showByAgreement = false;
   Map<String, dynamic>? result;
-  double dynamicMax = 1000.0;
+  double dynamicMax = 200000.0;
 
   // Sphere state
   List<Map<String, dynamic>> spheres = [];
@@ -323,7 +323,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                                       MediaQuery.of(context).size.width * 0.35,
                                   child: CustomInputText(
                                     labelText: 'До(₽)',
-                                    hintText: '1000+',
+                                    hintText: '200000',
                                     controller: toCtrl,
                                     keyboardType: TextInputType.number,
                                     onChanged: onToChanged,
@@ -338,9 +338,7 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                               values: currentSlider,
                               min: 0,
                               max: dynamicMax,
-                              divisions: dynamicMax > 100
-                                  ? dynamicMax.round()
-                                  : 100,
+                              divisions: 200,
                               labels: RangeLabels(
                                 '${currentSlider.start.round()}',
                                 '${currentSlider.end.round()}',

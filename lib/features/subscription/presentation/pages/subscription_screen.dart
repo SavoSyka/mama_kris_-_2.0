@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,8 +68,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   SubscriptionEntity? _subscription;
 
-
-
   final applicantBody =
       'Вся удаленная работа в вашем телефоне\n\nНаш ИИ-парсер 24/7 мониторит 500 000+ чатов Telegram и ВКонтакте, отсеивает 98% мусора и мошенников. Вы получаете только реальные вакансии с хорошей оплатой';
 
@@ -122,7 +119,9 @@ MamaKris объединяет десятки тысяч активных сои�
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppPalette.white,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(30),
+                      ),
                       boxShadow: const [
                         BoxShadow(
                           color: Color(0xff2e786633),
@@ -258,29 +257,7 @@ MamaKris объединяет десятки тысяч активных сои�
 
                                 const SizedBox(height: 16),
 
-                                if (_isApplicant)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 30,
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Сторисы',
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 18,
-                                          fontFamily: 'Manrope',
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.30,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                                const SizedBox(height: 8),
-
-                                 StoriesSection(horizontalPadding: 32,),
+                                StoriesSection(horizontalPadding: 32),
 
                                 if (state is TariffsLoadingState)
                                   const Center(child: IPhoneLoader(height: 200))
@@ -313,7 +290,8 @@ MamaKris объединяет десятки тысяч активных сои�
                                           // discount: subscription.name,
                                           price: subscription.price,
                                           isApplicant: _isApplicant,
-                                          pricePerMonth: subscription.pricePerMonth,
+                                          pricePerMonth:
+                                              subscription.pricePerMonth,
                                         ),
                                       ),
                                     ),

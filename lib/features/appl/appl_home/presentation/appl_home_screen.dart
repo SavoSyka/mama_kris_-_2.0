@@ -607,7 +607,10 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   }
 
   void _clearSearch() {
-    setState(() => _searchQuery = null);
+    setState(() {
+      _searchQuery = null;
+      _selectedSpheres = null;
+    });
     handleFetchJobs();
   }
 
@@ -617,17 +620,27 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
       MaterialPageRoute(
         builder: (context) => ResumeSpecialitySearchPage(
           isApplicant: true,
-          onSpecialitySelected: (selectedSpeciality) {
-            if (selectedSpeciality.isNotEmpty &&
-                _searchQuery != selectedSpeciality) {
-              setState(() {
-                _searchQuery = selectedSpeciality;
-              });
-
-              _handleFilters();
-            }
-            // Do whatever you want with the selected speciality
-            print('Selected: $selectedSpeciality');
+          onSpecialitySelected: (displayName, {int? sphereId}) {
+            if (displayName.isEmpty) return;
+            setState(() {
+              _searchQuery = displayName;
+              _minSalary = null;
+              _maxSalary = null;
+              _byAgreement = null;
+              if (sphereId != null) {
+                _selectedSpheres = [sphereId];
+              } else {
+                _selectedSpheres = null;
+              }
+            });
+            context.read<JobBloc>().add(
+              FilterJobEvent(
+                page: 1,
+                perPage: 7,
+                title: sphereId != null ? null : displayName,
+                searchSpheres: sphereId != null ? [sphereId] : null,
+              ),
+            );
           },
         ),
       ),

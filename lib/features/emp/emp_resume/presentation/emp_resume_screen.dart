@@ -273,17 +273,12 @@ class _EmpResumeScreenState extends State<EmpResumeScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => ResumeSpecialitySearchPage(
-          onSpecialitySelected: (selectedSpeciality) {
-            if (selectedSpeciality.isNotEmpty &&
-                _searchQuery != selectedSpeciality) {
-              setState(() {
-                _searchQuery = selectedSpeciality;
-              });
-
-              filterBasedOnSpecilaity();
-            }
-            // Do whatever you want with the selected speciality
-            print('Selected: $selectedSpeciality');
+          onSpecialitySelected: (displayName, {int? sphereId}) {
+            if (displayName.isEmpty) return;
+            setState(() {
+              _searchQuery = displayName;
+            });
+            filterBasedOnSpecilaity();
           },
         ),
       ),

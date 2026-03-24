@@ -294,12 +294,15 @@ class EmpAuthRemoteDataSourceImpl implements EmpAuthRemoteDataSource {
     try {
       final local = sl<AuthLocalDataSource>();
 
-      final postData = {"identityToken": identityToken, "userData": userData};
+      final postData = {
+        "identityToken": identityToken,
+        "userData": userData,
+        "HaveVacancies": true,
+      };
 
       final response = await dio.post(
         ApiConstants.loginWithApple,
         data: postData,
-        // options: Options(headers: {...dio.options.headers, ...requestHeaders}),
       );
 
       if (response.statusCode.toString().startsWith('2')) {
