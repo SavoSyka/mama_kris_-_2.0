@@ -251,7 +251,15 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                       InkWell(
                                         onTap: () async {
                                           final filter =
-                                              await ApplicantJobFilter(context);
+                                              await ApplicantJobFilter(
+                                            context,
+                                            initialSphereId: _selectedSpheres?.isNotEmpty == true
+                                                ? _selectedSpheres!.first
+                                                : null,
+                                            initialSphereTitle: _selectedSpheres != null
+                                                ? _searchQuery
+                                                : null,
+                                          );
                                           if (filter != null) {
                                             _applyFilters(filter);
                                           }
@@ -676,14 +684,18 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   void _applyFilters(DataMap filter) {
     debugPrint("FIlter $filter");
 
-    setState(() {
-      _searchQuery = filter['sphereTitle'] as String?;
-      if (filter['spheres'] != null) {
+    // If filter has a sphere selected → use sphere title as query, set spheres
+    // If filter has no sphere → keep existing _searchQuery (from search items)
+    if (filter['spheres'] != null) {
+      setState(() {
+        _searchQuery = filter['sphereTitle'] as String?;
         _selectedSpheres = List<int>.from(filter['spheres']);
-      } else {
+      });
+    } else {
+      setState(() {
         _selectedSpheres = null;
-      }
-    });
+      });
+    }
 
     if (filter['agreement'] != null && (filter['agreement'] as bool) == true) {
       debugPrint("BY Agreemenet ${filter['agreement']}");
@@ -710,6 +722,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
       FilterJobEvent(
         page: 1,
         perPage: 7,
+        title: _selectedSpheres != null ? null : _searchQuery,
         minSalary: _minSalary,
         maxSalary: _maxSalary,
         salaryWithAgreement: _byAgreement,

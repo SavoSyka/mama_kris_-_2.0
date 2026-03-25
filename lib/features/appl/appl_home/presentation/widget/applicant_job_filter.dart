@@ -10,7 +10,11 @@ import 'package:mama_kris/core/constants/api_constants.dart';
 import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 
-Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
+Future<Map<String, dynamic>?> ApplicantJobFilter(
+  BuildContext context, {
+  int? initialSphereId,
+  String? initialSphereTitle,
+}) async {
   const RangeValues initialSlider = RangeValues(0, 200000);
   RangeValues currentSlider = initialSlider;
 
@@ -27,8 +31,8 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
 
   // Sphere state
   List<Map<String, dynamic>> spheres = [];
-  String? selectedSphereTitle;
-  int? selectedSphereId;
+  String? selectedSphereTitle = initialSphereTitle;
+  int? selectedSphereId = initialSphereId;
   bool isLoadingSpheres = true;
 
   await showModalBottomSheet(
@@ -251,7 +255,9 @@ Future<Map<String, dynamic>?> ApplicantJobFilter(BuildContext context) async {
                               ),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String?>(
-                                  value: selectedSphereTitle,
+                                  value: spheres.any((s) => s['title'] == selectedSphereTitle)
+                                      ? selectedSphereTitle
+                                      : null,
                                   hint: const Text(
                                     'Специальность',
                                     style: TextStyle(

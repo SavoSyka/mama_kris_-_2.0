@@ -84,7 +84,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
         "page": page,
         "pageSize": 7,
         if (title != null) 'titleQuery': title,
-        if (title != null) 'description': title,
+        if (title != null) 'descriptionQuery': title,
         if (minSalary != null) 'minSalary': minSalary,
         if (maxSalary != null) 'maxSalary': maxSalary,
         if (searchSpheres != null && searchSpheres.isNotEmpty)
