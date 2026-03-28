@@ -198,7 +198,7 @@ class _ApplCreateContactScreenState extends State<ApplCreateContactScreen> {
                           const SizedBox(height: 16),
                           CustomStaticInput(
                             label: 'Почта',
-                            value: _email ,
+                            value: _email,
                             hasGreyBg: true,
                           ),
                           const SizedBox(height: 16),

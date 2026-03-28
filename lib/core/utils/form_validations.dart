@@ -351,12 +351,12 @@ class FormValidations {
       return null; // Optional
     }
     // Telegram username rules:
-    // - Must start with a letter (a-z, A-Z) only (not underscore or number)
-    // - Can contain only letters and numbers (no underscores)
+    // - Must start with a letter (a-z, A-Z)
+    // - Can contain letters, numbers, and underscores
     // - Length: 5-32 characters
     // - @ symbol is optional
     final trimmedValue = value.trim();
-    final regex = RegExp(r'^@?[a-zA-Z][a-zA-Z0-9]{4,31}$');
+    final regex = RegExp(r'^@?[a-zA-Z][a-zA-Z0-9_]{4,31}$');
 
     if (!regex.hasMatch(trimmedValue)) {
       return 'Введите корректный Telegram username';
