@@ -75,11 +75,13 @@ class _ArticleThreePageState extends State<ArticleThreePage> {
                           CustomButtonSec(
                             btnText: "Запустить консультанцию",
 
-                            onTap: () {
+                            onTap: () async {
                               if (isActive) {
+                                final token = await sl<AuthLocalDataSource>().getToken();
+                                if (!context.mounted) return;
                                 HandleLaunchUrl.launchUrlGeneric(
                                   context,
-                                  url: "https://recruiter.mamakris.ru/",
+                                  url: "https://dev.mamakris.ru/ai-recruiter/?token=$token",
                                 );
                               } else {
                                 context.pushNamed(RouteName.subscription);
