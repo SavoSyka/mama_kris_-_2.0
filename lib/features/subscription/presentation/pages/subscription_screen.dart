@@ -23,6 +23,7 @@ import 'package:mama_kris/features/subscription/application/bloc/subscription_pa
 import 'package:mama_kris/features/subscription/domain/entity/subscription_entity.dart';
 import 'package:mama_kris/features/subscription/application/cubit/subscription_status_cubit.dart';
 import 'package:mama_kris/features/subscription/presentation/pages/widget/subscription_card.dart';
+import 'package:mama_kris/features/subscription/presentation/pages/widget/paywall_personal_block.dart';
 import 'package:mama_kris/features/stories/presentation/widgets/stories_section.dart';
 
 class SubscriptionScreen extends StatefulWidget {
@@ -155,7 +156,9 @@ MamaKris объединяет десятки тысяч активных сои�
                                   ),
                                 ),
 
-                                const SizedBox(height: 32),
+                                const SizedBox(height: 24),
+
+                                if (_isApplicant) const PaywallPersonalBlock(),
 
                                 if (_isApplicant) ...[
                                   Container(
@@ -257,6 +260,22 @@ MamaKris объединяет десятки тысяч активных сои�
 
                                 const SizedBox(height: 16),
 
+                                if (_isApplicant)
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(30, 0, 30, 12),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Отзывы мам — смотрите в сторис',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontFamily: 'Manrope',
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 StoriesSection(horizontalPadding: 32),
 
                                 if (state is TariffsLoadingState)
@@ -268,7 +287,13 @@ MamaKris объединяет десятки тысяч активных сои�
                                       onTap: () => handleFetchTariffs(),
                                     ),
                                   )
-                                else if (state is TariffsLoadedState)
+                                else if (state is TariffsLoadedState) ...[
+                                  Builder(
+                                    builder: (_) {
+                                      _preselect(state.subscriptions);
+                                      return const SizedBox.shrink();
+                                    },
+                                  ),
                                   ...state.subscriptions.map(
                                     (subscription) => Padding(
                                       padding: const EdgeInsets.only(
@@ -287,15 +312,18 @@ MamaKris объединяет десятки тысяч активных сои�
                                               subscription,
 
                                           period: subscription.type,
-                                          // discount: subscription.name,
                                           price: subscription.price,
                                           isApplicant: _isApplicant,
                                           pricePerMonth:
                                               subscription.pricePerMonth,
+                                          monthPrice: _monthPrice(
+                                            state.subscriptions,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
+                                ],
 
                                 const SizedBox(height: 16),
 
@@ -370,6 +398,28 @@ MamaKris объединяет десятки тысяч активных сои�
   }
 
   // * ────────────── Helper Methods ───────────────────────
+
+  bool _preselected = false;
+
+  /// По умолчанию выбран самый выгодный тариф (3 месяца), если он есть
+  void _preselect(List<SubscriptionEntity> subscriptions) {
+    if (_preselected || _selectedSubscription != null) return;
+    _preselected = true;
+    final best = subscriptions
+        .where((s) => s.type == SubscriptionCard.highlighted)
+        .firstOrNull;
+    if (best == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _selectedSubscription == null) {
+        setState(() => _selectedSubscription = best);
+      }
+    });
+  }
+
+  num? _monthPrice(List<SubscriptionEntity> subscriptions) {
+    final month = subscriptions.where((s) => s.type == 'MONTH').firstOrNull;
+    return month == null ? null : num.tryParse(month.price);
+  }
 
   void handleFetchTariffs() {
     context.read<TarriffsBloc>().add(const FetchTariffsEvent());

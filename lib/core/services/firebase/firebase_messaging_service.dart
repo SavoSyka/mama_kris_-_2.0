@@ -3,6 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mama_kris/core/services/firebase/local_notification_service.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
+import 'package:mama_kris/core/services/routes/route_name.dart';
+import 'package:mama_kris/core/services/routes/router.dart';
 import 'package:mama_kris/core/utils/get_platform_type.dart';
 import 'package:mama_kris/features/appl/app_auth/data/data_sources/auth_local_data_source.dart';
 import 'package:mama_kris/features/notifications/domain/models/notification_model.dart';
@@ -206,6 +208,17 @@ class FirebaseMessagingService {
     debugPrint(
         'Notification caused the app to open: ${message.data.toString()}');
     _saveNotificationFromMessage(message);
+
+    // «Оплата не завершена» (бэкенд: payment-reminder) — сразу на экран тарифов
+    if (message.data['type'] == 'payment_reminder') {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        try {
+          AppRouter.router.go(RouteName.subscription);
+        } catch (e) {
+          debugPrint('Cannot open subscription from push: $e');
+        }
+      });
+    }
   }
 }
 

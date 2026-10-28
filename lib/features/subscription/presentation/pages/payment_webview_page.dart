@@ -155,13 +155,40 @@ class PaymentWebViewPage extends StatefulWidget {
   State<PaymentWebViewPage> createState() => _PaymentWebViewPageState();
 }
 
-class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
+class _PaymentWebViewPageState extends State<PaymentWebViewPage>
+    with WidgetsBindingObserver {
   late final WebViewController _controller;
   bool _hasCalledSuccess = false; // Prevent double callbacks
+
+  // Robokassa после оплаты уводит на SuccessURL/FailURL бэкенда (mamakris://pay/...)
+  static const _successPrefix = 'mamakris://pay/access';
+  static const _failPrefix = 'mamakris://pay/fail';
+
+  void _onPaid() {
+    if (_hasCalledSuccess) return;
+    _hasCalledSuccess = true;
+    context.read<SubscriptionStatusCubit>().startPolling();
+  }
+
+  // Вернулись из приложения банка (СБП, SberPay, TinkoffPay) — проверяем оплату,
+  // не дожидаясь, пока страница Robokassa сама сделает редирект
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && !_hasCalledSuccess && mounted) {
+      context.read<SubscriptionStatusCubit>().startPolling();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     _loadUserTypeAndSetupTabs();
     _controller = WebViewController()
@@ -231,6 +258,14 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
             }
           },
           onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith(_successPrefix)) {
+              _onPaid();
+              return NavigationDecision.prevent;
+            }
+            if (request.url.startsWith(_failPrefix)) {
+              if (!_hasCalledSuccess) widget.onFail?.call();
+              return NavigationDecision.prevent;
+            }
             final uri = Uri.tryParse(request.url);
             // Open tg://, app links, etc. in external apps
             if (uri != null && !['http', 'https'].contains(uri.scheme)) {

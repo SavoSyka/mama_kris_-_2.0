@@ -72,6 +72,7 @@ class ApiConstants {
   // ads
   static const getAds = 'advertisements/next';
   static const adRequest = 'advertisements/request';
+  static String paywallInfo(String? userId) => 'jobs/paywall-info/$userId';
   
   // analytics
   static const getPublicCounts = 'analytics/public-counts';
