@@ -71,6 +71,7 @@ class ApiConstants {
 
   // ads
   static const getAds = 'advertisements/next';
+  static const adRequest = 'advertisements/request';
   
   // analytics
   static const getPublicCounts = 'analytics/public-counts';

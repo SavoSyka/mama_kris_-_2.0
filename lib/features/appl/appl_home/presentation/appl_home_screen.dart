@@ -1,19 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mama_kris/core/common/widgets/custom_app_bar.dart';
 import 'package:mama_kris/core/common/widgets/custom_default_padding.dart';
 import 'package:mama_kris/core/common/widgets/custom_error_retry.dart';
-import 'package:mama_kris/core/common/widgets/custom_image_view.dart';
 import 'package:mama_kris/core/common/widgets/custom_input_text.dart';
 import 'package:mama_kris/core/common/widgets/custom_iphone_loader.dart';
 import 'package:mama_kris/core/common/widgets/custom_scaffold.dart';
 import 'package:mama_kris/core/common/widgets/custom_text.dart';
 import 'package:mama_kris/core/common/widgets/job_list_item.dart';
 import 'package:mama_kris/core/constants/app_palette.dart';
-import 'package:mama_kris/core/constants/media_res.dart';
 import 'package:mama_kris/core/services/dependency_injection/dependency_import.dart';
 import 'package:mama_kris/core/theme/app_theme.dart';
 import 'package:mama_kris/core/utils/build_base64image.dart';
@@ -35,10 +33,11 @@ import 'package:mama_kris/features/appl/appl_home/presentation/widget/empty_job_
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/filter_action_buttons.dart';
 import 'package:mama_kris/features/appl/appl_home/presentation/widget/home_search_page.dart';
 import 'package:mama_kris/features/emp/emp_resume/presentation/widget/resume_speciality_search_page.dart';
-import 'package:mama_kris/core/common/widgets/custom_app_bar_without.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mama_kris/core/services/routes/route_name.dart';
 import 'package:mama_kris/features/stories/presentation/widgets/stories_section.dart';
+import 'package:mama_kris/features/ad_request/presentation/ad_request_banner.dart';
+import 'package:mama_kris/features/ad_request/presentation/ad_request_styles.dart';
 import 'package:mama_kris/core/common/widgets/show_vacancy_warning_dialog.dart';
 
 class ApplHomeScreen extends StatefulWidget {
@@ -76,6 +75,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
     handleFetchJobs();
     context.read<AdsCubit>().fetchAds();
     context.read<PublicCountsBloc>().add(FetchPublicCountsEvent());
+    AdRequestBanner.restore();
     _scrollController.addListener(_scrollListener);
   }
 
@@ -92,13 +92,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(
-        title: 'Вакансии',
-        showLeading: false,
-        alignTitleToEnd: false,
-      ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: CustomScaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
         child: SafeArea(
@@ -144,8 +140,8 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                     );
                   }
 
-                  return SizedBox(
-                    child: RefreshIndicator(
+                  return LayoutBuilder(
+                    builder: (context, constraints) => RefreshIndicator(
                       onRefresh: _handleRefresh,
                       color: AppPalette.primaryColor,
                       backgroundColor: Colors.white,
@@ -162,118 +158,148 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                         itemBuilder: (context, index) {
                           if (index == 0) {
                             // ---------- Top Section (header/search/filter) ----------
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // ---------- Stories ----------
-                                const StoriesSection(),
-
-                                // ---------- Search Field ----------
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w,
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Вакансии',
+                                    style: AdUi.manrope(
+                                      20,
+                                      FontWeight.w600,
+                                      lineHeight: 26,
+                                    ),
                                   ),
-                                  child: GestureDetector(
+                                  const SizedBox(height: 16),
+
+                                  // ---------- Stories ----------
+                                  const StoriesSection(
+                                    horizontalPadding: 0,
+                                    bottomSpacing: 12,
+                                  ),
+
+                                  // ---------- Search Field ----------
+                                  GestureDetector(
                                     onTap: _openSearchPage,
                                     child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 16.w,
-                                        vertical: 8.h,
+                                      height: 45,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
                                       ),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(color: AdUi.greyStroke),
+                                        boxShadow: const [AdUi.shadowGreen],
                                       ),
                                       child: Row(
                                         children: [
-                                          const Icon(
-                                            Icons.search,
-                                            color: Colors.grey,
-                                          ),
-                                          const SizedBox(width: 10),
                                           Expanded(
                                             child: Text(
-                                              _searchQuery ?? 'Поиск вакансий...',
-                                              style: TextStyle(
+                                              _searchQuery ?? 'Поиск вакансий',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: AdUi.manrope(
+                                                16,
+                                                FontWeight.w600,
                                                 color: _searchQuery == null
-                                                    ? Colors.grey
+                                                    ? AdUi.grey
                                                     : Colors.black,
+                                                lineHeight: 20.8,
                                               ),
                                             ),
                                           ),
-                                          if (_searchQuery != null && _searchQuery!.isNotEmpty)
+                                          if (_searchQuery != null &&
+                                              _searchQuery!.isNotEmpty)
                                             GestureDetector(
                                               onTap: _clearSearch,
-                                              child: const Icon(
-                                                Icons.close,
-                                                color: Colors.grey,
-                                                size: 20,
+                                              child: const Padding(
+                                                padding: EdgeInsets.only(right: 8),
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: AdUi.grey,
+                                                  size: 20,
+                                                ),
                                               ),
                                             ),
+                                          const Icon(
+                                            Icons.search,
+                                            color: AdUi.grey,
+                                            size: 22,
+                                          ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 14),
+                                  const SizedBox(height: 12),
 
-                                // ---------- Filter Buttons ----------
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () =>
-                                                setState(() => isSlider = true),
-                                            child: FilterActionButtons(
-                                              isSelected: isSlider,
-                                              text: 'Слайдер',
-                                            ),
+                                  // ---------- Filter Buttons ----------
+                                  SizedBox(
+                                    height: 40,
+                                    child: Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () =>
+                                              setState(() => isSlider = true),
+                                          child: FilterActionButtons(
+                                            isSelected: isSlider,
+                                            text: 'Слайдер',
                                           ),
-                                          const SizedBox(width: 12),
-                                          InkWell(
-                                            onTap: () => setState(
-                                              () => isSlider = false,
-                                            ),
-                                            child: FilterActionButtons(
-                                              isSelected: !isSlider,
-                                              text: 'Список',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      InkWell(
-                                        onTap: () async {
-                                          final filter =
-                                              await ApplicantJobFilter(
-                                            context,
-                                            initialSphereId: _selectedSpheres?.isNotEmpty == true
-                                                ? _selectedSpheres!.first
-                                                : null,
-                                            initialSphereTitle: _selectedSpheres != null
-                                                ? _searchQuery
-                                                : null,
-                                          );
-                                          if (filter != null) {
-                                            _applyFilters(filter);
-                                          }
-                                        },
-                                        child: const CustomImageView(
-                                          imagePath: MediaRes.btnFilter,
-                                          width: 48,
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 12),
+                                        GestureDetector(
+                                          onTap: () =>
+                                              setState(() => isSlider = false),
+                                          child: FilterActionButtons(
+                                            isSelected: !isSlider,
+                                            text: 'Список',
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            final filter =
+                                                await ApplicantJobFilter(
+                                              context,
+                                              initialSphereId: _selectedSpheres?.isNotEmpty == true
+                                                  ? _selectedSpheres!.first
+                                                  : null,
+                                              initialSphereTitle: _selectedSpheres != null
+                                                  ? _searchQuery
+                                                  : null,
+                                            );
+                                            if (filter != null) {
+                                              _applyFilters(filter);
+                                            }
+                                          },
+                                          child: Container(
+                                            width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: AdUi.greyStroke,
+                                              ),
+                                            ),
+                                            child: const Icon(
+                                              Icons.tune,
+                                              size: 18,
+                                              color: AdUi.grey,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 14),
-                              ],
+                                  const SizedBox(height: 12),
+
+                                  // ---------- Реклама: «Займите рекламное место» ----------
+                                  const AdRequestBanner(),
+                                ],
+                              ),
                             );
                           }
 
@@ -295,9 +321,17 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                               );
                               final job = jobs[safeIndex];
 
-                              return Column(
+                              return ValueListenableBuilder<bool>(
+                                valueListenable: AdRequestBanner.visible,
+                                builder: (context, bannerVisible, _) => Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Column(
                                 children: [
                                   ApplicantJobSlider(
+                                    height: _sliderCardHeight(
+                                      constraints.maxHeight,
+                                      bannerVisible: bannerVisible,
+                                    ),
                                     vacancy: {
                                       'title': job.title,
                                       'description': job.description,
@@ -327,7 +361,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     },
                                   ),
 
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: 12),
 
                                   // Public Counts
                                   BlocBuilder<
@@ -335,50 +369,39 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
                                     PublicCountsState
                                   >(
                                     builder: (context, state) {
-                                      if (state is PublicCountsLoaded) {
-                                        return Container(
-                                          margin: EdgeInsets.symmetric(
-                                            horizontal: 16.w,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 0,
-                                          ),
-
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                '${state.counts.users}+ мам',
-                                                style: const TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.black45,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 40),
-                                              Text(
-                                                '${state.counts.jobs} вакансий',
-                                                style: const TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.black45,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                      return const SizedBox.shrink();
+                                      final style = AdUi.manrope(
+                                        15,
+                                        FontWeight.w500,
+                                        color: Colors.black.withValues(alpha: 0.4),
+                                        lineHeight: 20.5,
+                                      );
+                                      return SizedBox(
+                                        height: 20,
+                                        child: state is PublicCountsLoaded
+                                            ? Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    '${state.counts.users}+ мам',
+                                                    style: style,
+                                                  ),
+                                                  Text(
+                                                    '${state.counts.jobs} вакансий',
+                                                    style: style,
+                                                  ),
+                                                ],
+                                              )
+                                            : null,
+                                      );
                                     },
                                   ),
 
                                   const SizedBox(height: 16),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                                    child: const _AdCards()),
-                                         const SizedBox(height: 16),
+                                  const _AdCards(bottomSpacing: 16),
                                 ],
+                              ),
+                              ),
                               );
                             }
 
@@ -462,6 +485,7 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
             ),
           ),
         ),
+      ),
       ),
     );
   }
@@ -669,6 +693,20 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
   //   }
   // }
 
+  /// Высота карточки вакансии в слайдере: всё, что осталось от экрана
+  /// после шапки (макет «С рекламой предложение»), но не меньше 300.
+  double _sliderCardHeight(double viewport, {required bool bannerVisible}) {
+    const header =
+        20 + 26 + 16 + // отступ, «Вакансии», отступ
+        81 + 12 + // сторис
+        45 + 12 + // поиск
+        40 + 12; // слайдер/список/фильтр
+    const footer = 12 + 20 + 16; // отступ, счётчики, отступ снизу
+    final banner = bannerVisible ? AdRequestBanner.height + 12 : 0;
+    final available = viewport - header - footer - banner;
+    return available < 300 ? 300 : available;
+  }
+
   int _calculateItemCount(int jobsLength, bool hasNextPage, bool isSliderMode) {
     // 1 for header + content
     if (isSliderMode) {
@@ -735,7 +773,9 @@ class _ApplHomeScreenState extends State<ApplHomeScreen> {
 }
 
 class _AdCards extends StatelessWidget {
-  const _AdCards();
+  const _AdCards({this.bottomSpacing = 0});
+
+  final double bottomSpacing;
 
   @override
   Widget build(BuildContext context) {
@@ -744,6 +784,7 @@ class _AdCards extends StatelessWidget {
         if (state is AdsLoaded) {
           return Container(
             width: double.infinity,
+            margin: EdgeInsets.only(bottom: bottomSpacing),
             decoration: AppTheme.cardDecoration,
             child: InkWell(
               onTap: () {

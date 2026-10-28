@@ -8,7 +8,12 @@ import 'package:mama_kris/features/stories/presentation/widgets/stories_thumbnai
 
 class StoriesSection extends StatefulWidget {
   final double? horizontalPadding;
-  const StoriesSection({super.key, this.horizontalPadding});
+  final double bottomSpacing;
+  const StoriesSection({
+    super.key,
+    this.horizontalPadding,
+    this.bottomSpacing = 16,
+  });
 
   @override
   State<StoriesSection> createState() => _StoriesSectionState();
@@ -39,7 +44,7 @@ class _StoriesSectionState extends State<StoriesSection> {
         builder: (context, state) {
           if (state is StoriesLoading) {
             return Padding(
-              padding: EdgeInsets.only(bottom: 16),
+              padding: EdgeInsets.only(bottom: widget.bottomSpacing),
               child: _StoriesShimmer(
                 horizontalPadding: widget.horizontalPadding,
               ),
@@ -47,7 +52,7 @@ class _StoriesSectionState extends State<StoriesSection> {
           }
           if (state is StoriesLoaded && state.categories.isNotEmpty) {
             return Padding(
-              padding: EdgeInsets.only(bottom: 16),
+              padding: EdgeInsets.only(bottom: widget.bottomSpacing),
               child: StoriesThumbnailList(
                 categories: state.categories,
                 horizontalPadding: widget.horizontalPadding,
