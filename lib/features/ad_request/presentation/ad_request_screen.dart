@@ -62,9 +62,7 @@ class _AdRequestScreenState extends State<AdRequestScreen> {
         },
       );
       if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const AdRequestSuccessScreen()),
-      );
+      Navigator.of(context).pushReplacement(AdRequestSuccessScreen.route());
     } on DioException catch (e) {
       if (!mounted) return;
       final tooMany = e.response?.statusCode == 429;
